@@ -80,6 +80,7 @@
         },
         "ownerTag": {
             "type": "string",
+            "defaultValue": "Test",
             "metadata": {
                 "description": "Provide the value for the owner tag"
             }
