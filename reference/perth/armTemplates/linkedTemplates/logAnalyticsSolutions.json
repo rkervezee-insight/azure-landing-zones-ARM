@@ -99,8 +99,8 @@
         }
     },
     "variables": {
-        "resourceGroupName": "[toLower(concat(parameters('companyPrefix'), '-', parameters('environmentPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "logAnalyticsResourceId": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]",
         "solutions": {
@@ -143,6 +143,10 @@
             "securityInsights": {
                 "name": "[concat('SecurityInsights', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "SecurityInsights"
+            },
+           "KeyVaultAnalytics": {
+                "name": "[concat('KeyVaultAnalytics', '(', variables('logAnalyticsName'), ')')]",
+                "marketplaceName": "KeyVaultAnalytics"
             }
         },
         "apiVersions": {
