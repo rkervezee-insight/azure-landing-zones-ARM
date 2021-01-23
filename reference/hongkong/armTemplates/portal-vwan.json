@@ -307,7 +307,7 @@
                         "constraints": {
                             "required": false
                         },
-                        "visible": "[equals(steps('esGoalState').esLogAnalytics, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },           
                     {
                         "name": "mgmtSubApi",
@@ -920,7 +920,7 @@
                 ]
             },
             {
-                "name": "esIdentityGoalState",
+                "name": "esPlatformIdentity",
                 "label": "Identity",
                 "subLabel": {
                     "preValidation": "",
@@ -976,16 +976,16 @@
                         "filter": true,
                         "filterPlaceholder": "Filter items ...",
                         "multiLine": true,
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]",
                         "constraints": {
-                            "allowedValues": "[map(steps('esIdentityGoalState').esIdentitySubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "allowedValues": "[map(steps('esPlatformIdentity').esIdentitySubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
                             "required": true
                         }
                     },
                     {
                         "name": "identitypolicies",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]",
                         "options": {
                             "text": "Select which of the the recommended policies you will assign to your identity management group.",
                             "link": {
@@ -1012,7 +1012,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
                         "name": "esIdDenySubnetNsg",
@@ -1032,7 +1032,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
                         "name": "esIdDenyPublicIp",
@@ -1052,7 +1052,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
                         "name": "esIdAzBackup",
@@ -1072,7 +1072,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     }
                 ]
             },                     
@@ -1098,7 +1098,7 @@
                     {
                         "name": "onlineText",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esGoalState').esLogAnalytics, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
                             "text": "Select the subscriptions you want to move to online management group.",
                             "link": {
@@ -1134,7 +1134,7 @@
                     {
                         "name": "corpText",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esGoalState').esLogAnalytics, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
                             "text": "Select the subscriptions you want to move to corp management group.",
                             "link": {
@@ -1197,7 +1197,7 @@
                                 }
                             ]
                         },
-						"visible": "[equals(steps('esGoalState').esLogAnalytics, 'Yes')]"
+						"visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esVmssMonitoring",
@@ -1217,7 +1217,7 @@
                                 }
                             ]
                         },
-						"visible": "[equals(steps('esGoalState').esLogAnalytics, 'Yes')]"
+						"visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esArcVmMonitoring",
@@ -1237,7 +1237,7 @@
                                 }
                             ]
                         },
-						"visible": "[equals(steps('esGoalState').esLogAnalytics, 'Yes')]"
+						"visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esAksPolicy",
@@ -1463,42 +1463,42 @@
             }
         ],
         "outputs": {
-            "enableErGw": "[steps('esConnectivityGoalState').esErGw]",
-            "enableVpnGw": "[steps('esConnectivityGoalState').esVpnGw]",
-            "enableVwan": "[steps('esConnectivityGoalState').esVwan]",
-            "connectivitySubscriptionId": "[if(not(equals(steps('esConnectivityGoalState').esConnectivitySub, steps('esGoalState').esMgmtSub)), steps('esConnectivityGoalState').esConnectivitySub, '')]",
-            "enableAzFw": "[steps('esConnectivityGoalState').esAzFw]",
-            "addressPrefix": "[steps('esConnectivityGoalState').esAddress]",
-            "location": "[steps('esConnectivityGoalState').esNwLocation]",
-            "managementSubscriptionId": "[steps('esGoalState').esMgmtSub]",
-            "identitySubscriptionId": "[if(or(not(equals(steps('esIdentityGoalState').esIdentitySub, steps('esGoalState').esMgmtSub)), not(equals(steps('esIdentityGoalState').esIdentitySub, steps('esConnectivityGoalState').esConnectivitySub))), steps('esIdentityGoalState').esIdentitySub, '')]",
-            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esGoalState').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esConnectivityGoalState').esConnectivitySub))), steps('lzGoalState').esOnlineLzSub, '')]",
-            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esGoalState').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esConnectivityGoalState').esConnectivitySub))), steps('lzGoalState').esCorpLzSub, '')]",
-            "enableLogAnalytics": "[steps('esGoalState').esLogAnalytics]",
-            "denyRdpForIdentity": "[steps('esIdentityGoalState').esIdDenyRdp]",
-            "denySubnetWithoutNsgForIdentity": "[steps('esIdentityGoalState').esIdDenySubnetNsg]",
-            "denyPipForIdentity": "[steps('esIdentityGoalState').esIdDenyPublicIp]",
-            "enableVmBackupForIdentity": "[steps('esIdentityGoalState').esIdAzBackup]",
-            "enableAsc": "[steps('esGoalState').esAsc]",
-            "enableAscForServers": "[steps('esGoalState').esAscVms]",
-            "enableAscForAppServices": "[steps('esGoalState').esAscApps]",
-            "enableAscForStorage": "[steps('esGoalState').esAscStorage]",
-            "enableAscForSql": "[steps('esGoalState').esAscSql]",
-            "enableAscForKeyVault": "[steps('esGoalState').esAscKeyVault]",
-            "enableAscForArm": "[steps('esGoalState').esAscArm]",
-            "enableAscForDns": "[steps('esGoalState').esAscDns]",
-            "enableAscForKubernetes": "[steps('esGoalState').esAscKubernetes]",
-            "enableAscForRegistries": "[steps('esGoalState').esAscRegistries]",
-            "enableSecuritySolution": "[steps('esGoalState').esSecuritySolution]",
-            "enableAgentHealth": "[steps('esGoalState').esAgentSolution]",
-            "enableChangeTracking": "[steps('esGoalState').esChangeTracking]",
-            "enableUpdateMgmt": "[steps('esGoalState').esUpdateMgmt]",
-            "enableActivityLog": "[steps('esGoalState').esActivityLog]",
-            "enableVmInsights": "[steps('esGoalState').esVmInsights]",
-            "enableAntiMalware": "[steps('esGoalState').esAntiMalware]",
-            "enableServiceMap": "[steps('esGoalState').esServiceMap]",
-            "enableSqlAssessment": "[steps('esGoalState').esSqlAssessment]",
-            "enterpriseScaleCompanyPrefix": "[steps('lzSettings').esMgmtGroup]",
+            "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
+            "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
+            "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
+            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
+            "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
+            "location": "[steps('esPlatformConnectivity').esNwLocation]",
+            "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSub]",
+            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformConnectivity').esConnectivitySub))), steps('esPlatformIdentity').esIdentitySub, '')]",
+            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esOnlineLzSub, '')]",
+            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esCorpLzSub, '')]",
+            "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
+            "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
+            "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
+            "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
+            "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+            "enableAsc": "[steps('esPlatformManagement').esAsc]",
+            "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
+            "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
+            "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
+            "enableAscForSql": "[steps('esPlatformManagement').esAscSql]",
+            "enableAscForKeyVault": "[steps('esPlatformManagement').esAscKeyVault]",
+            "enableAscForArm": "[steps('esPlatformManagement').esAscArm]",
+            "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
+            "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
+            "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+            "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
+            "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
+            "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",
+            "enableUpdateMgmt": "[steps('esPlatformManagement').esUpdateMgmt]",
+            "enableActivityLog": "[steps('esPlatformManagement').esActivityLog]",
+            "enableVmInsights": "[steps('esPlatformManagement').esVmInsights]",
+            "enableAntiMalware": "[steps('esPlatformManagement').esAntiMalware]",
+            "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
+            "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
+            "companyPrefix": "[steps('esNaming').esComIdentifier]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
@@ -1510,7 +1510,7 @@
             "enableStorageHttps": "[steps('lzGoalState').esHttpsStorage]",
             "denyIpForwarding": "[steps('lzGoalState').esIpForwarding]",
             "denySubnetWithoutNsg": "[steps('lzGoalState').esNsg]",
-            "retentionInDays": "[string(steps('esGoalState').esLogRetention)]",
+            "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]"
