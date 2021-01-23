@@ -157,7 +157,9 @@
             "deployAks": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployAks))]"
         },
            "apiVersions": {
-            "policyAssignments": "2020-03-01"
+            "policyAssignments": "2020-03-01",
+            "deployments": "2020-06-01",
+            "roleAssignments": "2020-04-01-preview"
         }
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
     },
@@ -196,7 +198,7 @@
         {
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deployVmBackup]",
             "dependsOn": [
                 "[variables('policyAssignmentNames').deployVmBackup]"
@@ -226,7 +228,7 @@
         {
             "condition": "[equals(parameters('enableSqlAudit'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deploySqlAuditing]",
             "dependsOn": [
                 "[variables('policyAssignmentNames').deploySqlAuditing]"
@@ -241,7 +243,7 @@
         {
             "condition": "[equals(parameters('enableSqlSecurity'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').deploySqlSecurity]",
             "location": "[deployment().location]",
             "identity": {
@@ -257,7 +259,7 @@
         {
             "condition": "[equals(parameters('enableSqlSecurity'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2019-04-01-preview",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deploySqlSecurity]",
             "dependsOn": [
                 "[variables('policyAssignmentNames').deploySqlSecurity]"
@@ -271,7 +273,7 @@
         {
             "condition": "[equals(parameters('enableSqlEncryption'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').deploySqlEncryption]",
             "location": "[deployment().location]",
             "identity": {
@@ -287,7 +289,7 @@
         {
             "condition": "[equals(parameters('enableSqlEncryption'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2019-04-01-preview",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deploySqlEncryption]",
             "dependsOn": [
                 "[variables('policyAssignmentNames').deploySqlEncryption]"
@@ -301,7 +303,7 @@
         {
             "condition": "[equals(parameters('enableAksPolicy'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').deployAks]",
             "location": "[deployment().location]",
             "identity": {
@@ -317,7 +319,7 @@
         {
             "condition": "[equals(parameters('enableAksPolicy'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "2019-04-01-preview",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deployAks]",
             "dependsOn": [
                 "[variables('policyAssignmentNames').deployAks]"
@@ -331,7 +333,7 @@
         {
             "condition": "[equals(parameters('denyAksPrivileged'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyAksPriv]",
             "location": "[deployment().location]",
             "identity": {
@@ -352,7 +354,7 @@
         {
             "condition": "[equals(parameters('denyAksPrivilegedEscalation'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyAksNoPrivEsc]",
             "location": "[deployment().location]",
             "identity": {
@@ -373,7 +375,7 @@
         {
             "condition": "[equals(parameters('denyHttpIngressForAks'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyHttpIngressAks]",
             "location": "[deployment().location]",
             "identity": {
@@ -394,7 +396,7 @@
         {
             "condition": "[equals(parameters('enableStorageHttps'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').storageHttps]",
             "location": "[deployment().location]",
             "properties": {
@@ -407,7 +409,7 @@
         {
             "condition": "[equals(parameters('denyIpForwarding'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyIpForwarding]",
             "location": "[deployment().location]",
             "properties": {
@@ -420,7 +422,7 @@
         {
             "condition": "[equals(parameters('denySubnetWithoutNsg'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
             "location": "[deployment().location]",
             "properties": {
