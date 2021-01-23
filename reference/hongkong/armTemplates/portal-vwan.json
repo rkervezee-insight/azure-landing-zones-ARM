@@ -342,7 +342,7 @@
                         }
                     },
                     {
-                        "name": "esMgmtSubId",
+                        "name": "esMgmtSub",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Management Subscription",
                         "toolTip": "",
@@ -1466,11 +1466,11 @@
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
-            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
             "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSub]",
+            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
             "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformConnectivity').esConnectivitySub))), steps('esPlatformIdentity').esIdentitySub, '')]",
             "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esOnlineLzSub, '')]",
             "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esCorpLzSub, '')]",
