@@ -353,7 +353,7 @@
                         "multiLine": true,
                         "visible": true,
                         "constraints": {
-                            "allowedValues": "[map(steps('esPlatformManagement').subApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "allowedValues": "[map(steps('esPlatformManagement').mgmtSubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
                             "required": true
                         }
                     },   			
@@ -822,7 +822,7 @@
                         "multiLine": true,
                         "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "constraints": {
-                            "allowedValues": "[map(steps('esPlatformConnectivity').nwSubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "allowedValues": "[map(steps('esPlatformConnectivity').ConnectivitySubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
                             "required": true
                         }
                     },                    
