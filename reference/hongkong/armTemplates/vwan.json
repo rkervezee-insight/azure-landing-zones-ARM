@@ -51,6 +51,17 @@
                 "description": "Provide the Azure Storage identifier prefix"
             }
         },
+        "enableStorage": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then an Azure Storage Account will be deployed."
+            }
+        },
         "enableLtrStorage": {
             "type": "string",
             "defaultValue": "Yes",
@@ -474,6 +485,7 @@
             "policyDefinitions": "[concat(uri(deployment().properties.templateLink.uri, variables('azEnvPolicy')))]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalytics.json')]",
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalyticsSolutions.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
             "connectivity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vwan-connectivity.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/diagnosticsAndSecurity.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]",
@@ -500,7 +512,8 @@
             "diagnosticsAndSecurity": "[take(concat('diagSec', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
             "connectivity": "[take(concat('connectivity', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('landingZone', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "identity": "[take(concat('identity', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]"
+            "identity": "[take(concat('identity', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
+            "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -740,6 +753,48 @@
                     },
                     "enableSqlAssessment": {
                         "value": "[parameters('enableSqlAssessment')]"
+                    }
+                }
+            }
+        },
+         // Linked template for the creation of Azure Storage
+        {
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-05-01",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "name": "[variables('deploymentNames').storage]",
+            "dependsOn": [
+                "DeploymentDelay"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').storage]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "staPrefix": {
+                        "value": "[parameters('staPrefix')]"
+                    },
+                    "enableStorage": {
+                        "value": "[parameters('enableStorage')]"
+                    },
+                    "subscriptionId": {
+                        "value": "[parameters('managementSubscriptionId')]"
                     }
                 }
             }

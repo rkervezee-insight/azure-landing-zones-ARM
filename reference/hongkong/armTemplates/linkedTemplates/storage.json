@@ -30,17 +30,7 @@
             ],
             "defaultValue": "Yes"
         },
-        "onPremisesIP": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "subscriptionTag": {
-            "type": "string"
-        },
-        "ownerTag": {
-            "type": "string"
-        },
-        "subscriptionId": {
+        "managementSubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -51,10 +41,6 @@
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
-        },
         "storage": {
             "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
             "sku": "Standard_LRS",
@@ -72,12 +58,12 @@
     "resources": [
         {
             // Nested deloyment for Storage (Subscription Level)
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "storage",
             "location": "[deployment().location]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('managementSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -90,10 +76,6 @@
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
                             "name": "[variables('resourceGroupName')]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]"
-                            },
                             "properties": {}
                         },
                         {
@@ -122,7 +104,7 @@
                                         },
                                         {
                                             // Nested deployment for Storage (Resource Group Level)
-                                            "condition": "[and(equals(parameters('enableStorage'), 'Yes'), not(empty(parameters('onPremisesIP'))))]",
+                                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                                             "type": "Microsoft.Storage/storageAccounts",
                                             "apiVersion": "[variables('apiVersions').storage]",
                                             "name": "[variables('storage').name]",
@@ -141,10 +123,6 @@
                                                     "bypass": "Logging, Metrics, AzureServices",
                                                     "virtualNetworkRules": [],
                                                     "ipRules": [
-                                                        {
-                                                            "value": "[parameters('onPremisesIP')]",
-                                                            "action": "Allow"
-                                                        }
                                                     ],
                                                     "defaultAction": "Deny"
                                                 }

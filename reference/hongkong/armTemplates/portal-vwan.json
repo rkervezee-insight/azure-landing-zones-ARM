@@ -760,7 +760,47 @@
                             ]
                         },
 						"visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
-                    }					
+                    },
+                    {
+                        "name": "esSta",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy a Storage account for diagnostics.",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, a Storage account will be deployed",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "esActivityLogSta",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable Long Term retention of Logs to Azure Storage.",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Long term retention of Azure Activity Logs to Azure Storage will be enabled",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esSta, 'Yes')]"
+                    }			
                 ]
             },
             {
@@ -1463,6 +1503,17 @@
             }
         ],
         "outputs": {
+            "companyPrefix": "[steps('esNaming').esComIdentifier]",
+            "locationPrefix": "[steps('esNaming').esLocIdentifier]",
+            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
+            "argPrefix": "[steps('esNaming').esArgIdentifier]",
+            "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
+            "aaaPrefix": "[steps('esNaming').esAaaIdentifier]",
+            "staPrefix": "[steps('esNaming').esStaIdentifier]",
+
+
+
+
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
@@ -1498,7 +1549,7 @@
             "enableAntiMalware": "[steps('esPlatformManagement').esAntiMalware]",
             "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
-            "companyPrefix": "[steps('esNaming').esComIdentifier]",
+            
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
