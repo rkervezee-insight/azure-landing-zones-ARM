@@ -25,10 +25,6 @@
         "managementSubscriptionId": {
             "type": "string"
         },
-        "workspaceRegion": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
-        },
         "enableSecuritySolution": {
             "type": "string",
             "allowedValues": [
