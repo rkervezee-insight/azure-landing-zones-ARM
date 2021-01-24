@@ -506,13 +506,13 @@
         },
         "deploymentNames": {
             "managementGroups": "[take(concat('mgmtGroups', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "policyDefinitions": "[take(concat('policy', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "monitoring": "[take(concat('monitoring', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "diagnosticsAndSecurity": "[take(concat('diagSec', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "connectivity": "[take(concat('connectivity', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "landingZone": "[take(concat('landingZone', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
-            "identity": "[take(concat('identity', '-', deployment().location, guid(parameters('companyPrefix'))), 64)]",
+            "policyDefinitions": "[take(concat('policy', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "diagnosticsAndSecurity": "[take(concat('diagSec', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "connectivity": "[take(concat('connectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "landingZone": "[take(concat('landingZone', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "identity": "[take(concat('identity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
