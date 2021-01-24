@@ -165,207 +165,207 @@
         },
         {
           "Properties": {
-          "Description": "Depoloys a default budget on subscriptions.",
-          "DisplayName": "Deploy a default budget on subscriptions",
-          "Mode": "All",
-          "Parameters": {
-            "amount": {
-              "type": "string",
-              "defaultValue": "1000",
-              "metadata": {
-                "description": "The total amount of cost or usage to track with the budget"
-              }
-            },
-            "timeGrain": {
-              "type": "string",
-              "defaultValue": "Monthly",
-              "allowedValues": [
-                "Monthly",
-                "Quarterly",
-                "Annually",
-                "BillingMonth",
-                "BillingQuarter",
-                "BillingAnnual"
-              ],
-              "metadata": {
-                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
-              }
-            },
-            "firstThreshold": {
-              "type": "string",
-              "defaultValue": "90",
-              "metadata": {
-                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
-              }
-            },
-            "secondThreshold": {
-              "type": "string",
-              "defaultValue": "100",
-              "metadata": {
-                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
-              }
-            },
-            "contactRoles": {
-              "type": "array",
-              "defaultValue": [
-                "Owner",
-                "Contributor"
-              ],
-              "metadata": {
-                "description": "The list of contact RBAC roles, in an array, to send the budget notification to when the threshold is exceeded."
-              }
-            },
-            "contactEmails": {
-              "type": "array",
-              "defaultValue": [],
-              "metadata": {
-                "description": "The list of email addresses, in an array, to send the budget notification to when the threshold is exceeded."
-              }
-            },
-            "contactGroups": {
-              "type": "array",
-              "defaultValue": [],
-              "metadata": {
-                "description": "The list of action groups, in an array, to send the budget notification to when the threshold is exceeded. It accepts array of strings."
-              }
-            }
-          },
-          "metadata": {
-            "version": "1.0.0",
-            "category": "Budget"
-          },
-          "PolicyRule": {
-            "if": {
-              "allOf": [
-                {
-                  "field": "type",
-                  "equals": "Microsoft.Resources/subscriptions"
+            "Description": "Depoloys a default budget on subscriptions.",
+            "DisplayName": "Deploy a default budget on subscriptions",
+            "Mode": "All",
+            "Parameters": {
+              "amount": {
+                "type": "string",
+                "defaultValue": "1000",
+                "metadata": {
+                  "description": "The total amount of cost or usage to track with the budget"
                 }
-              ]
-            },
-            "then": {
-              "effect": "DeployIfNotExists",
-              "details": {
-                "type": "Microsoft.Consumption/budgets",
-                "deploymentScope": "Subscription",
-                "existenceScope": "Subscription",
-                "existenceCondition": {
-                  "allOf": [
-                    {
-                      "field": "Microsoft.Consumption/budgets/amount",
-                      "equals": "[[parameters('amount')]"
-                    },
-                    {
-                      "field": "Microsoft.Consumption/budgets/timeGrain",
-                      "equals": "[[parameters('timeGrain')]"
-                    },
-                    {
-                      "field": "Microsoft.Consumption/budgets/category",
-                      "equals": "Cost"
-                    }
-                  ]
-                },
-                "roleDefinitionIds": [
-                  "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+              },
+              "timeGrain": {
+                "type": "string",
+                "defaultValue": "Monthly",
+                "allowedValues": [
+                  "Monthly",
+                  "Quarterly",
+                  "Annually",
+                  "BillingMonth",
+                  "BillingQuarter",
+                  "BillingAnnual"
                 ],
-                "deployment": {
-                  "location": "northeurope",
-                  "properties": {
-                    "mode": "incremental",
-                    "parameters": {
-                      "amount": {
-                        "value": "[[parameters('amount')]"
+                "metadata": {
+                  "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+                }
+              },
+              "firstThreshold": {
+                "type": "string",
+                "defaultValue": "90",
+                "metadata": {
+                  "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
+                }
+              },
+              "secondThreshold": {
+                "type": "string",
+                "defaultValue": "100",
+                "metadata": {
+                  "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
+                }
+              },
+              "contactRoles": {
+                "type": "array",
+                "defaultValue": [
+                  "Owner",
+                  "Contributor"
+                ],
+                "metadata": {
+                  "description": "The list of contact RBAC roles, in an array, to send the budget notification to when the threshold is exceeded."
+                }
+              },
+              "contactEmails": {
+                "type": "array",
+                "defaultValue": [],
+                "metadata": {
+                  "description": "The list of email addresses, in an array, to send the budget notification to when the threshold is exceeded."
+                }
+              },
+              "contactGroups": {
+                "type": "array",
+                "defaultValue": [],
+                "metadata": {
+                  "description": "The list of action groups, in an array, to send the budget notification to when the threshold is exceeded. It accepts array of strings."
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Budget"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "DeployIfNotExists",
+                "details": {
+                  "type": "Microsoft.Consumption/budgets",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Consumption/budgets/amount",
+                        "equals": "[[parameters('amount')]"
                       },
-                      "timeGrain": {
-                        "value": "[[parameters('timeGrain')]"
+                      {
+                        "field": "Microsoft.Consumption/budgets/timeGrain",
+                        "equals": "[[parameters('timeGrain')]"
                       },
-                      "firstThreshold": {
-                        "value": "[[parameters('firstThreshold')]"
-                      },
-                      "secondThreshold": {
-                        "value": "[[parameters('secondThreshold')]"
-                      },
-                      "contactEmails": {
-                        "value": "[[parameters('contactEmails')]"
-                      },
-                      "contactRoles": {
-                        "value": "[[parameters('contactRoles')]"
-                      },
-                      "contactGroups": {
-                        "value": "[[parameters('contactGroups')]"
+                      {
+                        "field": "Microsoft.Consumption/budgets/category",
+                        "equals": "Cost"
                       }
-                    },
-                    "template": {
-                      "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
-                      "contentVersion": "1.0.0.0",
+                    ]
+                  },
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                  ],
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
                       "parameters": {
                         "amount": {
-                          "type": "string"
+                          "value": "[[parameters('amount')]"
                         },
                         "timeGrain": {
-                          "type": "string"
+                          "value": "[[parameters('timeGrain')]"
                         },
                         "firstThreshold": {
-                          "type": "string"
+                          "value": "[[parameters('firstThreshold')]"
                         },
                         "secondThreshold": {
-                          "type": "string"
+                          "value": "[[parameters('secondThreshold')]"
                         },
                         "contactEmails": {
-                          "type": "array"
+                          "value": "[[parameters('contactEmails')]"
                         },
                         "contactRoles": {
-                          "type": "array"
+                          "value": "[[parameters('contactRoles')]"
                         },
                         "contactGroups": {
-                          "type": "array"
-                        },
-                        "startDate": {
-                          "type": "string",
-                          "defaultValue": "[[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
+                          "value": "[[parameters('contactGroups')]"
                         }
                       },
-                      "resources": [
-                        {
-                          "type": "Microsoft.Consumption/budgets",
-                          "apiVersion": "2019-10-01",
-                          "name": "default-sandbox-budget",
-                          "properties": {
-                            "timePeriod": {
-                              "startDate": "[[parameters('startDate')]"
-                            },
-                            "timeGrain": "[[parameters('timeGrain')]",
-                            "amount": "[[parameters('amount')]",
-                            "category": "Cost",
-                            "notifications": {
-                              "NotificationForExceededBudget1": {
-                                "enabled": true,
-                                "operator": "GreaterThan",
-                                "threshold": "[[parameters('firstThreshold')]",
-                                "contactEmails": "[[parameters('contactEmails')]",
-                                "contactRoles": "[[parameters('contactRoles')]",
-                                "contactGroups": "[[parameters('contactGroups')]"
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "amount": {
+                            "type": "string"
+                          },
+                          "timeGrain": {
+                            "type": "string"
+                          },
+                          "firstThreshold": {
+                            "type": "string"
+                          },
+                          "secondThreshold": {
+                            "type": "string"
+                          },
+                          "contactEmails": {
+                            "type": "array"
+                          },
+                          "contactRoles": {
+                            "type": "array"
+                          },
+                          "contactGroups": {
+                            "type": "array"
+                          },
+                          "startDate": {
+                            "type": "string",
+                            "defaultValue": "[[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
+                          }
+                        },
+                        "resources": [
+                          {
+                            "type": "Microsoft.Consumption/budgets",
+                            "apiVersion": "2019-10-01",
+                            "name": "default-sandbox-budget",
+                            "properties": {
+                              "timePeriod": {
+                                "startDate": "[[parameters('startDate')]"
                               },
-                              "NotificationForExceededBudget2": {
-                                "enabled": true,
-                                "operator": "GreaterThan",
-                                "threshold": "[[parameters('secondThreshold')]",
-                                "contactEmails": "[[parameters('contactEmails')]",
-                                "contactRoles": "[[parameters('contactRoles')]",
-                                "contactGroups": "[[parameters('contactGroups')]"
+                              "timeGrain": "[[parameters('timeGrain')]",
+                              "amount": "[[parameters('amount')]",
+                              "category": "Cost",
+                              "notifications": {
+                                "NotificationForExceededBudget1": {
+                                  "enabled": true,
+                                  "operator": "GreaterThan",
+                                  "threshold": "[[parameters('firstThreshold')]",
+                                  "contactEmails": "[[parameters('contactEmails')]",
+                                  "contactRoles": "[[parameters('contactRoles')]",
+                                  "contactGroups": "[[parameters('contactGroups')]"
+                                },
+                                "NotificationForExceededBudget2": {
+                                  "enabled": true,
+                                  "operator": "GreaterThan",
+                                  "threshold": "[[parameters('secondThreshold')]",
+                                  "contactEmails": "[[parameters('contactEmails')]",
+                                  "contactRoles": "[[parameters('contactRoles')]",
+                                  "contactGroups": "[[parameters('contactGroups')]"
+                                }
                               }
                             }
                           }
-                        }
-                      ]
+                        ]
+                      }
                     }
                   }
                 }
               }
             }
-          }
-        },
-        "name": "Deploy-Budget"
+          },
+          "name": "Deploy-Budget"
         },
         {
           "properties": {
@@ -551,7 +551,6 @@
           "name": "Deploy-Diagnostics-ACR"
         },
         {
-          "Name": "Deploy-Diagnostics-ActivityLog-La",
           "Properties": {
             "Description": "Ensures that Activity Log Diagnostics settings are set to push logs into Log Analytics",
             "DisplayName": "Deploy-Diagnostics-ActivityLog-La",
@@ -565,6 +564,10 @@
                   "strongType": "omsWorkspace"
                 }
               }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Monitoring"
             },
             "PolicyRule": {
               "if": {
@@ -666,10 +669,10 @@
                 }
               }
             }
-          }
+          },
+          "Name": "Deploy-Diagnostics-ActivityLog-La"
         },
         {
-          "Name": "Deploy-Diagnostics-ActivityLog-Sta",
           "Properties": {
             "Description": "Ensures that Activity Log Diagnostics settings are set to push logs into a Storage Account for Long term retention",
             "DisplayName": "Deploy-Diagnostics-ActivityLog-Sta",
@@ -781,7 +784,8 @@
                 }
               }
             }
-          }
+          },
+          "Name": "Deploy-Diagnostics-ActivityLog-Sta"
         },
         {
           "properties": {
@@ -988,278 +992,278 @@
         },
         {
           "Properties": {
-          "Description": "This policy deploys virtual network and peer to the hub",
-          "DisplayName": "Deploys virtual network peering to hub",
-          "Mode": "All",
-          "Parameters": {
-            "vNetName": {
-              "type": "String",
-              "metadata": {
-                "displayName": "vNetName",
-                "description": "Name of the landing zone vNet"
+            "Description": "This policy deploys virtual network and peer to the hub",
+            "DisplayName": "Deploys virtual network peering to hub",
+            "Mode": "All",
+            "Parameters": {
+              "vNetName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "vNetName",
+                  "description": "Name of the landing zone vNet"
+                }
+              },
+              "vNetRgName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "vNetRgName",
+                  "description": "Name of the landing zone vNet RG"
+                }
+              },
+              "vNetLocation": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "vNetLocation",
+                  "description": "Location for the vNet"
+                }
+              },
+              "vNetCidrRange": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "vNetCidrRange",
+                  "description": "CIDR Range for the vNet"
+                }
+              },
+              "hubResourceId": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "hubResourceId",
+                  "description": "Resource ID for the HUB vNet"
+                }
               }
             },
-            "vNetRgName": {
-              "type": "String",
-              "metadata": {
-                "displayName": "vNetRgName",
-                "description": "Name of the landing zone vNet RG"
-              }
-            },
-            "vNetLocation": {
-              "type": "String",
-              "metadata": {
-                "displayName": "vNetLocation",
-                "description": "Location for the vNet"
-              }
-            },
-            "vNetCidrRange": {
-              "type": "String",
-              "metadata": {
-                "displayName": "vNetCidrRange",
-                "description": "CIDR Range for the vNet"
-              }
-            },
-            "hubResourceId": {
-              "type": "String",
-              "metadata": {
-                "displayName": "hubResourceId",
-                "description": "Resource ID for the HUB vNet"
-              }
-            }
-          },
-          "metadata": {
+            "metadata": {
               "version": "1.0.0",
               "category": "Network"
             },
-          "PolicyRule": {
-            "if": {
-              "allOf": [
-                {
-                  "field": "type",
-                  "equals": "Microsoft.Resources/subscriptions"
-                }
-              ]
-            },
-            "then": {
-              "effect": "deployIfNotExists",
-              "details": {
-                "type": "Microsoft.Network/virtualNetworks",
-                "name": "[[parameters('vNetName')]",
-                "deploymentScope": "Subscription",
-                "existenceScope": "ResourceGroup",
-                "ResourceGroupName": "[[parameters('vNetRgName')]",
-                "roleDefinitionIds": [
-                  "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
-                ],
-                "existenceCondition": {
-                  "allOf": [
-                    {
-                      "field": "name",
-                      "like": "[[parameters('vNetName')]"
-                    },
-                    {
-                      "field": "location",
-                      "equals": "[[parameters('vNetLocation')]"
-                    }
-                  ]
-                },
-                "deployment": {
-                  "location": "northeurope",
-                  "properties": {
-                    "mode": "incremental",
-                    "parameters": {
-                      "vNetRgName": {
-                        "value": "[[parameters('vNetRgName')]"
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "deployIfNotExists",
+                "details": {
+                  "type": "Microsoft.Network/virtualNetworks",
+                  "name": "[[parameters('vNetName')]",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "ResourceGroup",
+                  "ResourceGroupName": "[[parameters('vNetRgName')]",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "name",
+                        "like": "[[parameters('vNetName')]"
                       },
-                      "vNetName": {
-                        "value": "[[parameters('vNetName')]"
-                      },
-                      "vNetLocation": {
-                        "value": "[[parameters('vNetLocation')]"
-                      },
-                      "vNetCidrRange": {
-                        "value": "[[parameters('vNetCidrRange')]"
-                      },
-                      "hubResourceId": {
-                        "value": "[[parameters('hubResourceId')]"
+                      {
+                        "field": "location",
+                        "equals": "[[parameters('vNetLocation')]"
                       }
-                    },
-                    "template": {
-                      "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
-                      "contentVersion": "1.0.0.0",
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
                       "parameters": {
                         "vNetRgName": {
-                          "type": "string"
+                          "value": "[[parameters('vNetRgName')]"
                         },
                         "vNetName": {
-                          "type": "string"
+                          "value": "[[parameters('vNetName')]"
                         },
                         "vNetLocation": {
-                          "type": "string"
+                          "value": "[[parameters('vNetLocation')]"
                         },
                         "vNetCidrRange": {
-                          "type": "string"
-                        },
-                        "vNetPeerUseRemoteGateway": {
-                          "type": "bool",
-                          "defaultValue": false
+                          "value": "[[parameters('vNetCidrRange')]"
                         },
                         "hubResourceId": {
-                          "type": "string"
+                          "value": "[[parameters('hubResourceId')]"
                         }
                       },
-                      "variables": {},
-                      "resources": [
-                        {
-                          "type": "Microsoft.Resources/deployments",
-                          "apiVersion": "2020-06-01",
-                          "name": "[[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6),'-rg')]",
-                          "location": "[[parameters('vNetLocation')]",
-                          "dependsOn": [],
-                          "properties": {
-                            "mode": "Incremental",
-                            "template": {
-                              "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                              "contentVersion": "1.0.0.0",
-                              "parameters": {},
-                              "variables": {},
-                              "resources": [
-                                {
-                                  "type": "Microsoft.Resources/resourceGroups",
-                                  "apiVersion": "2020-06-01",
-                                  "name": "[[parameters('vNetRgName')]",
-                                  "location": "[[parameters('vNetLocation')]",
-                                  "properties": {}
-                                },
-                                {
-                                  "type": "Microsoft.Resources/resourceGroups",
-                                  "apiVersion": "2020-06-01",
-                                  "name": "NetworkWatcherRG",
-                                  "location": "[[parameters('vNetLocation')]",
-                                  "properties": {}
-                                }
-                              ],
-                              "outputs": {}
-                            }
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "vNetRgName": {
+                            "type": "string"
+                          },
+                          "vNetName": {
+                            "type": "string"
+                          },
+                          "vNetLocation": {
+                            "type": "string"
+                          },
+                          "vNetCidrRange": {
+                            "type": "string"
+                          },
+                          "vNetPeerUseRemoteGateway": {
+                            "type": "bool",
+                            "defaultValue": false
+                          },
+                          "hubResourceId": {
+                            "type": "string"
                           }
                         },
-                        {
-                          "type": "Microsoft.Resources/deployments",
-                          "apiVersion": "2020-06-01",
-                          "name": "[[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6))]",
-                          "dependsOn": [
-                            "[[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6),'-rg')]"
-                          ],
-                          "properties": {
-                            "mode": "Incremental",
-                            "template": {
-                              "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                              "contentVersion": "1.0.0.0",
-                              "parameters": {},
-                              "variables": {},
-                              "resources": [
-                                {
-                                  "type": "Microsoft.Network/virtualNetworks",
-                                  "apiVersion": "2020-06-01",
-                                  "name": "[[parameters('vNetName')]",
-                                  "location": "[[parameters('vNetLocation')]",
-                                  "dependsOn": [],
-                                  "properties": {
-                                    "addressSpace": {
-                                      "addressPrefixes": [
-                                        "[[parameters('vNetCidrRange')]"
-                                      ]
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-06-01",
+                            "name": "[[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6),'-rg')]",
+                            "location": "[[parameters('vNetLocation')]",
+                            "dependsOn": [],
+                            "properties": {
+                              "mode": "Incremental",
+                              "template": {
+                                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {},
+                                "variables": {},
+                                "resources": [
+                                  {
+                                    "type": "Microsoft.Resources/resourceGroups",
+                                    "apiVersion": "2020-06-01",
+                                    "name": "[[parameters('vNetRgName')]",
+                                    "location": "[[parameters('vNetLocation')]",
+                                    "properties": {}
+                                  },
+                                  {
+                                    "type": "Microsoft.Resources/resourceGroups",
+                                    "apiVersion": "2020-06-01",
+                                    "name": "NetworkWatcherRG",
+                                    "location": "[[parameters('vNetLocation')]",
+                                    "properties": {}
+                                  }
+                                ],
+                                "outputs": {}
+                              }
+                            }
+                          },
+                          {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2020-06-01",
+                            "name": "[[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6))]",
+                            "dependsOn": [
+                              "[[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6),'-rg')]"
+                            ],
+                            "properties": {
+                              "mode": "Incremental",
+                              "template": {
+                                "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {},
+                                "variables": {},
+                                "resources": [
+                                  {
+                                    "type": "Microsoft.Network/virtualNetworks",
+                                    "apiVersion": "2020-06-01",
+                                    "name": "[[parameters('vNetName')]",
+                                    "location": "[[parameters('vNetLocation')]",
+                                    "dependsOn": [],
+                                    "properties": {
+                                      "addressSpace": {
+                                        "addressPrefixes": [
+                                          "[[parameters('vNetCidrRange')]"
+                                        ]
+                                      }
                                     }
-                                  }
-                                },
-                                {
-                                  "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                                  "apiVersion": "2020-05-01",
-                                  "name": "[[concat(parameters('vNetName'), '/peerToHub')]",
-                                  "dependsOn": [
-                                    "[[parameters('vNetName')]"
-                                  ],
-                                  "properties": {
-                                    "remoteVirtualNetwork": {
-                                      "id": "[[parameters('hubResourceId')]"
-                                    },
-                                    "allowVirtualNetworkAccess": true,
-                                    "allowForwardedTraffic": true,
-                                    "allowGatewayTransit": false,
-                                    "useRemoteGateways": "[[parameters('vNetPeerUseRemoteGateway')]"
-                                  }
-                                },
-                                {
-                                  "type": "Microsoft.Resources/deployments",
-                                  "apiVersion": "2020-06-01",
-                                  "name": "[[concat('es-lz-hub-',substring(uniqueString(subscription().id),0,6),'-peering')]",
-                                  "subscriptionId": "[[split(parameters('hubResourceId'),'/')[2]]",
-                                  "resourceGroup": "[[split(parameters('hubResourceId'),'/')[4]]",
-                                  "dependsOn": [
-                                    "[[parameters('vNetName')]"
-                                  ],
-                                  "properties": {
-                                    "mode": "Incremental",
-                                    "expressionEvaluationOptions": {
-                                      "scope": "inner"
-                                    },
-                                    "template": {
-                                      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                                      "contentVersion": "1.0.0.0",
-                                      "parameters": {
-                                        "remoteVirtualNetwork": {
-                                          "Type": "string",
-                                          "defaultValue": false
-                                        },
-                                        "hubName": {
-                                          "Type": "string",
-                                          "defaultValue": false
-                                        }
+                                  },
+                                  {
+                                    "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                                    "apiVersion": "2020-05-01",
+                                    "name": "[[concat(parameters('vNetName'), '/peerToHub')]",
+                                    "dependsOn": [
+                                      "[[parameters('vNetName')]"
+                                    ],
+                                    "properties": {
+                                      "remoteVirtualNetwork": {
+                                        "id": "[[parameters('hubResourceId')]"
                                       },
-                                      "variables": {},
-                                      "resources": [
-                                        {
-                                          "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                                          "name": "[[[concat(parameters('hubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
-                                          "apiVersion": "2020-05-01",
-                                          "properties": {
-                                            "allowVirtualNetworkAccess": true,
-                                            "allowForwardedTraffic": true,
-                                            "allowGatewayTransit": true,
-                                            "useRemoteGateways": false,
-                                            "remoteVirtualNetwork": {
-                                              "id": "[[[parameters('remoteVirtualNetwork')]"
+                                      "allowVirtualNetworkAccess": true,
+                                      "allowForwardedTraffic": true,
+                                      "allowGatewayTransit": false,
+                                      "useRemoteGateways": "[[parameters('vNetPeerUseRemoteGateway')]"
+                                    }
+                                  },
+                                  {
+                                    "type": "Microsoft.Resources/deployments",
+                                    "apiVersion": "2020-06-01",
+                                    "name": "[[concat('es-lz-hub-',substring(uniqueString(subscription().id),0,6),'-peering')]",
+                                    "subscriptionId": "[[split(parameters('hubResourceId'),'/')[2]]",
+                                    "resourceGroup": "[[split(parameters('hubResourceId'),'/')[4]]",
+                                    "dependsOn": [
+                                      "[[parameters('vNetName')]"
+                                    ],
+                                    "properties": {
+                                      "mode": "Incremental",
+                                      "expressionEvaluationOptions": {
+                                        "scope": "inner"
+                                      },
+                                      "template": {
+                                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                        "contentVersion": "1.0.0.0",
+                                        "parameters": {
+                                          "remoteVirtualNetwork": {
+                                            "Type": "string",
+                                            "defaultValue": false
+                                          },
+                                          "hubName": {
+                                            "Type": "string",
+                                            "defaultValue": false
+                                          }
+                                        },
+                                        "variables": {},
+                                        "resources": [
+                                          {
+                                            "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+                                            "name": "[[[concat(parameters('hubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
+                                            "apiVersion": "2020-05-01",
+                                            "properties": {
+                                              "allowVirtualNetworkAccess": true,
+                                              "allowForwardedTraffic": true,
+                                              "allowGatewayTransit": true,
+                                              "useRemoteGateways": false,
+                                              "remoteVirtualNetwork": {
+                                                "id": "[[[parameters('remoteVirtualNetwork')]"
+                                              }
                                             }
                                           }
-                                        }
-                                      ],
-                                      "outputs": {}
-                                    },
-                                    "parameters": {
-                                      "remoteVirtualNetwork": {
-                                        "value": "[[concat(subscription().id,'/resourceGroups/',parameters('vNetRgName'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vNetName'))]"
+                                        ],
+                                        "outputs": {}
                                       },
-                                      "hubName": {
-                                        "value": "[[split(parameters('hubResourceId'),'/')[8]]"
+                                      "parameters": {
+                                        "remoteVirtualNetwork": {
+                                          "value": "[[concat(subscription().id,'/resourceGroups/',parameters('vNetRgName'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vNetName'))]"
+                                        },
+                                        "hubName": {
+                                          "value": "[[split(parameters('hubResourceId'),'/')[8]]"
+                                        }
                                       }
                                     }
                                   }
-                                }
-                              ],
-                              "outputs": {}
-                            }
-                          },
-                          "resourceGroup": "[[parameters('vNetRgName')]"
-                        }
-                      ],
-                      "outputs": {}
+                                ],
+                                "outputs": {}
+                              }
+                            },
+                            "resourceGroup": "[[parameters('vNetRgName')]"
+                          }
+                        ],
+                        "outputs": {}
+                      }
                     }
                   }
                 }
               }
             }
-          }
           },
           "name": "Deploy-VNET-HubSpoke"
         },
@@ -3007,7 +3011,7 @@
             }
           },
           "name": "Deny-RDP-From-Internet"
-        },        
+        },
         {
           "properties": {
             "Description": "Deploys the diagnostic settings for Batch to stream to a Log Analytics workspace when any Batch which is missing this diagnostic settings is created or updated. The policy wil  set the diagnostic with all metrics and category enabled",
