@@ -826,7 +826,7 @@
                         "name": "esVwan",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Virtual WAN",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "No",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual WAN",
                         "constraints": {
                             "allowedValues": [
@@ -982,7 +982,7 @@
                         "name": "esIdentity",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable identity subscription",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "No",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will move selected subscription into identity management group",
                         "constraints": {
                             "allowedValues": [
