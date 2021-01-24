@@ -9,6 +9,59 @@
                 "description": "Provide the prefix (max 5 characters) to the management group hierarchy that will be created"
             }
         },
+        "locationPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the location identifier prefix (3 characters)"
+            }
+        },
+        "environmentPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the environment identifier prefix (3 characters)"
+            }
+        },
+        "argPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the resource group identifier"
+            }
+        },
+        "omsPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the log analytics identifier prefix"
+            }
+        },
+        "aaaPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Automation identifier prefix"
+            }
+        },
+        "staPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Storage identifier prefix"
+            }
+        },
+        "enableLtrStorage": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then Long Term Retention to Storage will be enabled."
+            }
+        },
         "managementSubscriptionId": {
             "type": "string",
             "defaultValue": "",
@@ -455,8 +508,8 @@
         }
     },
     "resources": [
+        // Linked template for the creation of Management Groups
         {
-            // Linked template for the creation of Management Groups
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').managementGroups]",
@@ -474,8 +527,8 @@
                 }
             }
         },
-        {
-            // Linked template for the creation of Azure Policy Definitions
+        // Linked template for the creation of Azure Policy Definitions
+        {   
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').policyDefinitions]",
@@ -497,8 +550,8 @@
                 }
             }
         },
+        // nested template for delay counter
         {
-            // nested template for delay counter
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[concat('delayFor', copyIndex())]",
@@ -524,8 +577,8 @@
                 }
             }
         },
+        // Move the Subscription to the appropriate Management Group or skip if not used.
         {
-            // Move the Subscription to the appropriate Management Group or skip if not used.
             "condition": "[not(empty(parameters('managementSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -535,8 +588,8 @@
             ],
             "properties": {}
         },
+        // Move the Subscription to the appropriate Management Group or skip if not used.
         {
-            // Move the Subscription to the appropriate Management Group or skip if not used.
             "condition": "[not(empty(parameters('identitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -546,8 +599,8 @@
             ],
             "properties": {}
         },
+        // Move the Subscription to the appropriate Management Group or skip if not used.
         {
-            // Move the Subscription to the appropriate Management Group or skip if not used.
             "condition": "[not(empty(parameters('onlineLzSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -561,8 +614,8 @@
             },
             "properties": {}
         },
+        // Move the Subscription to the appropriate Management Group or skip if not used.
         {
-            // Move the Subscription to the appropriate Management Group or skip if not used.
             "condition": "[not(empty(parameters('corpLzSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -576,8 +629,8 @@
             },
             "properties": {}
         },
+        // Linked template for the creation of Log Analytics in the Management Subscription.
         {
-            // Linked template for the creation of Log Analytics in the Management Subscription.
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -598,6 +651,21 @@
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
                     },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "omsPrefix": {
+                        "value": "[parameters('omsPrefix')]"
+                    },
+                    "aaaPrefix": {
+                        "value": "[parameters('aaaPrefix')]"
+                    },
                     "enableLogAnalytics": {
                         "value": "[parameters('enableLogAnalytics')]"
                     },
@@ -610,8 +678,8 @@
                 }
             }
         },
+        // Linked template for the creation of Log Analytics Solutions in the Management Subscription.
         {
-            // Linked template for the creation of Log Analytics Solutions in the Management Subscription.
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableAntiMalware'), 'Yes'), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -630,6 +698,18 @@
                 "parameters": {
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "omsPrefix": {
+                        "value": "[parameters('omsPrefix')]"
                     },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
@@ -759,8 +839,8 @@
                 }
             }
         },
+        // Linked template for the creation of the Management Subscription.
         {
-            // Linked template for the creation of the Management Subscription.
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), or(equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableAsc'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -780,6 +860,21 @@
                 "parameters": {
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "omsPrefix": {
+                        "value": "[parameters('omsPrefix')]"
+                    },
+                    "staPrefix": {
+                        "value": "[parameters('staPrefix')]"
                     },
                     "enableLogAnalytics": {
                         "value": "[parameters('enableLogAnalytics')]"
@@ -814,6 +909,18 @@
                     "enableAscForRegistries": {
                         "value": "[parameters('enableAscForRegistries')]"
                     },
+                    "enableArcMonitoring": {
+                        "value": "[parameters('enableArcMonitoring')]"
+                    },
+                    "enableVmMonitoring": {
+                        "value": "[parameters('enableVmMonitoring')]"
+                    },
+                    "enableVmssMonitoring": {
+                        "value": "[parameters('enableVmssMonitoring')]"
+                    },
+                    "enableLtrStorage": {
+                        "value": "[parameters('enableLtrStorage')]"
+                    },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
                     },
@@ -828,21 +935,12 @@
                     },
                     "connectivitySubscriptionId": {
                         "value": "[parameters('connectivitySubscriptionId')]"
-                    },
-                    "enableVmMonitoring": {
-                        "value": "[parameters('enableVmMonitoring')]"
-                    },
-                    "enableVmssMonitoring": {
-                        "value": "[parameters('enableVmssMonitoring')]"
-                    },
-                    "enableArcMonitoring": {
-                        "value": "[parameters('enableArcMonitoring')]"
                     }
                 }
             }
         },
+        // Move the Subscription to the appropriate Management Group or skip if not used.
         {
-            // Move the Subscription to the appropriate Management Group or skip if not used.
             "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",

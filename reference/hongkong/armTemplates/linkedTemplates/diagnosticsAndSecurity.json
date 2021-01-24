@@ -26,11 +26,6 @@
             "type": "string",
             "maxLength": 3
         },
-        "managementSubscriptionId": {
-            "type": "string",
-            "maxLength": 36,
-            "defaultValue": ""
-        },
         "enableLogAnalytics": {
             "type": "string",
             "defaultValue": "No",
@@ -165,6 +160,11 @@
                 "Yes",
                 "No"
             ]
+        },
+        "managementSubscriptionId": {
+            "type": "string",
+            "maxLength": 36,
+            "defaultValue": ""
         },
         "onlineLzSubscriptionId": {
             "type": "array",
