@@ -51,6 +51,31 @@
                 "description": "Provide the Azure Storage identifier prefix"
             }
         },
+        "akvPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Key Vault identifier prefix"
+            }
+        },
+        "subscriptionTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the subscription tag"
+            }
+        },
+        "ownerTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the owner tag"
+            }
+        },
+        "costCenterTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the cost center tag"
+            }
+        },
         "enableStorage": {
             "type": "string",
             "defaultValue": "Yes",
@@ -62,6 +87,17 @@
                 "description": "If 'Yes' is selected then an Azure Storage Account will be deployed."
             }
         },
+        "enableAkv": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then an Azure Key Vault will be deployed."
+            }
+        },
         "enableLtrStorage": {
             "type": "string",
             "defaultValue": "Yes",
@@ -71,6 +107,14 @@
             ],
             "metadata": {
                 "description": "If 'Yes' is selected then Long Term Retention to Storage will be enabled."
+            }
+        },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36,
+            "metadata": {
+                "description": "Provide the tenant id"
             }
         },
         "managementSubscriptionId": {
@@ -486,6 +530,7 @@
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalytics.json')]",
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
+            "keyVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/keyVault.json')]",
             "connectivity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vwan-connectivity.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/diagnosticsAndSecurity.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]",
@@ -513,7 +558,8 @@
             "connectivity": "[take(concat('connectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('landingZone', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "identity": "[take(concat('identity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "keyVault": "[take(concat('keyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -590,7 +636,7 @@
                 }
             }
         },
-        // Move the Subscription to the appropriate Management Group or skip if not used.
+        // Move the Subscription to the appropriate Management Group or skip if not used. (Management Subscription)
         {
             "condition": "[not(empty(parameters('managementSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
@@ -601,7 +647,7 @@
             ],
             "properties": {}
         },
-        // Move the Subscription to the appropriate Management Group or skip if not used.
+        // Move the Subscription to the appropriate Management Group or skip if not used. (Identity Subscription)
         {
             "condition": "[not(empty(parameters('identitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
@@ -612,7 +658,18 @@
             ],
             "properties": {}
         },
-        // Move the Subscription to the appropriate Management Group or skip if not used.
+        // Move the Subscription to the appropriate Management Group or skip if not used. (Connectivity Subscription)
+        {
+            "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
+            "type": "Microsoft.Management/managementGroups/subscriptions",
+            "apiVersion": "[variables('apiVersions').subscriptions]",
+            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').connectivity, variables('noSubscription').connectivity)]",
+            "dependsOn": [
+                "DeploymentDelay"
+            ],
+            "properties": {}
+        },
+        // Move the Subscription to the appropriate Management Group or skip if not used. (Online Subscriptions)
         {
             "condition": "[not(empty(parameters('onlineLzSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
@@ -627,7 +684,7 @@
             },
             "properties": {}
         },
-        // Move the Subscription to the appropriate Management Group or skip if not used.
+        // Move the Subscription to the appropriate Management Group or skip if not used. (Corporate Subscription)
         {
             "condition": "[not(empty(parameters('corpLzSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
@@ -761,8 +818,8 @@
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-05-01",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-management')]",
             "name": "[variables('deploymentNames').storage]",
             "dependsOn": [
                 "DeploymentDelay"
@@ -792,6 +849,69 @@
                     },
                     "enableStorage": {
                         "value": "[parameters('enableStorage')]"
+                    },
+                    "managementSubscriptionId": {
+                        "value": "[parameters('managementSubscriptionId')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costcenterTag')]"
+                    }
+                }
+            }
+        },
+        // Linked template for the creation of Azure Key Vault
+        {
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-05-01",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "name": "[variables('deploymentNames').keyVault]",
+            "dependsOn": [
+                "DeploymentDelay"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').keyVault]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "akvPrefix": {
+                        "value": "[parameters('akvPrefix')]"
+                    },
+                    "enableAkv": {
+                        "value": "[parameters('enableAkv')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    },
+                    "tenantId": {
+                        "value": "[parameters('tenantId')]"
                     },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
@@ -993,17 +1113,6 @@
                     }
                 }
             }
-        },
-        // Move the Subscription to the appropriate Management Group or skip if not used.
-        {
-            "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
-            "type": "Microsoft.Management/managementGroups/subscriptions",
-            "apiVersion": "[variables('apiVersions').subscriptions]",
-            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').connectivity, variables('noSubscription').connectivity)]",
-            "dependsOn": [
-                "DeploymentDelay"
-            ],
-            "properties": {}
         },
         {
             // Linked template for the creation of the Connectivity Subscription.

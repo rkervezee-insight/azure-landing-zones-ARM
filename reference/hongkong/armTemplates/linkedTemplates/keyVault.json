@@ -18,11 +18,11 @@
             "type": "string",
             "maxLength": 3
         },
-        "staPrefix": {
+        "akvPrefix": {
             "type": "string",
             "maxLength": 3
         },
-        "enableStorage": {
+        "enableAkv": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -43,39 +43,42 @@
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
+        },
+        "tenantId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
         }
     },
     "variables": {
-        "deploymentName": "[take(concat(deployment().name, '-storage'), 64)]",
+        "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-security'))]",
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
             "costCenter": "[parameters('costCenterTag')]"
         },
-        "storage": {
-            "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
-            "sku": "Standard_LRS",
-            "kind": "StorageV2",
-            "use": "diagnostics",
-            "httpsOnly": true
+        "keyVault": {
+            "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+            "enabledForDeployment": true,
+            "enabledForDiskEncryption": true,
+            "enabledForTemplateDeployment": true,
+            "sku": "Standard"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
-            "storage": "2019-06-01"
+            "KeyVault": "2019-09-01"
         }
     },
     "resources": [
         {
-            // Nested deloyment for Storage (Subscription Level)
-            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "storage",
+            "name": "keyVault",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "properties": {
@@ -122,28 +125,27 @@
                                             }
                                         },
                                         {
-                                            // Nested deployment for Storage (Resource Group Level)
-                                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
-                                            "type": "Microsoft.Storage/storageAccounts",
-                                            "apiVersion": "[variables('apiVersions').storage]",
-                                            "name": "[variables('storage').name]",
+                                            "condition": "[equals(parameters('enableAkv'), 'Yes')]",
+                                            "type": "Microsoft.KeyVault/vaults",
+                                            "apiVersion": "[variables('apiVersions').KeyVault]",
+                                            "name": "[variables('keyVault').name]",
                                             "location": "[deployment().location]",
-                                            "sku": {
-                                                "name": "[variables('storage').sku]"
-                                            },
-                                            "tags": {
-                                                "storageSKU": "[variables('storage').sku]",
-                                                "storageUse": "[variables('storage').use]"
-                                            },
-                                            "kind": "[variables('storage').kind]",
                                             "properties": {
-                                                "supportsHttpsTrafficOnly": "[variables('storage').httpsOnly]",
+                                                "enabledForDeployment": "[variables('keyVault').enabledForDeployment]",
+                                                "enabledForDiskEncryption": "[variables('keyVault').enabledForDiskEncryption]",
+                                                "enabledForTemplateDeployment": "[variables('keyVault').enabledForTemplateDeployment]",
+                                                "tenantId": "[parameters('tenantId')]",
+                                                "accessPolicies": [],
+                                                "sku": {
+                                                    "name": "[variables('keyVault').sku]",
+                                                    "family": "A"
+                                                },
                                                 "networkAcls": {
-                                                    "bypass": "Logging, Metrics, AzureServices",
-                                                    "virtualNetworkRules": [],
+                                                    "defaultAction": "Deny",
+                                                    "bypass": "AzureServices",
                                                     "ipRules": [
                                                     ],
-                                                    "defaultAction": "Deny"
+                                                    "virtualNetworkRules": []
                                                 }
                                             }
                                         }

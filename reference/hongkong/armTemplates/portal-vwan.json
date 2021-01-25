@@ -252,6 +252,16 @@
                         "constraints": {
                             "required": false
                         }
+                    },
+                    {
+                        "name": "esCostCenterTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Cost Center Tag",
+                        "toolTip": "Provide a value for the cost center tag",
+                        "defaultValue": "1234",
+                        "constraints": {
+                            "required": false
+                        }
                     }
                 ]
             },
@@ -760,6 +770,26 @@
                             ]
                         },
 						"visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
+                        "name": "esAkv",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Azure Key Vault.",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, an Azure Key Vault will be deployed",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
                     },
                     {
                         "name": "esSta",
@@ -1510,26 +1540,15 @@
             "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
             "aaaPrefix": "[steps('esNaming').esAaaIdentifier]",
             "staPrefix": "[steps('esNaming').esStaIdentifier]",
-
-
-
-
-            "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
-            "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
-            "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
-            "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
-            "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
-            "location": "[steps('esPlatformConnectivity').esNwLocation]",
+            "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
+            "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
+            "ownerTag": "[steps('esNaming').esOwnerTag]",
+            "costCenterTag": "[steps('esNaming').esCostCenterTag]",
+            
+            "tenantId": "[steps('esPlatformManagement').esAzureAdTenant]",
             "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSub]",
-            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
-            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformConnectivity').esConnectivitySub))), steps('esPlatformIdentity').esIdentitySub, '')]",
-            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esOnlineLzSub, '')]",
-            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
-            "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
-            "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
-            "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
-            "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+            "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
@@ -1549,7 +1568,26 @@
             "enableAntiMalware": "[steps('esPlatformManagement').esAntiMalware]",
             "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
+            "enableAkv": "[steps('esPlatformManagement').esAkv]",
+            "enableStorage": "[steps('esPlatformManagement').esSta]",
+            "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
+
+            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
+            "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
+            "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
+            "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
+            "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
+            "location": "[steps('esPlatformConnectivity').esNwLocation]",
             
+            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformConnectivity').esConnectivitySub))), steps('esPlatformIdentity').esIdentitySub, '')]",
+            "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
+            "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
+            "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
+            "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+
+            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esOnlineLzSub, '')]",
+            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
@@ -1561,7 +1599,6 @@
             "enableStorageHttps": "[steps('lzGoalState').esHttpsStorage]",
             "denyIpForwarding": "[steps('lzGoalState').esIpForwarding]",
             "denySubnetWithoutNsg": "[steps('lzGoalState').esNsg]",
-            "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]"
