@@ -830,6 +830,26 @@
                             ]
                         },
                         "visible": "[equals(steps('esPlatformManagement').esSta, 'Yes')]"
+                    },
+                    {
+                        "name": "esRsv",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy a Recovery Services Vault.",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, a Recovery Services Vault will be deployed",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
                     }			
                 ]
             },
@@ -1541,6 +1561,7 @@
             "aaaPrefix": "[steps('esNaming').esAaaIdentifier]",
             "staPrefix": "[steps('esNaming').esStaIdentifier]",
             "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
+            "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
@@ -1571,6 +1592,7 @@
             "enableAkv": "[steps('esPlatformManagement').esAkv]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
+            "enableRsv": "[steps('esPlatformManagement').esRsv]",
 
             "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
