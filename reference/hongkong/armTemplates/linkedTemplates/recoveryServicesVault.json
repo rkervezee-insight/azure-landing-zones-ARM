@@ -49,7 +49,7 @@
         "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
-   "tags": {
+        "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
             "costCenter": "[parameters('costCenterTag')]"
@@ -69,7 +69,7 @@
     },
     "resources": [
         {
-             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "backup",

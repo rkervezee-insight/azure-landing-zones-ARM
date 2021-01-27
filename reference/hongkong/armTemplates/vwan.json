@@ -635,7 +635,7 @@
             }
         },
         // Linked template for the creation of Azure Policy Definitions
-        {   
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').policyDefinitions]",
@@ -862,7 +862,7 @@
                 }
             }
         },
-         // Linked template for the creation of Azure Storage
+        // Linked template for the creation of Azure Storage
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -1270,6 +1270,15 @@
                     },
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
