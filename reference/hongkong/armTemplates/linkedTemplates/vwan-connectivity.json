@@ -339,15 +339,17 @@
                                                 "ruleCollections": [
                                                     {
                                                         "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                                        "name": "DNS-Collection",
+                                                        "priority": 101,
                                                         "action": {
                                                             "type": "Allow"
                                                         },
                                                         "rules": [
                                                             {
                                                                 "ruleType": "NetworkRule",
-                                                                "name": "ICMP",
+                                                                "name": "DNS",
                                                                 "ipProtocols": [
-                                                                    "ICMP"
+                                                                    "Any"
                                                                 ],
                                                                 "sourceAddresses": [
                                                                     "*"
@@ -358,11 +360,11 @@
                                                                 ],
                                                                 "destinationIpGroups": [],
                                                                 "destinationFqdns": [],
-                                                                "destinationPorts": ["*"]
+                                                                "destinationPorts": [
+                                                                    "53"
+                                                                ]
                                                             }
-                                                        ],
-                                                        "name": "AllowAzureToAzureCloud",
-                                                        "priority": 101
+                                                        ]
                                                     }
                                                 ]
                                             }
@@ -376,7 +378,7 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
-                                                "[resourceId('Microsoft.Network/firewallPolicies', 'defaultAzFwPolicy')]"
+                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -393,7 +395,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                    "id": "[resourceId('Microsoft.Network/firewallPolicies', 'defaultAzFwPolicy')]"
+                                                    "id": "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
                                                 }
                                             }
                                         }
