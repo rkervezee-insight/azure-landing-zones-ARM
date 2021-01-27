@@ -99,10 +99,12 @@
         "deploymentName": "[take(concat(deployment().name, '-vwan'), 64)]",
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
+        "vHubCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+        "nwName": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
         "vWanName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vWanPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-        "azVpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
-        "azErGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
-        "vHubName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+        "vHubName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-', variables('vHubCidr')))]",
+        "vpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
+        "erGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
         "azFwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "vWanSku": "Standard",
         "vWanResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroupName'),'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
@@ -118,14 +120,7 @@
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
-            "virtualNetworks": "2020-05-01",
-            "subnets": "2020-05-01",
             "networkWatchers": "2019-11-01",
-            "privateDnsZones": "2020-01-01",
-            "virtualNetworkLinks": "2020-01-01",
-            "networkSecurityGroups": "2020-05-01",
-            "routeTables": "2020-05-01",
-            "publicIpAddresses": "2020-05-01",
             "virtualNetworkGateways": "2020-05-01",
             "azureFirewalls": "2020-05-01",
             "virtualWans": "2020-05-01",
@@ -147,6 +142,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        // Deployment of the Network Resource Group
                         {
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -174,7 +170,8 @@
                                     "contentVersion": "1.0.0.0",
                                     "parameters": {},
                                     "resources": [
-                                                                                {
+                                        // Deployment of Resource Group Lock
+                                        {
                                             "type": "Microsoft.Authorization/locks",
                                             "apiVersion": "[variables('apiVersions').locks]",
                                             "name": "ResourceGroup-DontDelete",
@@ -183,17 +180,34 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         },
+                                        // Deployment of vWAN resource
                                         {
                                             "type": "Microsoft.Network/virtualWans",
                                             "apiVersion": "[variables('apiVersions').virtualWans]",
                                             "name": "[variables('vWanName')]",
                                             "location": "[deployment().location]",
                                             "properties": {
+                                                "disableVpnEncryption": false,
+                                                "allowBranchToBranchTraffic": true,
+                                                "allowVnetToVnetTraffic": true,
+                                                "office365LocalBreakoutCategory": "None",
                                                 "virtualHubs": [],
                                                 "vpnSites": [],
                                                 "type": "[variables('vWanSku')]"
                                             }
                                         },
+                                        // Conditional deployment of Network Watcher
+                                        {   
+                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "type": "Microsoft.Network/networkWatchers",
+                                            "apiVersion": "[variables('apiVersions').networkWatchers]",
+                                            "name": "[variables('nwName')]",
+                                            "location": "[deployment().location]",
+                                            "tags": {},
+                                            "properties": {},
+                                            "resources": []
+                                        },
+                                        // Conditional deployment of Virtual Hub
                                         {
                                             "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('addressPrefix'))))]",
                                             "type": "Microsoft.Network/virtualHubs",
@@ -205,18 +219,19 @@
                                             ],
                                             "properties": {
                                                 "virtualWan": {
-                                                    "id": "[variables('vwanresourceid')]"
+                                                    "id": "[variables('vWanResourceId')]"
                                                 },
                                                 "addressPrefix": "[parameters('addressPrefix')]",
                                                 "sku": "[variables('vHubSku')]"
                                             }
                                         },
+                                        // Conditional deployment of Virtual Network Gateway (S2S)
                                         {
                                             "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableVpnGw'), 'Yes'))]",
                                             "type": "Microsoft.Network/vpnGateways",
                                             "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('azVpnGwName')]",
+                                            "name": "[variables('vpnGwName')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]"
                                             ],
@@ -230,12 +245,13 @@
                                                 "vpnGatewayScaleUnit": 1
                                             }
                                         },
+                                        // Conditional deployment of ExpressRoute Gateway
                                         {
                                             "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableErGw'), 'Yes'))]",
                                             "type": "Microsoft.Network/expressRouteGateways",
                                             "apiVersion": "[variables('apiVersions').expressRouteGateways]",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('azErGwName')]",
+                                            "name": "[variables('erGwName')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/', variables('vHubName'))]"
                                             ],
@@ -252,13 +268,67 @@
                                             }
                                         },
                                         {
+                                            "type": "Microsoft.Network/firewallPolicies",
+                                            "apiVersion": "2020-06-01",
+                                            "name": "Policy-01",
+                                            "location": "[parameters('location')]",
+                                            "properties": {
+                                                "threatIntelMode": "Alert"
+                                            }
+                                        },
+                                        {
+                                            "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
+                                            "apiVersion": "2020-06-01",
+                                            "name": "Policy-01/DefaultApplicationRuleCollectionGroup",
+                                            "location": "[parameters('location')]",
+                                            "dependsOn": [
+                                                "[resourceId('Microsoft.Network/firewallPolicies', 'Policy-01')]"
+                                            ],
+                                            "properties": {
+                                                "priority": 300,
+                                                "ruleCollections": [
+                                                    {
+                                                        "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                                        "name": "RC-01",
+                                                        "priority": 100,
+                                                        "action": {
+                                                            "type": "Allow"
+                                                        },
+                                                        "rules": [
+                                                            {
+                                                                "ruleType": "ApplicationRule",
+                                                                "name": "Allow-msft",
+                                                                "sourceAddresses": [
+                                                                    "*"
+                                                                ],
+                                                                "protocols": [
+                                                                    {
+                                                                        "port": "80",
+                                                                        "protocolType": "http"
+                                                                    },
+                                                                    {
+                                                                        "port": "443",
+                                                                        "protocolType": "https"
+                                                                    }
+                                                                ],
+                                                                "targetFqdns": [
+                                                                    "*.microsoft.com"
+                                                                ]
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        },
+                                        {
                                             "condition": "[equals(parameters('enableAzFw'), 'Yes')]",
                                             "apiVersion": "[variables('apiVersions').azureFirewalls]",
                                             "type": "Microsoft.Network/azureFirewalls",
                                             "name": "[variables('azfwname')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
+                                                "[resourceId('Microsoft.Network/firewallPolicies', 'Policy-01')]"
                                             ],
                                             "properties": {
                                                 "sku": {
