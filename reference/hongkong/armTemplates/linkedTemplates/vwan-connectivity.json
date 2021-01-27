@@ -329,9 +329,10 @@
                                             "type": "Microsoft.Network/firewallpolicies/ruleCollectionGroups",
                                             "apiVersion": "[variables('apiVersions').ruleCollectionGroups]",
                                             "name": "[concat(variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]",
-                                            "location": "australiaeast",
+                                            "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
+                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]",
+                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]"
                                             ],
                                             "properties": {
                                                 "priority": 200,
