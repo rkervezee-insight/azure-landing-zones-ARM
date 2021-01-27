@@ -344,7 +344,7 @@
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
-                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogSta), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableLtrStorage'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogSta), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of policy to enforce Log Analytics VM extension to Windows and Linux virtual machines
