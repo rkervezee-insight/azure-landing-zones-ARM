@@ -270,7 +270,7 @@
                                         {
                                             "type": "Microsoft.Network/firewallPolicies",
                                             "apiVersion": "2020-06-01",
-                                            "name": "Policy-01",
+                                            "name": "DefaultAzFwPolicy",
                                             "location": "[parameters('location')]",
                                             "properties": {
                                                 "threatIntelMode": "Alert"
@@ -279,17 +279,17 @@
                                         {
                                             "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
                                             "apiVersion": "2020-06-01",
-                                            "name": "Policy-01/DefaultApplicationRuleCollectionGroup",
+                                            "name": "DefaultAzFwPolicy/DefaultApplicationRuleCollectionGroup",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallPolicies', 'Policy-01')]"
+                                                "[resourceId('Microsoft.Network/firewallPolicies', 'DefaultAzFwPolicy')]"
                                             ],
                                             "properties": {
                                                 "priority": 300,
                                                 "ruleCollections": [
                                                     {
                                                         "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
-                                                        "name": "RC-01",
+                                                        "name": "externalUrl-Collection",
                                                         "priority": 100,
                                                         "action": {
                                                             "type": "Allow"
@@ -297,7 +297,7 @@
                                                         "rules": [
                                                             {
                                                                 "ruleType": "ApplicationRule",
-                                                                "name": "Allow-msft",
+                                                                "name": "Allow*.microsoft.com",
                                                                 "sourceAddresses": [
                                                                     "*"
                                                                 ],
@@ -328,7 +328,7 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
-                                                "[resourceId('Microsoft.Network/firewallPolicies', 'Policy-01')]"
+                                                "[resourceId('Microsoft.Network/firewallPolicies', 'DefaultAzFwPolicy')]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -345,7 +345,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                    "id": "[resourceId('Microsoft.Network/firewallPolicies', 'Policy-01')]"
+                                                    "id": "[resourceId('Microsoft.Network/firewallPolicies', 'DefaultAzFwPolicy')]"
                                                 }
                                             }
                                         }
