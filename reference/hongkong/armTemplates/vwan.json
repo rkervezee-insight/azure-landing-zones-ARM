@@ -65,6 +65,34 @@
                 "description": "Provide the Recovery Services Vault prefix"
             }
         },
+        "vngPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the virtual network gateway identifier prefix"
+            }
+        },
+        "vHubPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the virtual Hub prefix"
+            }
+        },
+        "vWanPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the virtual WAN prefix"
+            }
+        },
+        "azFwPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Firewall identifier prefix"
+            }
+        },
         "subscriptionTag": {
             "type": "string",
             "metadata": {
@@ -1185,8 +1213,8 @@
                 }
             }
         },
+        // Linked template for the creation of the Connectivity Subscription.
         {
-            // Linked template for the creation of the Connectivity Subscription.
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableVwan'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1206,6 +1234,27 @@
                 "parameters": {
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "vngPrefix": {
+                        "value": "[parameters('vngPrefix')]"
+                    },
+                    "azFwPrefix": {
+                        "value": "[parameters('azFwPrefix')]"
+                    },
+                    "vHubPrefix": {
+                        "value": "[parameters('vHubPrefix')]"
+                    },
+                    "vWanPrefix": {
+                        "value": "[parameters('vWanPrefix')]"
                     },
                     "enableVwan": {
                         "value": "[parameters('enableVwan')]"

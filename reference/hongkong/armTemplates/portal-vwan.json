@@ -214,6 +214,54 @@
                         }
                     },
                     {
+                        "name": "esVngIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Virtual Network Gateway Identifier",
+                        "toolTip": "Provide a naming prefix for the Virtual Network Gateway identifier",
+                        "defaultValue": "vng",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
+                        "name": "esAfwIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Firewall Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure Firewall identifier",
+                        "defaultValue": "afw",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
+                        "name": "esWanIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Virtual WAN Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure vWAN identifier",
+                        "defaultValue": "wan",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
+                        "name": "esHubIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Virtual Hub Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure vHub identifier",
+                        "defaultValue": "hub",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
                         "name": "esRsvIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Recovery Services Vaults Identifier",
@@ -1562,6 +1610,10 @@
             "staPrefix": "[steps('esNaming').esStaIdentifier]",
             "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
+            "vngPrefix": "[steps('esNaming').esVngIdentifier]",
+            "azFwPrefix": "[steps('esNaming').esAfwIdentifier]",
+            "vWanPrefix": "[steps('esNaming').esWanIdentifier]",
+            "vHubPrefix": "[steps('esNaming').esHubIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",

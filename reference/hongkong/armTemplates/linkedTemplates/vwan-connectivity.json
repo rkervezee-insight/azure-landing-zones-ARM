@@ -26,7 +26,7 @@
             "type": "string",
             "maxLength": 3
         },
-        "pipPrefix": {
+        "vWanPrefix": {
             "type": "string",
             "maxLength": 3
         },
@@ -34,18 +34,13 @@
             "type": "string",
             "maxLength": 3
         },
-        "udrPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
-        "nsgPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
         "subscriptionTag": {
             "type": "string"
         },
         "ownerTag": {
+            "type": "string"
+        },
+        "costCenterTag": {
             "type": "string"
         },
         "addressPrefix": {
@@ -101,19 +96,24 @@
         }
     },
     "variables": {
-        "deploymentName": "[take(concat(deployment().name, '-networking'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "deploymentName": "[take(concat(deployment().name, '-vwan'), 64)]",
+        "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-        "vWanName": "[concat(parameters('companyPrefix'), '-vwan-', parameters('location'))]",
+        "vWanName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vWanPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "azVpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
         "azErGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
-        "vHubName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-001'))]",
-        "azFwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-001'))]",
+        "vHubName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+        "azFwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "vWanSku": "Standard",
-        "vwanresourceid": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroupName'),'/providers/Microsoft.Network/virtualWans/', variables('vwanname'))]",
-        "vwanhub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
-        "vhubsku": "Standard",
-        "vpnbgpasn": 65515,
+        "vWanResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroupName'),'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
+        "vWanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
+        "vHubSku": "Standard",
+        "vpnBgpAsn": 65515,
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
+        },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
@@ -152,6 +152,11 @@
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
                             "name": "[variables('resourceGroupName')]",
+                            "tags": {
+                                "environment": "[variables('tags').environment]",
+                                "owner": "[variables('tags').owner]",
+                                "costCenter": "[variables('tags').costCenter]"
+                            },
                             "properties": {}
                         },
                         {
@@ -186,7 +191,7 @@
                                             "properties": {
                                                 "virtualHubs": [],
                                                 "vpnSites": [],
-                                                "type": "[variables('vwansku')]"
+                                                "type": "[variables('vWanSku')]"
                                             }
                                         },
                                         {
@@ -203,7 +208,7 @@
                                                     "id": "[variables('vwanresourceid')]"
                                                 },
                                                 "addressPrefix": "[parameters('addressPrefix')]",
-                                                "sku": "[variables('vhubsku')]"
+                                                "sku": "[variables('vHubSku')]"
                                             }
                                         },
                                         {
@@ -217,10 +222,10 @@
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[variables('vwanhub')]"
+                                                    "id": "[variables('vWanHub')]"
                                                 },
                                                 "bgpSettings": {
-                                                    "asn": "[variables('vpnbgpasn')]"
+                                                    "asn": "[variables('vpnBgpAsn')]"
                                                 },
                                                 "vpnGatewayScaleUnit": 1
                                             }
@@ -267,7 +272,7 @@
                                                     }
                                                 },
                                                 "virtualHub": {
-                                                    "id": "[variables('vwanhub')]"
+                                                    "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
                                                     "id": "[json('null')]"
