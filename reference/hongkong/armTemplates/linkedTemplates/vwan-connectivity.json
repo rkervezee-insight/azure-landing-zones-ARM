@@ -270,7 +270,7 @@
                                         {
                                             "type": "Microsoft.Network/firewallPolicies",
                                             "apiVersion": "2020-06-01",
-                                            "name": "DefaultAzFwPolicy",
+                                            "name": "defaultAzFwPolicy",
                                             "location": "[parameters('location')]",
                                             "properties": {
                                                 "threatIntelMode": "Alert"
@@ -279,10 +279,10 @@
                                         {
                                             "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
                                             "apiVersion": "2020-06-01",
-                                            "name": "DefaultAzFwPolicy/DefaultApplicationRuleCollectionGroup",
+                                            "name": "defaultAzFwPolicy/DefaultApplicationRuleCollectionGroup",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallPolicies', 'DefaultAzFwPolicy')]"
+                                                "[resourceId('Microsoft.Network/firewallPolicies', 'defaultAzFwPolicy')]"
                                             ],
                                             "properties": {
                                                 "priority": 300,
@@ -328,7 +328,7 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
-                                                "[resourceId('Microsoft.Network/firewallPolicies', 'DefaultAzFwPolicy')]"
+                                                "[resourceId('Microsoft.Network/firewallPolicies', 'defaultAzFwPolicy')]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -345,7 +345,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                    "id": "[resourceId('Microsoft.Network/firewallPolicies', 'DefaultAzFwPolicy')]"
+                                                    "id": "[resourceId('Microsoft.Network/firewallPolicies', 'defaultAzFwPolicy')]"
                                                 }
                                             }
                                         }
