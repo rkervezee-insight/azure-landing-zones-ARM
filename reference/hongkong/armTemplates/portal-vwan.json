@@ -941,7 +941,7 @@
                         "visible": true
                     },
                     {
-                        "name": "ConnectivitySubApi",
+                        "name": "ConnSubApi",
                         "type": "Microsoft.Solutions.ArmApiControl",
                         "request": {
                             "method": "GET",
@@ -949,7 +949,7 @@
                         }
                     },
                     {
-                        "name": "esConnectivitySubId",
+                        "name": "esConnSub",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Network Connectivity subscription (required)",
                         "toolTip": "",
@@ -960,7 +960,7 @@
                         "multiLine": true,
                         "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "constraints": {
-                            "allowedValues": "[map(steps('esPlatformConnectivity').ConnectivitySubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "allowedValues": "[map(steps('esPlatformConnectivity').ConnSubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
                             "required": true
                         }
                     },                    
@@ -1097,7 +1097,7 @@
                         "visible": true
                     },
                     {
-                        "name": "esIdentitySubsApi",
+                        "name": "esIdamSubsApi",
                         "type": "Microsoft.Solutions.ArmApiControl",
                         "request": {
                             "method": "GET",
@@ -1105,7 +1105,7 @@
                         }
                     },                  
                     {
-                        "name": "esIdentitySub",
+                        "name": "esIdamSub",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Identity subscription",
                         "toolTip": "",
@@ -1116,7 +1116,7 @@
                         "multiLine": true,
                         "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]",
                         "constraints": {
-                            "allowedValues": "[map(steps('esPlatformIdentity').esIdentitySubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "allowedValues": "[map(steps('esPlatformIdentity').esIdamSubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
                             "required": true
                         }
                     },
@@ -1646,7 +1646,7 @@
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableRsv": "[steps('esPlatformManagement').esRsv]",
 
-            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnectivitySub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnectivitySub, '')]",
+            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnSub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnSub, '')]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
@@ -1654,14 +1654,14 @@
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
             
-            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdentitySub, steps('esPlatformConnectivity').esConnectivitySub))), steps('esPlatformIdentity').esIdentitySub, '')]",
+            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformConnectivity').esConnSub))), steps('esPlatformIdentity').esIdamSub, '')]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
 
-            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esOnlineLzSub, '')]",
-            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnectivitySub))), steps('lzGoalState').esCorpLzSub, '')]",
+            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esOnlineLzSub, '')]",
+            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",

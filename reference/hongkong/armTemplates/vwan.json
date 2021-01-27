@@ -111,50 +111,6 @@
                 "description": "Provide the value for the cost center tag"
             }
         },
-        "enableStorage": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected then an Azure Storage Account will be deployed."
-            }
-        },
-        "enableAkv": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected then an Azure Key Vault will be deployed."
-            }
-        },
-        "enableLtrStorage": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected then Long Term Retention to Storage will be enabled."
-            }
-        },
-        "enableRsv": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected then an Azure Recovery Services Vault will be deployed."
-            }
-        },
         "tenantId": {
             "type": "string",
             "defaultValue": "",
@@ -492,6 +448,50 @@
                 "No"
             ]
         },
+        "enableStorage": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then an Azure Storage Account will be deployed."
+            }
+        },
+        "enableAkv": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then an Azure Key Vault will be deployed."
+            }
+        },
+        "enableLtrStorage": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then Long Term Retention to Storage will be enabled."
+            }
+        },
+        "enableRsv": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then an Azure Recovery Services Vault will be deployed."
+            }
+        },
         "denyRdp": {
             "type": "string",
             "defaultValue": "No",
@@ -554,7 +554,7 @@
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
         },
         "enableAzFw": {
             "type": "string",
@@ -713,7 +713,7 @@
             "apiVersion": "[variables('apiVersions').subscriptions]",
             "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').connectivity, variables('noSubscription').connectivity)]",
             "dependsOn": [
-                "DeploymentDelay"
+                "[variables('deploymentNames').managementGroups]"
             ],
             "properties": {}
         },
