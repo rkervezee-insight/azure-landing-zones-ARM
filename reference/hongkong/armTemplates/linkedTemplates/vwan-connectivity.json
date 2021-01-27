@@ -345,20 +345,20 @@
                                                         "rules": [
                                                             {
                                                                 "ruleType": "NetworkRule",
-                                                                "name": "AllowAzureToAzureCloud",
+                                                                "name": "ICMP",
                                                                 "ipProtocols": [
-                                                                    "Any"
+                                                                    "ICMP"
                                                                 ],
                                                                 "sourceAddresses": [
                                                                     "*"
                                                                 ],
                                                                 "sourceIpGroups": [],
                                                                 "destinationAddresses": [
-                                                                    "AzureCloud"
+                                                                    "*"
                                                                 ],
                                                                 "destinationIpGroups": [],
                                                                 "destinationFqdns": [],
-                                                                "destinationPorts": []
+                                                                "destinationPorts": ["*"]
                                                             }
                                                         ],
                                                         "name": "AllowAzureToAzureCloud",
