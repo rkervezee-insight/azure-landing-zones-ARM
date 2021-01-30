@@ -397,7 +397,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                    "id": "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
+                                                     "id": "[json('null')]"
                                                 }
                                             }
                                         }
