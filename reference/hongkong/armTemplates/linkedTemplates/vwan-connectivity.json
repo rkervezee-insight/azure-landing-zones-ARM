@@ -110,7 +110,6 @@
         "vWanSku": "Standard",
         "vWanResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroupName'),'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
         "vWanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
-        "azFwPolicy": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/firewallPolicies/', variables('azFwPolicyName'))]",
         "vHubSku": "Standard",
         "vpnBgpAsn": 65515,
         "tags": {
@@ -335,7 +334,8 @@
                                             "name": "[concat(variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
+                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]",
+                                                "[resourceId('Microsoft.Network/firewallpolicies/ruleCollectionGroups', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]"
                                             ],
                                             "properties": {
                                                 "priority": 200,
@@ -380,8 +380,10 @@
                                             "name": "[variables('azFwName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
-                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
+                                                "[resourceId('Microsoft.Network/virtualHubs',variables('vHubName'))]",
+                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]",
+                                                "[resourceId('Microsoft.Network/firewallpolicies/ruleCollectionGroups', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]",
+                                                "[resourceId('Microsoft.Network/firewallpolicies/ruleCollectionGroups', variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -398,7 +400,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                      "id": "[json('null')]"
+                                                      "id": "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
                                                 }
                                             }
                                         }
