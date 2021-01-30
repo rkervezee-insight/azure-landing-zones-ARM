@@ -864,7 +864,7 @@
                     {
                         "name": "text3",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
                             "text": "Please provide values for the Management Subscription tags:"
                         }
@@ -877,7 +877,8 @@
                         "defaultValue": "management",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esMgmtOwnerTag",
@@ -887,7 +888,8 @@
                         "defaultValue": "tulpy",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esMgmtCostCenterTag",
@@ -897,7 +899,8 @@
                         "defaultValue": "1234",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     }			
                 ]
             },
@@ -1059,7 +1062,7 @@
                     {
                         "name": "text4",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "options": {
                             "text": "Please provide values for the Connectivity Subscription tags:"
                         }
@@ -1072,7 +1075,8 @@
                         "defaultValue": "connectivity",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]"
                     },
                     {
                         "name": "esConnOwnerTag",
@@ -1082,7 +1086,8 @@
                         "defaultValue": "tulpy",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]"
                     },
                     {
                         "name": "esConnCostCenterTag",
@@ -1092,7 +1097,8 @@
                         "defaultValue": "1234",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]"
                     }
                 ]
             },
@@ -1254,7 +1260,7 @@
                     {
                         "name": "text4",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]",
                         "options": {
                             "text": "Please provide values for the Identity Subscription tags:"
                         }
@@ -1267,7 +1273,8 @@
                         "defaultValue": "identity",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
                         "name": "esIdOwnerTag",
@@ -1277,7 +1284,8 @@
                         "defaultValue": "tulpy",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
                         "name": "esIdCostCenterTag",
@@ -1287,7 +1295,8 @@
                         "defaultValue": "1234",
                         "constraints": {
                             "required": false
-                        }
+                        },
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     }
                 ]
             },                     
