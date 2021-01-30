@@ -334,7 +334,7 @@
                                             "name": "[concat(variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]",
+                                                "[resourceId('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]",
                                                 "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups/', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]"
                                             ],
                                             "properties": {
@@ -381,9 +381,9 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vhubname'))]",
-                                                "[concat('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]",
-                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]",
-                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups', variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]"
+                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]",
+                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups/', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]",
+                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups/', variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]"
                                             ],
                                             "properties": {
                                                 "sku": {
