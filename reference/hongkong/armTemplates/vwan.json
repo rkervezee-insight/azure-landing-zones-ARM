@@ -948,14 +948,14 @@
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
                     },
-                    "subscriptionTag": {
-                        "value": "[parameters('mgmtsubscriptionTag')]"
+                    "mgmtSubscriptionTag": {
+                        "value": "[parameters('mgmtSubscriptionTag')]"
                     },
-                    "ownerTag": {
-                        "value": "[parameters('mgmtownerTag')]"
+                    "mgmtOwnerTag": {
+                        "value": "[parameters('mgmtOwnerTag')]"
                     },
-                    "costCenterTag": {
-                        "value": "[parameters('mgmtcostcenterTag')]"
+                    "mgmtCostCenterTag": {
+                        "value": "[parameters('mgmtCostcenterTag')]"
                     }
                 }
             }
@@ -1050,13 +1050,13 @@
                     "enableRsv": {
                         "value": "[parameters('enableRsv')]"
                     },
-                    "subscriptionTag": {
+                    "mgmtSubscriptionTag": {
                         "value": "[parameters('mgmtsubscriptionTag')]"
                     },
-                    "ownerTag": {
+                    "mgmtOwnerTag": {
                         "value": "[parameters('mgmtownerTag')]"
                     },
-                    "costCenterTag": {
+                    "mgmtCostCenterTag": {
                         "value": "[parameters('mgmtcostCenterTag')]"
                     },
                     "managementSubscriptionId": {
@@ -1111,13 +1111,13 @@
                     "enableVmBackupForIdentity": {
                         "value": "[parameters('enableVmBackupForIdentity')]"
                     },
-                    "subscriptionTag": {
+                    "idSubscriptionTag": {
                         "value": "[parameters('idSubscriptionTag')]"
                     },
-                    "ownerTag": {
+                    "idOwnerTag": {
                         "value": "[parameters('idOwnerTag')]"
                     },
-                    "costCenterTag": {
+                    "idCostCenterTag": {
                         "value": "[parameters('idCostCenterTag')]"
                     },
                     "identitySubscriptionId": {
@@ -1342,13 +1342,13 @@
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
                     },
-                    "subscriptionTag": {
+                    "connSubscriptionTag": {
                         "value": "[parameters('connSubscriptionTag')]"
                     },
-                    "ownerTag": {
+                    "connOwnerTag": {
                         "value": "[parameters('connOwnerTag')]"
                     },
-                    "costCenterTag": {
+                    "connCostCenterTag": {
                         "value": "[parameters('connCostCenterTag')]"
                     },
                     "location": {
