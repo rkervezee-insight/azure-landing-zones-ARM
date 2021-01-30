@@ -996,14 +996,14 @@
                     "enableAkv": {
                         "value": "[parameters('enableAkv')]"
                     },
-                    "subscriptionTag": {
-                        "value": "[parameters('mgmtsubscriptionTag')]"
+                    "mgmtSubscriptionTag": {
+                        "value": "[parameters('mgmtSubscriptionTag')]"
                     },
-                    "ownerTag": {
-                        "value": "[parameters('mgmtownerTag')]"
+                    "mgmtOwnerTag": {
+                        "value": "[parameters('mgmtOwnerTag')]"
                     },
-                    "costCenterTag": {
-                        "value": "[parameters('mgmtcostCenterTag')]"
+                    "mgmtCostCenterTag": {
+                        "value": "[parameters('mgmtCostCenterTag')]"
                     },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
