@@ -272,44 +272,6 @@
                             "regex": "^[a-z0-9A-Z-]{3}$",
                             "validationMessage": "The prefix must be 3 characters."
                         }
-                    },
-                    {
-                        "name": "text3",
-                        "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
-                        "options": {
-                            "text": "Please provide values for the Landing Zone tags:"
-                        }
-                    },
-                    {
-                        "name": "esSubscriptionTag",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subscription Tag",
-                        "toolTip": "Provide a value for the subscription tag",
-                        "defaultValue": "platform",
-                        "constraints": {
-                            "required": false
-                        }
-                    },
-                    {
-                        "name": "esOwnerTag",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Owner Tag",
-                        "toolTip": "Provide a value for the owner tag",
-                        "defaultValue": "tulpy",
-                        "constraints": {
-                            "required": false
-                        }
-                    },
-                    {
-                        "name": "esCostCenterTag",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Cost Center Tag",
-                        "toolTip": "Provide a value for the cost center tag",
-                        "defaultValue": "1234",
-                        "constraints": {
-                            "required": false
-                        }
                     }
                 ]
             },
@@ -323,7 +285,7 @@
                 "bladeTitle": "lzGs",
                 "elements": [
                     {
-                        "name": "infoBox1",
+                        "name": "infoBdox1",
                         "type": "Microsoft.Common.InfoBox",
                         "visible": true,
                         "options": {
@@ -898,6 +860,44 @@
                             ]
                         },
                         "visible": true
+                    },
+                    {
+                        "name": "text3",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "Please provide values for the Management Subscription tags:"
+                        }
+                    },
+                    {
+                        "name": "esMgmtSubscriptionTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subscription Tag",
+                        "toolTip": "Provide a value for the subscription tag",
+                        "defaultValue": "management",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esMgmtOwnerTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Owner Tag",
+                        "toolTip": "Provide a value for the owner tag",
+                        "defaultValue": "tulpy",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esMgmtCostCenterTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Cost Center Tag",
+                        "toolTip": "Provide a value for the cost center tag",
+                        "defaultValue": "1234",
+                        "constraints": {
+                            "required": false
+                        }
                     }			
                 ]
             },
@@ -1054,6 +1054,44 @@
                                     "value": "No"
                                 }
                             ]
+                        }
+                    },
+                    {
+                        "name": "text4",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "Please provide values for the Connectivity Subscription tags:"
+                        }
+                    },
+                    {
+                        "name": "esConnSubscriptionTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subscription Tag",
+                        "toolTip": "Provide a value for the subscription tag",
+                        "defaultValue": "connectivity",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esConnOwnerTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Owner Tag",
+                        "toolTip": "Provide a value for the owner tag",
+                        "defaultValue": "tulpy",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esConnCostCenterTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Cost Center Tag",
+                        "toolTip": "Provide a value for the cost center tag",
+                        "defaultValue": "1234",
+                        "constraints": {
+                            "required": false
                         }
                     }
                 ]
@@ -1212,6 +1250,44 @@
                             ]
                         },
                         "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
+                    },
+                    {
+                        "name": "text4",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "Please provide values for the Identity Subscription tags:"
+                        }
+                    },
+                    {
+                        "name": "esIdSubscriptionTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subscription Tag",
+                        "toolTip": "Provide a value for the subscription tag",
+                        "defaultValue": "identity",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esIdOwnerTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Owner Tag",
+                        "toolTip": "Provide a value for the owner tag",
+                        "defaultValue": "tulpy",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esIdCostCenterTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Cost Center Tag",
+                        "toolTip": "Provide a value for the cost center tag",
+                        "defaultValue": "1234",
+                        "constraints": {
+                            "required": false
+                        }
                     }
                 ]
             },                     
@@ -1615,9 +1691,7 @@
             "azFwPrefix": "[steps('esNaming').esAfwIdentifier]",
             "vWanPrefix": "[steps('esNaming').esWanIdentifier]",
             "vHubPrefix": "[steps('esNaming').esHubIdentifier]",
-            "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
-            "ownerTag": "[steps('esNaming').esOwnerTag]",
-            "costCenterTag": "[steps('esNaming').esCostCenterTag]",
+           
             
             "tenantId": "[steps('esPlatformManagement').esAzureAdTenant]",
             "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSub]",
@@ -1646,6 +1720,9 @@
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableRsv": "[steps('esPlatformManagement').esRsv]",
+            "mgmtSubscriptionTag": "[steps('esPlatformManagement').esMgmtSubscriptionTag]",
+            "mgmtOwnerTag": "[steps('esPlatformManagement').esMgmtOwnerTag]",
+            "mgmtCostCenterTag": "[steps('esPlatformManagement').esMgmtCostCenterTag]",
 
             "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnSub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnSub, '')]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
@@ -1654,12 +1731,19 @@
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
+            "connSubscriptionTag": "[steps('esPlatformConnectivity').esConnSubscriptionTag]",
+            "connOwnerTag": "[steps('esPlatformConnectivity').esConnOwnerTag]",
+            "connCostCenterTag": "[steps('esPlatformConnectivity').esConnCostCenterTag]",
             
             "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformConnectivity').esConnSub))), steps('esPlatformIdentity').esIdamSub, '')]",
+            "enableIdentity": "[steps('esPlatformIdentity').esIdentity]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+            "idSubscriptionTag": "[steps('esPlatformIdentity').esIdSubscriptionTag]",
+            "idOwnerTag": "[steps('esPlatformIdentity').esIdOwnerTag]",
+            "idCostCenterTag": "[steps('esPlatformIdentity').esIdCostCenterTag]",
 
             "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esOnlineLzSub, '')]",
             "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esCorpLzSub, '')]",

@@ -34,13 +34,13 @@
             "type": "string",
             "maxLength": 3
         },
-        "subscriptionTag": {
+        "connSubscriptionTag": {
             "type": "string"
         },
-        "ownerTag": {
+        "connOwnerTag": {
             "type": "string"
         },
-        "costCenterTag": {
+        "connCostCenterTag": {
             "type": "string"
         },
         "addressPrefix": {
@@ -114,9 +114,9 @@
         "vHubSku": "Standard",
         "vpnBgpAsn": 65515,
         "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
+            "environment": "[parameters('connSubscriptionTag')]",
+            "owner": "[parameters('connOwnerTag')]",
+            "costCenter": "[parameters('connCostCenterTag')]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -398,7 +398,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                     "id": "[variables('azFwPolicy')]"
+                                                      "id": "[json('null')]"
                                                 }
                                             }
                                         }

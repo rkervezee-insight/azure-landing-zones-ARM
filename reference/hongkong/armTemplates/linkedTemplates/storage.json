@@ -30,13 +30,13 @@
             ],
             "defaultValue": "Yes"
         },
-        "subscriptionTag": {
+        "mgmtSubscriptionTag": {
             "type": "string"
         },
-        "ownerTag": {
+        "mgmtOwnerTag": {
             "type": "string"
         },
-        "costCenterTag": {
+        "mgmtCostCenterTag": {
             "type": "string"
         },
         "managementSubscriptionId": {
@@ -51,9 +51,9 @@
         "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
+            "environment": "[parameters('mgmtSubscriptionTag')]",
+            "owner": "[parameters('mgmtOwnerTag')]",
+            "costCenter": "[parameters('mgmtCostCenterTag')]"
         },
         "storage": {
             "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",

@@ -30,13 +30,13 @@
             ],
             "defaultValue": "Yes"
         },
-        "subscriptionTag": {
+        "mgmtSubscriptionTag": {
             "type": "string"
         },
-        "ownerTag": {
+        "mgmtOwnerTag": {
             "type": "string"
         },
-        "costCenterTag": {
+        "mgmtCostCenterTag": {
             "type": "string"
         },
         "managementSubscriptionId": {
@@ -50,9 +50,9 @@
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
         "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
+            "environment": "[parameters('mgmtSubscriptionTag')]",
+            "owner": "[parameters('mgmtOwnerTag')]",
+            "costCenter": "[parameters('mgmtCostCenterTag')]"
         },
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",

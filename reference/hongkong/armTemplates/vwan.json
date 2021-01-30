@@ -93,19 +93,55 @@
                 "description": "Provide the Azure Firewall identifier prefix"
             }
         },
-        "subscriptionTag": {
+        "mgmtSubscriptionTag": {
             "type": "string",
             "metadata": {
                 "description": "Provide the value for the subscription tag"
             }
         },
-        "ownerTag": {
+        "mgmtOwnerTag": {
             "type": "string",
             "metadata": {
                 "description": "Provide the value for the owner tag"
             }
         },
-        "costCenterTag": {
+        "mgmtCostCenterTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the cost center tag"
+            }
+        },
+        "connSubscriptionTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the subscription tag"
+            }
+        },
+        "connOwnerTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the owner tag"
+            }
+        },
+        "connCostCenterTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the cost center tag"
+            }
+        },
+        "idSubscriptionTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the subscription tag"
+            }
+        },
+        "idOwnerTag": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the value for the owner tag"
+            }
+        },
+        "idCostCenterTag": {
             "type": "string",
             "metadata": {
                 "description": "Provide the value for the cost center tag"
@@ -508,6 +544,17 @@
                 "No"
             ]
         },
+        "enableIdentity": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected then the Identity Subscription will be enabled."
+            }
+        },
         "denyIpForwarding": {
             "type": "string",
             "defaultValue": "No",
@@ -902,13 +949,13 @@
                         "value": "[parameters('managementSubscriptionId')]"
                     },
                     "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
+                        "value": "[parameters('mgmtsubscriptionTag')]"
                     },
                     "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
+                        "value": "[parameters('mgmtownerTag')]"
                     },
                     "costCenterTag": {
-                        "value": "[parameters('costcenterTag')]"
+                        "value": "[parameters('mgmtcostcenterTag')]"
                     }
                 }
             }
@@ -950,13 +997,13 @@
                         "value": "[parameters('enableAkv')]"
                     },
                     "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
+                        "value": "[parameters('mgmtsubscriptionTag')]"
                     },
                     "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
+                        "value": "[parameters('mgmtownerTag')]"
                     },
                     "costCenterTag": {
-                        "value": "[parameters('costCenterTag')]"
+                        "value": "[parameters('mgmtcostCenterTag')]"
                     },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
@@ -1004,13 +1051,13 @@
                         "value": "[parameters('enableRsv')]"
                     },
                     "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
+                        "value": "[parameters('mgmtsubscriptionTag')]"
                     },
                     "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
+                        "value": "[parameters('mgmtownerTag')]"
                     },
                     "costCenterTag": {
-                        "value": "[parameters('costCenterTag')]"
+                        "value": "[parameters('mgmtcostCenterTag')]"
                     },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
@@ -1040,6 +1087,18 @@
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
                     },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "enableIdentity": {
+                        "value": "[parameters('enableIdentity')]"
+                    },
                     "denyRdpForIdentity": {
                         "value": "[parameters('denyRdpForIdentity')]"
                     },
@@ -1051,6 +1110,18 @@
                     },
                     "enableVmBackupForIdentity": {
                         "value": "[parameters('enableVmBackupForIdentity')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('idSubscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('idOwnerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('idCostCenterTag')]"
+                    },
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
                     }
                 }
             }
@@ -1272,13 +1343,13 @@
                         "value": "[parameters('enableErGw')]"
                     },
                     "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
+                        "value": "[parameters('connSubscriptionTag')]"
                     },
                     "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
+                        "value": "[parameters('connOwnerTag')]"
                     },
                     "costCenterTag": {
-                        "value": "[parameters('costCenterTag')]"
+                        "value": "[parameters('connCostCenterTag')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
