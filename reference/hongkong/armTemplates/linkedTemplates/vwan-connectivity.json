@@ -110,6 +110,7 @@
         "vWanSku": "Standard",
         "vWanResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroupName'),'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
         "vWanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
+        "azFwPolicy": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/firewallPolicies/', variables('azFwPolicyName'))]",
         "vHubSku": "Standard",
         "vpnBgpAsn": 65515,
         "tags": {
@@ -397,7 +398,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                     "id": "[json('null')]"
+                                                     "id": "[variables('azFwPolicy')]"
                                                 }
                                             }
                                         }
