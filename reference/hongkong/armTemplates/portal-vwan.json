@@ -924,7 +924,7 @@
                         "name": "esVwan",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Virtual WAN",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual WAN",
                         "constraints": {
                             "allowedValues": [
@@ -988,6 +988,7 @@
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Region for the first virtual hub",
+                        "defaultValue": "Australai East",
                         "toolTip": "Select the target region for you connectivity deployment (requires you to provide a subscriptionId for connectivity)",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
@@ -1039,13 +1040,13 @@
                         "name": "esAzFw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {

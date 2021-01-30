@@ -123,19 +123,20 @@
             "locks": "2016-09-01",
             "networkWatchers": "2019-11-01",
             "virtualNetworkGateways": "2020-05-01",
-            "azureFirewalls": "2020-07-01",
-            "firewallPolicies": "2020-07-01",
-            "ruleCollectionGroups": "2020-07-01",
-            "virtualWans": "2020-05-01",
-            "virtualHubs": "2020-07-01",
+            "azureFirewalls": "2020-06-01",
+            "firewallPolicies": "2020-06-01",
+            "ruleCollectionGroups": "2020-06-01",
+            "virtualWans": "2020-06-01",
+            "virtualHubs": "2020-06-01",
             "expressRouteGateways": "2020-07-01"
         }
     },
     "resources": [
+        // Subscription Level Deployment
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "networking",
+            "name": "[concat(parameters('companyPrefix'), '-connectivitySub')]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "properties": {
@@ -158,6 +159,7 @@
                             },
                             "properties": {}
                         },
+                        // Resource Group Level Deployment
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
@@ -325,6 +327,7 @@
                                                 ]
                                             }
                                         },
+                                        // Deployment of Azure Firewall Policy Rule Collection Group (NetworkRule)
                                         {
                                             "type": "Microsoft.Network/firewallpolicies/ruleCollectionGroups",
                                             "apiVersion": "[variables('apiVersions').ruleCollectionGroups]",
@@ -373,11 +376,11 @@
                                             "condition": "[equals(parameters('enableAzFw'), 'Yes')]",
                                             "type": "Microsoft.Network/azureFirewalls",
                                             "apiVersion": "[variables('apiVersions').azureFirewalls]",
-                                            "name": "[variables('azfwname')]",
+                                            "name": "[variables('azFwName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
-                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
+                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
                                             ],
                                             "properties": {
                                                 "sku": {
