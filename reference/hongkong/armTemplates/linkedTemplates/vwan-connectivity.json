@@ -335,7 +335,7 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]",
-                                                "[resourceId('Microsoft.Network/firewallpolicies/ruleCollectionGroups', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]"
+                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups/', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]"
                                             ],
                                             "properties": {
                                                 "priority": 200,

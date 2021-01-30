@@ -1065,8 +1065,8 @@
                 }
             }
         },
+        // Linked template for the creation of Identity Subscription
         {
-            // Linked template for the creation of Identity Subscription
             "condition": "[not(empty(parameters('identitySubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
