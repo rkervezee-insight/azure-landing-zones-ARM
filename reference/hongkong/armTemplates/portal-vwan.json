@@ -1866,7 +1866,7 @@
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
-            "connSubscriptionTag": "[steps('esPlatformConnectivity').esConnSubscriptionTag]",
+            "connSubscriptionTag": "[steps('esPlatformConnectivity').esConnSubscriptionTag]",     
             "connOwnerTag": "[steps('esPlatformConnectivity').esConnOwnerTag]",
             "connCostCenterTag": "[steps('esPlatformConnectivity').esConnCostCenterTag]",
             
