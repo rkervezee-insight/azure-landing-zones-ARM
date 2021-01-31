@@ -148,6 +148,7 @@
                     "resources": [
                         // Deployment of the Network Resource Group
                         {
+                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -187,6 +188,7 @@
                                         },
                                         // Deployment of vWAN resource
                                         {
+                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualWans",
                                             "apiVersion": "[variables('apiVersions').virtualWans]",
                                             "name": "[variables('vWanName')]",
