@@ -916,14 +916,6 @@
                             ]
                         },
                         "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
-                    },
-                    {
-                        "name": "text3",
-                        "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
-                        "options": {
-                            "text": "Please provide values for the Management Subscription tags:"
-                        }
                     }
                 ]
             },
@@ -1257,7 +1249,7 @@
                         "filter": true,
                         "filterPlaceholder": "Filter items ...",
                         "multiLine": true,
-                        "visible": true,
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformIdentity').tenantApi.value, (tenant) => parse(concat('{\"label\":\"', tenant.displayName, '\",\"description\":\"', tenant.tenantId, '\",\"value\":\"', toLower(tenant.tenantId), '\"}')) )]",
                             "required": true
@@ -1281,7 +1273,7 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
                         "name": "esRsv",
@@ -1301,7 +1293,7 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     }
                 ]
             },
