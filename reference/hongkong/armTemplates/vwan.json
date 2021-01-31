@@ -1459,6 +1459,15 @@
                     "enablePrivateDnsZonesAkv": {
                         "value": "[parameters('enablePrivateDnsZonesAkv')]"
                     },
+                    "mgmtSubscriptionTag": {
+                        "value": "[parameters('mgmtSubscriptionTag')]"
+                    },
+                    "mgmtOwnerTag": {
+                        "value": "[parameters('mgmtOwnerTag')]"
+                    },
+                    "mgmtCostCenterTag": {
+                        "value": "[parameters('mgmtCostcenterTag')]"
+                    },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
                     }
