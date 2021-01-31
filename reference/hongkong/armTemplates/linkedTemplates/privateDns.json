@@ -70,15 +70,6 @@
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
-        },
-        "mgmtSubscriptionTag": {
-            "type": "string"
-        },
-        "mgmtOwnerTag": {
-            "type": "string"
-        },
-        "mgmtCostCenterTag": {
-            "type": "string"
         }
     },
     "variables": {
@@ -92,11 +83,6 @@
             "queue": "privatelink.queue.core.windows.net",
             "tables": "privatelink.table.core.windows.net",
             "keyVault": "privatelink.vaultcore.azure.net"
-        },
-        "tags": {
-            "environment": "[parameters('mgmtSubscriptionTag')]",
-            "owner": "[parameters('mgmtOwnerTag')]",
-            "costCenter": "[parameters('mgmtCostCenterTag')]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -113,11 +99,6 @@
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
-            "tags": {
-                "environment": "[variables('tags').environment]",
-                "owner": "[variables('tags').owner]",
-                "costCenter": "[variables('tags').costCenter]"
-            },
             "properties": {}
         },
         {

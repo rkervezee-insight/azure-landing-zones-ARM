@@ -93,60 +93,6 @@
                 "description": "Provide the Azure Firewall identifier prefix"
             }
         },
-        "mgmtSubscriptionTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the subscription tag"
-            }
-        },
-        "mgmtOwnerTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the owner tag"
-            }
-        },
-        "mgmtCostCenterTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the cost center tag"
-            }
-        },
-        "connSubscriptionTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the subscription tag"
-            }
-        },
-        "connOwnerTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the owner tag"
-            }
-        },
-        "connCostCenterTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the cost center tag"
-            }
-        },
-        "idSubscriptionTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the subscription tag"
-            }
-        },
-        "idOwnerTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the owner tag"
-            }
-        },
-        "idCostCenterTag": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the value for the cost center tag"
-            }
-        },
         "tenantId": {
             "type": "string",
             "defaultValue": "",
@@ -997,15 +943,6 @@
                     },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"
-                    },
-                    "mgmtSubscriptionTag": {
-                        "value": "[parameters('mgmtSubscriptionTag')]"
-                    },
-                    "mgmtOwnerTag": {
-                        "value": "[parameters('mgmtOwnerTag')]"
-                    },
-                    "mgmtCostCenterTag": {
-                        "value": "[parameters('mgmtCostcenterTag')]"
                     }
                 }
             }
@@ -1015,7 +952,7 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
             "name": "[variables('deploymentNames').keyVault]",
             "dependsOn": [
                 "DeploymentDelay"
@@ -1046,20 +983,11 @@
                     "enableAkv": {
                         "value": "[parameters('enableAkv')]"
                     },
-                    "mgmtSubscriptionTag": {
-                        "value": "[parameters('mgmtSubscriptionTag')]"
-                    },
-                    "mgmtOwnerTag": {
-                        "value": "[parameters('mgmtOwnerTag')]"
-                    },
-                    "mgmtCostCenterTag": {
-                        "value": "[parameters('mgmtCostCenterTag')]"
-                    },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
                     },
-                    "managementSubscriptionId": {
-                        "value": "[parameters('managementSubscriptionId')]"
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
                     }
                 }
             }
@@ -1069,7 +997,7 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
                 "DeploymentDelay"
@@ -1100,17 +1028,8 @@
                     "enableRsv": {
                         "value": "[parameters('enableRsv')]"
                     },
-                    "mgmtSubscriptionTag": {
-                        "value": "[parameters('mgmtsubscriptionTag')]"
-                    },
-                    "mgmtOwnerTag": {
-                        "value": "[parameters('mgmtownerTag')]"
-                    },
-                    "mgmtCostCenterTag": {
-                        "value": "[parameters('mgmtcostCenterTag')]"
-                    },
-                    "managementSubscriptionId": {
-                        "value": "[parameters('managementSubscriptionId')]"
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
                     }
                 }
             }
@@ -1160,15 +1079,6 @@
                     },
                     "enableVmBackupForIdentity": {
                         "value": "[parameters('enableVmBackupForIdentity')]"
-                    },
-                    "idSubscriptionTag": {
-                        "value": "[parameters('idSubscriptionTag')]"
-                    },
-                    "idOwnerTag": {
-                        "value": "[parameters('idOwnerTag')]"
-                    },
-                    "idCostCenterTag": {
-                        "value": "[parameters('idCostCenterTag')]"
                     },
                     "identitySubscriptionId": {
                         "value": "[parameters('identitySubscriptionId')]"
@@ -1392,15 +1302,6 @@
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
                     },
-                    "connSubscriptionTag": {
-                        "value": "[parameters('connSubscriptionTag')]"
-                    },
-                    "connOwnerTag": {
-                        "value": "[parameters('connOwnerTag')]"
-                    },
-                    "connCostCenterTag": {
-                        "value": "[parameters('connCostCenterTag')]"
-                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
@@ -1458,15 +1359,6 @@
                     },
                     "enablePrivateDnsZonesAkv": {
                         "value": "[parameters('enablePrivateDnsZonesAkv')]"
-                    },
-                    "mgmtSubscriptionTag": {
-                        "value": "[parameters('mgmtSubscriptionTag')]"
-                    },
-                    "mgmtOwnerTag": {
-                        "value": "[parameters('mgmtOwnerTag')]"
-                    },
-                    "mgmtCostCenterTag": {
-                        "value": "[parameters('mgmtCostcenterTag')]"
                     },
                     "managementSubscriptionId": {
                         "value": "[parameters('managementSubscriptionId')]"

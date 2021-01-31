@@ -58,15 +58,6 @@
             ],
             "defaultValue": "No"
         },
-        "idSubscriptionTag": {
-            "type": "string"
-        },
-        "idOwnerTag": {
-            "type": "string"
-        },
-        "idCostCenterTag": {
-            "type": "string"
-        },
         "identitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
@@ -94,11 +85,6 @@
         "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-identity'))]",
-        "tags": {
-            "environment": "[parameters('idSubscriptionTag')]",
-            "owner": "[parameters('idOwnerTag')]",
-            "costCenter": "[parameters('idCostCenterTag')]"
-        },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
@@ -195,11 +181,6 @@
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
                             "name": "[variables('resourceGroupName')]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]",
-                                "costCenter": "[variables('tags').costCenter]"
-                            },
                             "properties": {}
                         },
                         {

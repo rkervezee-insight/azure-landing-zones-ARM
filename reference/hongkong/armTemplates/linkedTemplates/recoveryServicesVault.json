@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
@@ -30,16 +30,7 @@
             ],
             "defaultValue": "Yes"
         },
-        "mgmtSubscriptionTag": {
-            "type": "string"
-        },
-        "mgmtOwnerTag": {
-            "type": "string"
-        },
-        "mgmtCostCenterTag": {
-            "type": "string"
-        },
-        "managementSubscriptionId": {
+        "identitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -49,11 +40,6 @@
         "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
-        "tags": {
-            "environment": "[parameters('mgmtSubscriptionTag')]",
-            "owner": "[parameters('mgmtOwnerTag')]",
-            "costCenter": "[parameters('mgmtCostCenterTag')]"
-        },
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
             "policyName": "[toLower(concat(parameters('companyPrefix'),'-backuppolicy'))]",
@@ -69,81 +55,59 @@
     },
     "resources": [
         {
-            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "[variables('apiVersions').resourceGroups]",
+            "location": "[deployment().location]",
+            "name": "[variables('resourceGroupName')]",
+            "properties": {}
+        },
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "backup",
-            "location": "[deployment().location]",
-            "subscriptionId": "[parameters('managementSubscriptionId')]",
+            "name": "[variables('deploymentName')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
                         {
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "[variables('apiVersions').resourceGroups]",
+                            "type": "Microsoft.Authorization/locks",
+                            "apiVersion": "[variables('apiVersions').locks]",
+                            "name": "ResourceGroup-DontDelete",
+                            "properties": {
+                                "level": "CanNotDelete",
+                                "notes": "Prevent deletion of the resourceGroup"
+                            }
+                        },
+                        {
+                            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
+                            "type": "Microsoft.RecoveryServices/vaults",
+                            "apiVersion": "[variables('apiVersions').vaults]",
+                            "name": "[variables('recoveryServicesVault').name]",
+                            "tags": { "vaultStorageType": "[variables('recoveryServicesVault').vaultStorageType]" },
                             "location": "[deployment().location]",
-                            "name": "[variables('resourceGroupName')]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]",
-                                "costCenter": "[variables('tags').costCenter]"
+                            "sku": {
+                                "name": "RS0",
+                                "tier": "Standard"
                             },
                             "properties": {}
                         },
                         {
-                            "type": "Microsoft.Resources/deployments",
-                            "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentName')]",
-                            "resourceGroup": "[variables('resourceGroupName')]",
+                            "type": "Microsoft.RecoveryServices/vaults/backupstorageconfig",
+                            "apiVersion": "[variables('apiVersions').backupstorageconfig]",
+                            "name": "[concat(variables('recoveryServicesVault').name, '/vaultstorageconfig')]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+                                "[concat('Microsoft.RecoveryServices/vaults/', variables('recoveryServicesVault').name)]"
                             ],
                             "properties": {
-                                "mode": "Incremental",
-                                "template": {
-                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                    "contentVersion": "1.0.0.0",
-                                    "parameters": {},
-                                    "resources": [
-                                        {
-                                            "type": "Microsoft.Authorization/locks",
-                                            "apiVersion": "[variables('apiVersions').locks]",
-                                            "name": "ResourceGroup-DontDelete",
-                                            "properties": {
-                                                "level": "CanNotDelete",
-                                                "notes": "Prevent deletion of the resourceGroup"
-                                            }
-                                        },
-                                        {
-                                            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
-                                            "type": "Microsoft.RecoveryServices/vaults",
-                                            "apiVersion": "[variables('apiVersions').vaults]",
-                                            "name": "[variables('recoveryServicesVault').name]",
-                                            "tags": { "vaultStorageType": "[variables('recoveryServicesVault').vaultStorageType]" },
-                                            "location": "[deployment().location]",
-                                            "sku": {
-                                                "name": "RS0",
-                                                "tier": "Standard"
-                                            },
-                                            "properties": {}
-                                        },
-                                        {
-                                            "type": "Microsoft.RecoveryServices/vaults/backupstorageconfig",
-                                            "apiVersion": "[variables('apiVersions').backupstorageconfig]",
-                                            "name": "[concat(variables('recoveryServicesVault').name, '/vaultstorageconfig')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.RecoveryServices/vaults/', variables('recoveryServicesVault').name)]"
-                                            ],
-                                            "properties": {
-                                                "StorageModelType": "[variables('recoveryServicesVault').vaultStorageType]"
-                                            }
-                                        }
-                                    ]
-                                }
+                                "StorageModelType": "[variables('recoveryServicesVault').vaultStorageType]"
                             }
                         }
                     ]
