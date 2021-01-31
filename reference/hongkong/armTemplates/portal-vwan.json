@@ -862,6 +862,126 @@
                         "visible": true
                     },
                     {
+                        "name": "esEnablePrivateDnsZones",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Azure Private DNS Zones.",
+                        "defaultValue": "No",
+                        "toolTip": "If 'Yes' is selected, Azure Private DNS Zones will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "esEnablePrivateDnsZoneBlob",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Private DNS Zone - Blob Storage",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                    },
+                    {
+                        "name": "esEnablePrivateDnsZoneAkv",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Private DNS Zone - Azure Key Vault",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                    },
+                    {
+                        "name": "esEnablePrivateDnsZoneFiles",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Private DNS Zone - Azure Files",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                    },
+                    {
+                        "name": "esEnablePrivateDnsZoneQueue",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Private DNS Zone - Queue Storage",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                    },
+                    {
+                        "name": "esEnablePrivateDnsZoneTable",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Private DNS Zone - Table Storage",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                    },
+                    {
                         "name": "text3",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
@@ -1729,6 +1849,12 @@
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableRsv": "[steps('esPlatformManagement').esRsv]",
+            "enablePrivateDnsZones": "[steps('esPlatformManagement').esPrivateDnsZones]",
+            "enablePrivateDnsZonesTable": "[steps('esPlatformManagement').esEnablePrivateDnsZoneTable]",
+            "enablePrivateDnsZonesQueue": "[steps('esPlatformManagement').esEnablePrivateDnsZoneQueue]",
+            "enablePrivateDnsZonesFiles": "[steps('esPlatformManagement').esEnablePrivateDnsZoneFiles]",
+            "enablePrivateDnsZonesBlob": "[steps('esPlatformManagement').esEnablePrivateDnsZoneBlob]",
+            "enablePrivateDnsZonesAkv": "[steps('esPlatformManagement').esEnablePrivateDnsZoneAkv]",
             "mgmtSubscriptionTag": "[steps('esPlatformManagement').esMgmtSubscriptionTag]",
             "mgmtOwnerTag": "[steps('esPlatformManagement').esMgmtOwnerTag]",
             "mgmtCostCenterTag": "[steps('esPlatformManagement').esMgmtCostCenterTag]",

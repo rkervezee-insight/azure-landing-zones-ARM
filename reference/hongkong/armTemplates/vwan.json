@@ -610,6 +610,54 @@
                 "No"
             ],
             "defaultValue": "No"
+        },
+        "enablePrivateDnsZones": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesTable": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesQueue": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesFiles": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesBlob": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesAkv": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
         }
     },
     "variables": {
@@ -624,6 +672,7 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
             "keyVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/keyVault.json')]",
+            "privateDns": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/privateDns.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
             "connectivity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vwan-connectivity.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/diagnosticsAndSecurity.json')]",
@@ -654,7 +703,8 @@
             "identity": "[take(concat('identity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "keyVault": "[take(concat('keyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -1356,6 +1406,61 @@
                     },
                     "connectivitySubscriptionId": {
                         "value": "[parameters('connectivitySubscriptionId')]"
+                    }
+                }
+            }
+        },
+        // Linked template for the creation of Private DNS
+        {
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
+            "name": "[variables('deploymentNames').diagnosticsAndSecurity]",
+            "dependsOn": [
+                "[variables('deploymentNames').monitoring]",
+                "DeploymentDelay"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').diagnosticsAndSecurity]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "enablePrivateDnsZones": {
+                        "value": "[parameters('enablePrivateDnsZones')]"
+                    },
+                    "enablePrivateDnsZonesTable": {
+                        "value": "[parameters('enablePrivateDnsZonesTable')]"
+                    },
+                    "enablePrivateDnsZonesQueue": {
+                        "value": "[parameters('enablePrivateDnsZonesQueue')]"
+                    },
+                    "enablePrivateDnsZonesFiles": {
+                        "value": "[parameters('enablePrivateDnsZonesFiles')]"
+                    },
+                    "enablePrivateDnsZonesBlob": {
+                        "value": "[parameters('enablePrivateDnsZonesBlob')]"
+                    },
+                    "enablePrivateDnsZonesAkv": {
+                        "value": "[parameters('enablePrivateDnsZonesAkv')]"
+                    },
+                    "managementSubscriptionId": {
+                        "value": "[parameters('managementSubscriptionId')]"
                     }
                 }
             }

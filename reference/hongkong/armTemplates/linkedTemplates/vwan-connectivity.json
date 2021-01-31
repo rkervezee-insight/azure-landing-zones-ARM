@@ -379,10 +379,8 @@
                                             "name": "[variables('azFwName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vhubname'))]",
-                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]",
-                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups/', variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]",
-                                                "[concat('Microsoft.Network/firewallpolicies/ruleCollectionGroups/', variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]"
+                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
+                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -399,7 +397,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                      "id": "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
+                                                      "id": "[json('null')]"
                                                 }
                                             }
                                         }

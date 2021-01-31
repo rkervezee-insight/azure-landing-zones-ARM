@@ -1,0 +1,187 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "companyPrefix": {
+            "type": "string",
+            "maxLength": 5
+        },
+        "locationPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "environmentPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "argPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "enablePrivateDnsZones": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesTable": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesQueue": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesFiles": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesBlob": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "enablePrivateDnsZonesAkv": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "managementSubscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
+        },
+        "mgmtSubscriptionTag": {
+            "type": "string"
+        },
+        "mgmtOwnerTag": {
+            "type": "string"
+        },
+        "mgmtCostCenterTag": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "deploymentName": "[take(concat(deployment().name, '-privateDns'), 64)]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-dns'))]",
+
+        "privateLinkDns": {
+            "blob": "privatelink.blob.core.windows.net",
+            "files": "privatelink.file.core.windows.net",
+            "queue": "privatelink.queue.core.windows.net",
+            "tables": "privatelink.table.core.windows.net",
+            "keyVault": "privatelink.vaultcore.azure.net"
+        },
+        "tags": {
+            "environment": "[parameters('mgmtSubscriptionTag')]",
+            "owner": "[parameters('mgmtOwnerTag')]",
+            "costCenter": "[parameters('mgmtCostCenterTag')]"
+        },
+        "apiVersions": {
+            "deployments": "2020-06-01",
+            "resourceGroups": "2020-06-01",
+            "locks": "2016-09-01",
+            "privateDnsZones": "2020-01-01"
+       
+        }
+    },
+    "resources": [
+        {
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "[variables('apiVersions').resourceGroups]",
+            "location": "[deployment().location]",
+            "name": "[variables('resourceGroupName')]",
+            "tags": {
+                "environment": "[variables('tags').environment]",
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
+            },
+            "properties": {}
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "[variables('deploymentName')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Authorization/locks",
+                            "apiVersion": "[variables('apiVersions').locks]",
+                            "name": "ResourceGroup-DontDelete",
+                            "properties": {
+                                "level": "CanNotDelete",
+                                "notes": "Prevent deletion of the resourceGroup"
+                            }
+                        },
+                        {
+                            "condition": "[equals(parameters('enablePrivateDnsZonesBlob'), 'Yes')]",
+                            "type": "Microsoft.Network/privateDnsZones",
+                            "apiVersion": "[variables('apiVersions').privateDnsZones]",
+                            "name": "[variables('privateLinkDns').blob]",
+                            "location": "global"
+                        },
+                        {
+                            "condition": "[equals(parameters('enablePrivateDnsZonesFiles'), 'Yes')]",
+                            "type": "Microsoft.Network/privateDnsZones",
+                            "apiVersion": "[variables('apiVersions').privateDnsZones]",
+                            "name": "[variables('privateLinkDns').files]",
+                            "location": "global"
+                        },
+                        {
+                            "condition": "[equals(parameters('enablePrivateDnsZonesQueue'), 'Yes')]",
+                            "type": "Microsoft.Network/privateDnsZones",
+                            "apiVersion": "[variables('apiVersions').privateDnsZones]",
+                            "name": "[variables('privateLinkDns').queue]",
+                            "location": "global"
+                        },
+                        {
+                            "condition": "[equals(parameters('enablePrivateDnsZonesTable'), 'Yes')]",
+                            "type": "Microsoft.Network/privateDnsZones",
+                            "apiVersion": "[variables('apiVersions').privateDnsZones]",
+                            "name": "[variables('privateLinkDns').tables]",
+                            "location": "global"
+                        },
+                        {
+                            "condition": "[equals(parameters('enablePrivateDnsZonesAkv'), 'Yes')]",
+                            "type": "Microsoft.Network/privateDnsZones",
+                            "apiVersion": "[variables('apiVersions').privateDnsZones]",
+                            "name": "[variables('privateLinkDns').keyVault]",
+                            "location": "global"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
