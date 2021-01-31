@@ -284,51 +284,6 @@
                                                 "threatIntelMode": "Alert"
                                             }
                                         },
-                                        // Deployment of Azure Firewall Policy Rule Collection Group (ApplicationRule)
-                                        {
-                                            "type": "Microsoft.Network/firewallPolicies/ruleCollectionGroups",
-                                            "apiVersion": "[variables('apiVersions').ruleCollectionGroups]",
-                                            "name": "[concat(variables('azFwPolicyName'), '/DefaultApplicationRuleCollectionGroup')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallpolicies', variables('azFwPolicyName'))]"
-                                            ],
-                                            "properties": {
-                                                "priority": 300,
-                                                "ruleCollections": [
-                                                    {
-                                                        "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
-                                                        "name": "externalUrl-Collection",
-                                                        "priority": 100,
-                                                        "action": {
-                                                            "type": "Allow"
-                                                        },
-                                                        "rules": [
-                                                            {
-                                                                "ruleType": "ApplicationRule",
-                                                                "name": "AllowAzureTo*.microsoft.com",
-                                                                "sourceAddresses": [
-                                                                    "*"
-                                                                ],
-                                                                "protocols": [
-                                                                    {
-                                                                        "port": "80",
-                                                                        "protocolType": "http"
-                                                                    },
-                                                                    {
-                                                                        "port": "443",
-                                                                        "protocolType": "https"
-                                                                    }
-                                                                ],
-                                                                "targetFqdns": [
-                                                                    "*.microsoft.com"
-                                                                ]
-                                                            }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        },
                                         // Deployment of Azure Firewall Policy Rule Collection Group (NetworkRule)
                                         {
                                             "type": "Microsoft.Network/firewallpolicies/ruleCollectionGroups",
