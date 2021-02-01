@@ -955,7 +955,8 @@
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "name": "[variables('deploymentNames').keyVault]",
             "dependsOn": [
-                "DeploymentDelay"
+                "DeploymentDelay",
+                "[variables('deploymentNames').identity]"
             ],
             "location": "[deployment().location]",
             "properties": {
