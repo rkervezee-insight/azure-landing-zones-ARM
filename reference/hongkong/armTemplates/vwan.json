@@ -1316,7 +1316,7 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('managementSubscriptionId')]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "name": "[variables('deploymentNames').privateDns]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]",
@@ -1360,8 +1360,8 @@
                     "enablePrivateDnsZonesAkv": {
                         "value": "[parameters('enablePrivateDnsZonesAkv')]"
                     },
-                    "managementSubscriptionId": {
-                        "value": "[parameters('managementSubscriptionId')]"
+                    "connectivitySubscriptionId": {
+                        "value": "[parameters('connectivitySubscriptionId')]"
                     }
                 }
             }

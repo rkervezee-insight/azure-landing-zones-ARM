@@ -66,7 +66,7 @@
             ],
             "defaultValue": "Yes"
         },
-        "managementSubscriptionId": {
+        "connectivitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -76,7 +76,6 @@
         "deploymentName": "[take(concat(deployment().name, '-privateDns'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-dns'))]",
-
         "privateLinkDns": {
             "blob": "privatelink.blob.core.windows.net",
             "files": "privatelink.file.core.windows.net",
@@ -89,12 +88,11 @@
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
             "privateDnsZones": "2020-01-01"
-       
         }
     },
     "resources": [
         {
-            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",

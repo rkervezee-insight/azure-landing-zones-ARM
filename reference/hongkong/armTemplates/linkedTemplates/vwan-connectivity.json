@@ -34,15 +34,6 @@
             "type": "string",
             "maxLength": 3
         },
-        "connSubscriptionTag": {
-            "type": "string"
-        },
-        "connOwnerTag": {
-            "type": "string"
-        },
-        "connCostCenterTag": {
-            "type": "string"
-        },
         "addressPrefix": {
             "type": "string",
             "metadata": {
