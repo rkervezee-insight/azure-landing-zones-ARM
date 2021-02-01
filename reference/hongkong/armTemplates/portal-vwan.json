@@ -815,7 +815,7 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneBlob",
@@ -835,7 +835,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformManagement').esEnablePrivateDnsZones, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneAkv",
@@ -855,7 +855,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformManagement').esEnablePrivateDnsZones, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneFiles",
@@ -875,7 +875,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformManagement').esEnablePrivateDnsZones, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneQueue",
@@ -895,7 +895,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformManagement').esEnablePrivateDnsZones, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneTable",
@@ -915,7 +915,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformManagement').esEnablePrivateDnsZones, 'Yes')]"
                     }
                 ]
             },
