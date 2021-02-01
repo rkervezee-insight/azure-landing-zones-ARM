@@ -84,7 +84,7 @@
         },
         "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-identity'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-adds'))]",
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
@@ -95,6 +95,7 @@
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
     },
     "resources": [
+        // Conditional assignment of Azure Policy to enforce the Azure Backup agent for install
         {
             "condition": "[equals(parameters('enableVmBackupForIdentity'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -112,6 +113,7 @@
                 "parameters": {}
             }
         },
+        // Role assignment of the conditional Backup policy assignment for VM Backups
         {
             "condition": "[equals(parameters('enableVmBackupForIdentity'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -126,6 +128,7 @@
                 "principalId": "[if(equals(parameters('enableVmBackupForIdentity'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployVmBackup), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
+        // Conditional assignment of Azure Policy to deny the creation of Public IPs
         {
             "condition": "[equals(parameters('denyPipForIdentity'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -138,6 +141,7 @@
                 "scope": "[variables('scope')]"
             }
         },
+        // Role assignment of the conditional Azure Policy to deny the creation of Public IPs
         {
             "condition": "[equals(parameters('denyRdpForIdentity'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -150,6 +154,7 @@
                 "scope": "[variables('scope')]"
             }
         },
+        // Conditional assignment of Azure Policy to deny the creation of subnets without NSGs
         {
             "condition": "[equals(parameters('denySubnetWithoutNsgForIdentity'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -162,7 +167,8 @@
                 "scope": "[variables('scope')]"
             }
         },
-               {
+        // Conditional deployment to invoke the creation of a Resource Group for ADDS and assocaited Resoruce Locks
+        {
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",

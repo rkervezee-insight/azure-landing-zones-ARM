@@ -230,7 +230,7 @@
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
-        "storageName": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",       
+        "storageName": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
         "landingZones": {
             "lzAscPricing": "[take(concat('lzAscPricing', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "lzAscAutoProvision": "[take(concat('lzAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -270,7 +270,7 @@
         }
     },
     "resources": [
-        // Conditional assignment of policy to enforce activity logs from subscriptions to Log Analytics
+        // Conditional assignment of /azure Policy to enforce activity logs from subscriptions to Log Analytics
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -295,7 +295,7 @@
                 }
             }
         },
-        // Role assignment for the conditional Azure Policy assignment
+        // Role assignment for the conditional Azure Policy assignment for Azure Activity Logs to Log Analytics
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -311,7 +311,7 @@
             }
         },
         // Conditional assignment of Azure Policy to enforce activity logs from subscriptions to Storage Account
-        { 
+        {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -332,7 +332,7 @@
                 }
             }
         },
-        // Role assignment for the conditional policy assignment for Azure Activity Logs to Storage Account
+        // Role assignment for the conditional Azure Policy assignment for Azure Activity Logs to Storage Account
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -347,8 +347,8 @@
                 "principalId": "[if(equals(parameters('enableLtrStorage'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogSta), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enforce Log Analytics VM extension to Windows and Linux virtual machines
-        {   
+        // Conditional assignment of Azure Policy to enforce Log Analytics VM extension to Windows and Linux virtual machines
+        {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmMonitoring'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -384,7 +384,7 @@
                 "principalId": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmMonitoring'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployVmMonitoring), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enforce VMSS monitoring to Log Analytics
+        // Conditional assignment of Azure policy to enforce VMSS monitoring to Log Analytics
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmssMonitoring'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -421,7 +421,7 @@
                 "principalId": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmssMonitoring'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployVmssMonitoring), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enforce Windows Arc monitoring to Log Analytics
+        // Conditional assignment of Azure Policy to enforce Windows Arc monitoring to Log Analytics
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableArcMonitoring'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -458,8 +458,8 @@
                 "principalId": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableArcMonitoring'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployWindowsArcMonitoring), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enforce Linux Arc monitoring to Log Analytics
-        {     
+        // Conditional assignment of Azure Policy to enforce Linux Arc monitoring to Log Analytics
+        {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableArcMonitoring'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -495,7 +495,7 @@
                 "principalId": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableArcMonitoring'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployLinuxArcMonitoring), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enforce Azure Resource Diagnostics to Log Analytics
+        // Conditional assignment of Azure Policy to enforce Azure Resource Diagnostics to Log Analytics
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -533,7 +533,7 @@
                 "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzResourceDiagnostics), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enforce Azure Security Center on subscriptions
+        // Conditional assignment of Azure Policy to enforce ASC on subscriptions
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -580,7 +580,7 @@
             }
         },
         // Role assignment of the conditional ASC policy assignment
-        {   
+        {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -594,7 +594,7 @@
                 "principalId": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-        // Conditional assignment of policy to enable ASC monitoring
+        // Conditional assignment of Azure Policy to enable ASC monitoring
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -611,7 +611,7 @@
                 "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ActivityLog diagnostics on management subscription
+        // Conditional deployments to invoke template for ActivityLog diagnostics on management subscription
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -628,7 +628,7 @@
                 "parameters": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ActivityLog diagnostics on identity subscription
+        // Conditional deployments to invoke template for ActivityLog diagnostics on identity subscription
         {
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -645,7 +645,7 @@
                 "parameters": "[if(and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ActivityLog diagnostics on connectivity subscription
+        // Conditional deployments to invoke template for ActivityLog diagnostics on connectivity subscription
         {
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -662,7 +662,7 @@
                 "parameters": "[if(and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ASC on management subscription
+        // Conditional deployments to invoke template for ASC on management subscription
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -679,7 +679,7 @@
                 "parameters": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes')) ,reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ASC on identity subscription
+        // Conditional deployments to invoke template for ASC on identity subscription
         {
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -696,7 +696,7 @@
                 "parameters": "[if(and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes')) ,reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ASC on connectivity subscription
+        // Conditional deployments to invoke template for ASC on connectivity subscription
         {
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -713,7 +713,7 @@
                 "parameters": "[if(and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ActivityLog diagnostics on online subscription(s)
+        // Conditional deployments to invoke template for ActivityLog diagnostics on online subscription(s)
         {
             "condition": "[and(not(empty(parameters('onlineLzSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -734,7 +734,7 @@
                 "parameters": "[if(and(not(empty(parameters('onlineLzSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ActivityLog diagnostics on corp subscription(s)
+        // Conditional deployments to invoke template for ActivityLog diagnostics on corp subscription(s)
         {
             "condition": "[and(not(empty(parameters('corpLzSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -755,7 +755,7 @@
                 "parameters": "[if(and(not(empty(parameters('corpLzSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ASC on online subscription(s)
+        // Conditional deployments to invoke template for ASC on online subscription(s)
         {
             "condition": "[and(not(empty(parameters('onlineLzSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -776,7 +776,7 @@
                 "parameters": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01').parameters, json('null'))]"
             }
         },
-        // Conditional ARM deployments to invoke template from ASC on corp subscription(s)
+        // Conditional deployments to invoke template for ASC on corp subscription(s)
         {
             "condition": "[and(not(empty(parameters('corpLzSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
