@@ -103,7 +103,7 @@
     "resources": [
         // Conditional assignment of Azure Policy to enforce the Azure Backup agent for install
         {
-            "condition": "[equals(parameters('enableVmBackupForIdentity'), 'Yes')]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableVmBackupForIdentity'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').deployVmBackup]",
@@ -121,7 +121,7 @@
         },
         // Role assignment of the conditional Backup policy assignment for VM Backups
         {
-            "condition": "[equals(parameters('enableVmBackupForIdentity'), 'Yes')]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableVmBackupForIdentity'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deployVmBackup]",
@@ -136,7 +136,7 @@
         },
         // Conditional assignment of Azure Policy to deny the creation of Public IPs
         {
-            "condition": "[equals(parameters('denyPipForIdentity'), 'Yes')]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('denyPipForIdentity'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyPip]",
@@ -147,9 +147,9 @@
                 "scope": "[variables('scope')]"
             }
         },
-        // Role assignment of the conditional Azure Policy to deny the creation of Public IPs
+        // Conditional assignment of Azure Policy to deny RDP from the Internet
         {
-            "condition": "[equals(parameters('denyRdpForIdentity'), 'Yes')]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('denyRdpForIdentity'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyRdp]",
@@ -162,7 +162,7 @@
         },
         // Conditional assignment of Azure Policy to deny the creation of subnets without NSGs
         {
-            "condition": "[equals(parameters('denySubnetWithoutNsgForIdentity'), 'Yes')]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('denySubnetWithoutNsgForIdentity'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
