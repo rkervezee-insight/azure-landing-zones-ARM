@@ -86,13 +86,17 @@
         },
         "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-adds'))]",
+        "resourceGroups": {
+            "adds": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-adds'))]",
+            "network": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]"
+        },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
             "policyAssignments": "2020-03-01",
             "locks": "2016-09-01",
-            "roleAssignments": "2020-04-01-preview"
+            "roleAssignments": "2020-04-01-preview",
+            "networkWatchers": "2019-04-01"
         }
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
     },
@@ -169,12 +173,12 @@
                 "scope": "[variables('scope')]"
             }
         },
-        // Conditional deployment to invoke the creation of a Resource Group for ADDS and assocaited Resoruce Locks
+        // Conditional deployment to invoke the creation of a Resource Group for ADDS and associated Resource Locks
         {
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "keyVault",
+            "name": "ADDS",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "properties": {
@@ -188,16 +192,16 @@
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
-                            "name": "[variables('resourceGroupName')]",
+                            "name": "[variables('resourceGroups').adds]",
                             "properties": {}
                         },
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
                             "name": "[variables('deploymentName')]",
-                            "resourceGroup": "[variables('resourceGroupName')]",
+                            "resourceGroup": "[variables('resourceGroups').adds]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').adds)]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
@@ -215,7 +219,71 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         }
-
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        // Conditional deployment to invoke the creation of a Resource Group for Networking and associated Resource Locks
+        {
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "Networking",
+            "location": "[deployment().location]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Resources/resourceGroups",
+                            "apiVersion": "[variables('apiVersions').resourceGroups]",
+                            "location": "[deployment().location]",
+                            "name": "[variables('resourceGroups').network]",
+                            "properties": {}
+                        },
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "[variables('apiVersions').deployments]",
+                            "name": "[variables('deploymentName')]",
+                            "resourceGroup": "[variables('resourceGroups').network]",
+                            "dependsOn": [
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').network)]"
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        {
+                                            "type": "Microsoft.Authorization/locks",
+                                            "apiVersion": "[variables('apiVersions').locks]",
+                                            "name": "ResourceGroup-DontDelete",
+                                            "properties": {
+                                                "level": "CanNotDelete",
+                                                "notes": "Prevent deletion of the resourceGroup"
+                                            }
+                                        },
+                                        {
+                                            // Conditional deployment of Network Watcher
+                                            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
+                                            "type": "Microsoft.Network/networkWatchers",
+                                            "apiVersion": "[variables('apiVersions').networkWatchers]",
+                                            "name": "test",
+                                            "location": "[deployment().location]",
+                                            "tags": {},
+                                            "properties": {},
+                                            "resources": []
+                                        }
                                     ]
                                 }
                             }
