@@ -270,7 +270,7 @@
         }
     },
     "resources": [
-        // Conditional assignment of /azure Policy to enforce activity logs from subscriptions to Log Analytics
+        // Conditional assignment of azure Policy to enforce activity logs from subscriptions to Log Analytics
         {
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",

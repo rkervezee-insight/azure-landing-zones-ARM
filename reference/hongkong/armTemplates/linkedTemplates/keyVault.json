@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
@@ -60,60 +60,81 @@
         }
     },
     "resources": [
+        // Nested Subscription level deployment
         {
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "[variables('apiVersions').resourceGroups]",
-            "location": "[deployment().location]",
-            "name": "[variables('resourceGroupName')]",
-            "properties": {}
-        },
-        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentName')]",
-            "resourceGroup": "[variables('resourceGroupName')]",
-            "dependsOn": [
-                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
-            ],
+            "name": "keyVault",
+            "location": "[deployment().location]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        // Create Resource Group
                         {
-                            "type": "Microsoft.Authorization/locks",
-                            "apiVersion": "[variables('apiVersions').locks]",
-                            "name": "ResourceGroup-DontDelete",
-                            "properties": {
-                                "level": "CanNotDelete",
-                                "notes": "Prevent deletion of the resourceGroup"
-                            }
-                        },
-                        {
-                            "condition": "[equals(parameters('enableAkv'), 'Yes')]",
-                            "type": "Microsoft.KeyVault/vaults",
-                            "apiVersion": "[variables('apiVersions').KeyVault]",
-                            "name": "[variables('keyVault').name]",
+                            "type": "Microsoft.Resources/resourceGroups",
+                            "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
+                            "name": "[variables('resourceGroupName')]",
+                            "properties": {}
+                        },
+                        // Nested Resource Group deployment
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "[variables('apiVersions').deployments]",
+                            "name": "[variables('deploymentName')]",
+                            "resourceGroup": "[variables('resourceGroupName')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+                            ],
                             "properties": {
-                                "enabledForDeployment": "[variables('keyVault').enabledForDeployment]",
-                                "enabledForDiskEncryption": "[variables('keyVault').enabledForDiskEncryption]",
-                                "enabledForTemplateDeployment": "[variables('keyVault').enabledForTemplateDeployment]",
-                                "tenantId": "[parameters('tenantId')]",
-                                "accessPolicies": [],
-                                "sku": {
-                                    "name": "[variables('keyVault').sku]",
-                                    "family": "A"
-                                },
-                                "networkAcls": {
-                                    "defaultAction": "Deny",
-                                    "bypass": "AzureServices",
-                                    "ipRules": [
-                                    ],
-                                    "virtualNetworkRules": []
+                                "mode": "Incremental",
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        // Create Resource Group Lock
+                                        {
+                                            "type": "Microsoft.Authorization/locks",
+                                            "apiVersion": "[variables('apiVersions').locks]",
+                                            "name": "ResourceGroup-DontDelete",
+                                            "properties": {
+                                                "level": "CanNotDelete",
+                                                "notes": "Prevent deletion of the resourceGroup"
+                                            }
+                                        },
+                                        // Conditional deployment of platform Azure Key Vault in the Identity Subscription
+                                        {
+                                            "condition": "[equals(parameters('enableAkv'), 'Yes')]",
+                                            "name": "[variables('keyVault').name]",
+                                            "type": "Microsoft.KeyVault/vaults",
+                                            "apiVersion": "[variables('apiVersions').KeyVault]",
+                                            "location": "[deployment().location]",
+                                            "properties": {
+                                                "enabledForDeployment": "[variables('keyVault').enabledForDeployment]",
+                                                "enabledForDiskEncryption": "[variables('keyVault').enabledForDiskEncryption]",
+                                                "enabledForTemplateDeployment": "[variables('keyVault').enabledForTemplateDeployment]",
+                                                "tenantId": "[parameters('tenantId')]",
+                                                "accessPolicies": [],
+                                                "sku": {
+                                                    "name": "[variables('keyVault').sku]",
+                                                    "family": "A"
+                                                },
+                                                "networkAcls": {
+                                                    "defaultAction": "Deny",
+                                                    "bypass": "AzureServices",
+                                                    "ipRules": [],
+                                                    "virtualNetworkRules": []
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
                             }
                         }
