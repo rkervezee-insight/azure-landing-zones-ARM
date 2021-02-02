@@ -96,7 +96,8 @@
             "policyAssignments": "2020-03-01",
             "locks": "2016-09-01",
             "roleAssignments": "2020-04-01-preview",
-            "networkWatchers": "2019-04-01"
+            "networkWatchers": "2019-04-01",
+            "virtualNetworks": "2020-07-01"
         }
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
     },
@@ -178,7 +179,7 @@
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "ADDS",
+            "name": "ADDS-RG",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "properties": {
@@ -232,7 +233,7 @@
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "Networking",
+            "name": "Network-RG",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "properties": {
@@ -273,8 +274,26 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         },
+                                                                                {
+                                            "type": "Microsoft.Network/virtualNetworks",
+                                            "apiVersion": "[variables('apiVersions').virtualNetworks]",
+                                            "name": "[variables('azVnetName')]",
+                                            "location": "[deployment().location]",
+                                            "dependsOn": [
+                                            ],
+                                            "properties": {
+                                                "addressSpace": {
+                                                    "addressPrefixes": [
+                                                        "[parameters('addressPrefix')]"
+                                                    ]
+                                                }
+                                            },
+                                            "resources": [
+                                            ]
+                                        },
+                                        // Conditional deployment of Network Watcher
                                         {
-                                            // Conditional deployment of Network Watcher
+                                            
                                             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",

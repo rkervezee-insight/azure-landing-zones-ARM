@@ -390,6 +390,14 @@
             ],
             "defaultValue": "Yes"
         },
+        "enableKeyVaultAnalytics": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
         "enableServiceMap": {
             "type": "string",
             "allowedValues": [
@@ -901,6 +909,9 @@
                     },
                     "enableSqlAssessment": {
                         "value": "[parameters('enableSqlAssessment')]"
+                    },
+                    "enableKeyVaultAnalytics": {
+                        "value": "[parameters('enableKeyVaultAnalytics')]"
                     }
                 }
             }

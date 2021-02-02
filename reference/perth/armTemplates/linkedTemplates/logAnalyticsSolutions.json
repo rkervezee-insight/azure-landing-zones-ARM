@@ -96,6 +96,14 @@
                 "No"
             ],
             "defaultValue": "Yes"
+        },
+        "enableKeyVaultAnalytics": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
         }
     },
     "variables": {
@@ -144,7 +152,7 @@
                 "name": "[concat('SecurityInsights', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "SecurityInsights"
             },
-           "KeyVaultAnalytics": {
+            "KeyVaultAnalytics": {
                 "name": "[concat('KeyVaultAnalytics', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "KeyVaultAnalytics"
             }
@@ -344,6 +352,23 @@
                             "plan": {
                                 "name": "[variables('solutions').updateMgmt.name]",
                                 "product": "[concat('OMSGallery/', variables('solutions').updateMgmt.marketplaceName)]",
+                                "promotionCode": "",
+                                "publisher": "Microsoft"
+                            }
+                        },
+                        {
+                            // Log Analytics Solution for Key Vault Analytics
+                            "condition": "[equals(parameters('enableKeyVaultAnalytics'), 'Yes')]",
+                            "apiVersion": "2015-11-01-preview",
+                            "type": "Microsoft.OperationsManagement/solutions",
+                            "name": "[variables('solutions').KeyVaultAnalytics.name]",
+                            "location": "[deployment().location]",
+                            "properties": {
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
+                            },
+                            "plan": {
+                                "name": "[variables('solutions').KeyVaultAnalytics.name]",
+                                "product": "[concat('OMSGallery/', variables('solutions').KeyVaultAnalytics.marketplaceName)]",
                                 "promotionCode": "",
                                 "publisher": "Microsoft"
                             }

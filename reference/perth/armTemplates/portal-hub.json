@@ -530,6 +530,26 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
+                        "name": "esKeyVaultAnalytics",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Key Vault Analytics solution",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
                         "name": "textBlock2",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
@@ -1482,6 +1502,7 @@
             "enableAntiMalware": "[steps('esPlatformManagement').esAntiMalware]",
             "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
+            "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
             "enableAkv": "[steps('esPlatformManagement').esAkv]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "onPremisesIP": "[steps('esPlatformManagement').esOnPremisesIP]",
