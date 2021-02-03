@@ -949,7 +949,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').keyVault]",
             "dependsOn": [
                 "DeploymentDelay"
