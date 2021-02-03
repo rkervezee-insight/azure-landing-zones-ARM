@@ -422,7 +422,7 @@
             "properties": {
                 "description": "[variables('policyAssignmentNames').denySsh]",
                 "displayName": "[variables('policyAssignmentNames').denySsh]",
-                "policyDefinitionId": "[variables('policyDefinitions').denyPrivateDnsZones]",
+                "policyDefinitionId": "[variables('policyDefinitions').denySsh]",
                 "scope": "[variables('scope')]"
             }
         },
@@ -435,7 +435,7 @@
             "properties": {
                 "description": "[variables('policyAssignmentNames').denyPrivateDnsZones]",
                 "displayName": "[variables('policyAssignmentNames').denyPrivateDnsZones]",
-                "policyDefinitionId": "[variables('policyDefinitions').denyRdp]",
+                "policyDefinitionId": "[variables('policyDefinitions').denyPrivateDnsZones]",
                 "scope": "[variables('scope')]"
             }
         }
