@@ -945,7 +945,7 @@
                     {
                         "name": "esEnablePrivateDnsZoneBlob",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS Zone (Blob Storage)",
+                        "label": "Deploy Private DNS (Blob Storage)",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
                         "constraints": {
@@ -965,7 +965,7 @@
                     {
                         "name": "esEnablePrivateDnsZoneAkv",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS Zone (Key Vault)",
+                        "label": "Deploy Private DNS (Key Vault)",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
                         "constraints": {
@@ -985,7 +985,7 @@
                     {
                         "name": "esEnablePrivateDnsZoneFiles",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS Zone (File Storage)",
+                        "label": "Deploy Private DNS (File Storage)",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
                         "constraints": {
@@ -1005,7 +1005,7 @@
                     {
                         "name": "esEnablePrivateDnsZoneQueue",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS Zone (Queue Storage)",
+                        "label": "Deploy Private DNS (Queue Storage)",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
                         "constraints": {
@@ -1025,7 +1025,7 @@
                     {
                         "name": "esEnablePrivateDnsZoneTable",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS Zone (Table Storage)",
+                        "label": "Deploy Private DNS (Table Storage)",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
                         "constraints": {

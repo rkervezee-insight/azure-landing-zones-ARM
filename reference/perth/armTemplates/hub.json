@@ -1001,7 +1001,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-05-01",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').storage]",
             "dependsOn": [
                 "DeploymentDelay"

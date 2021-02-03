@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
@@ -67,82 +67,63 @@
     },
     "resources": [
         {
-            // Nested deloyment for Storage (Subscription Level)
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "[variables('apiVersions').resourceGroups]",
+            "location": "[deployment().location]",
+            "name": "[variables('resourceGroupName')]",
+            "tags": {
+                "environment": "[variables('tags').environment]",
+                "owner": "[variables('tags').owner]"
+            },
+            "properties": {}
+        },
+        {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "storage",
-            "location": "[deployment().location]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "name": "[variables('deploymentName')]",
+            "resourceGroup": "[variables('resourceGroupName')]",
+            "dependsOn": [
+                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
                         {
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
-                            "name": "[variables('resourceGroupName')]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]"
-                            },
-                            "properties": {}
+                            "type": "Microsoft.Authorization/locks",
+                            "apiVersion": "[variables('apiVersions').locks]",
+                            "name": "ResourceGroup-DontDelete",
+                            "properties": {
+                                "level": "CanNotDelete",
+                                "notes": "Prevent deletion of the resourceGroup"
+                            }
                         },
                         {
-                            "type": "Microsoft.Resources/deployments",
-                            "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentName')]",
-                            "resourceGroup": "[variables('resourceGroupName')]",
-                            "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
-                            ],
+                            // Nested deployment for Storage (Resource Group Level)
+                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
+                            "type": "Microsoft.Storage/storageAccounts",
+                            "apiVersion": "[variables('apiVersions').storage]",
+                            "name": "[variables('storage').name]",
+                            "location": "[deployment().location]",
+                            "sku": {
+                                "name": "[variables('storage').sku]"
+                            },
+                            "tags": {
+                                "storageSKU": "[variables('storage').sku]",
+                                "storageUse": "[variables('storage').use]"
+                            },
+                            "kind": "[variables('storage').kind]",
                             "properties": {
-                                "mode": "Incremental",
-                                "template": {
-                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                    "contentVersion": "1.0.0.0",
-                                    "parameters": {},
-                                    "resources": [
-                                        {
-                                            "type": "Microsoft.Authorization/locks",
-                                            "apiVersion": "[variables('apiVersions').locks]",
-                                            "name": "ResourceGroup-DontDelete",
-                                            "properties": {
-                                                "level": "CanNotDelete",
-                                                "notes": "Prevent deletion of the resourceGroup"
-                                            }
-                                        },
-                                        {
-                                            // Nested deployment for Storage (Resource Group Level)
-                                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
-                                            "type": "Microsoft.Storage/storageAccounts",
-                                            "apiVersion": "[variables('apiVersions').storage]",
-                                            "name": "[variables('storage').name]",
-                                            "location": "[deployment().location]",
-                                            "sku": {
-                                                "name": "[variables('storage').sku]"
-                                            },
-                                            "tags": {
-                                                "storageSKU": "[variables('storage').sku]",
-                                                "storageUse": "[variables('storage').use]"
-                                            },
-                                            "kind": "[variables('storage').kind]",
-                                            "properties": {
-                                                "supportsHttpsTrafficOnly": "[variables('storage').httpsOnly]",
-                                                "networkAcls": {
-                                                    "bypass": "Logging, Metrics, AzureServices",
-                                                    "virtualNetworkRules": [],
-                                                    "ipRules": [
-                                                    ],
-                                                    "defaultAction": "Deny"
-                                                }
-                                            }
-                                        }
-                                    ]
+                                "supportsHttpsTrafficOnly": "[variables('storage').httpsOnly]",
+                                "networkAcls": {
+                                    "bypass": "Logging, Metrics, AzureServices",
+                                    "virtualNetworkRules": [],
+                                    "ipRules": [
+                                    ],
+                                    "defaultAction": "Deny"
                                 }
                             }
                         }
