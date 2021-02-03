@@ -35,11 +35,6 @@
         },
         "ownerTag": {
             "type": "string"
-        },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
         }
     },
     "variables": {
