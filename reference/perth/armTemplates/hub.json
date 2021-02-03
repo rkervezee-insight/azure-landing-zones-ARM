@@ -501,25 +501,9 @@
             },
             "defaultValue": "192.168.0.0/24"
         },
-        "enableAppLz": {
+        "enableVmBackup": {
             "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "Yes"
-        },
-        "denyPublicendpoints": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyPublicIP": {
-            "type": "string",
-            "defaultValue": "Yes",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -527,37 +511,85 @@
         },
         "denySubnetWithoutNsg": {
             "type": "string",
-            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ]
+            ],
+            "defaultValue": "No"
         },
-        "auditIpForwarding": {
+        "denyRdp": {
             "type": "string",
-            "defaultValue": "Yes",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
             ]
         },
-        "denyRdpInternet": {
+        "denyIpForwarding": {
             "type": "string",
-            "defaultValue": "Yes",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
             ]
         },
-        "denySshInternet": {
+        "enableSqlEncryption": {
             "type": "string",
-            "defaultValue": "Yes",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
             ]
         },
-        "denyVnetPeering": {
+        "enableSqlAudit": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableStorageHttps": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableAksPolicy": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyAksPrivileged": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyAksPrivilegedEscalation": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyHttpIngressForAks": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denySsh": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -602,6 +634,10 @@
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+        },
+        "apiVersions": {
+            "deployments": "2020-06-01",
+            "subscriptions": "2020-05-01"
         }
     },
     "resources": [
@@ -1101,9 +1137,10 @@
         },
         // Linked template for the creation of Azure Policy for the Landing Zone Management Group
         {
-            "condition": "[or(equals(parameters('enableAppLz'), 'Yes'), equals(parameters('denyPublicendpoints'), 'Yes'), equals(parameters('denyPublicIP'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes'), equals(parameters('auditIpForwarding'), 'Yes'), equals(parameters('denyRdpInternet'), 'Yes'), equals(parameters('denySshInternet'), 'Yes'), equals(parameters('denyVnetPeering'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'))]",
+            // Linked template for the creation of the Landing Zone Policies.
+            "condition": "[or(or(or(or(or(or(equals(parameters('enableVmBackup'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes')), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-05-01",
+            "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').landingZone]",
             "dependsOn": [
@@ -1121,29 +1158,41 @@
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
                     },
-                    "denyPublicendpoints": {
-                        "value": "[parameters('denyPublicendpoints')]"
-                    },
-                    "enableAppLz": {
-                        "value": "[parameters('enableAppLz')]"
-                    },
-                    "denyPublicIP": {
-                        "value": "[parameters('denyPublicIP')]"
+                    "enableVmBackup": {
+                        "value": "[parameters('enableVmBackup')]"
                     },
                     "denySubnetWithoutNsg": {
                         "value": "[parameters('denySubnetWithoutNsg')]"
                     },
-                    "auditIpForwarding": {
-                        "value": "[parameters('auditIpForwarding')]"
+                    "denyRdp": {
+                        "value": "[parameters('denyRdp')]"
                     },
-                    "denyRdpInternet": {
-                        "value": "[parameters('denyRdpInternet')]"
+                    "denyIpForwarding": {
+                        "value": "[parameters('denyIpForwarding')]"
                     },
-                    "denySshInternet": {
-                        "value": "[parameters('denySshInternet')]"
+                    "enableSqlAudit": {
+                        "value": "[parameters('enableSqlAudit')]"
                     },
-                    "denyVnetPeering": {
-                        "value": "[parameters('denyVnetPeering')]"
+                    "enableSqlEncryption": {
+                        "value": "[parameters('enableSqlEncryption')]"
+                    },
+                    "enableStorageHttps": {
+                        "value": "[parameters('enableStorageHttps')]"
+                    },
+                    "denyHttpIngressForAks": {
+                        "value": "[parameters('denyHttpIngressForAks')]"
+                    },
+                    "denyAksPrivilegedEscalation": {
+                        "value": "[parameters('denyAksPrivilegedEscalation')]"
+                    },
+                    "denyAksPrivileged": {
+                        "value": "[parameters('denyAksPrivileged')]"
+                    },
+                    "enableAksPolicy": {
+                        "value": "[parameters('enableAksPolicy')]"
+                    },
+                    "denySsh": {
+                        "value": "[parameters('denySsh')]"
                     },
                     "denyPrivateDnsZones": {
                         "value": "[parameters('denyPrivateDnsZones')]"

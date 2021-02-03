@@ -6,7 +6,55 @@
             "type": "string",
             "maxLength": 5
         },
+        "enableVmBackup": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denySubnetWithoutNsg": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
+        "denyRdp": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyIpForwarding": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableSqlEncryption": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "enableSqlAudit": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableStorageHttps": {
             "type": "string",
             "defaultValue": "No",
             "allowedValues": [
@@ -45,54 +93,6 @@
                 "Yes",
                 "No"
             ]
-        },
-        "enableSqlEncryption": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "enableVmBackup": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyRdp": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "enableStorageHttps": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyIpForwarding": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denySubnetWithoutNsg": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
         },
         "denySsh": {
             "type": "string",
