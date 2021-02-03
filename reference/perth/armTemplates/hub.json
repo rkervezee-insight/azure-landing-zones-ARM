@@ -1037,9 +1037,6 @@
                     },
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
-                    },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }

@@ -951,9 +951,6 @@
                     },
                     "enableStorage": {
                         "value": "[parameters('enableStorage')]"
-                    },
-                    "managementSubscriptionId": {
-                        "value": "[parameters('managementSubscriptionId')]"
                     }
                 }
             }
