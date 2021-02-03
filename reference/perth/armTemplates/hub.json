@@ -986,6 +986,9 @@
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
                     },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
                     },
