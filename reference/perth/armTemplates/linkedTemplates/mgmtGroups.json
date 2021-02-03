@@ -9,7 +9,7 @@
                 "description": "Provide the company identifier prefix (max 5 characters)"
             }
         },
-        "appLandingZoneMgs": {
+        "landingzonesMgs": {
             "type": "array",
             "defaultValue": [
                 "production",
@@ -23,7 +23,7 @@
     "variables": {
         "managementGroups": {
             "platform": "[concat(parameters('companyPrefix'), '-', 'platform')]",
-            "appLandingZone": "[concat(parameters('companyPrefix'), '-', 'appLandingZones')]",
+            "landingzones": "[concat(parameters('companyPrefix'), '-', 'landingzones')]",
             "decommissioned": "[concat(parameters('companyPrefix'), '-', 'decommissioned')]",
             "sandbox": "[concat(parameters('companyPrefix'), '-', 'sandbox')]"
         },
@@ -59,12 +59,12 @@
             // Create management group for app landing zones
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
-            "name": "[variables('managementGroups').appLandingZone]",
+            "name": "[variables('managementGroups').landingzones]",
             "dependsOn": [
                 "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
             ],
             "properties": {
-                "displayName": "[variables('managementGroups').appLandingZone]",
+                "displayName": "[variables('managementGroups').landingzones]",
                 "details": {
                     "parent": {
                         "id": "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
@@ -108,22 +108,22 @@
         },
         {
             // Create child management groups for app landing zones
-            "condition": "[not(empty(parameters('appLandingZoneMgs')))]",
+            "condition": "[not(empty(parameters('landingzonesMgs')))]",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
-            "name": "[concat(parameters('companyPrefix'), '-', parameters('appLandingZoneMgs')[copyIndex()])]",
+            "name": "[concat(parameters('companyPrefix'), '-', parameters('landingzonesMgs')[copyIndex()])]",
             "dependsOn": [
-                "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').appLandingZone)]"
+                "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').landingzones)]"
             ],
             "copy": {
                 "name": "lzMgCopy",
-                "count": "[length(parameters('appLandingZoneMgs'))]"
+                "count": "[length(parameters('landingzonesMgs'))]"
             },
             "properties": {
-                "displayName": "[concat(parameters('companyPrefix'), '-', parameters('appLandingZoneMgs')[copyIndex()])]",
+                "displayName": "[concat(parameters('companyPrefix'), '-', parameters('landingzonesMgs')[copyIndex()])]",
                 "details": {
                     "parent": {
-                        "id": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').appLandingZone)]"
+                        "id": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').landingzones)]"
                     }
                 }
             }
