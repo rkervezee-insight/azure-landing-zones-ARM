@@ -529,12 +529,12 @@
                         "name": "esKeyVaultAnalytics",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Key Vault Analytics solution",
-                        "defaultValue": "Yes",
+                        "defaultValue": "Yes (recommended)",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes",
+                                    "label": "Yes (recommended)",
                                     "value": "Yes"
                                 },
                                 {
