@@ -15,7 +15,6 @@
       "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
       "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
       "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF')]",
-      "enforceStorageHttps": "/providers/Microsoft.Authorization/policyDefinitions/404c3081-a854-4457-ae30-26a93ef643f9",
       "deployAzFoundationsCIS": "/providers/Microsoft.Authorization/policySetDefinitions/1a5bb27d-173f-493e-9568-eb56638dde4d",
       "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Append-AzHUB')]"
     },
@@ -23,7 +22,6 @@
       "allowedAzRegions": "Allowed-AzRegions",
       "allowedAzRegionsRg": "Allowed-AzRegions-RG",
       "denyAppGwyWaf": "Deny-AppGW-Without-WAF",
-      "enforceStorageHttps": "Enforce-Storage-https",
       "deployAzFoundationsCIS": "Deploy-AzureCIS",
       "appendAzHub": "Append-AzHUB"
     },
@@ -82,18 +80,6 @@
         "displayName": "[variables('policyAssignmentNames').denyAppGwyWaf]",
         "policyDefinitionId": "[variables('policyDefinitions').denyAppGwyWaf]",
         "parameters": {},
-        "scope": "[variables('scope').topLevel]"
-      }
-    },
-    {
-      "type": "Microsoft.Authorization/policyAssignments",
-      "apiVersion": "[variables('apiVersions').policyAssignments]",
-      "name": "[variables('policyAssignmentNames').enforceStorageHttps]",
-      "location": "[deployment().location]",
-      "properties": {
-        "description": "[variables('policyAssignmentNames').enforceStorageHttps]",
-        "displayName": "[variables('policyAssignmentNames').enforceStorageHttps]",
-        "policyDefinitionId": "[variables('policyDefinitions').enforceStorageHttps]",
         "scope": "[variables('scope').topLevel]"
       }
     },
