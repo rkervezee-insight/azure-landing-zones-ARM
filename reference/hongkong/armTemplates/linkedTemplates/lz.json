@@ -158,7 +158,6 @@
         },
         "apiVersions": {
             "policyAssignments": "2020-03-01",
-            "deployments": "2020-06-01",
             "roleAssignments": "2020-04-01-preview"
         }
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
