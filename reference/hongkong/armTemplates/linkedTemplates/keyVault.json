@@ -30,13 +30,7 @@
             ],
             "defaultValue": "Yes"
         },
-        "subscriptionTag": {
-            "type": "string"
-        },
-        "ownerTag": {
-            "type": "string"
-        },
-        "subscriptionId": {
+        "identitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -51,10 +45,6 @@
         "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-security'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
-        },
         "keyVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
             "enabledForDeployment": true,
@@ -70,13 +60,14 @@
         }
     },
     "resources": [
+        // Nested Subscription level deployment
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "keyVault",
             "location": "[deployment().location]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -84,17 +75,15 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        // Create Resource Group
                         {
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
                             "name": "[variables('resourceGroupName')]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]"
-                            },
                             "properties": {}
                         },
+                        // Nested Resource Group deployment
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
@@ -110,6 +99,7 @@
                                     "contentVersion": "1.0.0.0",
                                     "parameters": {},
                                     "resources": [
+                                        // Create Resource Group Lock
                                         {
                                             "type": "Microsoft.Authorization/locks",
                                             "apiVersion": "[variables('apiVersions').locks]",
@@ -119,6 +109,7 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         },
+                                        // Conditional deployment of platform Azure Key Vault in the Identity Subscription
                                         {
                                             "condition": "[equals(parameters('enableAkv'), 'Yes')]",
                                             "name": "[variables('keyVault').name]",
@@ -138,8 +129,7 @@
                                                 "networkAcls": {
                                                     "defaultAction": "Deny",
                                                     "bypass": "AzureServices",
-                                                    "ipRules": [
-                                                    ],
+                                                    "ipRules": [],
                                                     "virtualNetworkRules": []
                                                 }
                                             }

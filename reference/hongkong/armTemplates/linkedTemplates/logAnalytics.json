@@ -26,7 +26,7 @@
             "type": "string",
             "maxLength": 3
         },
-        "subscriptionId": {
+        "managementSubscriptionId": {
             "type": "string",
             "maxLength": 36
         },
@@ -38,7 +38,7 @@
                 "No"
             ],
             "metadata": {
-                "description": "If 'Yes' is selected, ARM will assign two policies to enable auditing in the environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
+                "description": "If 'Yes' is selected when also adding a subscription for management, ARM will assign two policies to enable auditing in your environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
             }
         },
         "retentionInDays": {
@@ -69,7 +69,7 @@
     },
     "resources": [
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').loganalytics]",
@@ -78,10 +78,10 @@
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "Deploy-Log-Analytics",
-                "displayName": "Deploy-Log-Analytics",
+                "description": "[variables('policyAssignmentNames').loganalytics]",
+                "displayName": "[variables('policyAssignmentNames').loganalytics]",
                 "policyDefinitionId": "[variables('policyDefinitions').deployLogAnalytics]",
-                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-management')]",
                 "parameters": {
                     "workspaceName": {
                         "value": "[variables('logAnalyticsName')]"
@@ -105,9 +105,9 @@
             }
         },
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "[variables('apiVersions').roleAssignments]",
+             "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deployLogAnalytics]",
             "dependsOn": [
                 "[variables('policyAssignmentNames').loganalytics]"
@@ -119,19 +119,19 @@
             }
         },
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
+             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('resourceDeploymentName')]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployLogAnalytics)]"
             ],
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('managementSubscriptionId')]",
             "properties": {
                 "mode": "incremental",
                 "template": "[reference(variables('policyDefinitions').deployLogAnalytics, '2018-05-01').policyRule.then.details.deployment.properties.template]",
-                "parameters": "[reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform', '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01').parameters]"
+                "parameters": "[reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-management', '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01').parameters]"
             }
         }
     ],

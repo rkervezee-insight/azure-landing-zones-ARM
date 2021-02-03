@@ -123,10 +123,6 @@
                 "description": "If 'Yes' is selected then an Azure Storage Account will be deployed."
             }
         },
-        "onPremisesIP": {
-            "type": "string",
-            "defaultValue": ""
-        },
         "enableRsv": {
             "type": "string",
             "defaultValue": "Yes",
@@ -231,10 +227,10 @@
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
             "spokeNetworking": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/spokeNetworking.json')]",
             "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vNetPeering.json')]",
-            "applicationLandingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/appLz.json')]"
+            "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]"
         },
-        "moveSubscription": "[concat(parameters('companyPrefix'), '-appLandingZones', '/', parameters('subscriptionId'))]",
-        "noSubscription": "[concat(parameters('companyPrefix'), '-appLandingZones', '/', 'na')]",
+        "moveSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', parameters('subscriptionId'))]",
+        "noSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', 'na')]",
         "deploymentNames": {
             "managementGroups": "[take(concat('mgmtGroups', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "keyVault": "[take(concat('keyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -285,7 +281,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-appLandingZones')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]"
@@ -333,7 +329,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-appLandingZones')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').spokeNetworking]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]"
@@ -417,7 +413,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-appLandingZones')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').vNetPeering]",
             "dependsOn": [
                 "[variables('deploymentNames').spokeNetworking]"
@@ -471,7 +467,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-appLandingZones')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').keyVault]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]"
@@ -502,9 +498,6 @@
                     "enableAkv": {
                         "value": "[parameters('enableAkv')]"
                     },
-                    "onPremisesIP": {
-                        "value": "[parameters('onPremisesIP')]"
-                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },
@@ -525,7 +518,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-appLandingZones')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').storage]",
             "dependsOn": [
                 "[variables('deploymentNames').keyVault]"
@@ -555,9 +548,6 @@
                     },
                     "enableStorage": {
                         "value": "[parameters('enableStorage')]"
-                    },
-                    "onPremisesIP": {
-                        "value": "[parameters('onPremisesIP')]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"

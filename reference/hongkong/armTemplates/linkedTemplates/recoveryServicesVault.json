@@ -30,13 +30,7 @@
             ],
             "defaultValue": "Yes"
         },
-        "subscriptionTag": {
-            "type": "string"
-        },
-        "ownerTag": {
-            "type": "string"
-        },
-        "subscriptionId": {
+        "identitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -46,10 +40,6 @@
         "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
-        },
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
             "policyName": "[toLower(concat(parameters('companyPrefix'),'-backuppolicy'))]",
@@ -65,15 +55,11 @@
     },
     "resources": [
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
-            "tags": {
-                "environment": "[variables('tags').environment]",
-                "owner": "[variables('tags').owner]"
-            },
             "properties": {}
         },
         {
