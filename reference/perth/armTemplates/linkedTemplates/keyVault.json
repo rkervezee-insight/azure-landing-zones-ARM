@@ -30,9 +30,6 @@
             ],
             "defaultValue": "Yes"
         },
-        "location": {
-            "type": "string"
-        },
         "subscriptionTag": {
             "type": "string"
         },

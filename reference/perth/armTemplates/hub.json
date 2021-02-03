@@ -121,8 +121,7 @@
         },
         "tenantId": {
             "type": "string",
-            "defaultValue": "",
-            "maxLength": 36,
+            "defaultValue": "[subscription().tenantId]",
             "metadata": {
                 "description": "Provide the tenant id"
             }
@@ -985,9 +984,6 @@
                     },
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
                     },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
