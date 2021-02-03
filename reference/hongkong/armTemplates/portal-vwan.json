@@ -277,15 +277,15 @@
             },
             {
                 "name": "esPlatformManagement",
-                "label": "Platform management, security, and governance",
+                "label": "Platform Management, Security, and Governance",
                 "subLabel": {
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "lzGs",
+                "bladeTitle": "platformManagement",
                 "elements": [
                     {
-                        "name": "infoBdox1",
+                        "name": "infoBox1",
                         "type": "Microsoft.Common.InfoBox",
                         "visible": true,
                         "options": {
@@ -295,15 +295,39 @@
                         }
                     },
                     {
+                        "name": "mgmtSubApi",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "request": {
+                            "method": "GET",
+                            "path": "subscriptions?api-version=2020-01-01"
+                        }
+                    },
+                    {
+                        "name": "esMgmtSub",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Platform Management Subscription",
+                        "toolTip": "",
+                        "multiselect": false,
+                        "selectAll": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "visible": true,
+                        "constraints": {
+                            "allowedValues": "[map(steps('esPlatformManagement').mgmtSubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "required": true
+                        }
+                    },
+                    {
                         "name": "esLogAnalytics",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Log Analytics workspace and enable monitoring for your platform and resources",
-                        "defaultValue": "Yes (recommended)",
+                        "label": "Deploy Log Analytics workspace and enable monitoring of platform and resources",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continious compliance.",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -330,35 +354,11 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "mgmtSubApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esMgmtSub",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Management Subscription",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
-                        "constraints": {
-                            "allowedValues": "[map(steps('esPlatformManagement').mgmtSubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
-                            "required": true
-                        }
-                    },
-                    {
                         "name": "monitoring",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
-                            "text": "Select which Azure Monitor solutions you will enable for your Log Analytics workspace",
+                            "text": "Select which Azure Monitor solutions to enable for the Log Analytics workspace",
                             "link": {
                                 "label": "Learn more",
                                 "uri": "https://docs.microsoft.com/azure/azure-monitor/insights/solutions"
@@ -369,12 +369,12 @@
                         "name": "esAgentSolution",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Agent Health solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -389,12 +389,12 @@
                         "name": "esChangeTracking",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Change Tracking solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -409,12 +409,12 @@
                         "name": "esUpdateMgmt",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Update Management solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -429,12 +429,12 @@
                         "name": "esActivityLog",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Activity Log solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -449,12 +449,12 @@
                         "name": "esVmInsights",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy VM Insights solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -469,12 +469,12 @@
                         "name": "esAntiMalware",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Antimalware solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -489,12 +489,12 @@
                         "name": "esServiceMap",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Service Map solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -509,12 +509,12 @@
                         "name": "esSqlAssessment",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy SQL Assessment solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -529,12 +529,12 @@
                         "name": "esKeyVaultAnalytics",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Key Vault Analytics solution",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -546,7 +546,7 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "textBlock0",
+                        "name": "security",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
@@ -761,12 +761,12 @@
                         "name": "esSecuritySolution",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Sentinel",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -826,7 +826,7 @@
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "lzGs",
+                "bladeTitle": "Connectivity",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -887,11 +887,11 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Address space (required for Virtual Hub)",
                         "toolTip": "Provide address prefix in CIDR notation (e.g 192.168.0.0/16)",
-                        "defaultValue": "192.168.0.0/16",
+                        "defaultValue": "10.49.0.0/18",
                         "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "The virtual hubs network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.0.0/16)"
+                            "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.49.0.0/18)"
                         }
                     },
                     {
@@ -906,13 +906,12 @@
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Region for the first virtual hub",
-                        "defaultValue": "Australai East",
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "toolTip": "Select the target region for you connectivity deployment (requires you to provide a subscriptionId for connectivity)",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
                             "required": true
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]"
+                        }
                     },
                     {
                         "name": "esVpnGw",
@@ -1722,6 +1721,20 @@
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
+            "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
+            "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
+            "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",
+            "enableUpdateMgmt": "[steps('esPlatformManagement').esUpdateMgmt]",
+            "enableActivityLog": "[steps('esPlatformManagement').esActivityLog]",
+            "enableVmInsights": "[steps('esPlatformManagement').esVmInsights]",
+            "enableAntiMalware": "[steps('esPlatformManagement').esAntiMalware]",
+            "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
+            "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
+            "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
+            "enableAkv": "[steps('esPlatformManagement').esAkv]",
+            "enableStorage": "[steps('esPlatformManagement').esSta]",
+            "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
+            "enableRsv": "[steps('esPlatformManagement').esRsv]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
             "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
@@ -1731,20 +1744,6 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
-            "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
-            "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
-            "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",
-            "enableUpdateMgmt": "[steps('esPlatformManagement').esUpdateMgmt]",
-            "enableActivityLog": "[steps('esPlatformManagement').esActivityLog]",
-            "enableVmInsights": "[steps('esPlatformManagement').esVmInsights]",
-            "enableAntiMalware": "[steps('esPlatformManagement').esAntiMalware]",
-            "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
-            "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
-            "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
-            "enableAkv": "[steps('esPlatformManagement').esAkv]",
-            "enableStorage": "[steps('esPlatformManagement').esSta]",
-            "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
-            "enableRsv": "[steps('esPlatformManagement').esRsv]",
         
             "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnSub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnSub, '')]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
@@ -1766,6 +1765,7 @@
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+
             "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esOnlineLzSub, '')]",
             "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",

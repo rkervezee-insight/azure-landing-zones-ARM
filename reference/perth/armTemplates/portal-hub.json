@@ -262,7 +262,7 @@
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "PlatformManagement",
+                "bladeTitle": "platformManagement",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -307,9 +307,9 @@
                         }
                     },
                     {
-                        "name": "esPlatformSubId",
+                        "name": "esPlatformSub",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Platform Azure Subscription (required)",
+                        "label": "Platform Azure Subscription",
                         "toolTip": "",
                         "multiselect": false,
                         "selectAll": true,
@@ -325,9 +325,9 @@
                     {
                         "name": "esLogAnalytics",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy the Log Analytics workspace.",
+                        "label": "Deploy Log Analytics workspace and enable monitoring of platform and resources",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, a Log Analytics workspace will be deployed.",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continious compliance.",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -358,7 +358,7 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "textBlock1",
+                        "name": "monitoring",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
@@ -550,7 +550,7 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "textBlock2",
+                        "name": "security",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
                         "options": {
@@ -762,7 +762,7 @@
                         }
                     },
                     {
-                        "name": "esAzSentinel",
+                        "name": "esSecuritySolution",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Sentinel",
                         "defaultValue": "Yes",
@@ -867,17 +867,17 @@
                 "name": "esPlatformConnectivity",
                 "label": "Network Connectivity (Hub)",
                 "subLabel": {
-                    "preValidation": "Select 'Yes' if goal state should be enforced during deployment. Select 'No' if you want to do it post deployment using Azure Policy.",
-                    "postValidation": "Done"
+                    "preValidation": "",
+                    "postValidation": ""
                 },
                 "bladeTitle": "Connectivity",
                 "elements": [
                     {
                         "name": "esHub",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy a Virtual Network",
+                        "label": "Deploy Hub Virtual Network",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, a Virtual Network will be deployed.",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -895,13 +895,13 @@
                     {
                         "name": "esAddress",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Virtual network CIDR Address Range",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/16)",
+                        "label": "Address space (required for Virtual Hub)",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g 192.168.0.0/16)",
                         "defaultValue": "10.49.0.0/18",
                         "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 192.168.1.0/24)"
+                            "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.49.0.0/18)"
                         }
                     },
                     {
@@ -915,7 +915,7 @@
                     {
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Azure Region for the Virtual Network Hub.",
+                        "label": "Region for the first virtual hub",
                         "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
@@ -941,7 +941,7 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneBlob",
@@ -1633,8 +1633,8 @@
         ],
         "outputs": {
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
-            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
+            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
@@ -1649,32 +1649,11 @@
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
-            "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esPrivateDnsZones]",
-            "enablePrivateDnsZonesTable": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneTable]",
-            "enablePrivateDnsZonesQueue": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneQueue]",
-            "enablePrivateDnsZonesFiles": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneFiles]",
-            "enablePrivateDnsZonesBlob": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneBlob]",
-            "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
-            "vpnGwType": "[steps('esPlatformConnectivity').esVpnGwType]",
-            "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
-            "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
-            "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
-            "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
-            "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
-            "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
-            "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
-            "enableHub": "[steps('esPlatformConnectivity').esHub]",
-            "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
-            "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
-            "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
-            "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
-            "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
-            "location": "[steps('esPlatformConnectivity').esNwLocation]",
             "tenantId": "[steps('esPlatformManagement').esAzureAdTenant]",
-            "subscriptionId": "[steps('esPlatformManagement').esPlatformSubId]",
+            "subscriptionId": "[steps('esPlatformManagement').esPlatformSub]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
+            "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
-            "enableAzSentinel": "[steps('esPlatformManagement').esAzSentinel]",
             "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
             "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
             "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",
@@ -1687,7 +1666,6 @@
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
             "enableAkv": "[steps('esPlatformManagement').esAkv]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
-            "onPremisesIP": "[steps('esPlatformManagement').esOnPremisesIP]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableRsv": "[steps('esPlatformManagement').esRsv]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
@@ -1699,7 +1677,27 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
-
+            "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
+            "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
+            "enableHub": "[steps('esPlatformConnectivity').esHub]",
+            "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
+            "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
+            "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
+            "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
+            "location": "[steps('esPlatformConnectivity').esNwLocation]",
+            "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esPrivateDnsZones]",
+            "enablePrivateDnsZonesTable": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneTable]",
+            "enablePrivateDnsZonesQueue": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneQueue]",
+            "enablePrivateDnsZonesFiles": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneFiles]",
+            "enablePrivateDnsZonesBlob": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneBlob]",
+            "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
+            "vpnGwType": "[steps('esPlatformConnectivity').esVpnGwType]",
+            "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
+            "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
+            "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
+            "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
+            "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
             "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esOnlineLzSub, '')]",
             "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
