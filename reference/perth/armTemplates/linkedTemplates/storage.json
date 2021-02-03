@@ -64,8 +64,8 @@
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
-            "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
+            "location": "[deployment().location]",
             "tags": {
                 "environment": "[variables('tags').environment]",
                 "owner": "[variables('tags').owner]"

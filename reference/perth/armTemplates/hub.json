@@ -997,7 +997,6 @@
         },
         // Linked template for the creation of Azure Storage
         {
-
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-05-01",
@@ -1112,7 +1111,6 @@
         },
         // Linked template for the creation of Azure Policy for the Landing Zone Management Group
         {
-            // Linked template for the creation of the Landing Zone Policies.
             "condition": "[or(or(or(or(or(or(equals(parameters('enableVmBackup'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes')), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
