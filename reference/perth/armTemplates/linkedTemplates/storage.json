@@ -30,10 +30,6 @@
             ],
             "defaultValue": "Yes"
         },
-        "onPremisesIP": {
-            "type": "string",
-            "defaultValue": ""
-        },
         "subscriptionTag": {
             "type": "string"
         },
@@ -122,7 +118,7 @@
                                         },
                                         {
                                             // Nested deployment for Storage (Resource Group Level)
-                                            "condition": "[and(equals(parameters('enableStorage'), 'Yes'), not(empty(parameters('onPremisesIP'))))]",
+                                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                                             "type": "Microsoft.Storage/storageAccounts",
                                             "apiVersion": "[variables('apiVersions').storage]",
                                             "name": "[variables('storage').name]",
@@ -141,10 +137,6 @@
                                                     "bypass": "Logging, Metrics, AzureServices",
                                                     "virtualNetworkRules": [],
                                                     "ipRules": [
-                                                        {
-                                                            "value": "[parameters('onPremisesIP')]",
-                                                            "action": "Allow"
-                                                        }
                                                     ],
                                                     "defaultAction": "Deny"
                                                 }

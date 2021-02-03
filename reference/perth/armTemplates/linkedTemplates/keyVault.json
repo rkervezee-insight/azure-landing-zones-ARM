@@ -30,9 +30,6 @@
             ],
             "defaultValue": "Yes"
         },
-        "onPremisesIP": {
-            "type": "string"
-        },
         "subscriptionTag": {
             "type": "string"
         },
@@ -123,7 +120,7 @@
                                             }
                                         },
                                         {
-                                            "condition": "[and(equals(parameters('enableAkv'), 'Yes'), not(empty(parameters('onPremisesIP'))))]",
+                                            "condition": "[equals(parameters('enableAkv'), 'Yes')]",
                                             "name": "[variables('keyVault').name]",
                                             "type": "Microsoft.KeyVault/vaults",
                                             "apiVersion": "[variables('apiVersions').KeyVault]",
@@ -142,9 +139,6 @@
                                                     "defaultAction": "Deny",
                                                     "bypass": "AzureServices",
                                                     "ipRules": [
-                                                        {
-                                                            "value": "[parameters('onPremisesIP')]"
-                                                        }
                                                     ],
                                                     "virtualNetworkRules": []
                                                 }
