@@ -1006,7 +1006,7 @@
         },
         // Linked template for the creation of Recovery Services Vaults
         {
-            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",

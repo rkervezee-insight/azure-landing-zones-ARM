@@ -869,11 +869,11 @@
             }
         },
         // Linked template for the creation of Recovery Services Vaults
-        {
+     {
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-05-01",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
                 "DeploymentDelay"
