@@ -90,7 +90,6 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
             "resourceGroup": "[variables('resourceGroupName')]",
-            "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
             ],
