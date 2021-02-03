@@ -619,6 +619,7 @@
             "keyVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/keyVault.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
+            "privateDns": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/privateDns.json')]",
             "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/hubNetworking.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/diagnosticsAndSecurity.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]"
@@ -635,7 +636,8 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -777,7 +779,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableHub'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').hubNetworking]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]",
@@ -829,24 +831,6 @@
                     },
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
-                    },
-                    "enablePrivateDnsZones": {
-                        "value": "[parameters('enablePrivateDnsZones')]"
-                    },
-                    "enablePrivateDnsZonesTable": {
-                        "value": "[parameters('enablePrivateDnsZonesTable')]"
-                    },
-                    "enablePrivateDnsZonesQueue": {
-                        "value": "[parameters('enablePrivateDnsZonesQueue')]"
-                    },
-                    "enablePrivateDnsZonesFiles": {
-                        "value": "[parameters('enablePrivateDnsZonesFiles')]"
-                    },
-                    "enablePrivateDnsZonesBlob": {
-                        "value": "[parameters('enablePrivateDnsZonesBlob')]"
-                    },
-                    "enablePrivateDnsZonesAkv": {
-                        "value": "[parameters('enablePrivateDnsZonesAkv')]"
                     },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
@@ -1246,6 +1230,61 @@
                     },
                     "enableLtrStorage": {
                         "value": "[parameters('enableLtrStorage')]"
+                    },
+                    "subscriptionId": {
+                        "value": "[parameters('subscriptionId')]"
+                    }
+                }
+            }
+        },
+        // Linked template for the creation of Private DNS
+        {
+            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "name": "[variables('deploymentNames').privateDns]",
+            "dependsOn": [
+                "[variables('deploymentNames').diagnosticsAndSecurity]",
+                "DeploymentDelay"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').privateDns]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "enablePrivateDnsZones": {
+                        "value": "[parameters('enablePrivateDnsZones')]"
+                    },
+                    "enablePrivateDnsZonesTable": {
+                        "value": "[parameters('enablePrivateDnsZonesTable')]"
+                    },
+                    "enablePrivateDnsZonesQueue": {
+                        "value": "[parameters('enablePrivateDnsZonesQueue')]"
+                    },
+                    "enablePrivateDnsZonesFiles": {
+                        "value": "[parameters('enablePrivateDnsZonesFiles')]"
+                    },
+                    "enablePrivateDnsZonesBlob": {
+                        "value": "[parameters('enablePrivateDnsZonesBlob')]"
+                    },
+                    "enablePrivateDnsZonesAkv": {
+                        "value": "[parameters('enablePrivateDnsZonesAkv')]"
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
