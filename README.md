@@ -1,6 +1,3 @@
-https://raw.githubusercontent.com/Insight-Services-APAC/AzureFoundations/master/reference/perth/armTemplates/portal-spoke.json
-https://raw.githubusercontent.com/Insight-Services-APAC/AzureFoundations/Master/reference/perth/armTemplates/spoke.json
-https://raw.githubusercontent.com/Insight-Services-APAC/AzureFoundations/master/reference/perth/armTemplates/portal-spoke.json
 # Azure Foundations - Reference Implementation
 
 ## Navigation Menu
