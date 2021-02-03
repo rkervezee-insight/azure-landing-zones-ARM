@@ -121,7 +121,8 @@
         },
         "tenantId": {
             "type": "string",
-            "defaultValue": "[subscription().tenantId]",
+            "defaultValue": "",
+            "maxLength": 36,
             "metadata": {
                 "description": "Provide the tenant id"
             }
