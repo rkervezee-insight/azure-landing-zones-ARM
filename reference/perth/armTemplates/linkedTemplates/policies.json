@@ -16,6 +16,152 @@
     "policies": {
       "policyDefinitions": [
         {
+          "Name": "Deploy-Log-AzureKeyVault",
+          "Properties": {
+            "Description": null,
+            "DisplayName": "Deploy-Log-AzureKeyVault",
+            "Mode": "All",
+            "Parameters": {
+              "kvName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "kvName",
+                  "description": "Provide name for key vault"
+                }
+              },
+              "rgName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "rgName",
+                  "description": "Provide name for resource group."
+                }
+              },
+              "tenantId": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "tenantId",
+                  "description": "tenantId."
+                }
+              }
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "deployIfNotExists",
+                "details": {
+                  "type": "Microsoft.KeyVault/vaults",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "name",
+                        "like": "[[parameters('kvName')]"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "rgName": {
+                          "value": "[[parameters('rgName')]"
+                        },
+                        "kvName": {
+                          "value": "[[parameters('kvName')]"
+                        },
+                        "tenantId": {
+                          "value": "[[parameters('tenantId')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "rgName": {
+                            "type": "string"
+                          },
+                          "kvName": {
+                            "type": "string"
+                          },
+                          "tenantId": {
+                            "type": "string"
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Resources/resourceGroups",
+                            "apiVersion": "2018-05-01",
+                            "name": "[[parameters('rgName')]",
+                            "location": "[[deployment().location]",
+                            "properties": {}
+                          },
+                          {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2018-05-01",
+                            "name": "kv",
+                            "resourceGroup": "[[parameters('rgName')]",
+                            "dependsOn": [
+                              "[[resourceId('Microsoft.Resources/resourceGroups/', parameters('rgName'))]"
+                            ],
+                            "properties": {
+                              "mode": "Incremental",
+                              "template": {
+                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
+                                "contentVersion": "1.0.0.0",
+                                "parameters": {},
+                                "variables": {},
+                                "resources": [
+                                  {
+                                    "type": "Microsoft.KeyVault/vaults",
+                                    "apiVersion": "2019-09-01",
+                                    "name": "[[parameters('kvName')]",
+                                    "location": "[[deployment().location]",
+                                    "properties": {
+                                      "enabledForDeployment": true,
+                                      "enabledForDiskEncryption": true,
+                                      "enabledForTemplateDeployment": true,
+                                      "tenantId": "[[parameters('tenantId')]",
+                                      "accessPolicies": [],
+                                      "sku": {
+                                        "name": "standard",
+                                        "family": "A"
+                                      },
+                                      "networkAcls": {
+                                        "defaultAction": "Deny",
+                                        "bypass": "AzureServices",
+                                        "ipRules": [],
+                                        "virtualNetworkRules": []
+                                      }
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
           "name": "Deny-Private-DNS-Zones",
           "properties": {
             "Description": "This policy denies the creation of a private DNS in the current scope, used in combination with policies that create centralized private DNS in connectivity subscription",
