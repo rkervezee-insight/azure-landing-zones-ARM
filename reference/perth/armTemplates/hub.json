@@ -779,7 +779,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableHub'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
             "name": "[variables('deploymentNames').hubNetworking]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]",
