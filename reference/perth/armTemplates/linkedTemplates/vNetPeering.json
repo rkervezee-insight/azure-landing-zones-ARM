@@ -57,8 +57,11 @@
         }
     },
     "variables": {
+        "Hub":
+        {
         "hubVnetId": "[concat('/subscriptions/',parameters('hubSubscriptionId'),'/resourceGroups/',parameters('hubVnetRG'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
         "hubVnetToSpokeVnetPeeringName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",
+        },
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "spokeVnetCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "spokeVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('spokeVnetCidr')))]",
@@ -97,7 +100,7 @@
                                 "allowGatewayTransit": false,
                                 "useRemoteGateways": true,
                                 "remoteVirtualNetwork": {
-                                    "id": "[variables('hubVnetId')]"
+                                    "id": "[variables('Hub').hubVnetId]"
                                 }
                             }
                         }
@@ -123,7 +126,7 @@
                         {
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
-                            "name": "[concat(parameters('hubVnetName'), '/',variables('hubVnetToSpokeVnetPeeringName'))]",
+                            "name": "[concat(parameters('hubVnetName'), '/',variables('Hub').hubVnetToSpokeVnetPeeringName)]",
                             "location": "[deployment().location]",
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
