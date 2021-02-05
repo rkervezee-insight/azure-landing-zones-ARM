@@ -219,8 +219,8 @@
 					{
 						"name": "workspaceSelector",
 						"type": "Microsoft.Solutions.ResourceSelector",
-						"label": "Select Log Analytics workspace",
-						"resourceType": "Microsoft.OperationalInsights/workspaces",
+						"label": "Select virtual network",
+						"resourceType": "Microsoft.Network/virtualNetworks",
 						"visible": "[equals(steps('aksIntegration').aksWorkspace, 'Yes')]",
 						"required": true,
 						"options": {
