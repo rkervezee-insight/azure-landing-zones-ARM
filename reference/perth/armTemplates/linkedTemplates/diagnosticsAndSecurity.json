@@ -150,7 +150,8 @@
             "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
             "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF')]",
             "deployAzFoundationsCIS": "/providers/Microsoft.Authorization/policySetDefinitions/1a5bb27d-173f-493e-9568-eb56638dde4d",
-            "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Append-AzHUB')]"
+            "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Append-AzHUB')]",
+            "deployAkv": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-AzureKeyVault')]"
         },
         "policyAssignmentNames": {
             "deployAzActivityLogLa": "Deploy-AzActivity-La",
@@ -164,7 +165,8 @@
             "allowedAzRegionsRg": "Allowed-AzRegions-RG",
             "denyAppGwyWaf": "Deny-AppGW-Without-WAF",
             "deployAzFoundationsCIS": "Deploy-AzureCIS",
-            "appendAzHub": "Append-AzHUB"
+            "appendAzHub": "Append-AzHUB",
+            "deployAkv": "Deploy-AzureKeyVault"
         },
         "rbac": {
             "owner": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
@@ -179,7 +181,8 @@
             "deployVmMonitoring": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployVmMonitoring))]",
             "deployAzSecurityCenterPricing": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzSecurityCenterPricing))]",
             "deployAzSecurityCenterAutoProvision": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision))]",
-            "enableAscMonitoring": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').enableAscMonitoring))]"
+            "enableAscMonitoring": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').enableAscMonitoring))]",
+            "deployAkv": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployAkv))]"
         },
         "blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
@@ -618,6 +621,50 @@
                 "displayName": "[variables('policyAssignmentNames').appendAzHub]",
                 "policyDefinitionId": "[variables('policyDefinitions').appendAzHub]",
                 "scope": "[variables('scope').topLevel]"
+            }
+        },
+        // Conditional assignment of Azure KEy Vault
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').deployAkv]",
+            "location": "[deployment().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "description": "[variables('policyAssignmentNames').deployAkv]",
+                "displayName": "[variables('policyAssignmentNames').deployAkv]",
+                "policyDefinitionId": "[variables('policyDefinitions').deployAkv]",
+                "scope": "[variables('scope').topLevel]",
+                "parameters": {
+                    "kvName": {
+                        "value": "tulpytestAKV"
+                    },
+                    "location": {
+                        "value": "[deployment().location]"
+                    },
+                    "rgName": {
+                        "value": "test"
+                    },
+                    "tenantId": {
+                        "value": "[subscription().tenantId]"
+                    }
+                }
+            }
+        },
+        // Role assignment of the conditional key vault
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
+            "name": "[variables('roleAssignmentNames').deployAkv]",
+            "dependsOn": [
+                "[variables('policyAssignmentNames').deployAkv]"
+            ],
+            "properties": {
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
+                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAkv), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         }
     ],

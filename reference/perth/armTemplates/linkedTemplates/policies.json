@@ -16,10 +16,10 @@
     "policies": {
       "policyDefinitions": [
         {
-          "Name": "Deploy-Log-AzureKeyVault",
+          "Name": "Deploy-AzureKeyVault",
           "Properties": {
             "Description": null,
-            "DisplayName": "Deploy-Log-AzureKeyVault",
+            "DisplayName": "Deploy-AzureKeyVault",
             "Mode": "All",
             "Parameters": {
               "kvName": {
@@ -34,13 +34,6 @@
                 "metadata": {
                   "displayName": "rgName",
                   "description": "Provide name for resource group."
-                }
-              },
-              "tenantId": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "tenantId",
-                  "description": "tenantId."
                 }
               }
             },
@@ -81,6 +74,9 @@
                         "kvName": {
                           "value": "[[parameters('kvName')]"
                         },
+                        "location": {
+                          "value": "[[parameters('location')]"
+                        },
                         "tenantId": {
                           "value": "[[parameters('tenantId')]"
                         }
@@ -94,9 +90,6 @@
                           },
                           "kvName": {
                             "type": "string"
-                          },
-                          "tenantId": {
-                            "type": "string"
                           }
                         },
                         "variables": {},
@@ -105,7 +98,7 @@
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "2018-05-01",
                             "name": "[[parameters('rgName')]",
-                            "location": "[[deployment().location]",
+                            "location": "[[parameters('location')]",
                             "properties": {}
                           },
                           {
@@ -128,7 +121,7 @@
                                     "type": "Microsoft.KeyVault/vaults",
                                     "apiVersion": "2019-09-01",
                                     "name": "[[parameters('kvName')]",
-                                    "location": "[[deployment().location]",
+                                    "location": "[[parameters('location')]",
                                     "properties": {
                                       "enabledForDeployment": true,
                                       "enabledForDiskEncryption": true,
