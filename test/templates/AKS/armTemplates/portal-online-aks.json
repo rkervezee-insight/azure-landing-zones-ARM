@@ -9,7 +9,7 @@
         "steps": [
             {
                 "name": "aksBasics",
-                "label": "AKS Setup (Online)",
+                "label": "AKS Setup (Onlinetulpy)",
                 "elements": [
 					{
                         "name": "infoBox1",
