@@ -31,6 +31,11 @@
             "maxLength": 36,
             "defaultValue": ""
         },
+        "tenantId": {
+            "type": "string",
+            "maxLength": 36,
+            "defaultValue": ""
+        },
         "enableLogAnalytics": {
             "type": "string",
             "defaultValue": "Yes",
@@ -649,7 +654,7 @@
                         "value": "test"
                     },
                     "tenantId": {
-                        "value": "[subscription().tenantId]"
+                        "value": "[parameters('tenantId')]"
                     }
                 }
             }
@@ -666,22 +671,6 @@
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
                 "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAkv), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
-            }
-        },
-                // Conditional ARM deployments akv
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').azKeyVault]",
-            "location": "[deployment().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAkv)]"
-            ],
-            "subscriptionId": "[parameters('subscriptionId')]",
-            "properties": {
-                "mode": "incremental",
-                "template": "[and(not(empty(parameters('subscriptionId'))), reference(variables('policyDefinitions').deployAkv, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
-                "parameters": "[and(not(empty(parameters('subscriptionId'))), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAkv), '2018-05-01').parameters, json('null'))]"
             }
         }
     ],
