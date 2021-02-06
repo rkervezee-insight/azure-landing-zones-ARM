@@ -96,8 +96,8 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
+                        // Nested deployment for Storage (Resource Group Level)
                         {
-                            // Nested deployment for Storage (Resource Group Level)
                             "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",

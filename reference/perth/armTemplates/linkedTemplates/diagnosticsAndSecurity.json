@@ -194,7 +194,8 @@
             "ascPricing": "[take(concat('ascPricing', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "ascAutoProvision": "[take(concat('ascAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "azActivityLogsLa": "[take(concat('azActivityLogsLa', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "azActivityLogsSta": "[take(concat('azActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "azActivityLogsSta": "[take(concat('azActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "azKeyVault": "[take(concat('azKeyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -665,6 +666,22 @@
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
                 "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAkv), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+            }
+        },
+                // Conditional ARM deployments akv
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "[variables('deploymentNames').azKeyVault]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAkv)]"
+            ],
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "properties": {
+                "mode": "incremental",
+                "template": "[and(not(empty(parameters('subscriptionId'))), reference(variables('policyDefinitions').deployAkv, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[and(not(empty(parameters('subscriptionId'))), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAkv), '2018-05-01').parameters, json('null'))]"
             }
         }
     ],
