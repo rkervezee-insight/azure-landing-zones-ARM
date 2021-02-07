@@ -85,6 +85,13 @@
                 "description": "Provide the value for the owner tag"
             }
         },
+        "costCenterTag": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Provide the value for the cost center tag"
+            }
+        },
         "tenantId": {
             "type": "string",
             "defaultValue": "",
@@ -369,6 +376,9 @@
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
                     },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    },
                     "enableSpoke": {
                         "value": "[parameters('enableSpoke')]"
                     },
@@ -447,9 +457,6 @@
                     "addressPrefix": {
                         "value": "[parameters('addressPrefix')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
-                    },
                     "hubSubscriptionId": {
                         "value": "[parameters('hubSubscriptionId')]"
                     },
@@ -504,11 +511,11 @@
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
                     },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
-                    },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }
@@ -555,8 +562,8 @@
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
