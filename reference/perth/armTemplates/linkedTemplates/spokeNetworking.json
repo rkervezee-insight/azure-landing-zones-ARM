@@ -156,7 +156,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[concat(parameters('companyPrefix'), '-networking')]",
+            "name": "[variables('deploymentName')]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {

@@ -224,7 +224,82 @@
                 "description": "Address prefix"
             },
             "defaultValue": "192.168.0.0/24"
+        },
+              "budgetName": {
+        "type": "string",
+        "defaultValue": "MyBudget",
+        "metadata": {
+          "description": "Name of the Subscription Budget."
         }
+      },
+      "amount": {
+        "type": "string",
+        "defaultValue": "1000",
+        "metadata": {
+          "description": "The total amount of cost or usage to track with the budget"
+        }
+      },
+      "timeGrain": {
+        "type": "string",
+        "defaultValue": "Monthly",
+        "allowedValues": [
+          "Monthly",
+          "Quarterly",
+          "Annually"
+        ],
+        "metadata": {
+          "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
+        }
+      },
+      "startDate": {
+        "type": "string",
+        "metadata": {
+          "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
+        }
+      },
+      "endDate": {
+        "type": "string",
+        "metadata": {
+          "description": "The end date for the budget in YYYY-MM-DD format. If not provided, we default this to 10 years from the start date."
+        }
+      },
+      "firstThreshold": {
+        "type": "string",
+        "defaultValue": "90",
+        "metadata": {
+          "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
+        }
+      },
+      "secondThreshold": {
+        "type": "string",
+        "defaultValue": "110",
+        "metadata": {
+          "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
+        }
+      },
+      "contactRoles": {
+        "type": "array",
+        "defaultValue": [
+          "Owner",
+          "Contributor",
+          "Reader"
+        ],
+        "metadata": {
+          "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
+        }
+      },
+      "contactEmails": {
+        "type": "array",
+        "metadata": {
+          "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
+        }
+      },
+      "contactGroups": {
+        "type": "array",
+        "metadata": {
+          "description": "The list of action groups to send the budget notification to when the threshold is exceeded. It accepts array of strings."
+        }
+      }
     },
     "variables": {
         "deploymentUris": {
@@ -233,7 +308,8 @@
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
             "spokeNetworking": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/spokeNetworking.json')]",
             "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vNetPeering.json')]",
-            "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]"
+            "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]",
+            "budget": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/budget.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', parameters('subscriptionId'))]",
         "noSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', 'na')]",
@@ -243,7 +319,9 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "spokeNetworking": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "vNetPeering": "[take(concat('vNetPeering', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "landingZone": "[take(concat('appLz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "landingZone": "[take(concat('appLz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "budget": "[take(concat('budget', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -539,6 +617,56 @@
                     },
                     "hubVnetRG": {
                         "value": "[parameters('hubVnetRG')]"
+                    }
+                }
+            }
+        },
+        // Linked template for the creation of a Subscription Budget
+        {
+            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "name": "[variables('deploymentNames').budget]",
+            "dependsOn": [
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').budget]"
+                },
+                "parameters": {
+                    "budgetName": {
+                        "value": "[parameters('budgetName')]"
+                    },
+                    "amount": {
+                        "value": "[parameters('amount')]"
+                    },
+                    "timeGrain": {
+                        "value": "[parameters('timeGrain')]"
+                    },
+                    "startDate": {
+                        "value": "[parameters('startDate')]"
+                    },
+                    "endDate": {
+                        "value": "[parameters('endDate')]"
+                    },
+                    "firstThreshold": {
+                        "value": "[parameters('firstThreshold')]"
+                    },
+                    "secondThreshold": {
+                        "value": "[parameters('secondThreshold')]"
+                    },
+                    "contactRoles": {
+                        "value": "[parameters('contactRoles')]"
+                    },
+                    "contactEmails": {
+                        "value": "[parameters('contactEmails')]"
+                    },
+                    "contactGroups": {
+                        "value": "[parameters('contactGroups')]"
                     }
                 }
             }

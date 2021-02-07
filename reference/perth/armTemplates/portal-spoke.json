@@ -460,7 +460,7 @@
                         "name": "esAkv",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Key Vault.",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, an Azure Key Vault will be deployed",
                         "constraints": {
                             "allowedValues": [
@@ -504,7 +504,7 @@
                         "name": "esSta",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy a Storage account for diagnostics.",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, a Storage account will be deployed",
                         "constraints": {
                             "allowedValues": [
@@ -637,7 +637,7 @@
                         "name": "esWeb",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Web Subnet",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "toolTip": "If 'Yes' is selected, a subnet for Web Server will be deployed.",
                         "constraints": {
@@ -669,7 +669,7 @@
                         "name": "esApp",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Application Subnet",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "toolTip": "If 'Yes' is selected, a subnet for Application Servers will be deployed.",
                         "constraints": {
@@ -701,7 +701,7 @@
                         "name": "esData",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Data Subnet",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "toolTip": "If 'Yes' is selected, a subnet for Data Servers will be deployed.",
                         "constraints": {
