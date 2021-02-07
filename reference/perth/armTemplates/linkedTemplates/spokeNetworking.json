@@ -36,6 +36,9 @@
         "ownerTag": {
             "type": "string"
         },
+        "costCenterTag": {
+            "type": "string"
+        },
         "addressPrefix": {
             "type": "string",
             "metadata": {
@@ -134,7 +137,8 @@
         "nsgId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -155,7 +159,8 @@
             "location": "[deployment().location]",
             "tags": {
                 "environment": "[variables('tags').environment]",
-                "owner": "[variables('tags').owner]"
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
             },
             "properties": {}
         },

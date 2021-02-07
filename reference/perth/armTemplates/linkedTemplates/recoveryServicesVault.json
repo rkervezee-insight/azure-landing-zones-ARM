@@ -36,10 +36,8 @@
         "ownerTag": {
             "type": "string"
         },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
+        "costCenterTag": {
+            "type": "string"
         }
     },
     "variables": {
@@ -48,7 +46,8 @@
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         },
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
@@ -65,14 +64,14 @@
     },
     "resources": [
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
             "tags": {
                 "environment": "[variables('tags').environment]",
-                "owner": "[variables('tags').owner]"
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
             },
             "properties": {}
         },

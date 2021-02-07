@@ -325,8 +325,8 @@
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }

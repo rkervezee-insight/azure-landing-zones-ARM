@@ -36,10 +36,8 @@
         "ownerTag": {
             "type": "string"
         },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
+        "costCenterTag": {
+            "type": "string"
         },
         "tenantId": {
             "type": "string",
@@ -53,7 +51,8 @@
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-security'))]",
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         },
         "keyVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
@@ -72,14 +71,14 @@
     "resources": [
         // Create Resource Group
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
             "tags": {
                 "environment": "[variables('tags').environment]",
-                "owner": "[variables('tags').owner]"
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
             },
             "properties": {}
         },
