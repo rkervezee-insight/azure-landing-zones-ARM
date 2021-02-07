@@ -608,7 +608,7 @@
                         "label": "Budget Contact Eamils",
                         "toolTip": "Provide the Budget amount in $",
                         "defaultValue": [
-                            "stephen.tulp@outlook.com", "stephen.tulp1@outlook.com"
+                            "stephen.tulp@outlook.com"
                         ]
                     }
                 ]
