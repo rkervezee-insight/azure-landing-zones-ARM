@@ -552,7 +552,7 @@
                     {
                         "name": "esBudget",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy an Azure Budget.",
+                        "label": "Deploy a Budget.",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, a Budget will be deployed",
                         "constraints": {
@@ -607,7 +607,9 @@
                         "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
                         "label": "Budget Contact Eamils",
                         "toolTip": "Provide the Budget amount in $",
-                        "defaultValue": "stephen.tulp@outlook.com, stephen.tulp1@outlook.com"
+                        "defaultValue": [
+                            "stephen.tulp@outlook.com", "stephen.tulp1@outlook.com"
+                        ]
                     }
                 ]
             },
@@ -856,7 +858,6 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-
             "subscriptionId": "[steps('esLz').esLzSub]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
@@ -876,8 +877,6 @@
             "amount": "[steps('esLz').esBudgetAmount]",
             "timeGrain": "[steps('esLz').esBudgetTimeGrain]",
             "contactEmails": "[steps('esLz').esBudgetContactEmail]",
-
-
             "enableSpoke": "[steps('esLzConnectivity').esSpoke]",
             "addressPrefix": "[steps('esLzConnectivity').esAddress]",
             "location": "[steps('esLzConnectivity').esNwLocation]",
