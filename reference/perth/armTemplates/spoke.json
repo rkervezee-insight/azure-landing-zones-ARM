@@ -277,7 +277,7 @@
             "condition": "[not(empty(parameters('subscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
-            "name": "[if(not(empty(parameters('subscriptionId'))), variables('moveSubscription'), variables('noSubscription'))]",
+            "name": "[and(not(empty(parameters('subscriptionId'))), variables('moveSubscription'))]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]"
             ],
@@ -318,6 +318,105 @@
                     },
                     "enableRsv": {
                         "value": "[parameters('enableRsv')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    }
+                }
+            }
+        },
+        // Linked template for the creation of Azure Key Vault
+        {
+            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "name": "[variables('deploymentNames').keyVault]",
+            "dependsOn": [
+                "[variables('deploymentNames').managementGroups]"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').keyVault]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "akvPrefix": {
+                        "value": "[parameters('akvPrefix')]"
+                    },
+                    "enableAkv": {
+                        "value": "[parameters('enableAkv')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    },
+                    "tenantId": {
+                        "value": "[parameters('tenantId')]"
+                    }
+                }
+            }
+        },
+        // Linked template for the creation of Azure Storage
+        {    
+            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "name": "[variables('deploymentNames').storage]",
+            "dependsOn": [
+                "[variables('deploymentNames').keyVault]"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').storage]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "staPrefix": {
+                        "value": "[parameters('staPrefix')]"
+                    },
+                    "enableStorage": {
+                        "value": "[parameters('enableStorage')]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
@@ -465,105 +564,6 @@
                     },
                     "hubVnetRG": {
                         "value": "[parameters('hubVnetRG')]"
-                    }
-                }
-            }
-        },
-        // Linked template for the creation of Azure Key Vault
-        {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
-            "name": "[variables('deploymentNames').keyVault]",
-            "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
-            ],
-            "location": "[deployment().location]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').keyVault]"
-                },
-                "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
-                    "akvPrefix": {
-                        "value": "[parameters('akvPrefix')]"
-                    },
-                    "enableAkv": {
-                        "value": "[parameters('enableAkv')]"
-                    },
-                    "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
-                    },
-                    "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
-                    },
-                    "costCenterTag": {
-                        "value": "[parameters('costCenterTag')]"
-                    },
-                    "tenantId": {
-                        "value": "[parameters('tenantId')]"
-                    }
-                }
-            }
-        },
-        // Linked template for the creation of Azure Storage
-        {    
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
-            "name": "[variables('deploymentNames').storage]",
-            "dependsOn": [
-                "[variables('deploymentNames').keyVault]"
-            ],
-            "location": "[deployment().location]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').storage]"
-                },
-                "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
-                    "staPrefix": {
-                        "value": "[parameters('staPrefix')]"
-                    },
-                    "enableStorage": {
-                        "value": "[parameters('enableStorage')]"
-                    },
-                    "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
-                    },
-                    "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
-                    },
-                    "costCenterTag": {
-                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
