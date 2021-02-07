@@ -795,7 +795,7 @@
                         "filter": true,
                         "filterPlaceholder": "Filter items ...",
                         "multiLine": true,
-                        "visible": true,
+                        "visible": "[equals(steps('esPlatformManagement').esAkv, 'Yes')]",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformManagement').tenantApi.value, (tenant) => parse(concat('{\"label\":\"', tenant.displayName, '\",\"description\":\"', tenant.tenantId, '\",\"value\":\"', toLower(tenant.tenantId), '\"}')) )]"
                         }

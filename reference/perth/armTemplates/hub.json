@@ -1127,9 +1127,6 @@
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
-                    },
-                      "tenantId": {
-                        "value": "[parameters('tenantId')]"
                     }
                 }
             }
