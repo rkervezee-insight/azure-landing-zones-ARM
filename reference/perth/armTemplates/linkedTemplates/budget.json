@@ -13,6 +13,10 @@
         "amount": {
             "type": "string"
         },
+        "startDate": {
+            "type": "string",
+            "defaultValue": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
+        },
         "timeGrain": {
             "type": "string",
             "allowedValues": [
@@ -52,7 +56,7 @@
             "name": "[variables('budget').name]",
             "properties": {
                 "timePeriod": {
-                    "startDate": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
+                    "startDate": "[parameters('startDate')]"
                 },
                 "timeGrain": "[parameters('timeGrain')]",
                 "amount": "[parameters('amount')]",

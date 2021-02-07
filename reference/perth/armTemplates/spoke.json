@@ -233,6 +233,10 @@
             ],
             "defaultValue": "Yes"
         },
+        "startDate": {
+            "type": "string",
+            "defaultValue": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
+        },
         "amount": {
             "type": "string"
         },
@@ -600,6 +604,9 @@
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
+                    },
+                    "startDate": {
+                        "value": "[parameters('startDate')]"
                     }
                 }
             }
