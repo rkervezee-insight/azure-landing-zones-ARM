@@ -291,15 +291,6 @@
             "metadata": {
                 "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
             }
-        },
-        "contactGroups": {
-            "type": "array",
-            "defaultValue": [
-                "test"
-            ],
-            "metadata": {
-                "description": "The list of action groups to send the budget notification to when the threshold is exceeded. It accepts array of strings."
-            }
         }
     },
     "variables": {
@@ -662,9 +653,6 @@
                     },
                     "contactEmails": {
                         "value": "[parameters('contactEmails')]"
-                    },
-                    "contactGroups": {
-                        "value": "[parameters('contactGroups')]"
                     }
                 }
             }
