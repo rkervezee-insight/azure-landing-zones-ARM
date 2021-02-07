@@ -336,7 +336,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
             "name": "[variables('deploymentNames').spokeNetworking]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]"
