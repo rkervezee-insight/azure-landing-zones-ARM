@@ -228,7 +228,6 @@
     },
     "variables": {
         "deploymentUris": {
-            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/mgmtGroups.json')]",
             "keyVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/keyVault.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
@@ -239,7 +238,6 @@
         "moveSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', parameters('subscriptionId'))]",
         "noSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', 'na')]",
         "deploymentNames": {
-            "managementGroups": "[take(concat('mgmtGroups', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "keyVault": "[take(concat('keyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -253,25 +251,6 @@
         }
     },
     "resources": [
-        // Linked template for the creation of Management Groups
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').managementGroups]",
-            "location": "[deployment().location]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').managementGroups]"
-                },
-                "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    }
-                }
-            }
-        },
         // Move identified Azure subscription to the appropriate Management Group
         {
             "condition": "[not(empty(parameters('subscriptionId')))]",
@@ -279,7 +258,6 @@
             "apiVersion": "[variables('apiVersions').subscriptions]",
             "name": "[if(not(empty(parameters('subscriptionId'))), variables('moveSubscription'), variables('noSubscription'))]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
             ],
             "properties": {}
         },
@@ -291,7 +269,6 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -339,7 +316,6 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').keyVault]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -438,7 +414,6 @@
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
             "name": "[variables('deploymentNames').spokeNetworking]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
             ],
             "location": "[deployment().location]",
             "properties": {
