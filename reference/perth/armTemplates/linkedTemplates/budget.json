@@ -3,22 +3,13 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
     "budgetName": {
-            "type": "string",
-            "defaultValue": "MyBudget",
-            "metadata": {
-                "description": "Name of the Subscription Budget."
-            }
+            "type": "string"
         },
         "amount": {
-            "type": "string",
-            "defaultValue": "1000",
-            "metadata": {
-                "description": "The total amount of cost or usage to track with the budget"
-            }
+            "type": "string"
         },
         "timeGrain": {
             "type": "string",
-            "defaultValue": "Monthly",
             "allowedValues": [
                 "Monthly",
                 "Quarterly",
@@ -29,45 +20,19 @@
             }
         },
         "startDate": {
-            "type": "string",
-            "defaultValue": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]",
-            "metadata": {
-                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
-            }
+            "type": "string"
         },
         "firstThreshold": {
-            "type": "string",
-            "defaultValue": "90",
-            "metadata": {
-                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
-            }
+            "type": "string"
         },
         "secondThreshold": {
-            "type": "string",
-            "defaultValue": "110",
-            "metadata": {
-                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
-            }
+            "type": "string"
         },
         "contactRoles": {
-            "type": "array",
-            "defaultValue": [
-                "Owner",
-                "Contributor",
-                "Reader"
-            ],
-            "metadata": {
-                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
-            }
+            "type": "array"
         },
         "contactEmails": {
-            "type": "array",
-            "defaultValue": [
-                "stephen.tulp@outlook.com"
-            ],
-            "metadata": {
-                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
-            }
+            "type": "array"
         }
     },
     "variables": {},
