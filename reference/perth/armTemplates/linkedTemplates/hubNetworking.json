@@ -222,7 +222,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        // Deployment of the Network Resource Group
+                        // Create Resource Group
                         {
                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
@@ -250,6 +250,7 @@
                                     "contentVersion": "1.0.0.0",
                                     "parameters": {},
                                     "resources": [
+                                        // Deploy Resource Group Lock
                                         {
                                             "type": "Microsoft.Authorization/locks",
                                             "apiVersion": "[variables('apiVersions').locks]",
