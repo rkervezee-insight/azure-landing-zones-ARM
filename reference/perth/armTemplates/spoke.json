@@ -225,19 +225,16 @@
             },
             "defaultValue": "192.168.0.0/24"
         },
-        "budgetName": {
+        "enableBudget": {
             "type": "string",
-            "defaultValue": "MyBudget",
-            "metadata": {
-                "description": "Name of the Subscription Budget."
-            }
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
         },
         "amount": {
-            "type": "string",
-            "defaultValue": "1000",
-            "metadata": {
-                "description": "The total amount of cost or usage to track with the budget"
-            }
+            "type": "string"
         },
         "timeGrain": {
             "type": "string",
@@ -246,51 +243,10 @@
                 "Monthly",
                 "Quarterly",
                 "Annually"
-            ],
-            "metadata": {
-                "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
-            }
-        },
-        "startDate": {
-            "type": "string",
-            "defaultValue": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]",
-            "metadata": {
-                "description": "The start date must be first of the month in YYYY-MM-DD format. Future start date should not be more than three months. Past start date should be selected within the timegrain preiod."
-            }
-        },
-        "firstThreshold": {
-            "type": "string",
-            "defaultValue": "80",
-            "metadata": {
-                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
-            }
-        },
-        "secondThreshold": {
-            "type": "string",
-            "defaultValue": "100",
-            "metadata": {
-                "description": "Threshold value associated with a notification. Notification is sent when the cost exceeded the threshold. It is always percent and has to be between 0 and 1000."
-            }
-        },
-        "contactRoles": {
-            "type": "array",
-            "defaultValue": [
-                "Owner",
-                "Contributor",
-                "Reader"
-            ],
-            "metadata": {
-                "description": "The list of contact roles to send the budget notification to when the threshold is exceeded."
-            }
+            ]
         },
         "contactEmails": {
-            "type": "array",
-            "defaultValue": [
-                "stephen.tulp@outlook.com"
-            ],
-            "metadata": {
-                "description": "The list of email addresses to send the budget notification to when the threshold is exceeded."
-            }
+            "type": "array"
         }
     },
     "variables": {
@@ -615,7 +571,7 @@
         },
         // Linked template for the creation of a Subscription Budget
         {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableBudget'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "subscriptionId": "[parameters('subscriptionId')]",
@@ -630,8 +586,8 @@
                     "uri": "[variables('deploymentUris').budget]"
                 },
                 "parameters": {
-                    "budgetName": {
-                        "value": "[parameters('budgetName')]"
+                    "enableBudget": {
+                        "value": "[parameters('enableBudget')]"
                     },
                     "amount": {
                         "value": "[parameters('amount')]"
@@ -639,20 +595,11 @@
                     "timeGrain": {
                         "value": "[parameters('timeGrain')]"
                     },
-                    "startDate": {
-                        "value": "[parameters('startDate')]"
-                    },
-                    "firstThreshold": {
-                        "value": "[parameters('firstThreshold')]"
-                    },
-                    "secondThreshold": {
-                        "value": "[parameters('secondThreshold')]"
-                    },
-                    "contactRoles": {
-                        "value": "[parameters('contactRoles')]"
-                    },
                     "contactEmails": {
                         "value": "[parameters('contactEmails')]"
+                    },
+                    "subscriptionId": {
+                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }

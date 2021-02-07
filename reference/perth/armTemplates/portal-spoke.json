@@ -539,6 +539,75 @@
                             ]
                         },
                         "visible": true
+                    },
+                    {
+                        "name": "budget",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": true,
+                        "options": {
+                            "icon": "Info",
+                            "text": "Allocate values to set the budget on the Landing Zone."
+                        }
+                    },
+                    {
+                        "name": "esBudget",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy an Azure Budget.",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, a Budget will be deployed",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "esBudgetAmount",
+                        "type": "Microsoft.Common.TextBox",
+                        "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
+                        "label": "Budget Amount",
+                        "toolTip": "Provide the Budget amount in $",
+                        "defaultValue": "1000"
+                    },
+                    {
+                        "name": "esBudgetTimeGrain",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Budget Time Grain.",
+                        "defaultValue": "Monthly",
+                        "toolTip": "If 'Yes' is selected, a Recovery Services Vault will be deployed",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Monthly",
+                                    "value": "Monthly"
+                                },
+                                {
+                                    "label": "Quarterly",
+                                    "value": "Quarterly"
+                                },
+                                {
+                                    "label": "Annually",
+                                    "value": "Annually"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esLz').esBudget, 'Yes')]"
+                    },
+                    {
+                        "name": "esBudgetContactEmail",
+                        "type": "Microsoft.Common.TextBox",
+                        "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
+                        "label": "Budget Contact Eamils",
+                        "toolTip": "Provide the Budget amount in $",
+                        "defaultValue": "stephen.tulp@outlook.com, stephen.tulp1@outlook.com"
                     }
                 ]
             },
@@ -803,6 +872,11 @@
             "tenantId": "[steps('esLz').esAzureAdTenant]",
             "enableStorage": "[steps('esLz').esSta]",
             "enableRsv": "[steps('esLz').esRsv]",
+            "enableBudget": "[steps('esLz').esBudget]",
+            "amount": "[steps('esLz').esBudgetAmount]",
+            "timeGrain": "[steps('esLz').esBudgetTimeGrain]",
+            "contactEmails": "[steps('esLz').esBudgetContactEmail]",
+
 
             "enableSpoke": "[steps('esLzConnectivity').esSpoke]",
             "addressPrefix": "[steps('esLzConnectivity').esAddress]",

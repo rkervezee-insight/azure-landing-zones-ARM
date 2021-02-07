@@ -2,8 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-    "budgetName": {
-            "type": "string"
+        "enableBudget": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
         },
         "amount": {
             "type": "string"
@@ -19,52 +24,56 @@
                 "description": "The time covered by a budget. Tracking of the amount will be reset based on the time grain."
             }
         },
-        "startDate": {
-            "type": "string"
-        },
-        "firstThreshold": {
-            "type": "string"
-        },
-        "secondThreshold": {
-            "type": "string"
-        },
-        "contactRoles": {
-            "type": "array"
-        },
         "contactEmails": {
             "type": "array"
+        },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
         }
     },
-    "variables": {},
-    "resources": [
-      {
-        "type": "Microsoft.Consumption/budgets",
-        "apiVersion": "2019-10-01",
-        "name": "[parameters('budgetName')]",
-        "properties": {
-          "timePeriod": {
-            "startDate": "[parameters('startDate')]"
-          },
-          "timeGrain": "[parameters('timeGrain')]",
-          "amount": "[parameters('amount')]",
-          "category": "Cost",
-          "notifications": {
-            "NotificationForExceededBudget1": {
-              "enabled": true,
-              "operator": "GreaterThan",
-              "threshold": "[parameters('firstThreshold')]",
-              "contactEmails": "[parameters('contactEmails')]",
-              "contactRoles": "[parameters('contactRoles')]"
-            },
-            "NotificationForExceededBudget2": {
-              "enabled": true,
-              "operator": "GreaterThan",
-              "threshold": "[parameters('secondThreshold')]",
-              "contactEmails": "[parameters('contactEmails')]",
-              "contactRoles": "[parameters('contactRoles')]"
-            }
-          }
+    "variables": {
+        "apiVersions": {
+            "budgets": "2019-10-01"
+        },
+        "budget": {
+            "name": "[toLower(concat(parameters('subscriptionId'), '-budget'))]",
+            "firstThreshold": "80",
+            "secondThreshold": "100",
+            "contactRoles": "Owner"
         }
-      }
+    },
+    "resources": [
+        {
+            "condition": "[and(equals(parameters('enableBudget'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+            "type": "Microsoft.Consumption/budgets",
+            "apiVersion": "[variables('apiVersions').budgets]",
+            "name": "[variables('budget').name]",
+            "properties": {
+                "timePeriod": {
+                    "startDate": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
+                },
+                "timeGrain": "[parameters('timeGrain')]",
+                "amount": "[parameters('amount')]",
+                "category": "Cost",
+                "notifications": {
+                    "NotificationForExceededBudget1": {
+                        "enabled": true,
+                        "operator": "GreaterThan",
+                        "threshold": "[variables('budget').firstThreshold]",
+                        "contactEmails": "[parameters('contactEmails')]",
+                        "contactRoles": "[variables('budget').contactRoles]"
+                    },
+                    "NotificationForExceededBudget2": {
+                        "enabled": true,
+                        "operator": "GreaterThan",
+                        "threshold": "[variables('budget').secondThreshold]",
+                        "contactEmails": "[parameters('contactEmails')]",
+                        "contactRoles": "[variables('budget').contactRoles]"
+                    }
+                }
+            }
+        }
     ]
-  }
+}
