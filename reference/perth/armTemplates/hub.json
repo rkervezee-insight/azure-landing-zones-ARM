@@ -903,9 +903,6 @@
                     },
                     "costCenterTag": {
                         "value": "[parameters('costCenterTag')]"
-                    },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }
@@ -957,9 +954,6 @@
                     },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
-                    },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }

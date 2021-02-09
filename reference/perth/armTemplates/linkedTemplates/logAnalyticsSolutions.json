@@ -119,53 +119,51 @@
         "deploymentName": "[take(concat(deployment().name, '-monSolutions'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
-        "logAnalytics": {
-            "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-            "resourceId": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalytics').name))]"
-        },
+        "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+        "logAnalyticsResourceId": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]",
         "solutions": {
             "security": {
-                "name": "[concat('Security', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('Security', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "Security"
             },
             "agentHealth": {
-                "name": "[concat('AgentHealthAssessment', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('AgentHealthAssessment', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "AgentHealthAssessment"
             },
             "changeTracking": {
-                "name": "[concat('ChangeTracking', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('ChangeTracking', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "ChangeTracking"
             },
             "updateMgmt": {
-                "name": "[concat('Updates', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('Updates', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "Updates"
             },
             "azureActivity": {
-                "name": "[concat('AzureActivity', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('AzureActivity', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "AzureActivity"
             },
             "sqlAssessment": {
-                "name": "[concat('SQLAssessment', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('SQLAssessment', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "SQLAssessment"
             },
             "antiMalware": {
-                "name": "[concat('AntiMalware', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('AntiMalware', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "AntiMalware"
             },
             "vmInsights": {
-                "name": "[concat('VMInsights', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('VMInsights', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "VMInsights"
             },
             "serviceMap": {
-                "name": "[concat('ServiceMap', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('ServiceMap', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "ServiceMap"
             },
             "securityInsights": {
-                "name": "[concat('SecurityInsights', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('SecurityInsights', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "SecurityInsights"
             },
             "KeyVaultAnalytics": {
-                "name": "[concat('KeyVaultAnalytics', '(', variables('logAnalytics').name, ')')]",
+                "name": "[concat('KeyVaultAnalytics', '(', variables('logAnalyticsName'), ')')]",
                 "marketplaceName": "KeyVaultAnalytics"
             }
         },
@@ -227,7 +225,7 @@
                             "name": "[variables('solutions').agentHealth.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').agentHealth.name]",
@@ -244,7 +242,7 @@
                             "name": "[variables('solutions').antiMalware.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').antiMalware.name]",
@@ -261,7 +259,7 @@
                             "name": "[variables('solutions').azureActivity.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').azureActivity.name]",
@@ -278,7 +276,7 @@
                             "name": "[variables('solutions').changeTracking.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').changeTracking.name]",
@@ -295,7 +293,7 @@
                             "name": "[variables('solutions').vmInsights.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').vmInsights.name]",
@@ -312,7 +310,7 @@
                             "name": "[variables('solutions').security.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').security.name]",
@@ -329,7 +327,7 @@
                             "name": "[variables('solutions').securityInsights.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').securityInsights.name]",
@@ -346,7 +344,7 @@
                             "name": "[variables('solutions').serviceMap.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').serviceMap.name]",
@@ -363,7 +361,7 @@
                             "name": "[variables('solutions').sqlAssessment.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').sqlAssessment.name]",
@@ -380,7 +378,7 @@
                             "name": "[variables('solutions').updateMgmt.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').updateMgmt.name]",
@@ -397,7 +395,7 @@
                             "name": "[variables('solutions').KeyVaultAnalytics.name]",
                             "location": "[deployment().location]",
                             "properties": {
-                                "workspaceResourceId": "[variables('logAnalytics').resourceId]"
+                                "workspaceResourceId": "[variables('logAnalyticsResourceId')]"
                             },
                             "plan": {
                                 "name": "[variables('solutions').KeyVaultAnalytics.name]",
