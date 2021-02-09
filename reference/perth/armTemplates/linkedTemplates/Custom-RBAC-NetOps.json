@@ -1,8 +1,8 @@
 {
-  "Name": "Custom - NetOps ",
-  "Id": "88888888-8888-8888-8888-888888888889",
+  "Name": "CustomRBAC - NetOps ",
+  "Id": null,
   "IsCustom": true,
-  "Description": "Custom role for NetOps",
+  "Description": "Custom RBAC role for NetOps",
   "Actions": [
     "Microsoft.Resources/deployments/*",
     "Microsoft.Resources/deployments/*",

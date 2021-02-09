@@ -49,6 +49,7 @@
         }
     },
     "resources": [
+        // Deploy Azure Budget to the Subscription
         {
             "condition": "[and(equals(parameters('enableBudget'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
             "type": "Microsoft.Consumption/budgets",
