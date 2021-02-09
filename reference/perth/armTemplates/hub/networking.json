@@ -392,8 +392,7 @@
                                             "apiVersion": "[variables('apiVersions').subnets]",
                                             "name": "[concat(variables('azVnetName'), '/', 'AzureBastionSubnet')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]"
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",

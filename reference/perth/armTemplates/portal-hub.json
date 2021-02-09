@@ -1752,7 +1752,7 @@
             "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
             "vpnGwType": "[steps('esPlatformConnectivity').esVpnGwType]",
             "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
-            "subnetMaskForBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
+            "subnetMaskForAzBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
