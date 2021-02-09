@@ -226,6 +226,18 @@
                         }
                     },
                     {
+                        "name": "esBasIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Bastion Identifier",
+                        "toolTip": "Provide a value for the Azure Bastion Identifier",
+                        "defaultValue": "bas",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
                         "name": "text3",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
@@ -1125,6 +1137,38 @@
                         }
                     },
                     {
+                        "name": "esAzBastion",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Azure Bastion",
+                        "defaultValue": "Yes",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esAddressBastion",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subnet for Azure Bastion",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
+                        "defaultValue": "10.49.2.0/24",
+                        "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
+                        "constraints": {
+                            "required": true,
+                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
+                        }
+                    },
+                    {
                         "name": "esAzFw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
@@ -1656,6 +1700,7 @@
             "nsgPrefix": "[steps('esNaming').esNsgIdentifier]",
             "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
+            "basPrefix": "[steps('esNaming').esBasIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
@@ -1692,6 +1737,7 @@
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
+            "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
@@ -1706,6 +1752,7 @@
             "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
             "vpnGwType": "[steps('esPlatformConnectivity').esVpnGwType]",
             "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
+            "subnetMaskForBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
