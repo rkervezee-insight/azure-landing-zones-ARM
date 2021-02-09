@@ -45,11 +45,6 @@
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
-        },
         "storage": {
             "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
             "sku": "Standard_LRS",
@@ -62,6 +57,11 @@
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
             "storage": "2019-06-01"
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [

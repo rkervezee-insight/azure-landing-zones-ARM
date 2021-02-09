@@ -48,6 +48,9 @@
         "ownerTag": {
             "type": "string"
         },
+        "costCenterTag": {
+            "type": "string"
+        },
         "addressPrefix": {
             "type": "string",
             "metadata": {
@@ -190,7 +193,8 @@
         "NsgId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -208,7 +212,7 @@
         }
     },
     "resources": [
-        // Subscription Level Deployment
+        // Nested deployment for Azure Key Vault (Management Group Level)
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -231,10 +235,12 @@
                             "name": "[variables('resourceGroupName')]",
                             "tags": {
                                 "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]"
+                                "owner": "[variables('tags').owner]",
+                                "costCenter": "[variables('tags').costCenter]"
                             },
                             "properties": {}
                         },
+                        // Nested deployment for Azure Key Vault (Subscription Level)
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
@@ -260,6 +266,7 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         },
+                                        // Nested deployment for Azure Virtual Network (Resource Group Level)
                                         {
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "[variables('apiVersions').virtualNetworks]",
@@ -283,6 +290,7 @@
                                             "resources": [
                                             ]
                                         },
+                                        // Conditional deployment of Network Watcher
                                         {
                                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
@@ -293,6 +301,7 @@
                                             "properties": {},
                                             "resources": []
                                         },
+                                        // Conditional deployment of Azure Firewall Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -305,6 +314,7 @@
                                                 "addressPrefix": "[parameters('subnetMaskForAzFw')]"
                                             }
                                         },
+                                        // Conditional deployment of Azure app Gateway Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -323,6 +333,7 @@
                                                 }
                                             }
                                         },
+                                        // Conditional deployment of Azure app Gateway NSG
                                         {
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
@@ -351,6 +362,7 @@
                                                 ]
                                             }
                                         },
+                                        // Conditional deployment of Azure Management Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -371,6 +383,7 @@
                                                 }
                                             }
                                         },
+                                        // Conditional deployment of Azure Management Route Table
                                         {
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/routeTables",
@@ -393,6 +406,7 @@
                                                 ]
                                             }
                                         },
+                                        // Conditional deployment of Azure Management NSG
                                         {
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
@@ -406,6 +420,7 @@
                                                 "securityRules": []
                                             }
                                         },
+                                        // Conditional deployment of Azure Identity Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -427,6 +442,7 @@
                                                 }
                                             }
                                         },
+                                        // Conditional deployment of Azure Identity Route Table
                                         {
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/routeTables",
@@ -449,6 +465,7 @@
                                                 ]
                                             }
                                         },
+                                        // Conditional deployment of Azure Identity NSG
                                         {
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
@@ -462,6 +479,7 @@
                                                 "securityRules": []
                                             }
                                         },
+                                        // Conditional deployment of Gateway Subnet
                                         {
                                             "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -477,8 +495,8 @@
                                                     "id": "[variables('udrId002')]"
                                                 }
                                             }
-
                                         },
+                                        // Conditional deployment of Gateway Route Table
                                         {
                                             "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/routeTables",
@@ -491,6 +509,7 @@
                                             "properties": {
                                             }
                                         },
+                                        // Conditional deployment of Public IP for VPN Gateway
                                         {
                                             "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
@@ -501,6 +520,7 @@
                                                 "publicIPAllocationMethod": "Dynamic"
                                             }
                                         },
+                                        // Conditional deployment of VPN Gateway
                                         {
                                             "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworkGateways",
@@ -534,6 +554,7 @@
                                                 }
                                             }
                                         },
+                                        // Conditional deployment of Public IP for ER Gateway
                                         {
                                             "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
@@ -544,6 +565,7 @@
                                                 "publicIPAllocationMethod": "Dynamic"
                                             }
                                         },
+                                        // Conditional deployment of ER Gateway
                                         {
                                             "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworkGateways",
@@ -576,6 +598,7 @@
                                                 }
                                             }
                                         },
+                                        // Conditional deployment of Public IP for Azure Firewall
                                         {
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
@@ -593,6 +616,7 @@
                                                 "publicIPAddressVersion": "IPv4"
                                             }
                                         },
+                                        // Conditional deployment of Azure Firewall
                                         {
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/azureFirewalls",

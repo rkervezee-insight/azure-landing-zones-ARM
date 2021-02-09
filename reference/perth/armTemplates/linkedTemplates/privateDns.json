@@ -70,6 +70,15 @@
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
+        },
+        "subscriptionTag": {
+            "type": "string"
+        },
+        "ownerTag": {
+            "type": "string"
+        },
+        "costCenterTag": {
+            "type": "string"
         }
     },
     "variables": {
@@ -88,17 +97,29 @@
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
             "privateDnsZones": "2020-01-01"
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [
+        // Create Resource Group
         {
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
+            "tags": {
+                "environment": "[variables('tags').environment]",
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
+            },
             "properties": {}
         },
+        // Nested deployment for Private DNS
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -114,6 +135,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        // Deploy Resource Group Lock
                         {
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
@@ -123,6 +145,7 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
+                        // Private DNS - Blob Storage
                         {
                             "condition": "[equals(parameters('enablePrivateDnsZonesBlob'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
@@ -130,6 +153,7 @@
                             "name": "[variables('privateLinkDns').blob]",
                             "location": "global"
                         },
+                        // Private DNS - File Storage
                         {
                             "condition": "[equals(parameters('enablePrivateDnsZonesFiles'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
@@ -137,6 +161,7 @@
                             "name": "[variables('privateLinkDns').files]",
                             "location": "global"
                         },
+                        // Private DNS - Queue Storage
                         {
                             "condition": "[equals(parameters('enablePrivateDnsZonesQueue'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
@@ -144,6 +169,7 @@
                             "name": "[variables('privateLinkDns').queue]",
                             "location": "global"
                         },
+                        // Private DNS - Table Storage
                         {
                             "condition": "[equals(parameters('enablePrivateDnsZonesTable'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
@@ -151,6 +177,7 @@
                             "name": "[variables('privateLinkDns').tables]",
                             "location": "global"
                         },
+                        // Private DNS - Key Vault
                         {
                             "condition": "[equals(parameters('enablePrivateDnsZonesAkv'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",

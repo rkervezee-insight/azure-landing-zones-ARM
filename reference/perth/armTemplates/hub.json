@@ -119,6 +119,13 @@
                 "description": "Provide the value for the owner tag"
             }
         },
+        "costCenterTag": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Provide the value for the cost center tag"
+            }
+        },
         "tenantId": {
             "type": "string",
             "defaultValue": "",
@@ -839,6 +846,15 @@
                     },
                     "enableKeyVaultAnalytics": {
                         "value": "[parameters('enableKeyVaultAnalytics')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
@@ -884,6 +900,9 @@
                     },
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
@@ -932,6 +951,9 @@
                     },
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     },
                     "tenantId": {
                         "value": "[parameters('tenantId')]"
@@ -983,6 +1005,9 @@
                     },
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
@@ -1186,6 +1211,9 @@
                     "ownerTag": {
                         "value": "[parameters('ownerTag')]"
                     },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    },
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
                     },
@@ -1289,6 +1317,15 @@
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }

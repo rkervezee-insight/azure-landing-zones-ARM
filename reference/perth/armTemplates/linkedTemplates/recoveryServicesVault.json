@@ -44,11 +44,6 @@
         "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
-        },
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
             "policyName": "[toLower(concat(parameters('companyPrefix'),'-backuppolicy'))]",
@@ -60,9 +55,15 @@
             "locks": "2016-09-01",
             "vaults": "2020-02-02",
             "backupstorageconfig": "2018-01-10"
+        },
+                "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [
+        // Create Resource Group
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -75,6 +76,7 @@
             },
             "properties": {}
         },
+        // Nested deployment for Recovery Services Vault (Subscription Level)
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -90,6 +92,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        // Deploy Resource Group Lock
                         {
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
@@ -99,6 +102,7 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
+                        // Nested deployment for Recovery Services Vault (Resource Group Level)
                         {
                             "condition": "[equals(parameters('enableRsv'), 'Yes')]",
                             "type": "Microsoft.RecoveryServices/vaults",

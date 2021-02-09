@@ -49,11 +49,6 @@
         "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-security'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
-        },
         "keyVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
             "enabledForDeployment": true,
@@ -66,6 +61,11 @@
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
             "KeyVault": "2019-09-01"
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [
