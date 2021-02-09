@@ -239,7 +239,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[concat(parameters('companyPrefix'), '-networking')]",
+            "name": "[variables('deploymentName')]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
@@ -392,7 +392,8 @@
                                             "apiVersion": "[variables('apiVersions').subnets]",
                                             "name": "[concat(variables('azVnetName'), '/', 'AzureBastionSubnet')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]"
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",

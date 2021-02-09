@@ -180,7 +180,7 @@
                             },
                             "properties": {}
                         },
-                        // Nested deployment for Azure Key Vault (Subscription Level)
+                        // Nested deployment for Azure Networking (Subscription Level)
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
