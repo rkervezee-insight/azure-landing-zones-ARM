@@ -615,24 +615,24 @@
     },
     "variables": {
         "azPolicyEnvMapping": {
-            "https://management.azure.com/": "linkedTemplates/policies.json"
+            "https://management.azure.com/": "hub/policies.json"
         },
         "azEnvPolicy": "[variables('azPolicyEnvMapping')[environment().resourceManager]]",
         "deploymentUris": {
-            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/mgmtGroups.json')]",
+            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'hub/mgmtGroups.json')]",
             "policyDefinitions": "[concat(uri(deployment().properties.templateLink.uri, variables('azEnvPolicy')))]",
-            "monitoring": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalytics.json')]",
-            "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/logAnalyticsSolutions.json')]",
-            "keyVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/keyVault.json')]",
-            "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
-            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
-            "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]",
-            "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/diagnosticsAndSecurity.json')]",
-            "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/hubNetworking.json')]",
-            "privateDns": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/privateDns.json')]"
+            "monitoring": "[uri(deployment().properties.templateLink.uri, 'hub/logAnalytics.json')]",
+            "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'hub/logAnalyticsSolutions.json')]",
+            "keyVault": "[uri(deployment().properties.templateLink.uri, 'common/keyVault.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'common/storage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
+            "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
+            "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
+            "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
+            "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]"
         },
-        "moveSubscription": "[concat(parameters('companyPrefix'), '-Platform', '/', parameters('subscriptionId'))]",
-        "noSubscription": "[concat(parameters('companyPrefix'), '-Platform', '/', 'na')]",
+        "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
+        "noSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', 'na')]",
         "deploymentNames": {
             "managementGroups": "[take(concat('mgmtGroups', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "policyDefinitions": "[take(concat('policyDef', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -737,7 +737,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
             "name": "[variables('deploymentNames').monitoring]",
             "dependsOn": [
                 "[variables('deploymentNames').policyDefinitions]",
@@ -1155,7 +1155,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableHub'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
             "name": "[variables('deploymentNames').hubNetworking]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]",

@@ -255,13 +255,13 @@
     },
     "variables": {
         "deploymentUris": {
-            "keyVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/keyVault.json')]",
-            "storage": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/storage.json')]",
-            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/recoveryServicesVault.json')]",
-            "spokeNetworking": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/spokeNetworking.json')]",
-            "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vNetPeering.json')]",
+            "keyVault": "[uri(deployment().properties.templateLink.uri, 'common/keyVault.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'common/storage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
+            "spokeNetworking": "[uri(deployment().properties.templateLink.uri, 'spoke/networking.json')]",
+            "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'spoke/vNetPeering.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]",
-            "budget": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/budget.json')]"
+            "budget": "[uri(deployment().properties.templateLink.uri, 'spoke/budget.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', parameters('subscriptionId'))]",
         "noSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', 'na')]",
@@ -441,7 +441,7 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
             "name": "[variables('deploymentNames').spokeNetworking]",
             "dependsOn": [
             ],

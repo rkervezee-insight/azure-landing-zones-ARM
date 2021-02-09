@@ -82,7 +82,7 @@
                 "description": "[variables('policyAssignmentNames').loganalytics]",
                 "displayName": "[variables('policyAssignmentNames').loganalytics]",
                 "policyDefinitionId": "[variables('policyDefinitions').deployLogAnalytics]",
-                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
                 "parameters": {
                     "workspaceName": {
                         "value": "[variables('logAnalyticsName')]"
@@ -134,7 +134,7 @@
             "properties": {
                 "mode": "incremental",
                 "template": "[reference(variables('policyDefinitions').deployLogAnalytics, '2018-05-01').policyRule.then.details.deployment.properties.template]",
-                "parameters": "[reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform', '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01').parameters]"
+                "parameters": "[reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform', '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01').parameters]"
             }
         }
     ],
