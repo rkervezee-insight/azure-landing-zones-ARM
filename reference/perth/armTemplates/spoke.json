@@ -260,7 +260,6 @@
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
             "spokeNetworking": "[uri(deployment().properties.templateLink.uri, 'spoke/networking.json')]",
             "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'spoke/vNetPeering.json')]",
-            "landingZone": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/lz.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'spoke/budget.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', parameters('subscriptionId'))]",
@@ -271,7 +270,6 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "spokeNetworking": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "vNetPeering": "[take(concat('vNetPeering', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "landingZone": "[take(concat('appLz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "budget": "[take(concat('budget', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
 
         },
