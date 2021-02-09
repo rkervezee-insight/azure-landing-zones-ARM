@@ -235,7 +235,7 @@
         }
     },
     "resources": [
-        // Nested deployment for Azure Key Vault (Management Group Level)
+        // Nested deployment for Azure Networking (Management Group Level)
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -263,7 +263,7 @@
                             },
                             "properties": {}
                         },
-                        // Nested deployment for Azure Key Vault (Subscription Level)
+                        // Nested deployment for Azure Networking (Subscription Level)
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
