@@ -704,6 +704,7 @@
                                         },
                                         // Conditional deployment of Public IP for Azure Bastion   
                                         {
+                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "apiVersion": "[variables('apiVersions').publicIpAddresses]",
                                             "name": "[variables('azBastionIpName')]",
@@ -721,6 +722,7 @@
                                         },
                                         // Conditional deployment of Azure Bastion
                                         {
+                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "apiVersion": "[variables('apiVersions').bastionHosts]",
                                             "type": "Microsoft.Network/bastionHosts",
                                             "name": "[variables('azBastionName')]",
