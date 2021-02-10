@@ -415,6 +415,62 @@
                                             },
                                             "properties": {
                                                 "securityRules": [
+                                                    {
+                                                        "name": "allowHttpsInbound",
+                                                        "properties": {
+                                                            "description": "This is required for inbound HTTPS access from the internet.",
+                                                            "protocol": "Tcp",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "Internet",
+                                                            "destinationAddressPrefix": "*",
+                                                            "access": "Allow",
+                                                            "priority": 120,
+                                                            "direction": "Inbound"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "allowGatewayManagerInbound",
+                                                        "properties": {
+                                                            "description": "This is required for inbound HTTPS access from the Gateway Manager.",
+                                                            "protocol": "Tcp",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "GatewayManager",
+                                                            "destinationAddressPrefix": "*",
+                                                            "access": "Allow",
+                                                            "priority": 130,
+                                                            "direction": "Inbound"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "allowAzureLoadBalancer",
+                                                        "properties": {
+                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
+                                                            "protocol": "Tcp",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "AzureLoadBalancer",
+                                                            "destinationAddressPrefix": "*",
+                                                            "access": "Allow",
+                                                            "priority": 140,
+                                                            "direction": "Inbound"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "allowBastionHostCommunication",
+                                                        "properties": {
+                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
+                                                            "protocol": "Tcp",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "8080,5701",
+                                                            "sourceAddressPrefix": "VirtualNetwork",
+                                                            "destinationAddressPrefix": "VirtualNetwork",
+                                                            "access": "Allow",
+                                                            "priority": 150,
+                                                            "direction": "Inbound"
+                                                        }
+                                                    }
                                                 ]
                                             }
                                         },
