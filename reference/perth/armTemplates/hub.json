@@ -1271,7 +1271,7 @@
                 }
             }
         },
-        // Linked template for subnetw
+        // Linked template for subnets
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",

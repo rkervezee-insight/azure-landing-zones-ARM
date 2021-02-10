@@ -100,8 +100,6 @@
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
         "azVnetCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "azVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('azVnetCidr')))]",
-
-
         "azRouteName": "[toLower('Subnet-to-firewall')]",
         "subnetName001": "Management",
         "nsgName001": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('subnetName001')))]",
