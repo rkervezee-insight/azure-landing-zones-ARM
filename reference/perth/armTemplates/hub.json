@@ -648,6 +648,7 @@
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
             "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
+            "subnets": "[uri(deployment().properties.templateLink.uri, 'hub/subnets.json')]",
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
@@ -663,6 +664,7 @@
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "subnets": "[take(concat('subnets', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
@@ -1248,15 +1250,6 @@
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
                     },
-                    "enableAppGw": {
-                        "value": "[parameters('enableAppGw')]"
-                    },
-                    "enableMgmt": {
-                        "value": "[parameters('enableMgmt')]"
-                    },
-                    "enableIdentity": {
-                        "value": "[parameters('enableIdentity')]"
-                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
@@ -1274,6 +1267,75 @@
                     },
                     "subnetMaskForGw": {
                         "value": "[parameters('subnetMaskForGw')]"
+                    }
+                }
+            }
+        },
+        // Linked template for subnetw
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
+            "name": "[variables('deploymentNames').subnets]",
+            "dependsOn": [
+                "[variables('deploymentNames').hubNetworking]",
+                "DeploymentDelay"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').subnets]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "vntPrefix": {
+                        "value": "[parameters('vntPrefix')]"
+                    },
+                    "udrPrefix": {
+                        "value": "[parameters('udrPrefix')]"
+                    },
+                    "nsgPrefix": {
+                        "value": "[parameters('nsgPrefix')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
+                    },
+                    "addressPrefix": {
+                        "value": "[parameters('addressPrefix')]"
+                    },
+                    "enableAppGw": {
+                        "value": "[parameters('enableAppGw')]"
+                    },
+                    "enableMgmt": {
+                        "value": "[parameters('enableMgmt')]"
+                    },
+                    "enableIdentity": {
+                        "value": "[parameters('enableIdentity')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "subscriptionId": {
+                        "value": "[parameters('subscriptionId')]"
                     },
                     "subnetMaskForAppGw": {
                         "value": "[parameters('subnetMaskForAppGw')]"
