@@ -183,6 +183,25 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         },
+                                        // Nested deployment for Azure Virtual Network (Resource Group Level)
+                                        {
+                                            "type": "Microsoft.Network/virtualNetworks",
+                                            "apiVersion": "[variables('apiVersions').virtualNetworks]",
+                                            "name": "[variables('azVnetName')]",
+                                            "location": "[deployment().location]",
+                                            "dependsOn": [
+                                          
+                                            ],
+                                            "properties": {
+                                                "addressSpace": {
+                                                    "addressPrefixes": [
+                                                        "[parameters('addressPrefix')]"
+                                                    ]
+                                                }
+                                            },
+                                            "resources": [
+                                            ]
+                                        },
                                         // Conditional deployment of Azure app Gateway Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
