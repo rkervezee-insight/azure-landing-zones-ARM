@@ -107,7 +107,13 @@
                 "description": "Provide the Recovery Services Vault prefix"
             }
         },
-
+        "basPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Bastion prefix"
+            }
+        },
         "subscriptionTag": {
             "type": "string",
             "metadata": {
@@ -453,7 +459,14 @@
             ],
             "defaultValue": "No"
         },
-
+        "enableAzBastion": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
         "enableMgmt": {
             "type": "string",
             "allowedValues": [
@@ -478,7 +491,10 @@
             ],
             "defaultValue": "RouteBased"
         },
-
+        "subnetMaskForAzBastion": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "subnetMaskForAzFw": {
             "type": "string",
             "defaultValue": ""
@@ -1202,7 +1218,9 @@
                     "nsgPrefix": {
                         "value": "[parameters('nsgPrefix')]"
                     },
-
+                    "basPrefix": {
+                        "value": "[parameters('basPrefix')]"
+                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },
@@ -1221,7 +1239,9 @@
                     "addressPrefix": {
                         "value": "[parameters('addressPrefix')]"
                     },
-                   
+                    "enableAzBastion": {
+                        "value": "[parameters('enableAzBastion')]"
+                    },
                     "enableVpnGw": {
                         "value": "[parameters('enableVpnGw')]"
                     },
@@ -1249,7 +1269,9 @@
                     "subnetMaskForAzFw": {
                         "value": "[parameters('subnetMaskForAzFw')]"
                     },
-
+                    "subnetMaskForAzBastion": {
+                        "value": "[parameters('subnetMaskForAzBastion')]"
+                    },
                     "subnetMaskForGw": {
                         "value": "[parameters('subnetMaskForGw')]"
                     },
