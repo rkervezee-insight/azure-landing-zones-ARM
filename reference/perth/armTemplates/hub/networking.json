@@ -42,10 +42,7 @@
             "type": "string",
             "maxLength": 3
         },
-        "basPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
+
         "subscriptionTag": {
             "type": "string"
         },
@@ -110,14 +107,7 @@
             ],
             "defaultValue": "No"
         },
-        "enableAzBastion": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
-        },
+
         "enableMgmt": {
             "type": "string",
             "allowedValues": [
@@ -147,10 +137,7 @@
             ],
             "defaultValue": "RouteBased"
         },
-        "subnetMaskForAzBastion": {
-            "type": "string",
-            "defaultValue": ""
-        },
+
         "subnetMaskForAzFw": {
             "type": "string",
             "defaultValue": ""
@@ -191,10 +178,7 @@
         "azFwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]",
         "azFwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
         "azFwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azFwIpName'))]",
-        "azBastionName": "[toLower(concat(variables('namingPrefix'), '-', parameters('basPrefix'), '-001'))]",
-        "azBastionSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]",
-        "azBastionIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
-        "azBastionPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azBastionIpName'))]",
+        
         "azRouteName": "[toLower(concat('Subnet-to-', variables('azFwName')))]",
         "subnetName001": "Management",
         "nsgName001": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('subnetName001')))]",
@@ -211,8 +195,9 @@
         "UdrName003": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('subnetName003')))]",
         "UdrId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/routeTables/', variables('udrName003'))]",
         "NsgId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
-        "NsgName004": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
-        "NsgId004": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName004'))]",
+
+
+
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
@@ -385,38 +370,7 @@
                                                 ]
                                             }
                                         },
-                                        // Conditional deployment of Conditional deployment of Azure Bastion Subnet
-                                        {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('azVnetName'), '/', 'AzureBastionSubnet')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('NsgId004')]"
-                                                }
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Bastion NSG
-                                        {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('nsgName004')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('azVnetName'), '/AzureBastionSubnet')]"
-                                            },
-                                            "properties": {
-                                                "securityRules": [
-                                                ]
-                                            }
-                                        },
+
                                         // Conditional deployment of Azure Management Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
@@ -701,52 +655,8 @@
                                                     }
                                                 ]
                                             }
-                                        },
-                                        // Conditional deployment of Public IP for Azure Bastion   
-                                        {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "type": "Microsoft.Network/publicIpAddresses",
-                                            "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('azBastionIpName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]"
-                                            ],
-                                            "sku": {
-                                                "name": "Standard"
-                                            },
-                                            "properties": {
-                                                "publicIPAllocationMethod": "Static",
-                                                "publicIPAddressVersion": "IPv4"
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Bastion
-                                        {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "apiVersion": "[variables('apiVersions').bastionHosts]",
-                                            "type": "Microsoft.Network/bastionHosts",
-                                            "name": "[variables('azBastionName')]",
-                                            "location": "[resourceGroup().location]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('azBastionIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]"
-                                            ],
-                                            "properties": {
-                                                "ipConfigurations": [
-                                                    {
-                                                        "name": "[variables('azBastionIpName')]",
-                                                        "properties": {
-                                                            "subnet": {
-                                                                "id": "[variables('azBastionSubnetId')]"
-                                                            },
-                                                            "publicIPAddress": {
-                                                                "id": "[variables('azBastionPipId')]"
-                                                            }
-                                                        }
-                                                    }
-                                                ]
-                                            }
                                         }
+
                                     ]
                                 }
                             }
