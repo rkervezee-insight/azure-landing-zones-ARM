@@ -1137,38 +1137,6 @@
                         }
                     },
                     {
-                        "name": "esAzBastion",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Bastion",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressBastion",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Azure Bastion",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.2.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
                         "name": "esAzFw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
@@ -1195,6 +1163,38 @@
                         "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
                         "defaultValue": "10.49.61.0/24",
                         "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
+                        "constraints": {
+                            "required": true,
+                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
+                        }
+                    },
+                    {
+                        "name": "esAzBastion",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Azure Bastion",
+                        "defaultValue": "Yes",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esAddressBastion",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subnet for Azure Bastion",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
+                        "defaultValue": "10.49.2.0/24",
+                        "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
                         "constraints": {
                             "required": true,
                             "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
@@ -1704,7 +1704,6 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-
             "tenantId": "[steps('esPlatformManagement').esAzureAdTenant]",
             "subscriptionId": "[steps('esPlatformManagement').esPlatformSub]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
@@ -1733,7 +1732,6 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
-
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
@@ -1757,7 +1755,6 @@
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
             "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
-            
             "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esOnlineLzSub, '')]",
             "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esMgmtSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
