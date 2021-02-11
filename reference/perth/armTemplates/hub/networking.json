@@ -597,7 +597,7 @@
                                                 ]
                                             }
                                         },
-                                         // Conditional deployment of Azure Identity NSG
+                                        // Conditional deployment of Azure Identity NSG
                                         {
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
@@ -841,7 +841,6 @@
                                             }
                                         },
                                         // Conditional deployment of Azure Bastion
-                            
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "apiVersion": "[variables('apiVersions').bastionHosts]",
@@ -868,7 +867,6 @@
                                                 ]
                                             }
                                         }
-                                        
                                     ]
                                 }
                             }
