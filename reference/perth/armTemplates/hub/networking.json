@@ -474,7 +474,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "bastion-vnet-out-allow",
+                                                        "name": "allowBastionToVirtualNetwork",
                                                         "properties": {
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
@@ -490,7 +490,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "bastion-azure-out-allow",
+                                                        "name": "allowBastionToAzureCloud",
                                                         "properties": {
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
@@ -503,7 +503,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "bastion-out-host",
+                                                        "name": "allowVirtualNetworkToVirtualNetwork",
                                                         "properties": {
                                                             "protocol": "*",
                                                             "sourcePortRange": "*",
@@ -519,7 +519,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "bastion-out-deny",
+                                                        "name": "denyAllOutbound",
                                                         "properties": {
                                                             "protocol": "*",
                                                             "sourcePortRange": "*",
