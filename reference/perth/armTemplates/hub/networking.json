@@ -396,8 +396,10 @@
                                                 "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]"
                                             ],
                                             "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForAzBastion')]"
-
+                                                "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
+                                                    "networkSecurityGroup": {
+                                                    "id": "[variables('nsgId004')]"
+                                                }
                                             }
                                         },
                                         // Conditional deployment of Azure Bastion NSG
