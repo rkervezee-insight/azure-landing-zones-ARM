@@ -776,8 +776,9 @@
                                                 "publicIPAllocationMethod": "Static",
                                                 "publicIPAddressVersion": "IPv4"
                                             }
-                                        },
+                                        }
                                         // Conditional deployment of Azure Bastion
+                                        /*
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "apiVersion": "[variables('apiVersions').bastionHosts]",
@@ -786,7 +787,6 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/publicIpAddresses/', variables('azBastionIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
                                                 "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]"
                                             ],
                                             "properties": {
@@ -805,6 +805,7 @@
                                                 ]
                                             }
                                         }
+                                        */
                                     ]
                                 }
                             }
