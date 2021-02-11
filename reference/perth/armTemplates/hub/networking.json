@@ -324,6 +324,23 @@
                                             "properties": {},
                                             "resources": []
                                         },
+                                        // Conditional deployment of Gateway Subnet
+                                        {
+                                            "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('azVnetName'), '/', 'GatewaySubnet')]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName002'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForGw')]",
+                                                "routeTable": {
+                                                    "id": "[variables('udrId002')]"
+                                                }
+                                            }
+                                        },
                                         // Conditional deployment of Azure Firewall Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
@@ -356,36 +373,7 @@
                                                 }
                                             }
                                         },
-                                        // Conditional deployment of Azure app Gateway NSG
-                                        {
-                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('nsgName002')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName002'))]"
-                                            },
-                                            "properties": {
-                                                "securityRules": [
-                                                    {
-                                                        "name": "allowAzureBackendCommunication",
-                                                        "properties": {
-                                                            "description": "This is required for Azure infrastructure communication. These ports are protected & locked down by Azure certificates.",
-                                                            "protocol": "Tcp",
-                                                            "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "GatewayManager",
-                                                            "destinationPortRange": "65200-65535",
-                                                            "destinationAddressPrefix": "*",
-                                                            "access": "Allow",
-                                                            "priority": 100,
-                                                            "direction": "Inbound"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        // Conditional deployment of Conditional deployment of Azure Bastion Subnet
+                                        // Conditional deployment of Azure Bastion Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -393,12 +381,58 @@
                                             "name": "[concat(variables('azVnetName'), '/', 'AzureBastionSubnet')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName001'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName002'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName003'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
                                                 "networkSecurityGroup": {
                                                     "id": "[variables('nsgId004')]"
+                                                }
+                                            }
+                                        },
+                                        // Conditional deployment of Azure Management Subnet
+                                        {
+                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName001'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName001'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForMgmt')]",
+                                                "routeTable": {
+                                                    "id": "[variables('udrId001')]"
+                                                },
+                                                "networkSecurityGroup": {
+                                                    "id": "[variables('nsgId001')]"
+                                                }
+                                            }
+                                        },
+                                        // Conditional deployment of Azure Identity Subnet
+                                        {
+                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName003'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName001'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForIdentity')]",
+                                                "routeTable": {
+                                                    "id": "[variables('udrId003')]"
+                                                },
+                                                "networkSecurityGroup": {
+                                                    "id": "[variables('nsgId003')]"
                                                 }
                                             }
                                         },
@@ -534,48 +568,47 @@
                                                 ]
                                             }
                                         },
-                                        // Conditional deployment of Azure Management Subnet
+                                        // Conditional deployment of Azure app Gateway NSG
                                         {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('udrName001'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName001'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForMgmt')]",
-                                                "routeTable": {
-                                                    "id": "[variables('udrId001')]"
-                                                },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('nsgId001')]"
-                                                }
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Management Route Table
-                                        {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/routeTables",
-                                            "apiVersion": "2020-05-01",
-                                            "name": "[variables('udrName001')]",
+                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
+                                            "type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
+                                            "name": "[variables('nsgName002')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName002'))]"
                                             },
                                             "properties": {
-                                                "routes": [
+                                                "securityRules": [
                                                     {
-                                                        "name": "[variables('azRouteName')]",
+                                                        "name": "allowAzureBackendCommunication",
                                                         "properties": {
-                                                            "addressPrefix": "0.0.0.0/0",
-                                                            "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('azVnetCidr')]"
+                                                            "description": "This is required for Azure infrastructure communication. These ports are protected & locked down by Azure certificates.",
+                                                            "protocol": "Tcp",
+                                                            "sourcePortRange": "*",
+                                                            "sourceAddressPrefix": "GatewayManager",
+                                                            "destinationPortRange": "65200-65535",
+                                                            "destinationAddressPrefix": "*",
+                                                            "access": "Allow",
+                                                            "priority": 100,
+                                                            "direction": "Inbound"
                                                         }
                                                     }
                                                 ]
+                                            }
+                                        },
+                                         // Conditional deployment of Azure Identity NSG
+                                        {
+                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
+                                            "type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
+                                            "name": "[variables('nsgName003')]",
+                                            "location": "[parameters('location')]",
+                                            "tags": {
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]"
+                                            },
+                                            "properties": {
+                                                "securityRules": []
                                             }
                                         },
                                         // Conditional deployment of Azure Management NSG
@@ -590,28 +623,6 @@
                                             },
                                             "properties": {
                                                 "securityRules": []
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Identity Subnet
-                                        {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('udrName003'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName001'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForIdentity')]",
-                                                "routeTable": {
-                                                    "id": "[variables('udrId003')]"
-                                                },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('nsgId003')]"
-                                                }
                                             }
                                         },
                                         // Conditional deployment of Azure Identity Route Table
@@ -637,37 +648,6 @@
                                                 ]
                                             }
                                         },
-                                        // Conditional deployment of Azure Identity NSG
-                                        {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('nsgName003')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]"
-                                            },
-                                            "properties": {
-                                                "securityRules": []
-                                            }
-                                        },
-                                        // Conditional deployment of Gateway Subnet
-                                        {
-                                            "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('azVnetName'), '/', 'GatewaySubnet')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('udrName002'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForGw')]",
-                                                "routeTable": {
-                                                    "id": "[variables('udrId002')]"
-                                                }
-                                            }
-                                        },
                                         // Conditional deployment of Gateway Route Table
                                         {
                                             "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
@@ -679,6 +659,29 @@
                                                 "appliedSubnet": "[concat(variables('azVnetName'), '/', 'GatewaySubnet')]"
                                             },
                                             "properties": {
+                                            }
+                                        },
+                                        // Conditional deployment of Azure Management Route Table
+                                        {
+                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
+                                            "type": "Microsoft.Network/routeTables",
+                                            "apiVersion": "2020-05-01",
+                                            "name": "[variables('udrName001')]",
+                                            "location": "[parameters('location')]",
+                                            "tags": {
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]"
+                                            },
+                                            "properties": {
+                                                "routes": [
+                                                    {
+                                                        "name": "[variables('azRouteName')]",
+                                                        "properties": {
+                                                            "addressPrefix": "0.0.0.0/0",
+                                                            "nextHopType": "VirtualAppliance",
+                                                            "nextHopIpAddress": "[variables('azVnetCidr')]"
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         },
                                         // Conditional deployment of Public IP for VPN Gateway
@@ -836,9 +839,9 @@
                                                 "publicIPAllocationMethod": "Static",
                                                 "publicIPAddressVersion": "IPv4"
                                             }
-                                        }
+                                        },
                                         // Conditional deployment of Azure Bastion
-                                        /*
+                            
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "apiVersion": "[variables('apiVersions').bastionHosts]",
@@ -865,7 +868,7 @@
                                                 ]
                                             }
                                         }
-                                        */
+                                        
                                     ]
                                 }
                             }
