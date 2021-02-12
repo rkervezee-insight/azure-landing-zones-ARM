@@ -2320,25 +2320,7 @@
                               "workspaceId": "[[parameters('logAnalytics')]",
                               "metrics": [
                                 {
-                                  "category": "Gateway Requests",
-                                  "enabled": true,
-                                  "retentionPolicy": {
-                                    "days": 0,
-                                    "enabled": false
-                                  },
-                                  "timeGrain": null
-                                },
-                                {
-                                  "category": "Capacity",
-                                  "enabled": true,
-                                  "retentionPolicy": {
-                                    "days": 0,
-                                    "enabled": false
-                                  },
-                                  "timeGrain": null
-                                },
-                                {
-                                  "category": "EventHub Events",
+                                  "category": "AllMetrics",
                                   "enabled": true,
                                   "retentionPolicy": {
                                     "days": 0,
@@ -2569,6 +2551,15 @@
                             "properties": {
                               "workspaceId": "[[parameters('logAnalytics')]",
                               "metrics": [
+                                {
+                                  "category": "AllMetrics",
+                                  "enabled": true,
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  },
+                                  "timeGrain": null
+                                },
                                 {
                                   "category": "Availability",
                                   "timeGrain": null,
@@ -6430,7 +6421,7 @@
                                   "enabled": true,
                                   "retentionPolicy": {
                                     "days": 0,
-                                    "enabled": false
+                                    "enabled": true
                                   },
                                   "timeGrain": null
                                 }
@@ -11473,7 +11464,8 @@
         "mode": "All",
         "policyType": "Custom",
         "parameters": "[variables('policies').policyDefinitions[copyIndex()].properties.parameters]",
-        "policyRule": "[variables('policies').policyDefinitions[copyIndex()].properties.policyRule]"
+        "policyRule": "[variables('policies').policyDefinitions[copyIndex()].properties.policyRule]",
+        "metadata": "[variables('policies').policyDefinitions[copyIndex()].properties.metadata]"
       }
     },
     {
@@ -11491,7 +11483,8 @@
         "displayName": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.displayName]",
         "description": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.description]",
         "parameters": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.parameters]",
-        "policyDefinitions": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.policyDefinitions]"
+        "policyDefinitions": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.policyDefinitions]",
+        "metadata": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.metadata]"
       }
     }
   ]

@@ -9,8 +9,249 @@
   },
   "variables": {
     "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
+    "apiVersions": {
+      "policyDefinitions": "2020-03-01",
+      "policySetDefinitions": "2020-03-01"
+    },
     "policies": {
       "policyDefinitions": [
+        {
+          "name": "Deny-Private-DNS-Zones",
+          "properties": {
+            "Description": "This policy denies the creation of a private DNS in the current scope, used in combination with policies that create centralized private DNS in connectivity subscription",
+            "DisplayName": "Deny the creation of private DNS",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Network"
+            },
+            "PolicyRule": {
+              "if": {
+                "field": "type",
+                "equals": "Microsoft.Network/privateDnsZones"
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          }
+        },
+        {
+          "name": "Deny-RDP-From-Internet",
+          "properties": {
+            "displayName": "RDP access from the Internet should be blocked",
+            "description": "This policy denies any network security rule that allows RDP access from Internet",
+            "mode": "All",
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Network"
+            },
+            "parameters": {
+              "effect": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                },
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny"
+              }
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Network/networkSecurityGroups/securityRules"
+                  },
+                  {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/access",
+                        "equals": "Allow"
+                      },
+                      {
+                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/direction",
+                        "equals": "Inbound"
+                      },
+                      {
+                        "anyOf": [
+                          {
+                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+                            "equals": "*"
+                          },
+                          {
+                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
+                            "equals": "3389"
+                          },
+                          {
+                            "value": "[[if(and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'))), contains(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'),'-')), and(lessOrEquals(int(first(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))),3389),greaterOrEquals(int(last(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))),3389)), 'false')]",
+                            "equals": "true"
+                          },
+                          {
+                            "count": {
+                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
+                              "where": {
+                                "value": "[[if(and(not(empty(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')))), contains(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')),'-')), and(lessOrEquals(int(first(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))),3389),greaterOrEquals(int(last(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))),3389)) , 'false')]",
+                                "equals": "true"
+                              }
+                            },
+                            "greater": 0
+                          },
+                          {
+                            "not": {
+                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
+                              "notEquals": "*"
+                            }
+                          },
+                          {
+                            "not": {
+                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
+                              "notEquals": "3389"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "anyOf": [
+                          {
+                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                            "equals": "*"
+                          },
+                          {
+                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
+                            "equals": "Internet"
+                          },
+                          {
+                            "not": {
+                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
+                              "notEquals": "*"
+                            }
+                          },
+                          {
+                            "not": {
+                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
+                              "notEquals": "Internet"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          }
+        },
+        {
+          "Name": "Append-AzHUB",
+          "Properties": {
+            "Description": "Append Azure Hybrid Use Benefits licensing to all Windows VMs",
+            "DisplayName": "Append-AzHUB",
+            "Mode": "All",
+            "Parameters": {},
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "in": [
+                      "Microsoft.Compute/virtualMachines",
+                      "Microsoft.Compute/VirtualMachineScaleSets"
+                    ]
+                  },
+                  {
+                    "field": "Microsoft.Compute/imagePublisher",
+                    "equals": "MicrosoftWindowsServer"
+                  },
+                  {
+                    "field": "Microsoft.Compute/imageOffer",
+                    "equals": "WindowsServer"
+                  },
+                  {
+                    "field": "Microsoft.Compute/imageSKU",
+                    "in": [
+                      "2008-R2-SP1",
+                      "2008-R2-SP1-smalldisk",
+                      "2012-Datacenter",
+                      "2012-Datacenter-smalldisk",
+                      "2012-R2-Datacenter",
+                      "2012-R2-Datacenter-smalldisk",
+                      "2016-Datacenter",
+                      "2016-Datacenter-Server-Core",
+                      "2016-Datacenter-Server-Core-smalldisk",
+                      "2016-Datacenter-smalldisk",
+                      "2016-Datacenter-with-Containers",
+                      "2016-Datacenter-with-RDSH",
+                      "2019-Datacenter"
+                    ]
+                  },
+                  {
+                    "field": "Microsoft.Compute/licenseType",
+                    "notEquals": "Windows_Server"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "append",
+                "details": [
+                  {
+                    "field": "Microsoft.Compute/licenseType",
+                    "value": "Windows_Server"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "Name": "Deny-AppGW-Without-WAF",
+          "Properties": {
+            "Description": null,
+            "DisplayName": "Deny-AppGW-Without-WAF",
+            "Mode": "All",
+            "Parameters": {},
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Network/applicationGateways"
+                  },
+                  {
+                    "field": "Microsoft.Network/applicationGateways/sku.name",
+                    "notequals": "WAF_v2"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "Deny"
+              }
+            }
+          }
+        },
         {
           "properties": {
             "Description": "Deploys the diagnostic settings for Container Instances to stream to a Log Analytics workspace when any ACR which is missing this diagnostic settings is created or updated. The policy wil set the diagnostic with all metrics enabled.",
@@ -2919,120 +3160,6 @@
             }
           },
           "name": "Deploy-Diagnostics-AA"
-        },
-        {
-          "properties": {
-            "displayName": "RDP access from the Internet should be blocked",
-            "description": "This policy denies any network security rule that allows RDP access from Internet",
-            "mode": "All",
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Network"
-            },
-            "parameters": {
-              "effect": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                },
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny"
-              }
-            },
-            "policyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.Network/networkSecurityGroups/securityRules"
-                  },
-                  {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/access",
-                        "equals": "Allow"
-                      },
-                      {
-                        "field": "Microsoft.Network/networkSecurityGroups/securityRules/direction",
-                        "equals": "Inbound"
-                      },
-                      {
-                        "anyOf": [
-                          {
-                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
-                            "equals": "*"
-                          },
-                          {
-                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange",
-                            "equals": "3389"
-                          },
-                          {
-                            "value": "[[if(and(not(empty(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'))), contains(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'),'-')), and(lessOrEquals(int(first(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))),3389),greaterOrEquals(int(last(split(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRange'), '-'))),3389)), 'false')]",
-                            "equals": "true"
-                          },
-                          {
-                            "count": {
-                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
-                              "where": {
-                                "value": "[[if(and(not(empty(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')))), contains(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')),'-')), and(lessOrEquals(int(first(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))),3389),greaterOrEquals(int(last(split(first(field('Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]')), '-'))),3389)) , 'false')]",
-                                "equals": "true"
-                              }
-                            },
-                            "greater": 0
-                          },
-                          {
-                            "not": {
-                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
-                              "notEquals": "*"
-                            }
-                          },
-                          {
-                            "not": {
-                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/destinationPortRanges[*]",
-                              "notEquals": "3389"
-                            }
-                          }
-                        ]
-                      },
-                      {
-                        "anyOf": [
-                          {
-                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
-                            "equals": "*"
-                          },
-                          {
-                            "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefix",
-                            "equals": "Internet"
-                          },
-                          {
-                            "not": {
-                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
-                              "notEquals": "*"
-                            }
-                          },
-                          {
-                            "not": {
-                              "field": "Microsoft.Network/networkSecurityGroups/securityRules/sourceAddressPrefixes[*]",
-                              "notEquals": "Internet"
-                            }
-                          }
-                        ]
-                      }
-                    ]
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-RDP-From-Internet"
         },
         {
           "properties": {
@@ -17338,7 +17465,7 @@
     {
       "type": "Microsoft.Authorization/policyDefinitions",
       "name": "[variables('policies').policyDefinitions[copyIndex()].name]",
-      "apiVersion": "2019-09-01",
+      "apiVersion": "[variables('apiVersions').policyDefinitions]",
       "copy": {
         "name": "policyDefinitionCopy",
         "count": "[length(variables('policies').policyDefinitions)]"
@@ -17356,7 +17483,7 @@
     {
       "type": "Microsoft.Authorization/policySetDefinitions",
       "name": "[variables('initiatives').policySetDefinitions[copyIndex()].name]",
-      "apiVersion": "2019-09-01",
+      "apiVersion": "[variables('apiVersions').policySetDefinitions]",
       "dependsOn": [
         "policyDefinitionCopy"
       ],
