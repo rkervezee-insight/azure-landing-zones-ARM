@@ -16,42 +16,6 @@
     "policies": {
       "policyDefinitions": [
         {
-          "name": "Deny-Private-DNS-Zones",
-          "properties": {
-            "Description": "This policy denies the creation of a private DNS in the current scope, used in combination with policies that create centralized private DNS in connectivity subscription",
-            "DisplayName": "Deny the creation of private DNS",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Network"
-            },
-            "PolicyRule": {
-              "if": {
-                "field": "type",
-                "equals": "Microsoft.Network/privateDnsZones"
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          }
-        },
-        {
           "name": "Deny-RDP-From-Internet",
           "properties": {
             "displayName": "RDP access from the Internet should be blocked",
