@@ -746,18 +746,6 @@
                   "description": "Select Log Analytics workspace from dropdown list",
                   "strongType": "omsWorkspace"
                 }
-              },
-              "logsEnabled": {
-                "type": "string",
-                "defaultValue": "True",
-                "allowedValues": [
-                  "True",
-                  "False"
-                ],
-                "metadata": {
-                  "displayName": "Enable logs",
-                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
-                }
               }
             },
             "metadata": {
@@ -782,10 +770,6 @@
                   "existenceCondition": {
                     "allOf": [
                       {
-                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                        "equals": "true"
-                      },
-                      {
                         "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
                         "equals": "[[parameters('logAnalytics')]"
                       }
@@ -800,9 +784,6 @@
                         "contentVersion": "1.0.0.0",
                         "parameters": {
                           "logAnalytics": {
-                            "type": "string"
-                          },
-                          "logsEnabled": {
                             "type": "string"
                           }
                         },
@@ -857,9 +838,6 @@
                       "parameters": {
                         "logAnalytics": {
                           "value": "[[parameters('logAnalytics')]"
-                        },
-                        "logsEnabled": {
-                          "value": "[[parameters('logsEnabled')]"
                         }
                       }
                     }
