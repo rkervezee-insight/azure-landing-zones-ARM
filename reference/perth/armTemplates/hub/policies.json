@@ -9236,7 +9236,7 @@
             "Mode": "Indexed",
             "Parameters": {
               "retention": {
-                "type": "Integer",
+                "type": "String",
                 "metadata": {
                   "displayName": "Retention"
                 },
@@ -9361,7 +9361,7 @@
                             "type": "string"
                           },
                           "retention": {
-                            "type": "int"
+                            "type": "string"
                           },
                           "flowAnalyticsEnabled": {
                             "type": "bool"
@@ -9386,7 +9386,7 @@
                               "enabled": true,
                               "retentionPolicy": {
                                 "enabled": true,
-                                "days": "[[parameters('retention')]"
+                                "days": "[[int(parameters('retention'))]"
                               },
                               "format": {
                                 "type": "JSON",
