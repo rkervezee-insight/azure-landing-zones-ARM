@@ -580,6 +580,17 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
+                        "name": "esAscEmailContact",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Provide the Azure Security Center Email Contact",
+                        "toolTip": "Provide the email contact for Azure Security Center alerts",
+                        "defaultValue": "stephen.tulp@outlook.com",
+                        "constraints": {
+                            "required": false
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esAsc, 'Yes')]"
+                    },
+                    {
                         "name": "esAscVms",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for servers",
@@ -1709,6 +1720,7 @@
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
+            "ascEmailContact": "[steps('esPlatformManagement').esAscEmailContact]",
             "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
             "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
             "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",

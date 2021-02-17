@@ -175,6 +175,12 @@
                 "description": "If 'Yes' is selected when also adding a subscription for management, ARM will assign two policies to enable auditing in your environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
             }
         },
+        "ascEmailContact": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide the Azure Security Center Email Contact"
+            }
+        },
         "enableAscForServers": {
             "type": "string",
             "defaultValue": "Free",
@@ -1132,6 +1138,9 @@
                     },
                     "enableAsc": {
                         "value": "[parameters('enableAsc')]"
+                    },
+                    "ascEmailContact": {
+                        "value": "[parameters('ascEmailContact')]"
                     },
                     "enableAscForServers": {
                         "value": "[parameters('enableAscForServers')]"
