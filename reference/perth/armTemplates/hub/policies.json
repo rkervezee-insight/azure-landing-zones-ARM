@@ -2222,14 +2222,6 @@
                 },
                 "defaultValue": "stephen.tulp@outlook.com"
               },
-              "phoneNumberSecurityContact": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Contact phone number",
-                  "description": "The phone number of the email contact"
-                },
-                "defaultValue": "12345"
-              },
               "alertNotifications": {
                 "type": "String",
                 "metadata": {
@@ -2271,10 +2263,6 @@
                       {
                         "field": "Microsoft.Security/securityContacts/email",
                         "equals": "[[parameters ('emailSecurityContact')]"
-                      },
-                      {
-                        "field": "Microsoft.Security/securityContacts/phone",
-                        "equals": "[[parameters ('phoneNumberSecurityContact')]"
                       }
                     ]
                   },
@@ -2292,9 +2280,6 @@
                           "emailSecurityContact": {
                             "type": "string"
                           },
-                          "phoneNumberSecurityContact": {
-                            "type": "string"
-                          },
                           "alertNotifications": {
                             "type": "string"
                           },
@@ -2310,7 +2295,6 @@
                             "apiVersion": "2017-08-01-preview",
                             "properties": {
                               "email": "[[parameters('emailSecurityContact')]",
-                              "phone": "[[parameters('phoneNumberSecurityContact')]",
                               "alertNotifications": "[[parameters('alertNotifications')]",
                               "alertsToAdmins": "[[parameters('alertsToAdmins')]"
                             }
@@ -2321,9 +2305,6 @@
                       "parameters": {
                         "emailSecurityContact": {
                           "value": "[[parameters('emailSecurityContact')]"
-                        },
-                        "phoneNumberSecurityContact": {
-                          "value": "[[parameters('phoneNumberSecurityContact')]"
                         },
                         "alertNotifications": {
                           "value": "[[parameters('alertNotifications')]"

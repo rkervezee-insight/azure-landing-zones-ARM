@@ -451,7 +451,7 @@
                 "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
-         // Conditional assignment of Azure Policy to enforce ASC Email Contact
+        // Conditional assignment of Azure Policy to enforce ASC Email Contact
         {
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -467,18 +467,15 @@
                 "policyDefinitionId": "[variables('policyDefinitions').deployAzSecurityCenterEmail]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
-                        "emailSecurityContact": {
-                          "value": "stephen.tulp@outlook.com"
-                        },
-                        "phoneNumberSecurityContact": {
-                          "value": "1234"
-                        },
-                        "alertNotifications": {
-                          "value": "On"
-                        },
-                        "alertsToAdmins": {
-                          "value": "On"
-                        }
+                    "emailSecurityContact": {
+                        "value": "stephen.tulp@outlook.com"
+                    },
+                    "alertNotifications": {
+                        "value": "On"
+                    },
+                    "alertsToAdmins": {
+                        "value": "On"
+                    }
                 }
             }
         },
@@ -582,7 +579,7 @@
                 "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision), '2018-05-01').parameters, json('null'))]"
             }
         },
-                // Conditional deployment to invoke ASC Email Contact deployment
+        // Conditional deployment to invoke ASC Email Contact deployment
         {
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
