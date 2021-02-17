@@ -581,7 +581,7 @@
                     },
                     {
                         "name": "esAscEmailContact",
-                        "type": "Microsoft.Common.OptionsGroup",
+                        "type": "Microsoft.Common.TextBox",
                         "label": "Provide the Azure Security Center Email Contact",
                         "toolTip": "Provide the email contact for Azure Security Center alerts",
                         "defaultValue": "stephen.tulp@outlook.com",
