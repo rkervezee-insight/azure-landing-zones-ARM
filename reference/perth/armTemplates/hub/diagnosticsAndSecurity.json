@@ -236,7 +236,7 @@
                         "value": "7"
                     },
                     "trafficAnalyticsInterval": {
-                        "value": "60"
+                        "value": 60
                     },
                     "flowAnalyticsEnabled": {
                         "value": false

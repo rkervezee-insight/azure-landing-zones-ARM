@@ -9253,8 +9253,7 @@
                 "type": "Integer",
                 "metadata": {
                   "displayName": "Traffic Analytics processing interval mins (10/60)"
-                },
-                "defaultValue": 60
+                }
               },
               "flowAnalyticsEnabled": {
                 "type": "Boolean",
