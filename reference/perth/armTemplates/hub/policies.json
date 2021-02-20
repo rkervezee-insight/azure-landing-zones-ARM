@@ -11623,7 +11623,7 @@
                 "metadata": {
                   "displayName": "Retention"
                 },
-                "defaultValue": "5"
+                "defaultValue": 5
               },
               "storageAccountResourceId": {
                 "type": "String",
