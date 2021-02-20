@@ -233,7 +233,7 @@
                         "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.Storage/storageAccounts/', variables('storageName')))]"
                     },
                     "retention": {
-                        "value": "7"
+                        "value": 7
                     },
                     "trafficAnalyticsInterval": {
                         "value": 60

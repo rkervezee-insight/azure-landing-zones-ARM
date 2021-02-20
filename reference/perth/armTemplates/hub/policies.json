@@ -17,6 +17,193 @@
       "policyDefinitions": [
         {
           "properties": {
+            "Description": "Deploys the diagnostic settings for Automation to stream to a Log Analytics workspace when any Automation which is missing this diagnostic settings is created or updated. The policy wil  set the diagnostic with all metrics and category enabled",
+            "DisplayName": "Deploy Diagnostic Settings for Automation to Log Analytics workspace",
+            "Mode": "Indexed",
+            "Parameters": {
+              "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Log Analytics workspace",
+                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+                  "strongType": "omsWorkspace"
+                }
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              },
+              "profileName": {
+                "type": "string",
+                "defaultValue": "setbypolicy",
+                "metadata": {
+                  "displayName": "Profile name",
+                  "description": "The diagnostic settings profile name"
+                }
+              },
+              "metricsEnabled": {
+                "type": "string",
+                "defaultValue": "True",
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "metadata": {
+                  "displayName": "Enable metrics",
+                  "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
+                }
+              },
+              "logsEnabled": {
+                "type": "string",
+                "defaultValue": "True",
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "metadata": {
+                  "displayName": "Enable logs",
+                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Monitoring"
+            },
+            "PolicyRule": {
+              "if": {
+                "field": "type",
+                "equals": "Microsoft.Automation/automationAccounts"
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Insights/diagnosticSettings",
+                  "name": "setByPolicy",
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                        "equals": "true"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                        "equals": "true"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                        "equals": "[[parameters('logAnalytics')]"
+                      }
+                    ]
+                  },
+                  "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                  ],
+                  "deployment": {
+                    "properties": {
+                      "mode": "incremental",
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "resourceName": {
+                            "type": "string"
+                          },
+                          "logAnalytics": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "profileName": {
+                            "type": "string"
+                          },
+                          "metricsEnabled": {
+                            "type": "string"
+                          },
+                          "logsEnabled": {
+                            "type": "string"
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Automation/automationAccounts/providers/diagnosticSettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "name": "[[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                            "location": "[[parameters('location')]",
+                            "dependsOn": [],
+                            "properties": {
+                              "workspaceId": "[[parameters('logAnalytics')]",
+                              "metrics": [
+                                {
+                                  "category": "AllMetrics",
+                                  "timeGrain": null,
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": true,
+                                    "days": 0
+                                  }
+                                }
+                              ],
+                              "logs": [
+                                {
+                                  "category": "JobLogs",
+                                  "enabled": "[[parameters('logsEnabled')]"
+                                },
+                                {
+                                  "category": "JobStreams",
+                                  "enabled": "[[parameters('logsEnabled')]"
+                                },
+                                {
+                                  "category": "DscNodeStatus",
+                                  "enabled": "[[parameters('logsEnabled')]"
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      },
+                      "parameters": {
+                        "logAnalytics": {
+                          "value": "[[parameters('logAnalytics')]"
+                        },
+                        "location": {
+                          "value": "[[field('location')]"
+                        },
+                        "resourceName": {
+                          "value": "[[field('name')]"
+                        },
+                        "profileName": {
+                          "value": "[[parameters('profileName')]"
+                        },
+                        "metricsEnabled": {
+                          "value": "[[parameters('metricsEnabled')]"
+                        },
+                        "logsEnabled": {
+                          "value": "[[parameters('logsEnabled')]"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "Deploy-Diagnostics-AA"
+        },
+        {
+          "properties": {
             "Description": "Deploys the diagnostic settings for Container Instances to stream to a Log Analytics workspace when any ACR which is missing this diagnostic settings is created or updated. The policy wil set the diagnostic with all metrics enabled.",
             "DisplayName": "Deploy Diagnostic Settings for Container Instances to Log Analytics workspace",
             "Mode": "Indexed",
@@ -1556,193 +1743,6 @@
             }
           },
           "name": "Deploy-Diagnostics-ApplicationInsights"
-        },
-        {
-          "properties": {
-            "Description": "Deploys the diagnostic settings for Automation to stream to a Log Analytics workspace when any Automation which is missing this diagnostic settings is created or updated. The policy wil  set the diagnostic with all metrics and category enabled",
-            "DisplayName": "Deploy Diagnostic Settings for Automation to Log Analytics workspace",
-            "Mode": "Indexed",
-            "Parameters": {
-              "logAnalytics": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Log Analytics workspace",
-                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
-                  "strongType": "omsWorkspace"
-                }
-              },
-              "effect": {
-                "type": "string",
-                "defaultValue": "DeployIfNotExists",
-                "allowedValues": [
-                  "DeployIfNotExists",
-                  "Disabled"
-                ],
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              },
-              "profileName": {
-                "type": "string",
-                "defaultValue": "setbypolicy",
-                "metadata": {
-                  "displayName": "Profile name",
-                  "description": "The diagnostic settings profile name"
-                }
-              },
-              "metricsEnabled": {
-                "type": "string",
-                "defaultValue": "True",
-                "allowedValues": [
-                  "True",
-                  "False"
-                ],
-                "metadata": {
-                  "displayName": "Enable metrics",
-                  "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
-                }
-              },
-              "logsEnabled": {
-                "type": "string",
-                "defaultValue": "True",
-                "allowedValues": [
-                  "True",
-                  "False"
-                ],
-                "metadata": {
-                  "displayName": "Enable logs",
-                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Monitoring"
-            },
-            "PolicyRule": {
-              "if": {
-                "field": "type",
-                "equals": "Microsoft.Automation/automationAccounts"
-              },
-              "then": {
-                "effect": "[[parameters('effect')]",
-                "details": {
-                  "type": "Microsoft.Insights/diagnosticSettings",
-                  "name": "setByPolicy",
-                  "existenceCondition": {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                        "equals": "true"
-                      },
-                      {
-                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
-                        "equals": "true"
-                      },
-                      {
-                        "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
-                        "equals": "[[parameters('logAnalytics')]"
-                      }
-                    ]
-                  },
-                  "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
-                  ],
-                  "deployment": {
-                    "properties": {
-                      "mode": "incremental",
-                      "template": {
-                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                          "resourceName": {
-                            "type": "string"
-                          },
-                          "logAnalytics": {
-                            "type": "string"
-                          },
-                          "location": {
-                            "type": "string"
-                          },
-                          "profileName": {
-                            "type": "string"
-                          },
-                          "metricsEnabled": {
-                            "type": "string"
-                          },
-                          "logsEnabled": {
-                            "type": "string"
-                          }
-                        },
-                        "variables": {},
-                        "resources": [
-                          {
-                            "type": "Microsoft.Automation/automationAccounts/providers/diagnosticSettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "name": "[[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
-                            "location": "[[parameters('location')]",
-                            "dependsOn": [],
-                            "properties": {
-                              "workspaceId": "[[parameters('logAnalytics')]",
-                              "metrics": [
-                                {
-                                  "category": "AllMetrics",
-                                  "timeGrain": null,
-                                  "enabled": "[[parameters('metricsEnabled')]",
-                                  "retentionPolicy": {
-                                    "enabled": true,
-                                    "days": 0
-                                  }
-                                }
-                              ],
-                              "logs": [
-                                {
-                                  "category": "JobLogs",
-                                  "enabled": "[[parameters('logsEnabled')]"
-                                },
-                                {
-                                  "category": "JobStreams",
-                                  "enabled": "[[parameters('logsEnabled')]"
-                                },
-                                {
-                                  "category": "DscNodeStatus",
-                                  "enabled": "[[parameters('logsEnabled')]"
-                                }
-                              ]
-                            }
-                          }
-                        ],
-                        "outputs": {}
-                      },
-                      "parameters": {
-                        "logAnalytics": {
-                          "value": "[[parameters('logAnalytics')]"
-                        },
-                        "location": {
-                          "value": "[[field('location')]"
-                        },
-                        "resourceName": {
-                          "value": "[[field('name')]"
-                        },
-                        "profileName": {
-                          "value": "[[parameters('profileName')]"
-                        },
-                        "metricsEnabled": {
-                          "value": "[[parameters('metricsEnabled')]"
-                        },
-                        "logsEnabled": {
-                          "value": "[[parameters('logsEnabled')]"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "name": "Deploy-Diagnostics-AA"
         },
         {
           "properties": {
@@ -11616,10 +11616,10 @@
           "properties": {
             "Description": "Deploys NSG flow logs and traffic analytics to a storageaccountid with a specfied retention period.",
             "DisplayName": "Deploys NSG flow logs and traffic analytics",
-            "Mode": "Indexed",
+            "Mode": "All",
             "Parameters": {
               "retention": {
-                "type": "String",
+                "type": "Integer",
                 "metadata": {
                   "displayName": "Retention"
                 },
@@ -11743,7 +11743,7 @@
                             "type": "string"
                           },
                           "retention": {
-                            "type": "string"
+                            "type": "int"
                           },
                           "flowAnalyticsEnabled": {
                             "type": "bool"
@@ -11768,7 +11768,7 @@
                               "enabled": true,
                               "retentionPolicy": {
                                 "enabled": true,
-                                "days": "[[int(parameters('retention'))]"
+                                "days": "[[parameters('retention')]"
                               },
                               "format": {
                                 "type": "JSON",
