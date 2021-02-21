@@ -43,7 +43,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -230,7 +230,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -382,7 +382,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -802,7 +802,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -979,7 +979,7 @@
         },
         {
           "properties": {
-            "Description": "Deploys the diagnostic settings for Analysis Services to stream to a Log Analytics workspace when any Analysis Services which is missing this diagnostic settings is created or updated. The policy wil  set the diagnostic with all metrics and category enabled",
+            "Description": "Deploys the diagnostic settings for Analysis Services to stream to a Log Analytics workspace when any Analysis Services which is missing this diagnostic settings is created or updated. The policy will set the diagnostic with all metrics and category enabled",
             "DisplayName": "Deploy Diagnostic Settings for Analysis Services to Log Analytics workspace",
             "Mode": "Indexed",
             "Parameters": {
@@ -1005,7 +1005,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -1188,7 +1188,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -1367,7 +1367,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -1554,7 +1554,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -1772,7 +1772,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -1925,6 +1925,817 @@
         },
         {
           "properties": {
+            "description": "Deploys the diagnostic settings for Azure Storage blobs to stream to a Log Analytics workspace when any Azure Storage which is missing this diagnostic settings is created or updated.",
+            "displayName": "Deploy Diagnostic Settings for Azure Storage blobs to Log Analytics workspace",
+            "mode": "Indexed",
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Monitoring"
+            },
+            "Parameters": {
+              "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Log Analytics workspace",
+                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+                  "strongType": "omsWorkspace"
+                }
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              },
+              "profileName": {
+                "type": "string",
+                "defaultValue": "setByPolicy",
+                "metadata": {
+                  "displayName": "Profile name",
+                  "description": "The diagnostic settings profile name"
+                }
+              },
+              "metricsEnabled": {
+                "type": "string",
+                "defaultValue": "True",
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "metadata": {
+                  "displayName": "Enable metrics",
+                  "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
+                }
+              },
+              "logsEnabled": {
+                "type": "string",
+                "defaultValue": "True",
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "metadata": {
+                  "displayName": "Enable logs",
+                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
+                }
+              }
+            },
+            "policyRule": {
+              "if": {
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts"
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Insights/diagnosticSettings",
+                  "name": "[[parameters('profileName')]",
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                        "equals": "[[parameters('logsEnabled')]"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                        "equals": "[[parameters('metricsEnabled')]"
+                      }
+                    ]
+                  },
+                  "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                  ],
+                  "deployment": {
+                    "properties": {
+                      "mode": "incremental",
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "resourceName": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "logAnalytics": {
+                            "type": "string"
+                          },
+                          "metricsEnabled": {
+                            "type": "string"
+                          },
+                          "logsEnabled": {
+                            "type": "string"
+                          },
+                          "profileName": {
+                            "type": "string"
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Storage/storageAccounts/blobServices/providers/diagnosticSettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "name": "[[concat(parameters('resourceName'), '/default/microsoft.insights/', parameters('profileName'))]",
+                            "location": "[[parameters('location')]",
+                            "dependsOn": [],
+                            "properties": {
+                              "workspaceId": "[[parameters('logAnalytics')]",
+                              "metrics": [
+                                {
+                                  "category": "Capacity",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                },
+                                {
+                                  "category": "Transaction",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": true,
+                                    "days": 0
+                                  }
+                                }
+                              ],
+                              "logs": [
+                                {
+                                  "category": "StorageRead",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageWrite",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageDelete",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      },
+                      "parameters": {
+                        "location": {
+                          "value": "[[field('location')]"
+                        },
+                        "resourceName": {
+                          "value": "[[field('name')]"
+                        },
+                        "logAnalytics": {
+                          "value": "[[parameters('logAnalytics')]"
+                        },
+                        "metricsEnabled": {
+                          "value": "[[parameters('metricsEnabled')]"
+                        },
+                        "logsEnabled": {
+                          "value": "[[parameters('logsEnabled')]"
+                        },
+                        "profileName": {
+                          "value": "[[parameters('profileName')]"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "Deploy-Diagnostics-BlobStorage"
+        },
+        {
+          "properties": {
+            "description": "Deploys the diagnostic settings for Azure Storage files to stream to a regional Log Analytics workspace when any Azure Storage which is missing this diagnostic settings is created or updated.",
+            "displayName": "Deploy Diagnostic Settings for Azure Storage files to Log Analytics workspace",
+            "mode": "Indexed",
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Monitoring"
+            },
+            "parameters": {
+              "effect": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                },
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "defaultValue": "DeployIfNotExists"
+              },
+              "profileName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Profile name",
+                  "description": "The diagnostic settings profile name"
+                },
+                "defaultValue": "setByPolicy"
+              },
+              "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Log Analytics workspace",
+                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+                  "strongType": "omsWorkspace",
+                  "assignPermissions": true
+                }
+              },
+              "metricsEnabled": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Enable metrics",
+                  "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "defaultValue": "False"
+              },
+              "logsEnabled": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Enable logs",
+                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "defaultValue": "True"
+              }
+            },
+            "policyRule": {
+              "if": {
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts"
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Insights/diagnosticSettings",
+                  "name": "[[]parameters('profileName')]",
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                        "equals": "[[parameters('logsEnabled')]"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                        "equals": "[[parameters('metricsEnabled')]"
+                      }
+                    ]
+                  },
+                  "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                  ],
+                  "deployment": {
+                    "properties": {
+                      "mode": "incremental",
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "resourceName": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "logAnalytics": {
+                            "type": "string"
+                          },
+                          "metricsEnabled": {
+                            "type": "string"
+                          },
+                          "logsEnabled": {
+                            "type": "string"
+                          },
+                          "profileName": {
+                            "type": "string"
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Storage/storageAccounts/fileServices/providers/diagnosticSettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "name": "[[concat(parameters('resourceName'), '/default/microsoft.insights/', parameters('profileName'))]",
+                            "location": "[[parameters('location')]",
+                            "dependsOn": [],
+                            "properties": {
+                              "workspaceId": "[[parameters('logAnalytics')]",
+                              "metrics": [
+                                {
+                                  "category": "Capacity",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                },
+                                {
+                                  "category": "Transaction",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                }
+                              ],
+                              "logs": [
+                                {
+                                  "category": "StorageRead",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageWrite",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageDelete",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      },
+                      "parameters": {
+                        "location": {
+                          "value": "[[field('location')]"
+                        },
+                        "resourceName": {
+                          "value": "[[field('name')]"
+                        },
+                        "logAnalytics": {
+                          "value": "[[parameters('logAnalytics')]"
+                        },
+                        "metricsEnabled": {
+                          "value": "[[parameters('metricsEnabled')]"
+                        },
+                        "logsEnabled": {
+                          "value": "[[parameters('logsEnabled')]"
+                        },
+                        "profileName": {
+                          "value": "[[parameters('profileName')]"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "Deploy-Diagnostics-FileStorage"
+        },
+        {
+          "properties": {
+            "description": "Deploys the diagnostic settings for Azure Storage tables to stream to a regional Log Analytics workspace when any Azure Storage which is missing this diagnostic settings is created or updated.",
+            "displayName": "Deploy Diagnostic Settings for Azure Storage tables to Log Analytics workspace",
+            "mode": "Indexed",
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Monitoring"
+            },
+            "parameters": {
+              "effect": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                },
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "defaultValue": "DeployIfNotExists"
+              },
+              "profileName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Profile name",
+                  "description": "The diagnostic settings profile name"
+                },
+                "defaultValue": "setByPolicy"
+              },
+              "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Log Analytics workspace",
+                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+                  "strongType": "omsWorkspace",
+                  "assignPermissions": true
+                }
+              },
+              "metricsEnabled": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Enable metrics",
+                  "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "defaultValue": "False"
+              },
+              "logsEnabled": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Enable logs",
+                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "defaultValue": "True"
+              }
+            },
+            "policyRule": {
+              "if": {
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts"
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Insights/diagnosticSettings",
+                  "name": "[[parameters('profileName')]",
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                        "equals": "[[parameters('logsEnabled')]"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                        "equals": "[[parameters('metricsEnabled')]"
+                      }
+                    ]
+                  },
+                  "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                  ],
+                  "deployment": {
+                    "properties": {
+                      "mode": "incremental",
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "resourceName": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "logAnalytics": {
+                            "type": "string"
+                          },
+                          "metricsEnabled": {
+                            "type": "string"
+                          },
+                          "logsEnabled": {
+                            "type": "string"
+                          },
+                          "profileName": {
+                            "type": "string"
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Storage/storageAccounts/tableServices/providers/diagnosticSettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "name": "[[concat(parameters('resourceName'), '/default/microsoft.insights/', parameters('profileName'))]",
+                            "location": "[[parameters('location')]",
+                            "dependsOn": [],
+                            "properties": {
+                              "workspaceId": "[[parameters('logAnalytics')]",
+                              "metrics": [
+                                {
+                                  "category": "Capacity",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                },
+                                {
+                                  "category": "Transaction",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                }
+                              ],
+                              "logs": [
+                                {
+                                  "category": "StorageRead",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageWrite",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageDelete",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      },
+                      "parameters": {
+                        "location": {
+                          "value": "[[field('location')]"
+                        },
+                        "resourceName": {
+                          "value": "[[field('name')]"
+                        },
+                        "logAnalytics": {
+                          "value": "[[parameters('logAnalytics')]"
+                        },
+                        "metricsEnabled": {
+                          "value": "[[parameters('metricsEnabled')]"
+                        },
+                        "logsEnabled": {
+                          "value": "[[parameters('logsEnabled')]"
+                        },
+                        "profileName": {
+                          "value": "[[parameters('profileName')]"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "Deploy-Diagnostics-TableStorage"
+        },
+        {
+          "properties": {
+            "description": "Deploys the diagnostic settings for Azure Storage queues to stream to a regional Log Analytics workspace when any Azure Storage which is missing this diagnostic settings is created or updated.",
+            "displayName": "Deploy Diagnostic Settings for Azure Storage queues to Log Analytics workspace",
+            "mode": "Indexed",
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Monitoring"
+            },
+            "parameters": {
+              "effect": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                },
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "defaultValue": "DeployIfNotExists"
+              },
+              "profileName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Profile name",
+                  "description": "The diagnostic settings profile name"
+                },
+                "defaultValue": "setByPolicy"
+              },
+              "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Log Analytics workspace",
+                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+                  "strongType": "omsWorkspace",
+                  "assignPermissions": true
+                }
+              },
+              "metricsEnabled": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Enable metrics",
+                  "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "defaultValue": "False"
+              },
+              "logsEnabled": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Enable logs",
+                  "description": "Whether to enable logs stream to the Log Analytics workspace - True or False"
+                },
+                "allowedValues": [
+                  "True",
+                  "False"
+                ],
+                "defaultValue": "True"
+              }
+            },
+            "policyRule": {
+              "if": {
+                "field": "type",
+                "equals": "Microsoft.Storage/storageAccounts"
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Insights/diagnosticSettings",
+                  "name": "[[parameters('profileName')]",
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                        "equals": "[[parameters('logsEnabled')]"
+                      },
+                      {
+                        "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                        "equals": "[[parameters('metricsEnabled')]"
+                      }
+                    ]
+                  },
+                  "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                  ],
+                  "deployment": {
+                    "properties": {
+                      "mode": "incremental",
+                      "template": {
+                        "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "resourceName": {
+                            "type": "string"
+                          },
+                          "location": {
+                            "type": "string"
+                          },
+                          "logAnalytics": {
+                            "type": "string"
+                          },
+                          "metricsEnabled": {
+                            "type": "string"
+                          },
+                          "logsEnabled": {
+                            "type": "string"
+                          },
+                          "profileName": {
+                            "type": "string"
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Storage/storageAccounts/queueServices/providers/diagnosticSettings",
+                            "apiVersion": "2017-05-01-preview",
+                            "name": "[[concat(parameters('resourceName'), '/default/microsoft.insights/', parameters('profileName'))]",
+                            "location": "[[parameters('location')]",
+                            "dependsOn": [],
+                            "properties": {
+                              "workspaceId": "[[parameters('logAnalytics')]",
+                              "metrics": [
+                                {
+                                  "category": "Capacity",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                },
+                                {
+                                  "category": "Transaction",
+                                  "enabled": "[[parameters('metricsEnabled')]",
+                                  "retentionPolicy": {
+                                    "enabled": false,
+                                    "days": 0
+                                  }
+                                }
+                              ],
+                              "logs": [
+                                {
+                                  "category": "StorageRead",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageWrite",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                },
+                                {
+                                  "category": "StorageDelete",
+                                  "enabled": "[[parameters('logsEnabled')]",
+                                  "retentionPolicy": {
+                                    "days": 0,
+                                    "enabled": false
+                                  }
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      },
+                      "parameters": {
+                        "location": {
+                          "value": "[[field('location')]"
+                        },
+                        "resourceName": {
+                          "value": "[[field('name')]"
+                        },
+                        "logAnalytics": {
+                          "value": "[[parameters('logAnalytics')]"
+                        },
+                        "metricsEnabled": {
+                          "value": "[[parameters('metricsEnabled')]"
+                        },
+                        "logsEnabled": {
+                          "value": "[[parameters('logsEnabled')]"
+                        },
+                        "profileName": {
+                          "value": "[[parameters('profileName')]"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "Deploy-Diagnostics-QueueStorage"
+        },
+        {
+          "properties": {
             "Description": "Deploys the diagnostic settings for CDN Endpoint to stream to a Log Analytics workspace when any CDN Endpoint which is missing this diagnostic settings is created or updated. The policy wil  set the diagnostic with all metrics and category enabled",
             "DisplayName": "Deploy Diagnostic Settings for CDN Endpoint to Log Analytics workspace",
             "Mode": "Indexed",
@@ -1951,7 +2762,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -2098,7 +2909,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -2285,7 +3096,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -2492,7 +3303,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -2674,7 +3485,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -2885,7 +3696,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -3068,7 +3879,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -3251,7 +4062,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -3403,7 +4214,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -3586,7 +4397,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -3789,7 +4600,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -3968,7 +4779,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -4147,7 +4958,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -4334,7 +5145,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -4517,7 +5328,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -4704,7 +5515,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -4856,7 +5667,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -5087,7 +5898,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -5266,7 +6077,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -5449,7 +6260,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -5596,7 +6407,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -5775,7 +6586,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -5958,7 +6769,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -6179,7 +6990,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -6362,7 +7173,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -6513,7 +7324,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -6700,7 +7511,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -6851,7 +7662,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -7038,7 +7849,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -7217,7 +8028,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -7413,7 +8224,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -7565,7 +8376,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -7744,7 +8555,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -7923,7 +8734,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -8102,7 +8913,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -8277,7 +9088,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -8492,7 +9303,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -8644,7 +9455,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -8798,7 +9609,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -8981,7 +9792,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -9164,7 +9975,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -9343,7 +10154,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -9494,7 +10305,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -9672,7 +10483,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -9823,7 +10634,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -10022,7 +10833,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -10174,7 +10985,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
@@ -14383,7 +15194,7 @@
               },
               "profileName": {
                 "type": "string",
-                "defaultValue": "setbypolicy",
+                "defaultValue": "setByPolicy",
                 "metadata": {
                   "displayName": "Profile name",
                   "description": "The diagnostic settings profile name"
