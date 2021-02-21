@@ -2198,7 +2198,7 @@
                 "effect": "[[parameters('effect')]",
                 "details": {
                   "type": "Microsoft.Insights/diagnosticSettings",
-                  "name": "[[]parameters('profileName')]",
+                  "name": "[[parameters('profileName')]",
                   "existenceCondition": {
                     "allOf": [
                       {
@@ -2256,7 +2256,7 @@
                                   "category": "Capacity",
                                   "enabled": "[[parameters('metricsEnabled')]",
                                   "retentionPolicy": {
-                                    "enabled": false,
+                                    "enabled": true,
                                     "days": 0
                                   }
                                 },
@@ -2264,7 +2264,7 @@
                                   "category": "Transaction",
                                   "enabled": "[[parameters('metricsEnabled')]",
                                   "retentionPolicy": {
-                                    "enabled": false,
+                                    "enabled": true,
                                     "days": 0
                                   }
                                 }
