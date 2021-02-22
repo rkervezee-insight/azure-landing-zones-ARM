@@ -639,6 +639,20 @@
                                                             "priority": 100,
                                                             "direction": "Inbound"
                                                         }
+                                                    },
+                                                    {
+                                                        "name": "allowHttpsInbound",
+                                                        "properties": {
+                                                            "description": "This is required for inbound HTTPS access from the internet.",
+                                                            "protocol": "Tcp",
+                                                            "sourcePortRange": "*",
+                                                            "sourceAddressPrefix": "Internet",
+                                                            "destinationPortRange": "443",
+                                                            "destinationAddressPrefix": "[parameters('subnetMaskForAppGw')]",
+                                                            "access": "Allow",
+                                                            "priority": 110,
+                                                            "direction": "Inbound"
+                                                        }
                                                     }
                                                 ]
                                             }
