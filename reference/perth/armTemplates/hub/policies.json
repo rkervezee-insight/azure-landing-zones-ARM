@@ -11941,6 +11941,270 @@
         },
         {
           "properties": {
+            "Description": "This policy denies creation of Postgre SQL DB accounts with exposed public endpoints",
+            "DisplayName": "Public network access should be disabled for PostgreSql",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "SQL"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.DBforPostgreSQL/servers"
+                  },
+                  {
+                    "field": "Microsoft.DBforPostgreSQL/servers/publicNetworkAccess",
+                    "notequals": "Disabled"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          },
+          "name": "Deny-PublicEndpoint-PostgreSql"
+        },
+        {
+          "properties": {
+            "Description": "This policy denies creation of MySql DB accounts with exposed public endpoints",
+            "DisplayName": "Public network access should be disabled for MySQL",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "SQL"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.DBforMySQL/servers"
+                  },
+                  {
+                    "field": "Microsoft.DBforMySQL/servers/publicNetworkAccess",
+                    "notequals": "Disabled"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          },
+          "name": "Deny-PublicEndpoint-MySQL"
+        },
+        {
+          "properties": {
+            "Description": "This policy denies the creation of Maria DB accounts with exposed public endpoints",
+            "DisplayName": "Public network access should be disabled for MariaDB",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "SQL"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.DBforMariaDB/servers"
+                  },
+                  {
+                    "field": "Microsoft.DBforMariaDB/servers/publicNetworkAccess",
+                    "notequals": "Disabled"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          },
+          "name": "Deny-PublicEndpoint-MariaDB"
+        },
+        {
+          "properties": {
+            "Description": "This policy denies  the creation of  Azure Kubernetes Service non-private clusters",
+            "DisplayName": "Public network access on AKS API should be disabled",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Kubernetes"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.ContainerService/managedClusters"
+                  },
+                  {
+                    "field": "Microsoft.ContainerService/managedClusters/apiServerAccessProfile.enablePrivateCluster",
+                    "notequals": "true"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          },
+          "name": "Deny-PublicEndpoint-Aks"
+        },
+        {
+          "properties": {
+            "Description": "This policy denies creation of Key Vaults with IP Firewall exposed to all public endpoints",
+            "DisplayName": "Public network access should be disabled for KeyVault",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Key Vault"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.KeyVault/vaults"
+                  },
+                  {
+                    "field": "Microsoft.KeyVault/vaults/networkAcls.defaultAction",
+                    "notequals": "Deny"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          },
+          "name": "Deny-PublicEndpoint-KeyVault"
+        },
+        {
+          "properties": {
+            "Description": "This policy denies that  Cosmos database accounts  are created with out public network access is disabled.",
+            "DisplayName": "Public network access should be disabled for CosmosDB",
+            "Mode": "Indexed",
+            "Parameters": {
+              "effect": {
+                "type": "String",
+                "allowedValues": [
+                  "Audit",
+                  "Deny",
+                  "Disabled"
+                ],
+                "defaultValue": "Deny",
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "SQL"
+            },
+            "PolicyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.DocumentDB/databaseAccounts"
+                  },
+                  {
+                    "field": "Microsoft.DocumentDB/databaseAccounts/publicNetworkAccess",
+                    "notequals": "Disabled"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]"
+              }
+            }
+          },
+          "name": "Deny-PublicEndpoint-CosmosDB"
+        },
+        {
+          "properties": {
             "Description": "Deploy auditing settings to SQL Database when it not exist in the deployment",
             "DisplayName": "Deploy SQL Database auditing settings",
             "Mode": "Indexed",
@@ -12381,50 +12645,6 @@
         },
         {
           "properties": {
-            "Description": "This policy denies creation of Postgre SQL DB accounts with exposed public endpoints",
-            "DisplayName": "Public network access should be disabled for PostgreSql",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "SQL"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.DBforPostgreSQL/servers"
-                  },
-                  {
-                    "field": "Microsoft.DBforPostgreSQL/servers/publicNetworkAccess",
-                    "notequals": "Disabled"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-PublicEndpoint-PostgreSql"
-        },
-        {
-          "properties": {
             "Description": "Deploys NSG flow logs and traffic analytics to a storageaccountid with a specfied retention period.",
             "DisplayName": "Deploys NSG flow logs and traffic analytics",
             "Mode": "All",
@@ -12650,50 +12870,6 @@
             }
           },
           "name": "Deny-Subnet-Without-Nsg"
-        },
-        {
-          "properties": {
-            "Description": "This policy denies creation of MySql DB accounts with exposed public endpoints",
-            "DisplayName": "Public network access should be disabled for MySQL",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "SQL"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.DBforMySQL/servers"
-                  },
-                  {
-                    "field": "Microsoft.DBforMySQL/servers/publicNetworkAccess",
-                    "notequals": "Disabled"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-PublicEndpoint-MySQL"
         },
         {
           "properties": {
@@ -13129,94 +13305,6 @@
         },
         {
           "properties": {
-            "Description": "This policy denies the creation of Maria DB accounts with exposed public endpoints",
-            "DisplayName": "Public network access should be disabled for MariaDB",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "SQL"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.DBforMariaDB/servers"
-                  },
-                  {
-                    "field": "Microsoft.DBforMariaDB/servers/publicNetworkAccess",
-                    "notequals": "Disabled"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-PublicEndpoint-MariaDB"
-        },
-        {
-          "properties": {
-            "Description": "This policy denies creation of Key Vaults with IP Firewall exposed to all public endpoints",
-            "DisplayName": "Public network access should be disabled for KeyVault",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Key Vault"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.KeyVault/vaults"
-                  },
-                  {
-                    "field": "Microsoft.KeyVault/vaults/networkAcls.defaultAction",
-                    "notequals": "Deny"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-PublicEndpoint-KeyVault"
-        },
-        {
-          "properties": {
             "Description": "Deploys Azure Firewall Manager policy in subscription where the policy is assigned.",
             "DisplayName": "Deploy Azure Firewall Manager policy in the subscription",
             "Mode": "Indexed",
@@ -13373,9 +13461,9 @@
           "name": "Deploy-FirewallPolicy"
         },
         {
-          "name": "Deny-RDP-From-Internet",
+          "name": "Deny RDP From the Internet",
           "properties": {
-            "displayName": "Deny-RDP-From-Internet",
+            "displayName": "Deny RDP From the Internet",
             "description": "This policy denies any network security rule that allows RDP access from Internet",
             "mode": "All",
             "metadata": {
@@ -13754,50 +13842,6 @@
             }
           },
           "name": "Deploy-Budget"
-        },
-        {
-          "properties": {
-            "Description": "This policy denies  the creation of  Azure Kubernetes Service non-private clusters",
-            "DisplayName": "Public network access on AKS API should be disabled",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Kubernetes"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.ContainerService/managedClusters"
-                  },
-                  {
-                    "field": "Microsoft.ContainerService/managedClusters/apiServerAccessProfile.enablePrivateCluster",
-                    "notequals": "true"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-PublicEndpoint-Aks"
         },
         {
           "properties": {
@@ -14317,50 +14361,6 @@
             }
           },
           "name": "Deploy-ASC-Standard"
-        },
-        {
-          "properties": {
-            "Description": "This policy denies that  Cosmos database accounts  are created with out public network access is disabled.",
-            "DisplayName": "Public network access should be disabled for CosmosDB",
-            "Mode": "Indexed",
-            "Parameters": {
-              "effect": {
-                "type": "String",
-                "allowedValues": [
-                  "Audit",
-                  "Deny",
-                  "Disabled"
-                ],
-                "defaultValue": "Deny",
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "SQL"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.DocumentDB/databaseAccounts"
-                  },
-                  {
-                    "field": "Microsoft.DocumentDB/databaseAccounts/publicNetworkAccess",
-                    "notequals": "Disabled"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]"
-              }
-            }
-          },
-          "name": "Deny-PublicEndpoint-CosmosDB"
         },
         {
           "properties": {
