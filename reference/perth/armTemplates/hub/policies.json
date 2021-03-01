@@ -15801,7 +15801,7 @@
               },
               {
                 "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-LogicAppsWF')]",
-                "p4444olicyDefinitionReferenceId": "LogicAppsWFDeployDiagnosticLogDeployLogAnalytics",
+                "policyDefinitionReferenceId": "LogicAppsWFDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
                     "value": "[[parameters('logAnalytics')]"
