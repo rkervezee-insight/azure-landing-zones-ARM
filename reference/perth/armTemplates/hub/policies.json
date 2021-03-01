@@ -13042,7 +13042,7 @@
           "name": "Deploy-FirewallPolicy"
         },
         {
-          "name": "Deny RDP From the Internet",
+          "name": "Deny-RDP-From-Internet",
           "properties": {
             "displayName": "Deny RDP From the Internet",
             "description": "This policy denies any network security rule that allows RDP access from Internet",
@@ -13737,7 +13737,7 @@
               }
             }
           },
-          "name": "Deploy-ASC-Standard"
+          "name": "Deploy-ASC-Pricing"
         },
         {
           "properties": {
