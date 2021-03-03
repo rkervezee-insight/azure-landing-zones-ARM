@@ -30,7 +30,7 @@
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
-                            "text": "THe deployment will create the management group hierarchy under the Tenant Root Group with the prefix provided at this step.",
+                            "text": "The deployment will create the management group hierarchy under the Tenant Root Group with the prefix provided at this step.",
                             "link": {
                                 "label": "Learn more",
                                 "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/management-group-and-subscription-organization"
@@ -226,6 +226,18 @@
                         }
                     },
                     {
+                        "name": "esBasIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Bastion Identifier",
+                        "toolTip": "Provide a value for the Azure Bastion Identifier",
+                        "defaultValue": "bas",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
                         "name": "text3",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
@@ -238,7 +250,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Subscription Tag",
                         "toolTip": "Provide a value for the subscription tag",
-                        "defaultValue": "platform",
+                        "defaultValue": "production",
                         "constraints": {
                             "required": false
                         }
@@ -249,6 +261,16 @@
                         "label": "Owner Tag",
                         "toolTip": "Provide a value for the owner tag",
                         "defaultValue": "tulpy",
+                        "constraints": {
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "esCostCenterTag",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Cost Center Tag",
+                        "toolTip": "Provide a value for the Cost Center tag",
+                        "defaultValue": "1234",
                         "constraints": {
                             "required": false
                         }
@@ -556,6 +578,17 @@
                             ]
                         },
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
+                        "name": "esAscEmailContact",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Provide the Azure Security Center Email Contact",
+                        "toolTip": "Provide the email contact for Azure Security Center alerts",
+                        "defaultValue": "stephen.tulp@outlook.com",
+                        "constraints": {
+                            "required": false
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esAsc, 'Yes')]"
                     },
                     {
                         "name": "esAscVms",
@@ -1147,6 +1180,38 @@
                         }
                     },
                     {
+                        "name": "esAzBastion",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Azure Bastion",
+                        "defaultValue": "Yes",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esAddressBastion",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Subnet for Azure Bastion",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
+                        "defaultValue": "10.49.2.0/24",
+                        "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
+                        "constraints": {
+                            "required": true,
+                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
+                        }
+                    },
+                    {
                         "name": "esAppGw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure App Gateway Subnet",
@@ -1646,13 +1711,16 @@
             "nsgPrefix": "[steps('esNaming').esNsgIdentifier]",
             "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
+            "basPrefix": "[steps('esNaming').esBasIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
+            "costCenterTag": "[steps('esNaming').esCostCenterTag]",
             "tenantId": "[steps('esPlatformManagement').esAzureAdTenant]",
             "subscriptionId": "[steps('esPlatformManagement').esPlatformSub]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
+            "ascEmailContact": "[steps('esPlatformManagement').esAscEmailContact]",
             "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
             "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
             "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",
@@ -1679,6 +1747,7 @@
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
+            "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
@@ -1693,6 +1762,7 @@
             "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
             "vpnGwType": "[steps('esPlatformConnectivity').esVpnGwType]",
             "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
+            "subnetMaskForAzBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",

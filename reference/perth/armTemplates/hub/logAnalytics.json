@@ -68,6 +68,7 @@
         }
     },
     "resources": [
+        // Conditional assignment of Azure Policy to deploy Log Analytics and Azure Automation
         {
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -78,10 +79,10 @@
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "Deploy-Log-Analytics",
-                "displayName": "Deploy-Log-Analytics",
+                "description": "[variables('policyAssignmentNames').loganalytics]",
+                "displayName": "[variables('policyAssignmentNames').loganalytics]",
                 "policyDefinitionId": "[variables('policyDefinitions').deployLogAnalytics]",
-                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform')]",
+                "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
                 "parameters": {
                     "workspaceName": {
                         "value": "[variables('logAnalyticsName')]"
@@ -104,6 +105,7 @@
                 }
             }
         },
+        // Role assignment for the conditional Log Analytics policy assignment
         {
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -118,6 +120,7 @@
                 "principalId": "[toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01', 'Full' ).identity.principalId)]"
             }
         },
+        // Conditional deployment to invoke template for Log Analytics
         {
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
@@ -131,7 +134,7 @@
             "properties": {
                 "mode": "incremental",
                 "template": "[reference(variables('policyDefinitions').deployLogAnalytics, '2018-05-01').policyRule.then.details.deployment.properties.template]",
-                "parameters": "[reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-Platform', '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01').parameters]"
+                "parameters": "[reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform', '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').loganalytics), '2018-05-01').parameters]"
             }
         }
     ],

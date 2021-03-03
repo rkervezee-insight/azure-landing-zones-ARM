@@ -18,11 +18,11 @@
             "type": "string",
             "maxLength": 3
         },
-        "staPrefix": {
+        "rsvPrefix": {
             "type": "string",
             "maxLength": 3
         },
-        "enableStorage": {
+        "enableRsv": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -35,32 +35,35 @@
         },
         "ownerTag": {
             "type": "string"
+        },
+        "costCenterTag": {
+            "type": "string"
         }
     },
     "variables": {
-        "deploymentName": "[take(concat(deployment().name, '-storage'), 64)]",
+        "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]"
-        },
-        "storage": {
-            "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
-            "sku": "Standard_LRS",
-            "kind": "StorageV2",
-            "use": "diagnostics",
-            "httpsOnly": true
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
+        "recoveryServicesVault": {
+            "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+            "policyName": "[toLower(concat(parameters('companyPrefix'),'-backuppolicy'))]",
+            "vaultStorageType": "LocallyRedundant"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
-            "storage": "2019-06-01"
+            "vaults": "2020-02-02",
+            "backupstorageconfig": "2018-01-10"
+        },
+                "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [
+        // Create Resource Group
         {
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -68,10 +71,12 @@
             "name": "[variables('resourceGroupName')]",
             "tags": {
                 "environment": "[variables('tags').environment]",
-                "owner": "[variables('tags').owner]"
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
             },
             "properties": {}
         },
+        // Nested deployment for Recovery Services Vault (Subscription Level)
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -87,6 +92,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        // Deploy Resource Group Lock
                         {
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
@@ -96,30 +102,29 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
+                        // Nested deployment for Recovery Services Vault (Resource Group Level)
                         {
-                            // Nested deployment for Storage (Resource Group Level)
-                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
-                            "type": "Microsoft.Storage/storageAccounts",
-                            "apiVersion": "[variables('apiVersions').storage]",
-                            "name": "[variables('storage').name]",
+                            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
+                            "type": "Microsoft.RecoveryServices/vaults",
+                            "apiVersion": "[variables('apiVersions').vaults]",
+                            "name": "[variables('recoveryServicesVault').name]",
+                            "tags": { "vaultStorageType": "[variables('recoveryServicesVault').vaultStorageType]" },
                             "location": "[deployment().location]",
                             "sku": {
-                                "name": "[variables('storage').sku]"
+                                "name": "RS0",
+                                "tier": "Standard"
                             },
-                            "tags": {
-                                "storageSKU": "[variables('storage').sku]",
-                                "storageUse": "[variables('storage').use]"
-                            },
-                            "kind": "[variables('storage').kind]",
+                            "properties": {}
+                        },
+                        {
+                            "type": "Microsoft.RecoveryServices/vaults/backupstorageconfig",
+                            "apiVersion": "[variables('apiVersions').backupstorageconfig]",
+                            "name": "[concat(variables('recoveryServicesVault').name, '/vaultstorageconfig')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.RecoveryServices/vaults/', variables('recoveryServicesVault').name)]"
+                            ],
                             "properties": {
-                                "supportsHttpsTrafficOnly": "[variables('storage').httpsOnly]",
-                                "networkAcls": {
-                                    "bypass": "Logging, Metrics, AzureServices",
-                                    "virtualNetworkRules": [],
-                                    "ipRules": [
-                                    ],
-                                    "defaultAction": "Deny"
-                                }
+                                "StorageModelType": "[variables('recoveryServicesVault').vaultStorageType]"
                             }
                         }
                     ]

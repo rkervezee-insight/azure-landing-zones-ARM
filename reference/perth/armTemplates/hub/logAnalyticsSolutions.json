@@ -104,9 +104,19 @@
                 "No"
             ],
             "defaultValue": "Yes"
+        },
+        "subscriptionTag": {
+            "type": "string"
+        },
+        "ownerTag": {
+            "type": "string"
+        },
+        "costCenterTag": {
+            "type": "string"
         }
     },
     "variables": {
+        "deploymentName": "[take(concat(deployment().name, '-monSolutions'), 64)]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
@@ -159,15 +169,35 @@
         },
         "apiVersions": {
             "deployments": "2020-06-01",
+            "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
             "operationsManagementSolutions": "2015-11-01-preview"
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [
+        // Create Resource Group
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "[variables('apiVersions').resourceGroups]",
+            "location": "[deployment().location]",
+            "name": "[variables('resourceGroupName')]",
+            "tags": {
+                "environment": "[variables('tags').environment]",
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
+            },
+            "properties": {}
+        },
+        // Nested deployment for Log Analytics Solutions
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "monSolutions",
+            "name": "[variables('deploymentName')]",
             "resourceGroup": "[variables('resourceGroupName')]",
             "properties": {
                 "mode": "Incremental",
@@ -177,6 +207,7 @@
                     "parameters": {},
                     "variables": {},
                     "resources": [
+                        // Deploy Resource Group Lock
                         {
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
@@ -186,8 +217,8 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
+                        // Log Analytics Solution for Agent Health
                         {
-                            // Log Analytics Solution for Agent Health
                             "condition": "[equals(parameters('enableAgentHealth'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -203,8 +234,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for AntiMalware
                         {
-                            // Log Analytics Solution for AntiMalware
                             "condition": "[equals(parameters('enableAntiMalware'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -220,8 +251,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Azure Activity Logs
                         {
-                            // Log Analytics Solution for Azure Activity Logs
                             "condition": "[equals(parameters('enableActivityLog'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -237,8 +268,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Change Tracking
                         {
-                            // Log Analytics Solution for Change Tracking
                             "condition": "[equals(parameters('enableChangeTracking'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -254,8 +285,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for VM Insights
                         {
-                            // Log Analytics Solution for VM Insights
                             "condition": "[equals(parameters('enableVmInsights'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -271,8 +302,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Security
                         {
-                            // Log Analytics Solution for Security
                             "condition": "[equals(parameters('enableSecuritySolution'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -288,8 +319,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Security Insights
                         {
-                            // Log Analytics Solution for Security Insights
                             "condition": "[equals(parameters('enableSecuritySolution'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -305,8 +336,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Service Map
                         {
-                            // Log Analytics Solution for Service Map
                             "condition": "[equals(parameters('enableServiceMap'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -322,8 +353,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for SQL Assessment
                         {
-                            // Log Analytics Solution for SQL Assessment
                             "condition": "[equals(parameters('enableSqlAssessment'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -339,8 +370,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Update Management
                         {
-                            // Log Analytics Solution for Update Management
                             "condition": "[equals(parameters('enableUpdateMgmt'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -356,8 +387,8 @@
                                 "publisher": "Microsoft"
                             }
                         },
+                        // Log Analytics Solution for Key Vault Analytics
                         {
-                            // Log Analytics Solution for Key Vault Analytics
                             "condition": "[equals(parameters('enableKeyVaultAnalytics'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
