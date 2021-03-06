@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/roleAssignments/94be2807-30de-5a70-b1bd-6ac4a74ec4d2",
+        "Name": "94be2807-30de-5a70-b1bd-6ac4a74ec4d2",
+        "properties": {
+          "DisplayName": "Deploy-AzResource-Diag",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "c60a1133-5ebf-48fc-9593-26c2a00cac7b",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

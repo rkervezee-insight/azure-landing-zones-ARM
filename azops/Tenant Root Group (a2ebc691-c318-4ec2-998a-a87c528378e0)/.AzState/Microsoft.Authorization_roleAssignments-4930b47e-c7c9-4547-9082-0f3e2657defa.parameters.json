@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/a2ebc691-c318-4ec2-998a-a87c528378e0/providers/Microsoft.Authorization/roleAssignments/4930b47e-c7c9-4547-9082-0f3e2657defa",
+        "Name": "4930b47e-c7c9-4547-9082-0f3e2657defa",
+        "properties": {
+          "DisplayName": "AzDevOpsConnection - SPN",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "74fbe86b-56ec-498b-8d3e-f3eef609c8a8",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

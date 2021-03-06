@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/a2ebc691-c318-4ec2-998a-a87c528378e0/providers/Microsoft.Authorization/roleAssignments/d2bd15ff-f5ed-4c2f-b78d-93c4eee60e24",
+        "Name": "d2bd15ff-f5ed-4c2f-b78d-93c4eee60e24",
+        "properties": {
+          "DisplayName": "Tulp, Stephen",
+          "ObjectType": "User",
+          "PrincipalId": "fce6bf71-0d10-4469-8d3a-f6468465b8fd",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+          "RoleDefinitionName": "Owner"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/subscriptions/afa561b9-1bcc-4e69-bb33-af606363a7df/providers/Microsoft.Authorization/roleAssignments/ec3f7b87-b444-4639-a377-722daa8fd013",
+        "Name": "ec3f7b87-b444-4639-a377-722daa8fd013",
+        "properties": {
+          "DisplayName": "Harris, Rhys",
+          "ObjectType": "User",
+          "PrincipalId": "0175dc1e-3f0f-4200-b41b-00a105c4ba94",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+          "RoleDefinitionName": "Owner"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/roleAssignments/316022a5-29e8-57bd-900e-2ff7aeb43aab",
+        "Name": "316022a5-29e8-57bd-900e-2ff7aeb43aab",
+        "properties": {
+          "DisplayName": "Deploy-VMSS-Monitoring",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "c77b8ff5-31e3-4637-b1ca-c2f9fecf954c",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+          "RoleDefinitionName": "Log Analytics Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

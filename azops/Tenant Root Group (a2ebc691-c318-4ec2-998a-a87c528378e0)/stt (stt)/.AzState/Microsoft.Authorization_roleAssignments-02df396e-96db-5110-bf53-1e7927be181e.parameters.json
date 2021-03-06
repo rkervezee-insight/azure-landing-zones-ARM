@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/roleAssignments/02df396e-96db-5110-bf53-1e7927be181e",
+        "Name": "02df396e-96db-5110-bf53-1e7927be181e",
+        "properties": {
+          "DisplayName": "Deploy-WS-Arc-Monitoring",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "304d7a48-1a8d-4877-9da3-9653a1669c4e",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+          "RoleDefinitionName": "Log Analytics Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

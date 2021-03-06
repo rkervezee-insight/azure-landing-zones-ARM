@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/roleAssignments/b49151a3-588b-59be-8e89-dcdaabd1a048",
+        "Name": "b49151a3-588b-59be-8e89-dcdaabd1a048",
+        "properties": {
+          "DisplayName": "Deploy-AzActivity-La",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "a18e3867-0c96-46f7-90f5-76f04cea5fb0",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+          "RoleDefinitionName": "Owner"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

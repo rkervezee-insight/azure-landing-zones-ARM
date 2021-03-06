@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/roleAssignments/be00cf58-7be0-54e8-8a03-af24c06e47bf",
+        "Name": "be00cf58-7be0-54e8-8a03-af24c06e47bf",
+        "properties": {
+          "DisplayName": "Deploy-ASC-AutoProvision",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "f523d079-129c-4bd4-be4e-fa72670ec163",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

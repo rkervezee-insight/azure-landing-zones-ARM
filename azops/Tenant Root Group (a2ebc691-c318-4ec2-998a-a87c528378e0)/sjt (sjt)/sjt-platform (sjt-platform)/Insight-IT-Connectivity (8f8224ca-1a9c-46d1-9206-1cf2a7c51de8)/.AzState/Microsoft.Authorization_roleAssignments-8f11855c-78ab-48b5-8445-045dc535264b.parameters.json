@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/providers/Microsoft.Authorization/roleAssignments/8f11855c-78ab-48b5-8445-045dc535264b",
+        "Name": "8f11855c-78ab-48b5-8445-045dc535264b",
+        "properties": {
+          "DisplayName": "sjt-auto-runasaccount",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "b9a70b93-19d1-4d2b-bce8-25d5bd6b5a61",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

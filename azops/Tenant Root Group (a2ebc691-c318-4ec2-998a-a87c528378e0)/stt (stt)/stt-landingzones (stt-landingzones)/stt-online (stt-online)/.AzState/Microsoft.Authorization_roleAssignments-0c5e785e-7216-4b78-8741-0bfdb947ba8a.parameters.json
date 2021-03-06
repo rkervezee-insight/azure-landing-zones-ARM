@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/stt-online/providers/Microsoft.Authorization/roleAssignments/0c5e785e-7216-4b78-8741-0bfdb947ba8a",
+        "Name": "0c5e785e-7216-4b78-8741-0bfdb947ba8a",
+        "properties": {
+          "DisplayName": "Stephen Tulp (Insight AU Demo)",
+          "ObjectType": "User",
+          "PrincipalId": "e5906c27-d401-4768-9c79-1dab42fd1a80",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+          "RoleDefinitionName": "Owner"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}

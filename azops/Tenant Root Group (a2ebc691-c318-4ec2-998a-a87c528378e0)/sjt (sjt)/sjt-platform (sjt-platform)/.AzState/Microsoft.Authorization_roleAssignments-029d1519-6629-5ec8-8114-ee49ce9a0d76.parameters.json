@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/sjt-platform/providers/Microsoft.Authorization/roleAssignments/029d1519-6629-5ec8-8114-ee49ce9a0d76",
+        "Name": "029d1519-6629-5ec8-8114-ee49ce9a0d76",
+        "properties": {
+          "DisplayName": "Deploy-Log-Analytics",
+          "ObjectType": "ServicePrincipal",
+          "PrincipalId": "b3e97931-6200-4bf8-8475-e46f21f61a6e",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
+          "RoleDefinitionName": "Owner"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}
