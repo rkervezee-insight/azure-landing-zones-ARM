@@ -15,8 +15,7 @@
           "Parameters": {
             "listOfAllowedLocations": {
               "value": [
-                "australiaeast",
-                "australiasoutheast"
+                "australiaeast"
               ]
             }
           },
