@@ -1,0 +1,33 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Identity": {
+          "principalId": "aedac24f-bef7-481e-865d-10437464fd52",
+          "tenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+          "type": "SystemAssigned"
+        },
+        "Location": "eastus",
+        "Name": "1e9d561a3f97493e82ae5739",
+        "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyAssignments/1e9d561a3f97493e82ae5739",
+        "Properties": {
+          "Description": null,
+          "DisplayName": "Deploy a default budget on subscriptions",
+          "NotScopes": null,
+          "Parameters": {},
+          "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyDefinitions/Deploy-Budget",
+          "Scope": "/providers/Microsoft.Management/managementGroups/stt"
+        },
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyAssignments/1e9d561a3f97493e82ae5739",
+        "ResourceName": "1e9d561a3f97493e82ae5739",
+        "ResourceType": "Microsoft.Authorization/policyAssignments",
+        "Sku": {
+          "name": "A0",
+          "tier": "Free"
+        }
+      }
+    }
+  }
+}

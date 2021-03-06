@@ -1,0 +1,29 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Identity": null,
+        "Location": null,
+        "Name": "Deny-Public-IP",
+        "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/stt-identity/providers/Microsoft.Authorization/policyAssignments/Deny-Public-IP",
+        "Properties": {
+          "Description": "Deny-Public-IP",
+          "DisplayName": "Deny-Public-IP",
+          "NotScopes": null,
+          "Parameters": null,
+          "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicIP",
+          "Scope": "/providers/Microsoft.Management/managementGroups/stt-identity"
+        },
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/stt-identity/providers/Microsoft.Authorization/policyAssignments/Deny-Public-IP",
+        "ResourceName": "Deny-Public-IP",
+        "ResourceType": "Microsoft.Authorization/policyAssignments",
+        "Sku": {
+          "name": "A0",
+          "tier": "Free"
+        }
+      }
+    }
+  }
+}

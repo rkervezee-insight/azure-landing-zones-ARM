@@ -1,0 +1,29 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/stt-identity",
+        "Type": "/providers/Microsoft.Management/managementGroups",
+        "Name": "stt-identity",
+        "TenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+        "DisplayName": "stt-identity",
+        "UpdatedTime": "2021-01-23T06:19:31.9032381Z",
+        "UpdatedBy": "e5906c27-d401-4768-9c79-1dab42fd1a80",
+        "ParentId": "/providers/Microsoft.Management/managementGroups/stt-platform",
+        "ParentName": "stt-platform",
+        "ParentDisplayName": "stt-platform",
+        "Children": [
+          {
+            "Type": "/subscriptions",
+            "Id": "/subscriptions/5cb7efe0-67af-4723-ab35-0f2b42a85839",
+            "Name": "5cb7efe0-67af-4723-ab35-0f2b42a85839",
+            "DisplayName": "Insight-IT-Identity",
+            "Children": null
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/sjt-landingzones",
+        "Type": "/providers/Microsoft.Management/managementGroups",
+        "Name": "sjt-landingzones",
+        "TenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+        "DisplayName": "sjt-landingzones",
+        "UpdatedTime": "2021-02-03T07:38:27.9112489Z",
+        "UpdatedBy": "e5906c27-d401-4768-9c79-1dab42fd1a80",
+        "ParentId": "/providers/Microsoft.Management/managementGroups/sjt",
+        "ParentName": "sjt",
+        "ParentDisplayName": "sjt",
+        "Children": [
+          {
+            "Type": "/providers/Microsoft.Management/managementGroups",
+            "Id": "/providers/Microsoft.Management/managementGroups/sjt-online",
+            "Name": "sjt-online",
+            "DisplayName": "sjt-online",
+            "Children": null
+          },
+          {
+            "Type": "/providers/Microsoft.Management/managementGroups",
+            "Id": "/providers/Microsoft.Management/managementGroups/sjt-corp",
+            "Name": "sjt-corp",
+            "DisplayName": "sjt-corp",
+            "Children": null
+          }
+        ]
+      }
+    }
+  }
+}

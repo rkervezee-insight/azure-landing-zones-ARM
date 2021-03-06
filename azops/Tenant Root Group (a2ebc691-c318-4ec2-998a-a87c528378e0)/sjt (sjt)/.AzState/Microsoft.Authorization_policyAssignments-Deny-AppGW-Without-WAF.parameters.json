@@ -1,0 +1,29 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Identity": null,
+        "Location": "australiaeast",
+        "Name": "Deny-AppGW-Without-WAF",
+        "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyAssignments/Deny-AppGW-Without-WAF",
+        "Properties": {
+          "Description": "Deny-AppGW-Without-WAF",
+          "DisplayName": "Deny-AppGW-Without-WAF",
+          "NotScopes": null,
+          "Parameters": {},
+          "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF",
+          "Scope": "/providers/Microsoft.Management/managementGroups/sjt"
+        },
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyAssignments/Deny-AppGW-Without-WAF",
+        "ResourceName": "Deny-AppGW-Without-WAF",
+        "ResourceType": "Microsoft.Authorization/policyAssignments",
+        "Sku": {
+          "name": "A0",
+          "tier": "Free"
+        }
+      }
+    }
+  }
+}

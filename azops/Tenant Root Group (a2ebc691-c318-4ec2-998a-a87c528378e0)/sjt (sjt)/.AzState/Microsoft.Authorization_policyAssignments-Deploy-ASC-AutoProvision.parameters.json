@@ -1,0 +1,37 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Identity": {
+          "principalId": "f523d079-129c-4bd4-be4e-fa72670ec163",
+          "tenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+          "type": "SystemAssigned"
+        },
+        "Location": "australiaeast",
+        "Name": "Deploy-ASC-AutoProvision",
+        "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyAssignments/Deploy-ASC-AutoProvision",
+        "Properties": {
+          "Description": "Deploy-ASC-AutoProvision",
+          "DisplayName": "Deploy-ASC-AutoProvision",
+          "NotScopes": null,
+          "Parameters": {
+            "logAnalytics": {
+              "value": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/resourcegroups/sjt-syd-cor-arg-monitoring/providers/microsoft.operationalinsights/workspaces/sjt-syd-cor-oms-c310db5e"
+            }
+          },
+          "PolicyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/8e7da0a5-0a0e-4bbc-bfc0-7773c018b616",
+          "Scope": "/providers/Microsoft.Management/managementGroups/sjt"
+        },
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyAssignments/Deploy-ASC-AutoProvision",
+        "ResourceName": "Deploy-ASC-AutoProvision",
+        "ResourceType": "Microsoft.Authorization/policyAssignments",
+        "Sku": {
+          "name": "A0",
+          "tier": "Free"
+        }
+      }
+    }
+  }
+}

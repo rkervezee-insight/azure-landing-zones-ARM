@@ -1,0 +1,122 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Name": "Deploy-ASC-Email-Contact",
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Email-Contact",
+        "ResourceName": "Deploy-ASC-Email-Contact",
+        "ResourceType": "Microsoft.Authorization/policyDefinitions",
+        "SubscriptionId": null,
+        "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Email-Contact",
+        "Properties": {
+          "Description": "Deploys Azure Security Center Email Contact details.",
+          "DisplayName": "Deploy Azure Security Center Email Contacts",
+          "Mode": "All",
+          "Parameters": {
+            "emailSecurityContact": {
+              "type": "String",
+              "metadata": {
+                "displayName": "emailSecurityContact",
+                "description": "email address to send ASC alerts"
+              },
+              "defaultValue": "stephen.tulp@outlook.com"
+            },
+            "alertNotifications": {
+              "type": "String",
+              "metadata": {
+                "displayName": "Alert Notifications On or Off",
+                "description": "Set alert notifications on or off"
+              },
+              "defaultValue": "On"
+            },
+            "alertsToAdmins": {
+              "type": "String",
+              "metadata": {
+                "displayName": "Send alerts to admins, On or Off",
+                "description": "Set sending alerts to admins On or Off"
+              },
+              "defaultValue": "On"
+            }
+          },
+          "PolicyRule": {
+            "if": {
+              "allOf": [
+                {
+                  "field": "type",
+                  "equals": "Microsoft.Resources/subscriptions"
+                }
+              ]
+            },
+            "then": {
+              "effect": "deployIfNotExists",
+              "details": {
+                "deploymentScope": "subscription",
+                "existenceScope": "subscription",
+                "type": "Microsoft.Security/securityContacts",
+                "existenceCondition": {
+                  "allOf": [
+                    {
+                      "field": "Microsoft.Security/securityContacts/email",
+                      "equals": "[parameters ('emailSecurityContact')]"
+                    }
+                  ]
+                },
+                "roleDefinitionIds": [
+                  "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
+                ],
+                "deployment": {
+                  "location": "westus",
+                  "properties": {
+                    "mode": "incremental",
+                    "template": {
+                      "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                      "contentVersion": "1.0.0.0",
+                      "parameters": {
+                        "emailSecurityContact": {
+                          "type": "string"
+                        },
+                        "alertNotifications": {
+                          "type": "string"
+                        },
+                        "alertsToAdmins": {
+                          "type": "string"
+                        }
+                      },
+                      "variables": {},
+                      "resources": [
+                        {
+                          "type": "Microsoft.Security/securityContacts",
+                          "name": "default1",
+                          "apiVersion": "2017-08-01-preview",
+                          "properties": {
+                            "email": "[parameters('emailSecurityContact')]",
+                            "alertNotifications": "[parameters('alertNotifications')]",
+                            "alertsToAdmins": "[parameters('alertsToAdmins')]"
+                          }
+                        }
+                      ],
+                      "outputs": {}
+                    },
+                    "parameters": {
+                      "emailSecurityContact": {
+                        "value": "[parameters('emailSecurityContact')]"
+                      },
+                      "alertNotifications": {
+                        "value": "[parameters('alertNotifications')]"
+                      },
+                      "alertsToAdmins": {
+                        "value": "[parameters('alertsToAdmins')]"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

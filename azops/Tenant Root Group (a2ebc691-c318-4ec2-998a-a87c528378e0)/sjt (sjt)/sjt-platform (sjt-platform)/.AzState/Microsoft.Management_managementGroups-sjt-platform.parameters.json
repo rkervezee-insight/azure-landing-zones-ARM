@@ -1,0 +1,50 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/providers/Microsoft.Management/managementGroups/sjt-platform",
+        "Type": "/providers/Microsoft.Management/managementGroups",
+        "Name": "sjt-platform",
+        "TenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+        "DisplayName": "sjt-platform",
+        "UpdatedTime": "2021-02-03T07:38:26.5733773Z",
+        "UpdatedBy": "e5906c27-d401-4768-9c79-1dab42fd1a80",
+        "ParentId": "/providers/Microsoft.Management/managementGroups/sjt",
+        "ParentName": "sjt",
+        "ParentDisplayName": "sjt",
+        "Children": [
+          {
+            "Type": "/providers/Microsoft.Management/managementGroups",
+            "Id": "/providers/Microsoft.Management/managementGroups/sjt-identity",
+            "Name": "sjt-identity",
+            "DisplayName": "sjt-identity",
+            "Children": null
+          },
+          {
+            "Type": "/providers/Microsoft.Management/managementGroups",
+            "Id": "/providers/Microsoft.Management/managementGroups/sjt-management",
+            "Name": "sjt-management",
+            "DisplayName": "sjt-management",
+            "Children": null
+          },
+          {
+            "Type": "/providers/Microsoft.Management/managementGroups",
+            "Id": "/providers/Microsoft.Management/managementGroups/sjt-connectivity",
+            "Name": "sjt-connectivity",
+            "DisplayName": "sjt-connectivity",
+            "Children": null
+          },
+          {
+            "Type": "/subscriptions",
+            "Id": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8",
+            "Name": "8f8224ca-1a9c-46d1-9206-1cf2a7c51de8",
+            "DisplayName": "Insight-IT-Connectivity",
+            "Children": null
+          }
+        ]
+      }
+    }
+  }
+}

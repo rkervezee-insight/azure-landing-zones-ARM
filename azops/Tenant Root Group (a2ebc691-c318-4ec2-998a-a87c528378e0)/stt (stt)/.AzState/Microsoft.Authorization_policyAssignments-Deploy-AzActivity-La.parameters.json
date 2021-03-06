@@ -1,0 +1,40 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Identity": {
+          "principalId": "8aab5773-418f-4b3f-afbe-bd5c7a904090",
+          "tenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+          "type": "SystemAssigned"
+        },
+        "Location": "australiaeast",
+        "Name": "Deploy-AzActivity-La",
+        "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyAssignments/Deploy-AzActivity-La",
+        "Properties": {
+          "Description": "Deploy-AzActivity-La",
+          "DisplayName": "Deploy-AzActivity-La",
+          "NotScopes": null,
+          "Parameters": {
+            "logAnalytics": {
+              "value": "/subscriptions/afa561b9-1bcc-4e69-bb33-af606363a7df/resourcegroups/stt-syd-cor-arg-monitoring/providers/microsoft.operationalinsights/workspaces/stt-syd-cor-oms-c08f5d6f"
+            },
+            "logsEnabled": {
+              "value": "True"
+            }
+          },
+          "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ActivityLog-La",
+          "Scope": "/providers/Microsoft.Management/managementGroups/stt"
+        },
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/stt/providers/Microsoft.Authorization/policyAssignments/Deploy-AzActivity-La",
+        "ResourceName": "Deploy-AzActivity-La",
+        "ResourceType": "Microsoft.Authorization/policyAssignments",
+        "Sku": {
+          "name": "A0",
+          "tier": "Free"
+        }
+      }
+    }
+  }
+}

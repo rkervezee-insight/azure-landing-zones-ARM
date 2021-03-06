@@ -1,0 +1,37 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Identity": {
+          "principalId": "8c0a0aae-0681-445c-8e85-b947cfd7615d",
+          "tenantId": "a2ebc691-c318-4ec2-998a-a87c528378e0",
+          "type": "SystemAssigned"
+        },
+        "Location": "australiaeast",
+        "Name": "Enforce-AKS-HTTPS",
+        "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/sjt-landingzones/providers/Microsoft.Authorization/policyAssignments/Enforce-AKS-HTTPS",
+        "Properties": {
+          "Description": "Enforce-AKS-HTTPS",
+          "DisplayName": "Enforce-AKS-HTTPS",
+          "NotScopes": null,
+          "Parameters": {
+            "effect": {
+              "value": "deny"
+            }
+          },
+          "PolicyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/1a5b4dca-0b6f-4cf5-907c-56316bc1bf3d",
+          "Scope": "/providers/Microsoft.Management/managementGroups/sjt-landingzones"
+        },
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/sjt-landingzones/providers/Microsoft.Authorization/policyAssignments/Enforce-AKS-HTTPS",
+        "ResourceName": "Enforce-AKS-HTTPS",
+        "ResourceType": "Microsoft.Authorization/policyAssignments",
+        "Sku": {
+          "name": "A0",
+          "tier": "Free"
+        }
+      }
+    }
+  }
+}
