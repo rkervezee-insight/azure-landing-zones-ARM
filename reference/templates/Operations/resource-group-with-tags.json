@@ -1,0 +1,91 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "companyPrefix": {
+            "type": "string",
+            "defaultValue": "sjt",
+            "maxLength": 5
+        },
+        "environmentPrefix": {
+            "type": "string",
+            "defaultValue": "cor",
+            "maxLength": 3
+        },
+        "argPrefix": {
+            "type": "string",
+            "defaultValue": "arg",
+            "maxLength": 3
+        },
+        "location": {
+            "type": "string",
+            "allowedValues": [
+                "australiaeast",
+                "australiasoutheast"
+            ],
+            "defaultValue": "australiaeast"
+        },
+        "applicationName": {
+            "type": "string",
+            "defaultValue": "app01"
+        },
+        "owner": {
+            "type": "string",
+            "defaultValue": "tulpy"
+        },
+        "businessCriticality": {
+            "type": "string",
+            "defaultValue": "Tier2",
+            "allowedValues": [
+                "Tier0",
+                "Tier1",
+                "Tier2",
+                "Tier3"
+            ]
+        },
+        "ownerEmail": {
+            "type": "string",
+            "defaultValue": "stephen.tulp@outlook.com"
+        },
+        "costCenter": {
+            "type": "string",
+            "defaultValue": "1234"
+        },
+        "dataClassification": {
+            "type": "string",
+            "defaultValue": "Internal",
+            "allowedValues": [
+                "Public",
+                "Internal",
+                "Restricted",
+                "Confidential"
+            ]
+        }
+    },
+    "variables": {
+        "rgRegion": "[replace(parameters('location'),'australiaeast','syd')]",
+        "rgPurpose": "[toLower(parameters('applicationName'))]",
+        "rgName": "[toLower(concat(parameters('companyPrefix'), '-', variables('rgRegion'), '-', parameters('environmentPrefix'), '-', parameters('argPrefix'), '-', variables('rgPurpose')))]",
+        "apiVersions": {
+            "resourceGroups": "2020-06-01"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "[variables('apiVersions').resourceGroups]",
+            "name": "[variables('rgName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "applicationName": "[parameters('applicationName')]",
+                "owner": "[parameters('owner')]",
+                "criticality": "[parameters('businessCriticality')]",
+                "ownerEmail": "[parameters('ownerEmail')]",
+                "costCenter": "[parameters('costCenter')]",
+                "dataClassification": "[parameters('dataClassification')]"
+            },
+            "properties": {}
+        }
+    ],
+    "outputs": {}
+}
