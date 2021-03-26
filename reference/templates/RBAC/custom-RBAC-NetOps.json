@@ -42,7 +42,7 @@
           }
         ],
         "assignableScopes": [
-          "[concat('/providers/Microsoft.Management/managementGroups/', variables('scope').topLevel)]"
+          "[variables('scope').topLevel]"
         ]
       }
     }
