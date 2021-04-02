@@ -443,6 +443,12 @@
         },
         "enableAzFwAzs": {
             "type": "string",
+            "allowedValues": [
+                "None",
+                "1",
+                "2",
+                "3"
+            ],
             "defaultValue": "None"
         },
         "enableVpnGw": {
