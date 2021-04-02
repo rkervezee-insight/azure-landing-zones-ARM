@@ -1767,8 +1767,6 @@
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
             "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
-            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformManagement').esPlatformSub)), not(contains(steps('lzGoalState').esOnlineLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esOnlineLzSub, '')]",
-            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformManagement').esPlatformSub)), not(contains(steps('lzGoalState').esCorpLzSub, steps('esPlatformConnectivity').esConnSub))), steps('lzGoalState').esCorpLzSub, '')]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
