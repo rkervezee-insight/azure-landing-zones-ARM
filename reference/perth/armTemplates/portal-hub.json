@@ -1171,7 +1171,7 @@
                         "name": "esAzFwAzs",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Azure Firewall Availability Zones",
-                        "defaultValue": "None",
+                        "placeholder": "",
                         "multiselect": true,  
                         "selectAll": true,  
                         "multiLine": true,  
@@ -1179,10 +1179,6 @@
                         "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway. Select whether it should be policy or route based.",
                         "constraints": {
                             "allowedValues": [
-                                {
-                                    "label": "None",
-                                    "value": "None"
-                                },
                                 {
                                     "label": "1",
                                     "value": "1"
