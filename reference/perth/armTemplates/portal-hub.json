@@ -1780,6 +1780,7 @@
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "enableAzFwAz": "[steps('esPlatformConnectivity').esAzFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
             "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
