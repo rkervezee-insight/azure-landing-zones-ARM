@@ -1754,7 +1754,7 @@
             "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
-            "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esPrivateDnsZones]",
+            "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esEnablePrivateDnsZones]",
             "enablePrivateDnsZonesTable": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneTable]",
             "enablePrivateDnsZonesQueue": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneQueue]",
             "enablePrivateDnsZonesFiles": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneFiles]",
