@@ -4,15 +4,15 @@
   "parameters": {
     "input": {
       "value": {
-        "Name": "Deploy-Diagnostics-RecoveryVault",
-        "ResourceId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RecoveryVault",
-        "ResourceName": "Deploy-Diagnostics-RecoveryVault",
+        "Name": "Deploy-Diagnostics-ASE",
+        "ResourceId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ASE",
+        "ResourceName": "Deploy-Diagnostics-ASE",
         "ResourceType": "Microsoft.Authorization/policyDefinitions",
         "SubscriptionId": null,
-        "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-RecoveryVault",
+        "PolicyDefinitionId": "/providers/Microsoft.Management/managementGroups/sjt/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ASE",
         "Properties": {
-          "Description": "Deploys the diagnostic settings for Recovery Services vaults to stream to a Log Analytics workspace when any Recovery Services vaults which is missing this diagnostic settings is created or updated. The policy wil set the diagnostic with all metrics and category enabled",
-          "DisplayName": "Deploy Diagnostic Settings for Recovery Services vaults to Log Analytics workspace",
+          "Description": "Deploys the diagnostic settings for App Service Environments to stream to a Log Analytics workspace when any App Service Environments which is missing this diagnostic settings is created or updated. The policy wil set the diagnostic with all metrics and category enabled",
+          "DisplayName": "Deploy Diagnostic Settings for App Service Environments to Log Analytics workspace",
           "Mode": "All",
           "Parameters": {
             "logAnalytics": {
@@ -43,6 +43,18 @@
               },
               "defaultValue": "setByPolicy"
             },
+            "metricsEnabled": {
+              "type": "String",
+              "metadata": {
+                "displayName": "Enable metrics",
+                "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"
+              },
+              "allowedValues": [
+                "True",
+                "False"
+              ],
+              "defaultValue": "True"
+            },
             "logsEnabled": {
               "type": "String",
               "metadata": {
@@ -59,7 +71,7 @@
           "PolicyRule": {
             "if": {
               "field": "type",
-              "equals": "Microsoft.RecoveryServices/vaults"
+              "equals": "Microsoft.Web/hostingEnvironments"
             },
             "then": {
               "effect": "[parameters('effect')]",
@@ -67,39 +79,18 @@
                 "type": "Microsoft.Insights/diagnosticSettings",
                 "name": "setByPolicy",
                 "existenceCondition": {
-                  "allof": [
+                  "allOf": [
                     {
-                      "count": {
-                        "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
-                        "where": {
-                          "allof": [
-                            {
-                              "field": "Microsoft.Insights/diagnosticSettings/logs[*].Category",
-                              "in": [
-                                "CoreAzureBackup",
-                                "AddonAzureBackupJobs",
-                                "AddonAzureBackupAlerts",
-                                "AddonAzureBackupPolicy",
-                                "AddonAzureBackupStorage",
-                                "AddonAzureBackupProtectedInstance"
-                              ]
-                            },
-                            {
-                              "field": "Microsoft.Insights/diagnosticSettings/logs[*].Enabled",
-                              "equals": "True"
-                            }
-                          ]
-                        }
-                      },
-                      "Equals": 7
+                      "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                      "equals": "true"
+                    },
+                    {
+                      "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                      "equals": "true"
                     },
                     {
                       "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
                       "equals": "[parameters('logAnalytics')]"
-                    },
-                    {
-                      "field": "Microsoft.Insights/diagnosticSettings/logAnalyticsDestinationType",
-                      "equals": "Dedicated"
                     }
                   ]
                 },
@@ -126,6 +117,9 @@
                         "profileName": {
                           "type": "string"
                         },
+                        "metricsEnabled": {
+                          "type": "string"
+                        },
                         "logsEnabled": {
                           "type": "string"
                         }
@@ -133,38 +127,18 @@
                       "variables": {},
                       "resources": [
                         {
-                          "type": "Microsoft.RecoveryServices/vaults/providers/diagnosticSettings",
+                          "type": "Microsoft.Web/hostingEnvironments/providers/diagnosticSettings",
                           "apiVersion": "2017-05-01-preview",
                           "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                          "location": "[parameters('location')]",
                           "dependsOn": [],
                           "properties": {
                             "workspaceId": "[parameters('logAnalytics')]",
-                            "logAnalyticsDestinationType": "Dedicated",
                             "metrics": [],
                             "logs": [
                               {
-                                "category": "CoreAzureBackup",
-                                "enabled": "[parameters('logsEnabled')]"
-                              },
-                              {
-                                "category": "AddonAzureBackupAlerts",
-                                "enabled": "[parameters('logsEnabled')]"
-                              },
-                              {
-                                "category": "AddonAzureBackupJobs",
-                                "enabled": "[parameters('logsEnabled')]"
-                              },
-                              {
-                                "category": "AddonAzureBackupPolicy",
-                                "enabled": "[parameters('logsEnabled')]"
-                              },
-                              {
-                                "category": "AddonAzureBackupProtectedInstance",
-                                "enabled": "[parameters('logsEnabled')]"
-                              },
-                              {
-                                "category": "AddonAzureBackupStorage",
-                                "enabled": "[parameters('logsEnabled')]"
+                                "category": "AppServiceEnvironmentPlatformLogs",
+                                "enabled": true
                               }
                             ]
                           }
@@ -184,6 +158,9 @@
                       },
                       "profileName": {
                         "value": "[parameters('profileName')]"
+                      },
+                      "metricsEnabled": {
+                        "value": "[parameters('metricsEnabled')]"
                       },
                       "logsEnabled": {
                         "value": "[parameters('logsEnabled')]"
