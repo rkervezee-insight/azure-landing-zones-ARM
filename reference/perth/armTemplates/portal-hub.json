@@ -1174,7 +1174,6 @@
                         "placeholder": "",
                         "multiselect": true,  
                         "selectAll": true,  
-                        "multiLine": true,  
                         "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway. Select whether it should be policy or route based.",
                         "constraints": {
