@@ -441,14 +441,6 @@
             ],
             "defaultValue": "Yes"
         },
-        "enableAzFwAzs": {
-            "type": "array",
-            "defaultValue": [
-                "1",
-                "2",
-                "3"
-            ]
-        },
         "enableVpnGw": {
             "type": "string",
             "allowedValues": [
@@ -1243,9 +1235,6 @@
                     },
                     "addressPrefix": {
                         "value": "[parameters('addressPrefix')]"
-                    },
-                    "enableAzFwAzs": {
-                        "value": "[parameters('enableAzFwAzs')]"
                     },
                     "enableAzBastion": {
                         "value": "[parameters('enableAzBastion')]"

@@ -1168,32 +1168,6 @@
                         }
                     },
                     {
-                        "name": "esAzFwAzs",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Azure Firewall Availability Zones",
-                        "placeholder": "",
-                        "multiselect": true,  
-                        "selectAll": true,  
-                        "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway. Select whether it should be policy or route based.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "1",
-                                    "value": "1"
-                                },
-                                {
-                                    "label": "2",
-                                    "value": "2"
-                                },
-                                {
-                                    "label": "3",
-                                    "value": "3"
-                                }
-                            ]
-                        }
-                    },
-                    {
                         "name": "esAddressFw",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Subnet for Azure Firewall",
@@ -1775,7 +1749,6 @@
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
-            "enableAzFwAzs": "[steps('esPlatformConnectivity').esAzFwAzs]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
             "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
