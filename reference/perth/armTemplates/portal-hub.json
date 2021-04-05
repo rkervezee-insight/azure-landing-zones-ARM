@@ -910,7 +910,7 @@
                         "visible": true,
                         "options": {
                             "icon": "Info",
-                            "text": "Azure Foundations enables hybrid network connectivity with an on premises environment using the Hub & Spoke network topology. Please note, all network connectivity components will be deployed to the Platform Subscription.",
+                            "text": "Azure Foundations enables hybrid network connectivity with an on-premises environment using the Hub & Spoke network topology. Please note, all network connectivity components will be deployed to the Platform Subscription.",
                             "uri": "https://github.com/Azure/Enterprise-Scale/blob/main/docs/reference/Readme.md"
                         }
                     },
@@ -1446,12 +1446,12 @@
                         "name": "esVmssMonitoring",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure Azure VMSS (Windows & Linux) are being monitored",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -1566,7 +1566,7 @@
                         "name": "esAzBackup",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure Azure VMs (Windows & Linux) are enabled for Azure Backup",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Policy will be assigned and enable Azure Backup on all VMs in the landing zones.",
                         "constraints": {
                             "allowedValues": [
