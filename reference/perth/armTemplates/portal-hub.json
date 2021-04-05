@@ -65,7 +65,7 @@
                         "name": "esSubIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Subscription Identifier Prefix",
-                        "toolTip": "Provide a value for the subscription identifier, 3 characters eg 'cor'.",
+                        "toolTip": "Provide a value for the subscription identifier.",
                         "defaultValue": "cor",
                         "constraints": {
                             "required": true,

@@ -8,12 +8,12 @@
         "steps": [
             {
                 "name": "esNaming",
-                "label": "Naming Convention Prefixes",
+                "label": "Naming Prefixes",
                 "subLabel": {
-                    "preValidation": "Provide values for all Azure resources that will be created.",
+                    "preValidation": "Provide naming prefix values for all Azure resources that will be created.",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "Naming Convention Prefixes",
+                "bladeTitle": "Naming Prefixes",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -30,7 +30,7 @@
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
-                            "text": "Please provide values for the Company, Location and Subscription identifiers:"
+                            "text": "Please provide naming prefixes for the Company, Location and Subscription identifiers:"
                         }
                     },
                     {
@@ -61,7 +61,7 @@
                         "name": "esSubIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Subscription Identifier Prefix",
-                        "toolTip": "Provide a value for the subscription identifier, 3 characters eg 'prd, dev, uat'.",
+                        "toolTip": "Provide a value for the subscription identifier.",
                         "defaultValue": "prd",
                         "constraints": {
                             "required": true,
@@ -243,7 +243,7 @@
                     {
                         "name": "esLzSub",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Choose the Landing Zone Subscription (required)",
+                        "label": "Choose the Landing Zone Subscription",
                         "toolTip": "",
                         "multiselect": false,
                         "selectAll": true,
@@ -259,13 +259,13 @@
                     {
                         "name": "esAsc",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Security Center and enable security monitoring for your platform and resources",
-                        "defaultValue": "Yes (recommended)",
+                        "label": "Deploy Azure Security Center and enable security monitoring for the Platform and resources",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -279,14 +279,14 @@
                     {
                         "name": "esAscVms",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Enable Azure Defender for servers",
-                        "defaultValue": "Yes (recommended)",
+                        "label": "Enable Azure Defender for Servers",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for all servers.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -300,13 +300,13 @@
                         "name": "esAscApps",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for AppServices",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for AppServices.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -320,13 +320,13 @@
                         "name": "esAscStorage",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for Storage",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for Storage.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -340,13 +340,13 @@
                         "name": "esAscSql",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for SQL",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for SQL.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -360,13 +360,13 @@
                         "name": "esAscKeyVault",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for Key Vault",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for Key Vault.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -380,13 +380,13 @@
                         "name": "esAscArm",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for Azure Resource Manager",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for Resource Manager.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -400,13 +400,13 @@
                         "name": "esAscDns",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for DNS",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for DNS.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -420,13 +420,13 @@
                         "name": "esAscKubernetes",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for Kubernetes",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for Kubernetes.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -440,13 +440,13 @@
                         "name": "esAscRegistries",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Azure Defender for Container registries",
-                        "defaultValue": "Yes (recommended)",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for Container registries.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Standard"
                                 },
                                 {
@@ -496,8 +496,7 @@
                         "multiLine": true,
                         "visible": "[equals(steps('esLz').esAkv, 'Yes')]",
                         "constraints": {
-                            "allowedValues": "[map(steps('esLz').tenantApi.value, (tenant) => parse(concat('{\"label\":\"', tenant.displayName, '\",\"description\":\"', tenant.tenantId, '\",\"value\":\"', toLower(tenant.tenantId), '\"}')) )]",
-                            "required": true
+                            "allowedValues": "[map(steps('esLz').tenantApi.value, (tenant) => parse(concat('{\"label\":\"', tenant.displayName, '\",\"description\":\"', tenant.tenantId, '\",\"value\":\"', toLower(tenant.tenantId), '\"}')) )]"
                         }
                     },
                     {
@@ -625,7 +624,7 @@
                     {
                         "name": "esSpoke",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy a Virtual Network",
+                        "label": "Deploy the Spoke Virtual Network",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, a Virtual Network will be deployed.",
                         "constraints": {
