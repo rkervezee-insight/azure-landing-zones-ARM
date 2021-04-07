@@ -31,6 +31,13 @@
           },
           {
             "Type": "/subscriptions",
+            "Id": "/subscriptions/afa561b9-1bcc-4e69-bb33-af606363a7df",
+            "Name": "afa561b9-1bcc-4e69-bb33-af606363a7df",
+            "DisplayName": "Insight-IT-Management",
+            "Children": null
+          },
+          {
+            "Type": "/subscriptions",
             "Id": "/subscriptions/47b81534-e1db-4076-bdc8-470b377783bc",
             "Name": "47b81534-e1db-4076-bdc8-470b377783bc",
             "DisplayName": "Insight-IT-Connectivity",
