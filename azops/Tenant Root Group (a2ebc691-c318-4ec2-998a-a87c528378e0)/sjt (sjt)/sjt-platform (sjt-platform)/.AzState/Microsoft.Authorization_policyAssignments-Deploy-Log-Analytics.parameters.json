@@ -14,7 +14,7 @@
         "PolicyAssignmentId": "/providers/Microsoft.Management/managementGroups/sjt-platform/providers/Microsoft.Authorization/policyAssignments/Deploy-Log-Analytics",
         "Properties": {
           "Description": "Deploy-Log-Analytics",
-          "DisplayName": "Deploy-Log-Analyticss",
+          "DisplayName": "Deploy-Log-Analytics",
           "NotScopes": null,
           "Parameters": {
             "automationAccountName": {
