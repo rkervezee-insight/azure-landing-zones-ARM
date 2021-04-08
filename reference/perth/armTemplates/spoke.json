@@ -258,7 +258,7 @@
             "keyVault": "[uri(deployment().properties.templateLink.uri, 'common/keyVault.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'common/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
-            "spokeNetworking": "[uri(deployment().properties.templateLink.uri, 'spoke/networking.json')]",
+            "spokeNetwork": "[uri(deployment().properties.templateLink.uri, 'spoke/networking.json')]",
             "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'spoke/vNetPeering.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'spoke/budget.json')]"
         },
@@ -268,7 +268,7 @@
             "keyVault": "[take(concat('keyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "spokeNetworking": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "spokeNetwork": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "vNetPeering": "[take(concat('vNetPeering', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "budget": "[take(concat('budget', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
 
@@ -279,8 +279,8 @@
         }
     },
     "resources": [
-        // Move identified Azure subscription to the appropriate Management Group
         {
+            "comments": "// Move identified Azure subscription to the appropriate Management Group",
             "condition": "[not(empty(parameters('subscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -289,8 +289,8 @@
             ],
             "properties": {}
         },
-        // Linked template for the creation of Recovery Services Vault
         {
+            "comments": "// Linked template for the creation of Recovery Services Vault",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -336,8 +336,9 @@
                 }
             }
         },
-        // Linked template for the creation of Azure Key Vault
+
         {
+            "comments": "// Linked template for the creation of Azure Key Vault",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableAkv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -386,8 +387,9 @@
                 }
             }
         },
-        // Linked template for the creation of Azure Storage
+
         {
+            "comments": "// Linked template for the creation of Azure Storage",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -434,13 +436,14 @@
                 }
             }
         },
-        // Linked template for the creation of spoke virtual networking
+
         {
+            "comments": "// Linked template for the creation of the spoke virtual network",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
-            "name": "[variables('deploymentNames').spokeNetworking]",
+            "name": "[variables('deploymentNames').spokeNetwork]",
             "dependsOn": [
             ],
             "location": "[deployment().location]",
@@ -448,7 +451,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').spokeNetworking]"
+                    "uri": "[variables('deploymentUris').spokeNetwork]"
                 },
                 "parameters": {
                     "companyPrefix": {
@@ -520,15 +523,16 @@
                 }
             }
         },
-        // Linked template for the creation of vNet peering to the Hub
+
         {
+            "comments": "// Linked template for the creation of vNet peering to the Hub",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').vNetPeering]",
             "dependsOn": [
-                "[variables('deploymentNames').spokeNetworking]"
+                "[variables('deploymentNames').spokeNetwork]"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -571,8 +575,9 @@
                 }
             }
         },
-        // Linked template for the creation of a Subscription Budget
+
         {
+            "comments": "// Linked template for the creation of a Subscription Budget",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableBudget'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
