@@ -653,6 +653,7 @@
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
+            "mgmtDiagnostics": "[uri(deployment().properties.templateLink.uri, 'hub/mgmtGroupDiagnostics.json')]",
             "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]"
         },
@@ -668,6 +669,7 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "mgmtDiagnostics": "[take(concat('mgmtDiagnostics', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
@@ -1280,6 +1282,47 @@
                     },
                     "subnetMaskForIdentity": {
                         "value": "[parameters('subnetMaskForIdentity')]"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
+            "name": "[variables('deploymentNames').mgmtDiagnostics]",
+            "dependsOn": [
+                "[variables('deploymentNames').diagnosticsAndSecurity]"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').mgmtDiagnostics]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
+                    "omsPrefix": {
+                        "value": "[parameters('omsPrefix')]"
+                    },
+                    "enableLogAnalytics": {
+                        "value": "[parameters('enableLogAnalytics')]"
+                    },
+                    "subscriptionId": {
+                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }

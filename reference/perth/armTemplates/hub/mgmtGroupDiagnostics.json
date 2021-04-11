@@ -1,0 +1,87 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "companyPrefix": {
+            "type": "string",
+            "maxLength": 5
+        },
+        "locationPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "environmentPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "argPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "omsPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "enableLogAnalytics": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "If 'Yes' is selected when also adding a subscription for the Platform Landing Zone, ARM will assign two policies to enable auditing in your environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
+            }
+        },
+        "subscriptionId": {
+            "type": "string",
+            "maxLength": 36
+        }
+    },
+    "variables": {
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
+        "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+        "logAnalyticsId": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]",
+        "mgmtGroups": [
+            "[concat(parameters('companyPrefix'), '-platform')]",
+            "[concat(parameters('companyPrefix'), '-management')]",
+            "[concat(parameters('companyPrefix'), '-connectivity')]",
+            "[concat(parameters('companyPrefix'), '-identity')]",
+            "[concat(parameters('companyPrefix'), '-landingzones')]",
+            "[concat(parameters('companyPrefix'), '-online')]",
+            "[concat(parameters('companyPrefix'), '-corp')]",
+            "[concat(parameters('companyPrefix'), '-sandboxes')]",
+            "[concat(parameters('companyPrefix'), '-decommissioned')]",
+            "[parameters('companyPrefix')]"
+        ]
+    },
+    "resources": [
+        {
+            "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', variables('mgmtGroups')[copyIndex()])]",
+            "name": "[concat('mgmtGroupLogsToLa', copyIndex())]",
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "apiVersion": "2020-01-01-preview",
+            "location": "Global",
+            "copy": {
+                "name": "mgmtDiagCopy",
+                "count": "[length(variables('mgmtGroups'))]"
+            },
+            "properties": {
+                "workspaceId": "[variables('logAnalyticsId')]",
+                "logs": [
+                    {
+                        "category": "Administrative",
+                        "enabled": true
+                    },
+                    {
+                        "category": "Policy",
+                        "enabled": true
+                    }
+                ]
+            }
+        }
+    ],
+    "outputs": {}
+}
