@@ -21,7 +21,7 @@
                 "description": "This policy denies  the creation of  Azure Kubernetes Service non-private clusters",
                 "displayName": "Public network access should be disabled for AKS API"
               },
-              "type": "String"
+              "type": "string"
             },
             "CosmosPublicIpDenyEffect": {
               "allowedValues": [
@@ -34,7 +34,7 @@
                 "description": "This policy denies that  Cosmos database accounts  are created with out public network access is disabled.",
                 "displayName": "Public network access should be disabled for CosmosDB"
               },
-              "type": "String"
+              "type": "string"
             },
             "KeyVaultPublicIpDenyEffect": {
               "allowedValues": [
@@ -47,7 +47,7 @@
                 "description": "This policy denies creation of Key Vaults with IP Firewall exposed to all public endpoints",
                 "displayName": "Public network access should be disabled for KeyVault"
               },
-              "type": "String"
+              "type": "string"
             },
             "MariaDBPublicIpDenyEffect": {
               "allowedValues": [
@@ -60,7 +60,7 @@
                 "description": "This policy denies the creation of Maria DB accounts with exposed public endpoints",
                 "displayName": "Public network access should be disabled for MariaDB"
               },
-              "type": "String"
+              "type": "string"
             },
             "MySQLPublicIpDenyEffect": {
               "allowedValues": [
@@ -73,7 +73,7 @@
                 "description": "This policy denies creation of MySql DB accounts with exposed public endpoints",
                 "displayName": "Public network access should be disabled for MySQL"
               },
-              "type": "String"
+              "type": "string"
             },
             "PostgreSQLPublicIpDenyEffect": {
               "allowedValues": [
@@ -86,7 +86,7 @@
                 "description": "This policy denies creation of Postgre SQL DB accounts with exposed public endpoints",
                 "displayName": "Public network access should be disabled for PostgreSql"
               },
-              "type": "String"
+              "type": "string"
             },
             "SqlServerPublicIpDenyEffect": {
               "allowedValues": [
@@ -99,7 +99,7 @@
                 "description": "This policy denies creation of Sql servers with exposed public endpoints",
                 "displayName": "Public network access should be disabled for Azure SQL Database"
               },
-              "type": "String"
+              "type": "string"
             },
             "StoragePublicIpDenyEffect": {
               "allowedValues": [
@@ -112,7 +112,7 @@
                 "description": "This policy denies creation of storage accounts with IP Firewall exposed to all public endpoints",
                 "displayName": "Public network access should be disabled for Storage accounts"
               },
-              "type": "String"
+              "type": "string"
             }
           },
           "PolicyDefinitionGroups": null,

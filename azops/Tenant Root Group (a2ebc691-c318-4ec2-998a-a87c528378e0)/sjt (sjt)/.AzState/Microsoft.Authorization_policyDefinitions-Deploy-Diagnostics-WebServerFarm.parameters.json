@@ -24,7 +24,7 @@
               }
             },
             "effect": {
-              "type": "String",
+              "type": "string",
               "metadata": {
                 "displayName": "Effect",
                 "description": "Enable or disable the execution of the policy"
@@ -36,7 +36,7 @@
               "defaultValue": "DeployIfNotExists"
             },
             "profileName": {
-              "type": "String",
+              "type": "string",
               "metadata": {
                 "displayName": "Profile name",
                 "description": "The diagnostic settings profile name"
@@ -44,7 +44,7 @@
               "defaultValue": "setByPolicy"
             },
             "metricsEnabled": {
-              "type": "String",
+              "type": "string",
               "metadata": {
                 "displayName": "Enable metrics",
                 "description": "Whether to enable metrics stream to the Log Analytics workspace - True or False"

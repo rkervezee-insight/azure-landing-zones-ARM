@@ -44,7 +44,7 @@
               }
             },
             "retentionInDays": {
-              "type": "String",
+              "type": "string",
               "metadata": {
                 "displayName": "Data retention",
                 "description": "Select data retention (days) for Log Analytics."
@@ -59,7 +59,7 @@
               }
             },
             "effect": {
-              "type": "String",
+              "type": "string",
               "metadata": {
                 "displayName": "Effect",
                 "description": "Enable or disable the execution of the policy"
