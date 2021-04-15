@@ -4,14 +4,14 @@
   "parameters": {
     "input": {
       "value": {
-        "Id": "/providers/Microsoft.Management/managementGroups/a2ebc691-c318-4ec2-998a-a87c528378e0/providers/Microsoft.Authorization/roleAssignments/e99b2970-ec86-49ab-8abb-ef031faddd02",
-        "Name": "e99b2970-ec86-49ab-8abb-ef031faddd02",
+        "Id": "/subscriptions/8d0248a2-d875-4407-99a6-0981fe09bff2/providers/Microsoft.Authorization/roleAssignments/fe692bce-bc98-46e3-895c-e2405131a496",
+        "Name": "fe692bce-bc98-46e3-895c-e2405131a496",
         "properties": {
           "DisplayName": "Paul Smithdale (Insight)",
           "ObjectType": "User",
           "PrincipalId": "c7634bc2-98fd-4bb2-aaab-0e63ca547918",
-          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
-          "RoleDefinitionName": "Owner"
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
         },
         "ResourceType": "Microsoft.Authorization/roleAssignments"
       }

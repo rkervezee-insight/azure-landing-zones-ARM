@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/subscriptions/8d0248a2-d875-4407-99a6-0981fe09bff2/providers/Microsoft.Authorization/roleAssignments/51d6fa7c-b3df-4e05-963e-17926e965d6c",
+        "Name": "51d6fa7c-b3df-4e05-963e-17926e965d6c",
+        "properties": {
+          "DisplayName": "Cameron Zivkovic (Insight)",
+          "ObjectType": "User",
+          "PrincipalId": "e6d4298d-0cda-4e33-b8f7-b3b58120354c",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}
