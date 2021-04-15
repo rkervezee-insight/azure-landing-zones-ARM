@@ -42,6 +42,13 @@
             "Name": "47b81534-e1db-4076-bdc8-470b377783bc",
             "DisplayName": "Insight-IT-Connectivity",
             "Children": null
+          },
+          {
+            "Type": "/subscriptions",
+            "Id": "/subscriptions/8d0248a2-d875-4407-99a6-0981fe09bff2",
+            "Name": "8d0248a2-d875-4407-99a6-0981fe09bff2",
+            "DisplayName": "Insight-APAC-Demo",
+            "Children": null
           }
         ]
       }
