@@ -1,0 +1,20 @@
+{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "input": {
+      "value": {
+        "Id": "/subscriptions/8d0248a2-d875-4407-99a6-0981fe09bff2/providers/Microsoft.Authorization/roleAssignments/0eb7c854-8bb4-4731-bdfb-385bb321d119",
+        "Name": "0eb7c854-8bb4-4731-bdfb-385bb321d119",
+        "properties": {
+          "DisplayName": "McKelt, Chris",
+          "ObjectType": "User",
+          "PrincipalId": "23ff638b-0c06-4c41-bd39-8d9e045282cc",
+          "RoleDefinitionId": "/providers/Microsoft.Authorization/RoleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+          "RoleDefinitionName": "Contributor"
+        },
+        "ResourceType": "Microsoft.Authorization/roleAssignments"
+      }
+    }
+  }
+}
