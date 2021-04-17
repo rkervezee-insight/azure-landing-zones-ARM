@@ -177,6 +177,7 @@
         },
         "ascEmailContact": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "Provide the Azure Security Center Email Contact"
             }
@@ -1282,47 +1283,6 @@
                     },
                     "subnetMaskForIdentity": {
                         "value": "[parameters('subnetMaskForIdentity')]"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
-            "name": "[variables('deploymentNames').mgmtDiagnostics]",
-            "dependsOn": [
-                "[variables('deploymentNames').diagnosticsAndSecurity]"
-            ],
-            "location": "[deployment().location]",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').mgmtDiagnostics]"
-                },
-                "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
-                    "omsPrefix": {
-                        "value": "[parameters('omsPrefix')]"
-                    },
-                    "enableLogAnalytics": {
-                        "value": "[parameters('enableLogAnalytics')]"
-                    },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
                     }
                 }
             }

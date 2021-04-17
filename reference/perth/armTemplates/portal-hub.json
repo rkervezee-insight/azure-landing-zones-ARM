@@ -470,7 +470,7 @@
                     {
                         "name": "esAntiMalware",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Antimalware solution",
+                        "label": "Deploy Anti-malware solution",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
                         "constraints": {
