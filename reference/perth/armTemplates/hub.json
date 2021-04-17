@@ -116,12 +116,14 @@
         },
         "subscriptionTag": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "Provide the value for the environment tag"
             }
         },
         "ownerTag": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "Provide the value for the owner tag"
             }
@@ -532,11 +534,11 @@
                 "displayName": "addressPrefix",
                 "description": "Address prefix"
             },
-            "defaultValue": "192.168.0.0/24"
+            "defaultValue": ""
         },
         "enableVmBackup": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -548,11 +550,11 @@
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
         },
         "denyRdp": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -560,7 +562,7 @@
         },
         "denyIpForwarding": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -568,7 +570,7 @@
         },
         "enableSqlEncryption": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -576,7 +578,7 @@
         },
         "enableSqlAudit": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -584,7 +586,7 @@
         },
         "enableStorageHttps": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -592,7 +594,7 @@
         },
         "enableAksPolicy": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -600,7 +602,7 @@
         },
         "denyAksPrivileged": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -608,7 +610,7 @@
         },
         "denyAksPrivilegedEscalation": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -616,7 +618,7 @@
         },
         "denyHttpIngressForAks": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -654,7 +656,6 @@
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
-            "mgmtDiagnostics": "[uri(deployment().properties.templateLink.uri, 'hub/mgmtGroupDiagnostics.json')]",
             "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]"
         },
@@ -670,7 +671,6 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "mgmtDiagnostics": "[take(concat('mgmtDiagnostics', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
