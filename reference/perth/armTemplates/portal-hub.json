@@ -250,7 +250,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Subscription Tag",
                         "toolTip": "Provide a value for the subscription tag",
-                        "defaultValue": "production",
+                        "defaultValue": "platform",
                         "constraints": {
                             "required": false
                         }
