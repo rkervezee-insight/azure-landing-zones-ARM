@@ -929,7 +929,7 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
-                "DeploymentDelay"
+                "policyCompletion"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -976,7 +976,7 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').keyVault]",
             "dependsOn": [
-                "DeploymentDelay"
+                "policyCompletion"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -1026,7 +1026,7 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').storage]",
             "dependsOn": [
-                "DeploymentDelay"
+                "policyCompletion"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -1074,7 +1074,7 @@
             "name": "[variables('deploymentNames').landingZone]",
             "dependsOn": [
                 "[variables('deploymentNames').policyDefinitions]",
-                "DeploymentDelay"
+                "policyCompletion"
             ],
             "location": "[deployment().location]",
             "properties": {
