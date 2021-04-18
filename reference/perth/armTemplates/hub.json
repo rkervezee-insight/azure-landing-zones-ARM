@@ -1430,7 +1430,7 @@
                     "gitHubUserNameOrOrg": {
                         "value": "[parameters('gitHubUserNameOrOrg')]"
                     },
-                    "topLevelManagementGroupPrefix": {
+                    "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
                     },
                     "subscriptionId": {
