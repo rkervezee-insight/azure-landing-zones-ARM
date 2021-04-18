@@ -639,6 +639,37 @@
                 "Yes",
                 "No"
             ]
+        },
+        "paToken": {
+            "type": "securestring",
+            "defaultValue": ""
+        },
+        "principalId": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "appId": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "principalSecret": {
+            "type": "securestring",
+            "defaultValue": ""
+        },
+        "gitHubUserNameOrOrg": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "repositoryName": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "enableAzOps": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
         }
     },
     "variables": {
@@ -657,7 +688,8 @@
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
             "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
-            "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]"
+            "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]",
+            "azOps": "[uri(deployment().properties.templateLink.uri, 'hub/azOpsSetup.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
         "noSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', 'na')]",
@@ -672,7 +704,8 @@
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -723,7 +756,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[concat('delayFor', copyIndex())]",
+            "name": "[concat('preparingToLaunch', copyIndex())]",
             "location": "[deployment().location]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
             "dependsOn": [
@@ -731,9 +764,9 @@
             ],
             "copy": {
                 "batchSize": 1,
-                "count": 10,
+                "count": 20,
                 "mode": "Serial",
-                "name": "DeploymentDelay"
+                "name": "policyCompletion"
             },
             "properties": {
                 "mode": "Incremental",
@@ -764,7 +797,7 @@
             "name": "[variables('deploymentNames').monitoring]",
             "dependsOn": [
                 "[variables('deploymentNames').policyDefinitions]",
-                "DeploymentDelay"
+                "policyCompletion"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -1095,9 +1128,7 @@
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
             "name": "[variables('deploymentNames').diagnosticsAndSecurity]",
             "dependsOn": [
-                "[variables('deploymentNames').monitoring]",
-                "[variables('deploymentNames').monitoringSolutions]",
-                "DeploymentDelay"
+                "[variables('deploymentNames').monitoring]"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -1177,8 +1208,7 @@
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
             "name": "[variables('deploymentNames').hubNetworking]",
             "dependsOn": [
-                "[variables('deploymentNames').diagnosticsAndSecurity]",
-                "DeploymentDelay"
+                "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -1295,8 +1325,7 @@
             "name": "[variables('deploymentNames').privateDns]",
             "dependsOn": [
                 "[variables('deploymentNames').hubNetworking]",
-                "[variables('deploymentNames').diagnosticsAndSecurity]",
-                "DeploymentDelay"
+                "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
             "location": "[deployment().location]",
             "properties": {
@@ -1350,12 +1379,63 @@
                     }
                 }
             }
-        }
+        },
+        {
+            "condition": "[and(equals(parameters('enableAzOps'), 'Yes'), not(empty(parameters('principalSecret'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-06-01",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
+            "name": "[variables('deploymentNames').azOps]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[variables('deploymentNames').landingZone]",
+                "[variables('deploymentNames').diagnosticsAndSecurity]",
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').monitoring]",
+                "[variables('deploymentNames').monitoringSolutions]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "[variables('deploymentNames').hubNetworking]",
+                "policyCompletion"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').azOps]"
+                },
+                "parameters": {
+                    "paToken": {
+                        "value": "[parameters('paToken')]"
+                    },
+                    "principalId": {
+                        "value": "[parameters('principalId')]"
+                    },
+                    "principalSecret": {
+                        "value": "[parameters('principalSecret')]"
+                    },
+                    "gitHubUserNameOrOrg": {
+                        "value": "[parameters('gitHubUserNameOrOrg')]"
+                    },
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "subscriptionId": {
+                        "value": "[parameters('subscriptionId')]"
+                    },
+                    "appId": {
+                        "value": "[parameters('appId')]"
+                    },
+                    "repositoryName": {
+                        "value": "[parameters('repositoryName')]"
+                    }
+                }
+            }
+        }        
     ],
     "outputs": {
         "deployment": {
             "type": "string",
-            "value": "[concat(deployment().name, ' has successfully deployed.')]"
+            "value": "[concat(deployment().name, ' has successfully deployed. Welcome to Azure Foundations!')]"
         }
     }
 }

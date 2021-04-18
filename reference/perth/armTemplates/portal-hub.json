@@ -325,7 +325,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Log Analytics Workspace",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when adding an Azure Subscription, ARM will deploy resources and enable them for continious compliance.",
+                        "toolTip": "If 'Yes' is selected when adding an Azure Subscription, ARM will deploy resources and enable them for continuous compliance.",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -372,7 +372,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Agent Health solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -392,7 +392,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Change Tracking solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -412,7 +412,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Update Management solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -432,7 +432,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Activity Log solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -452,7 +452,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy VM Insights solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -472,7 +472,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Anti-malware solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -492,7 +492,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Service Map solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -512,7 +512,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy SQL Assessment solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -532,7 +532,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Key Vault Analytics solution",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -564,7 +564,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Security Center and enable security monitoring for the Platform and resources",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -775,7 +775,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Sentinel",
                         "defaultValue": "No",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -892,6 +892,161 @@
                             ]
                         },
                         "visible": true
+                    }
+                ]
+            },
+            {
+                "name": "esPlatformDevOps",
+                "label": "Platform DevOps and Automation",
+                "subLabel": {},
+                "bladeTitle": "platformdevops",
+                "elements": [
+                    {
+                        "name": "info",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSub))]",
+                        "options": {
+                            "icon": "Info",
+                            "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines.",
+                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction"
+                        }
+                    },
+                    {
+                        "name": "correction",
+                        "type": "Microsoft.Common.InfoBox",
+                        "visible": "[empty(steps('esPlatformManagement').esPlatformSub)]",
+                        "options": {
+                            "icon": "Warning",
+                            "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines, but requires a dedicated subscription for platform management in the previous step. Please add a subscription or continue without setting up the CI/CD integration.",
+                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction"
+                        }
+                    },
+                    {
+                        "name": "cicdOption",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy integrated CI/CD pipeline?",
+                        "defaultValue": "Yes",
+                        "toolTip": "",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ],
+                            "required": true
+                        },
+                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSub))]"
+                    },
+                    {
+                        "name": "Instructions",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                        "options": {
+                            "text": "Provide the credentials to initialize the repository with the ARM templates for Enterprise-Scale.",
+                            "link": {
+                                "label": "Learn more",
+                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/management-group-and-subscription-organization"
+                            }
+                        }
+                    },
+                    {
+                        "name": "optionsGroup1",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Select CI/CD option",
+                        "defaultValue": "GitHub Actions",
+                        "toolTip": "Azure Foundations will provide options for both GitHub Actions and Azure DevOps pipelines. For now, only GitHub Actions is available",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "GitHub Actions",
+                                    "value": "actions"
+                                }
+                            ],
+                            "required": true
+                        },
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
+                    },
+                    {
+                        "name": "esGit",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "GitHub organization or username",
+                        "toolTip": "Provide Git org/username.",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                        "defaultValue": "",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{1,15}$",
+                            "validationMessage": "The prefix must be 1-5 characters."
+                        }
+                    },
+                    {
+                        "name": "esGitRepoName",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "New GitHub repository name",
+                        "toolTip": "Provide a name for the new repository that will be created",
+                        "defaultValue": "",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                        "placeholder": "",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{1,15}$",
+                            "validationMessage": "The prefix must be 1-5 characters."
+                        }
+                    },
+                    {
+                        "name": "esPaToken",
+                        "type": "Microsoft.Common.PasswordBox",
+                        "label": {
+                            "password": "GitHub personal access token",
+                            "confirmPassword": "Confirm PA Token"
+                        },
+                        "toolTip": "Provide the personal access token to access your GitHub account or organization. For more information see this link: https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token",
+                        "constraints": {
+                            "required": true,
+                            "validationMessage": "Password must be at least 8 characters long, contain only numbers and letters"
+                        },
+                        "options": {
+                            "hideConfirmation": true
+                        },
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
+                    },
+                    {
+                        "name": "spnSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "",
+                        "elements": [
+                            {
+                                "name": "esServicePrincipal",
+                                "type": "Microsoft.Common.ServicePrincipalSelector",
+                                "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                                "label": {
+                                    "password": "Password",
+                                    "certificateThumbprint": "Certificate thumbprint",
+                                    "authenticationType": "Authentication Type",
+                                    "sectionHeader": "Service Principal"
+                                },
+                                "toolTip": {
+                                    "password": "Provide the application secret as it will be used to authenticate with Azure AD",
+                                    "certificateThumbprint": "Certificate thumbprint",
+                                    "authenticationType": "Authentication Type"
+                                },
+                                "defaultValue": {
+                                    "principalId": "<default guid>",
+                                    "name": "(New) default App Id"
+                                },
+                                "constraints": {
+                                    "required": true
+                                },
+                                "options": {
+                                    "hideCertificate": true
+                                }
+                            }
+                        ]
                     }
                 ]
             },
@@ -1427,7 +1582,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure Azure VMs (Windows & Linux) are being monitored",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1447,7 +1602,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure Azure VMSS (Windows & Linux) are being monitored",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1467,7 +1622,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure Azure Arc VMs (Windows & Linux) are being monitored",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1487,7 +1642,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable Kubernetes (AKS) for Azure Policy",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1607,7 +1762,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure subnets are associated with NSG",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure NSGs must be associated with subnets being created",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure Network Security Groups must be associated with subnets being created",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1647,7 +1802,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure Azure SQL is enabled with transparent data encryption",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1667,7 +1822,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Ensure auditing is enabled on Azure SQL",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure auditing is enabled on Azure SQLs",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure auditing is enabled on Azure SQL",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1754,6 +1909,13 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+            "paToken": "[steps('lzDevOps').esPaToken]",
+            "principalId": "[steps('lzDevOps').spnSection.esServicePrincipal.objectId]",
+            "principalSecret": "[steps('lzDevOps').spnSection.esServicePrincipal.password]",
+            "gitHubUserNameOrOrg": "[steps('lzDevOps').esGit]",
+            "appId": "[steps('lzDevOps').spnSection.esServicePrincipal.appId]",
+            "enableAzOps": "[steps('lzDevOps').cicdOption]",
+            "repositoryName": "[steps('lzDevOps').esGitRepoName]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
