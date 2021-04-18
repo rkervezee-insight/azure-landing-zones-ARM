@@ -452,7 +452,7 @@
             ],
             "defaultValue": "No"
         },
-        "enableAppGw": {
+        "enableErGw": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -460,7 +460,15 @@
             ],
             "defaultValue": "No"
         },
-        "enableErGw": {
+        "vpnOrErZones": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "firewallZones": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "enableAppGw": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -1266,6 +1274,12 @@
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
                     },
+                    "vpnOrErZones": {
+                        "value": "[parameters('vpnOrErZones')]"
+                    },
+                    "firewallZones": {
+                        "value": "[parameters('firewallZones')]"
+                    },
                     "addressPrefix": {
                         "value": "[parameters('addressPrefix')]"
                     },
@@ -1430,7 +1444,7 @@
                     }
                 }
             }
-        }        
+        }
     ],
     "outputs": {
         "deployment": {

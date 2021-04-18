@@ -1261,6 +1261,33 @@
                         }
                     },
                     {
+                        "name": "esGwOrErAz",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Availability Zones for the Virtual Network Gateway/ExpressRoute Gateway",
+                        "defaultValue": "None",
+                        "multiselect": true,
+                        "selectAll": true,
+                        "filter": true,
+                        "visible": "[and(or(equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'), equals(steps('esPlatformConnectivity').esErGw, 'Yes')), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esConnectivityGoalState').esNwLocation, 'centralus')), equals(steps('esConnectivityGoalState').esNwLocation, 'eastus'), equals(steps('esConnectivityGoalState').esNwLocation, 'eastus2')), equals(steps('esConnectivityGoalState').esNwLocation, 'southcentralus'), equals(steps('esConnectivityGoalState').esNwLocation, 'westus2')), equals(steps('esConnectivityGoalState').esNwLocation, 'francecentral'), equals(steps('esConnectivityGoalState').esNwLocation, 'germanywestcentral')), equals(steps('esConnectivityGoalState').esNwLocation, 'northeurope'), equals(steps('esConnectivityGoalState').esNwLocation, 'westeurope')), equals(steps('esConnectivityGoalState').esNwLocation, 'uksouth'), equals(steps('esConnectivityGoalState').esNwLocation, 'southafricanorth')), equals(steps('esConnectivityGoalState').esNwLocation, 'japaneast'), equals(steps('esConnectivityGoalState').esNwLocation, 'southeastasia')), equals(steps('esConnectivityGoalState').esNwLocation, 'southeastasia'), equals(steps('esConnectivityGoalState').esNwLocation, 'australiaeast')))]",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual Gateway/Express Route Gateway to the selected region and availability zones.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Zone 1",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Zone 2",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Zone 3",
+                                    "value": "3"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "esVpnGwType",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Select VPN type",
@@ -1328,6 +1355,33 @@
                                 {
                                     "label": "No",
                                     "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esFwAz",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Availability Zones for the Azure Firewall",
+                        "defaultValue": "None",
+                        "multiselect": true,
+                        "selectAll": true,
+                        "filter": true,
+                        "visible": "[and(equals(steps('esPlatformConnectivity').esAzFw, 'Yes'), or(or(or(or(or(or(or(or(equals(steps('esConnectivityGoalState').esNwLocation, 'canadacentral'), equals(steps('esConnectivityGoalState').esNwLocation, 'centralus')), equals(steps('esConnectivityGoalState').esNwLocation, 'eastus'), equals(steps('esConnectivityGoalState').esNwLocation, 'eastus2')), equals(steps('esConnectivityGoalState').esNwLocation, 'southcentralus'), equals(steps('esConnectivityGoalState').esNwLocation, 'westus2')), equals(steps('esConnectivityGoalState').esNwLocation, 'francecentral'), equals(steps('esConnectivityGoalState').esNwLocation, 'germanywestcentral')), equals(steps('esConnectivityGoalState').esNwLocation, 'northeurope'), equals(steps('esConnectivityGoalState').esNwLocation, 'westeurope')), equals(steps('esConnectivityGoalState').esNwLocation, 'uksouth'), equals(steps('esConnectivityGoalState').esNwLocation, 'southafricanorth')), equals(steps('esConnectivityGoalState').esNwLocation, 'japaneast'), equals(steps('esConnectivityGoalState').esNwLocation, 'southeastasia')), equals(steps('esConnectivityGoalState').esNwLocation, 'southeastasia'), equals(steps('esConnectivityGoalState').esNwLocation, 'australiaeast')))]",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall to the selected region and availability zones.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Zone 1",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Zone 2",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Zone 3",
+                                    "value": "3"
                                 }
                             ]
                         }
@@ -1918,9 +1972,11 @@
             "repositoryName": "[steps('lzDevOps').esGitRepoName]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
+            "vpnOrErZones": "[steps('esConnectivityGoalState').esGwOrErAz]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "firewallZones": "[steps('esConnectivityGoalState').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
             "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
