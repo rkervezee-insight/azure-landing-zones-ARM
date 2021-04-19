@@ -1418,8 +1418,17 @@
                     "uri": "[variables('deploymentUris').azOps]"
                 },
                 "parameters": {
-                    "paToken": {
-                        "value": "[parameters('paToken')]"
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
                     },
                     "principalId": {
                         "value": "[parameters('principalId')]"
@@ -1430,8 +1439,8 @@
                     "gitHubUserNameOrOrg": {
                         "value": "[parameters('gitHubUserNameOrOrg')]"
                     },
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
+                    "paToken": {
+                        "value": "[parameters('paToken')]"
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
@@ -1441,6 +1450,15 @@
                     },
                     "repositoryName": {
                         "value": "[parameters('repositoryName')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
