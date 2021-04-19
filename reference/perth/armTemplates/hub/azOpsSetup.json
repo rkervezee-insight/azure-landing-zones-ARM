@@ -21,7 +21,8 @@
         },
         "akvPrefix": {
             "type": "string",
-            "maxLength": 3
+            "minLength": 3,
+            "maxLength": 5
         },
         "principalId": {
             "type": "array"
