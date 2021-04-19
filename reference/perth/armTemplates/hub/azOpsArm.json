@@ -33,6 +33,7 @@
         },
         "locationPrefix": {
             "type": "string",
+            "minLength": 3,
             "maxLength": 5
         },
         "environmentPrefix": {
