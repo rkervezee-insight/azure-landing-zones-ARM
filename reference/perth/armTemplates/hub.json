@@ -1430,6 +1430,9 @@
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
                     },
+                    "akvPrefix": {
+                        "value": "[parameters('akvPrefix')]"
+                    },
                     "principalId": {
                         "value": "[parameters('principalId')]"
                     },
