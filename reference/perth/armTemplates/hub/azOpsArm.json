@@ -55,17 +55,15 @@
     "variables": {
         "formattingPrincipalIdToString": "[replace(replace(replace(string(parameters('principalId')), '\"', ''), '[', ''), ']', '')]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "keyVault": {
-            "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-            "rbacName": "[concat(variables('keyVault').name, '/Microsoft.Authorization/', guid(variables('keyVault').name))]",
+            "keyVaultName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+            "keyVaultRbacName": "[concat(variables('keyVaultName'), '/Microsoft.Authorization/', guid(variables('keyVaultName')))]",
             "enabledForDeployment": true,
             "enabledForDiskEncryption": true,
             "enabledForTemplateDeployment": true,
             "enableRbacAuthorization": true,
             "enablePurgeProtection": true,
             "enableSoftDelete": true,
-            "sku": "Standard"
-        },
+            "keyVaultSku": "Standard",
         "patSecretName": "PATSecret",
         "spnSecretName": "SPNSecret",
         "userManagedIdentityName": "[concat(resourceGroup().name, '-umi')]",
