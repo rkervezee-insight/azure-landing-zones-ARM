@@ -2,6 +2,24 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "companyPrefix": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 5
+        },
+        "locationPrefix": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 5
+        },
+        "environmentPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "akvPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
         "paToken": {
             "type": "securestring",
             "metadata": {
@@ -25,24 +43,6 @@
             "metadata": {
                 "description": "Provide username or org name for GitHub."
             }
-        },
-        "companyPrefix": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 5
-        },
-        "locationPrefix": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 5
-        },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
-        "akvPrefix": {
-            "type": "string",
-            "maxLength": 3
         },
         "appId": {
             "type": "string"

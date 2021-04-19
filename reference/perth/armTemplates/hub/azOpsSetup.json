@@ -19,6 +19,10 @@
         "argPrefix": {
             "type": "string"
         },
+        "akvPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
         "principalId": {
             "type": "array"
         },
@@ -99,7 +103,7 @@
         },
         {
             "type": "Microsoft.Resources/deployments",
-             "apiVersion": "[variables('apiVersions').deployments]",
+            "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').azOpsSub]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('subscriptionId')]",
@@ -140,6 +144,18 @@
                                     "uri": "[variables('deploymentUris').azOpsSetup]"
                                 },
                                 "parameters": {
+                                    "companyPrefix": {
+                                        "value": "[parameters('companyPrefix')]"
+                                    },
+                                    "locationPrefix": {
+                                        "value": "[parameters('locationPrefix')]"
+                                    },
+                                    "environmentPrefix": {
+                                        "value": "[parameters('environmentPrefix')]"
+                                    },
+                                    "akvPrefix": {
+                                        "value": "[parameters('akvPrefix')]"
+                                    },
                                     "paToken": {
                                         "value": "[parameters('paToken')]"
                                     },
@@ -151,15 +167,6 @@
                                     },
                                     "gitHubUserNameOrOrg": {
                                         "value": "[parameters('gitHubUserNameOrOrg')]"
-                                    },
-                                    "companyPrefix": {
-                                        "value": "[parameters('companyPrefix')]"
-                                    },
-                                    "locationPrefix": {
-                                        "value": "[parameters('locationPrefix')]"
-                                    },
-                                    "environmentPrefix": {
-                                        "value": "[parameters('environmentPrefix')]"
                                     },
                                     "appId": {
                                         "value": "[parameters('appId')]"
@@ -175,4 +182,4 @@
             }
         }
     ]
-}   
+}
