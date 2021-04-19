@@ -83,21 +83,21 @@
         {
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "[variables('apiVersions').KeyVault]",
-            "name": "[variables('keyVault').name]",
+            "name": "[variables('keyVaultName')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[variables('userManagedIdentityName')]"
             ],
             "properties": {
-                "enabledForDeployment": "[variables('keyVault').enabledForDeployment]",
-                "enabledForDiskEncryption": "[variables('keyVault').enabledForDiskEncryption]",
-                "enabledForTemplateDeployment": "[variables('keyVault').enabledForTemplateDeployment]",
-                "enableRbacAuthorization": "[variables('keyVault').enableRbacAuthorization]",
-                "enablePurgeProtection": "[variables('keyVault').enablePurgeProtection]",
-                "enableSoftDelete": "[variables('keyVault').enableSoftDelete]",
+                "enabledForDeployment": "[variables('enabledForDeployment')]",
+                "enabledForDiskEncryption": "[variables('enabledForDiskEncryption')]",
+                "enabledForTemplateDeployment": "[variables('enabledForTemplateDeployment')]",
+                "enableRbacAuthorization": "[variables('enableRbacAuthorization')]",
+                "enablePurgeProtection": "[variables('enablePurgeProtection')]",
+                "enableSoftDelete": "[variables('enableSoftDelete')]",
                 "tenantId": "[subscription().tenantId]",
                 "sku": {
-                    "name": "[variables('keyVault').sku]",
+                    "name": "[variables('keyVaultSku')]",
                     "family": "A"
                 },
                 "networkAcls": {
@@ -112,10 +112,10 @@
         {
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "[variables('apiVersions').KeyVault]",
-            "name": "[concat(variables('keyVault').name, '/', variables('patSecretName'))]",
+            "name": "[concat(variables('keyVaultName'), '/', variables('patSecretName'))]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVault').name)]"
+                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
             ],
             "properties": {
                 "value": "[parameters('paToken')]"
@@ -124,10 +124,10 @@
         {
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "[variables('apiVersions').KeyVault]",
-            "name": "[concat(variables('keyVault').name, '/', variables('spnSecretName'))]",
+            "name": "[concat(variables('keyVaultName'), '/', variables('spnSecretName'))]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVault').name)]"
+                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]"
             ],
             "properties": {
                 "value": "[parameters('principalSecret')]"
@@ -136,9 +136,9 @@
         {
             "type": "Microsoft.KeyVault/vaults/providers/roleAssignments",
             "apiVersion": "2020-04-01-preview",
-            "name": "[variables('keyVault').rbacName]",
+            "name": "[variables('keyVaultRbacName')]",
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVault').name)]",
+                "[resourceId('Microsoft.KeyVault/vaults', variables('keyVaultName'))]",
                 "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userManagedIdentityName'))]"
             ],
             "properties": {
@@ -160,13 +160,13 @@
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.KeyVault/vaults/providers/roleAssignments', variables('keyVault').name, 'Microsoft.Authorization', guid(variables('keyVault').name))]",
-                "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('keyVault').name, variables('patSecretName'))]",
-                "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('keyVault').name, variables('spnSecretName'))]"
+                "[resourceId('Microsoft.KeyVault/vaults/providers/roleAssignments', variables('keyVaultName'), 'Microsoft.Authorization', guid(variables('keyVaultName')))]",
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('keyVaultName'), variables('patSecretName'))]",
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', variables('keyVaultName'), variables('spnSecretName'))]"
             ],
             "properties": {
                 "primaryScriptUri": "[base64ToString('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2tybmVzZS9ucy9tYXN0ZXIvdW1pQXpPcHNTZXR1cC5wczE=')]",
-                "arguments": "[concat('-KeyVault', ' ', variables('keyVault').name, ' ',
+                "arguments": "[concat('-KeyVault', ' ', variables('keyVaultName'), ' ',
                                       '-NewRepositoryName', ' ', parameters('repositoryName'), ' ',
                                       '-GitHubUserNameOrOrg', ' ', parameters('gitHubUserNameOrOrg'), ' ', 
                                       '-SPNSecretName', ' ', variables('spnSecretName'), ' ',
