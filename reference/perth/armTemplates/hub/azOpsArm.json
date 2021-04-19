@@ -101,7 +101,7 @@
                     "family": "A"
                 },
                 "networkAcls": {
-                    "defaultAction": "Deny",
+                    "defaultAction": "Allow",
                     "bypass": "AzureServices",
                     "ipRules": [
                     ],
