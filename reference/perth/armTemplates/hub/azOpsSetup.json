@@ -155,6 +155,12 @@
                                     "companyPrefix": {
                                         "value": "[parameters('companyPrefix')]"
                                     },
+                                    "locationPrefix": {
+                                        "value": "[parameters('locationPrefix')]"
+                                    },
+                                    "environmentPrefix": {
+                                        "value": "[parameters('environmentPrefix')]"
+                                    },
                                     "appId": {
                                         "value": "[parameters('appId')]"
                                     },
