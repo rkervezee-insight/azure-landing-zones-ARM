@@ -67,6 +67,7 @@
         "patSecretName": "PATSecret",
         "spnSecretName": "SPNSecret",
         "userManagedIdentityName": "[toLower(concat(variables('namingPrefix'), '-umi-azops'))]",
+        "deploymentScriptName": "[toLower(concat(variables('namingPrefix'), '-ps1-azops'))]",
         "rbac": {
             "keyVaultAdmin": "/providers/Microsoft.Authorization/roleDefinitions/00482a5a-887f-4fb3-b363-3b7fe8e74483"
         },
@@ -153,7 +154,7 @@
         {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "[variables('apiVersions').deploymentScripts]",
-            "name": "[concat(resourceGroup().name, '-GitHub')]",
+            "name": "[variables('deploymentScriptName')]",
             "location": "[resourceGroup().location]",
             "kind": "AzurePowerShell",
             "identity": {

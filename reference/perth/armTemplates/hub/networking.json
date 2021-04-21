@@ -640,7 +640,7 @@
                                                 ]
                                             }
                                         },
-                                        // Conditional deployment of Azure app Gateway NSG
+                                        // Conditional deployment of Azure App Gateway NSG
                                         {
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
