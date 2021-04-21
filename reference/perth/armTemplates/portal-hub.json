@@ -791,49 +791,6 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "esAkv",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Key Vault.",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, an Azure Key Vault will be deployed",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": true
-                    },
-                    {
-                        "name": "tenantApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "tenants?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esAzureAdTenant",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Azure AD Tenant (required)",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": "[equals(steps('esPlatformManagement').esAkv, 'Yes')]",
-                        "constraints": {
-                            "allowedValues": "[map(steps('esPlatformManagement').tenantApi.value, (tenant) => parse(concat('{\"label\":\"', tenant.displayName, '\",\"description\":\"', tenant.tenantId, '\",\"value\":\"', toLower(tenant.tenantId), '\"}')) )]"
-                        }
-                    },
-                    {
                         "name": "esSta",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy a Storage account for diagnostics.",
@@ -1934,7 +1891,6 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-            "tenantId": "[steps('esPlatformManagement').esAzureAdTenant]",
             "subscriptionId": "[steps('esPlatformManagement').esPlatformSub]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
@@ -1950,7 +1906,6 @@
             "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
-            "enableAkv": "[steps('esPlatformManagement').esAkv]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableRsv": "[steps('esPlatformManagement').esRsv]",
