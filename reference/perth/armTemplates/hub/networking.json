@@ -182,7 +182,7 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-networking'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
         "resourceGroups": {
             "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
             "networkWatcher": "NetworkWatcherRG"

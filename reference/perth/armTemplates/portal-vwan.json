@@ -1230,33 +1230,6 @@
                         }
                     },
                     {
-                        "name": "esGwOrErAz",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Select Availability Zones for the Virtual Network Gateway/ExpressRoute Gateway",
-                        "defaultValue": "None",
-                        "multiselect": true,
-                        "selectAll": true,
-                        "filter": true,
-                        "visible": "[and(or(equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'), equals(steps('esPlatformConnectivity').esErGw, 'Yes')), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast')))]",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual Gateway/Express Route Gateway to the selected region and availability zones.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Zone 1",
-                                    "value": "1"
-                                },
-                                {
-                                    "label": "Zone 2",
-                                    "value": "2"
-                                },
-                                {
-                                    "label": "Zone 3",
-                                    "value": "3"
-                                }
-                            ]
-                        }
-                    },
-                    {
                         "name": "esErGw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy ExpressRoute Gateway",
@@ -1764,7 +1737,6 @@
             "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
-            "vpnOrErZones": "[steps('esPlatformConnectivity').esGwOrErAz]",
             "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",

@@ -460,10 +460,6 @@
                 "No"
             ]
         },
-        "vpnOrErZones": {
-            "type": "array",
-            "defaultValue": []
-        },
         "firewallZones": {
             "type": "array",
             "defaultValue": []
@@ -1115,9 +1111,6 @@
                     },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
-                    },
-                    "vpnOrErZones": {
-                        "value": "[parameters('vpnOrErZones')]"
                     },
                     "firewallZones": {
                         "value": "[parameters('firewallZones')]"

@@ -22,6 +22,10 @@
             "type": "string",
             "maxLength": 3
         },
+        "azFwPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
         "vHubPrefix": {
             "type": "string",
             "maxLength": 3
@@ -30,33 +34,22 @@
             "type": "string",
             "maxLength": 3
         },
-        "azFwPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
-        "addressPrefix": {
-            "type": "string",
-            "metadata": {
-                "displayName": "addressPrefix",
-                "description": "Address prefix of the VHUB"
-            },
-            "defaultValue": "192.168.0.0/24"
-        },
-        "location": {
-            "type": "string",
-            "metadata": {
-                "displayName": "location",
-                "description": "Location of the VHUB"
-            },
-            "defaultValue": "[deployment().location]"
-        },
         "enableVwan": {
             "type": "string",
             "allowedValues": [
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
+        },
+        "subscriptionTag": {
+            "type": "string"
+        },
+        "ownerTag": {
+            "type": "string"
+        },
+        "costCenterTag": {
+            "type": "string"
         },
         "enableAzFw": {
             "type": "string",
@@ -64,7 +57,18 @@
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
+        },
+        "firewallZones": {
+            "type": "array",
+            "defaultValue": []
+        },
+        "addressPrefix": {
+            "type": "string",
+            "metadata": {
+                "displayName": "addressPrefix",
+                "description": "Address prefix of the VHUB"
+            }
         },
         "enableVpnGw": {
             "type": "string",
@@ -82,14 +86,27 @@
             ],
             "defaultValue": "No"
         },
-        "connectivitySubscriptionId": {
-            "type": "string"
+        "location": {
+            "type": "string",
+            "metadata": {
+                "displayName": "location",
+                "description": "Location of the VHUB"
+            },
+            "defaultValue": "[deployment().location]"
+        },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
         }
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-vwan'), 64)]",
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
+        "resourceGroups": {
+            "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
+            "networkWatcher": "NetworkWatcherRG"
+        },
         "vHubCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "nwName": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
         "vWanName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vWanPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
@@ -99,10 +116,33 @@
         "azFwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "azFwPolicyName": "defaultAzFwPolicy",
         "vWanSku": "Standard",
-        "vWanResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroupName'),'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
-        "vWanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'),'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
+        "vWanResourceId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/' ,variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
+        "vWanHub": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
         "vHubSku": "Standard",
         "vpnBgpAsn": 65515,
+        "sku": {
+            "0": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "1": {
+                "name": "ErGw1AZ",
+                "tier": "ErGw1AZ"
+            },
+            "2": {
+                "name": "ErGw2AZ",
+                "tier": "ErGw2AZ"
+            },
+            "3": {
+                "name": "ErGw3AZ",
+                "tier": "ErGw3AZ"
+            }
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
+        },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
@@ -122,9 +162,9 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[concat(parameters('companyPrefix'), '-connectivitySub')]",
+            "name": "[variables('deploymentName')]",
             "location": "[deployment().location]",
-            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -134,11 +174,29 @@
                     "resources": [
                         // Deployment of the Network Resource Group
                         {
-                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
-                            "name": "[variables('resourceGroupName')]",
+                            "name": "[variables('resourceGroups').networking]",
+                            "tags": {
+                                "environment": "[variables('tags').environment]",
+                                "owner": "[variables('tags').owner]",
+                                "costCenter": "[variables('tags').costCenter]"
+                            },
+                            "properties": {}
+                        },
+                        {
+                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+                            "type": "Microsoft.Resources/resourceGroups",
+                            "apiVersion": "[variables('apiVersions').resourceGroups]",
+                            "location": "[deployment().location]",
+                            "name": "[variables('resourceGroups').networkWatcher]",
+                            "tags": {
+                                "environment": "[variables('tags').environment]",
+                                "owner": "[variables('tags').owner]",
+                                "costCenter": "[variables('tags').costCenter]"
+                            },
                             "properties": {}
                         },
                         // Resource Group Level Deployment
@@ -146,9 +204,9 @@
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
                             "name": "[variables('deploymentName')]",
-                            "resourceGroup": "[variables('resourceGroupName')]",
+                            "resourceGroup": "[variables('resourceGroups').networkWatcher]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networkWatcher)]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
@@ -169,7 +227,7 @@
                                         },
                                         // Deployment of vWAN resource
                                         {
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualWans",
                                             "apiVersion": "[variables('apiVersions').virtualWans]",
                                             "name": "[variables('vWanName')]",
@@ -186,7 +244,7 @@
                                         },
                                         // Conditional deployment of Network Watcher
                                         {
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                                             "name": "[variables('nwName')]",
@@ -316,6 +374,7 @@
                                             "apiVersion": "[variables('apiVersions').azureFirewalls]",
                                             "name": "[variables('azFwName')]",
                                             "location": "[parameters('location')]",
+                                            "zones": "[if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null'))]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
                                                 "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
@@ -335,7 +394,7 @@
                                                     "id": "[variables('vWanHub')]"
                                                 },
                                                 "firewallPolicy": {
-                                                      "id": "[json('null')]"
+                                                    "id": "[json('null')]"
                                                 }
                                             }
                                         }
