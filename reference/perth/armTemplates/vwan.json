@@ -584,10 +584,10 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'hub/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'common/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
-            "privateDns": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/privateDns.json')]",
+            "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
-            "connectivity": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/vwan-connectivity.json')]",
+            "connectivity": "[uri(deployment().properties.templateLink.uri, 'hub/vwan-connectivity.json')]",
             "azOps": "[uri(deployment().properties.templateLink.uri, 'hub/azOpsSetup.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
