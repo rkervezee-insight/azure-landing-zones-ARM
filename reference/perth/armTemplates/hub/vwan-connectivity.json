@@ -207,23 +207,6 @@
                                                 "notes": "Prevent deletion of the resourceGroup"
                                             }
                                         },
-                                        // Deployment of vWAN resource
-                                        {
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
-                                            "type": "Microsoft.Network/virtualWans",
-                                            "apiVersion": "[variables('apiVersions').virtualWans]",
-                                            "name": "[variables('vWanName')]",
-                                            "location": "[deployment().location]",
-                                            "properties": {
-                                                "disableVpnEncryption": false,
-                                                "allowBranchToBranchTraffic": true,
-                                                "allowVnetToVnetTraffic": true,
-                                                "office365LocalBreakoutCategory": "None",
-                                                "virtualHubs": [],
-                                                "vpnSites": [],
-                                                "type": "[variables('vWanSku')]"
-                                            }
-                                        },
                                         // Conditional deployment of Network Watcher
                                         {
                                             "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
@@ -235,148 +218,195 @@
                                             "properties": {},
                                             "resources": []
                                         },
-                                        // Conditional deployment of Virtual Hub
+                                        // Nested deployment for Azure Networking (Subscription Level)
                                         {
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('addressPrefix'))))]",
-                                            "type": "Microsoft.Network/virtualHubs",
-                                            "apiVersion": "[variables('apiVersions').virtualHubs]",
-                                            "location": "[deployment().location]",
-                                            "name": "[variables('vHubName')]",
+                                            "type": "Microsoft.Resources/deployments",
+                                            "apiVersion": "[variables('apiVersions').deployments]",
+                                            "name": "[variables('deploymentName')]",
+                                            "resourceGroup": "[variables('resourceGroups').networking]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualWans/', variables('vWanName'))]"
+                                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
                                             ],
                                             "properties": {
-                                                "virtualWan": {
-                                                    "id": "[variables('vWanResourceId')]"
-                                                },
-                                                "addressPrefix": "[parameters('addressPrefix')]",
-                                                "sku": "[variables('vHubSku')]"
-                                            }
-                                        },
-                                        // Conditional deployment of Virtual Network Gateway (S2S)
-                                        {
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableVpnGw'), 'Yes'))]",
-                                            "type": "Microsoft.Network/vpnGateways",
-                                            "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
-                                            "name": "[variables('vpnGwName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]"
-                                            ],
-                                            "properties": {
-                                                "virtualHub": {
-                                                    "id": "[variables('vWanHub')]"
-                                                },
-                                                "bgpSettings": {
-                                                    "asn": "[variables('vpnBgpAsn')]"
-                                                },
-                                                "vpnGatewayScaleUnit": 1
-                                            }
-                                        },
-                                        // Conditional deployment of ExpressRoute Gateway
-                                        {
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableErGw'), 'Yes'))]",
-                                            "type": "Microsoft.Network/expressRouteGateways",
-                                            "apiVersion": "[variables('apiVersions').expressRouteGateways]",
-                                            "name": "[variables('erGwName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/', variables('vHubName'))]"
-                                            ],
-                                            "properties": {
-                                                "virtualHub": {
-                                                    "id": "[variables('vWanHub')]"
-                                                },
-                                                "autoScaleConfiguration": {
-                                                    "bounds": {
-                                                        "min": 1,
-                                                        "max": 1
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        // Deployment of Azure Firewall Policy
-                                        {
-                                            "type": "Microsoft.Network/firewallPolicies",
-                                            "apiVersion": "[variables('apiVersions').firewallPolicies]",
-                                            "name": "[variables('azFwPolicyName')]",
-                                            "location": "[parameters('location')]",
-                                            "properties": {
-                                                "threatIntelMode": "Alert"
-                                            }
-                                        },
-                                        // Deployment of Azure Firewall Policy Rule Collection Group (NetworkRule)
-                                        {
-                                            "type": "Microsoft.Network/firewallpolicies/ruleCollectionGroups",
-                                            "apiVersion": "[variables('apiVersions').ruleCollectionGroups]",
-                                            "name": "[concat(variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[resourceId('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
-                                            ],
-                                            "properties": {
-                                                "priority": 200,
-                                                "ruleCollections": [
-                                                    {
-                                                        "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
-                                                        "name": "DNS-Collection",
-                                                        "priority": 101,
-                                                        "action": {
-                                                            "type": "Allow"
+                                                "mode": "Incremental",
+                                                "template": {
+                                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                                    "contentVersion": "1.0.0.0",
+                                                    "parameters": {},
+                                                    "resources": [
+                                                        // Deploy Resource Group Lock
+                                                        {
+                                                            "type": "Microsoft.Authorization/locks",
+                                                            "apiVersion": "[variables('apiVersions').locks]",
+                                                            "name": "ResourceGroup-DontDelete",
+                                                            "properties": {
+                                                                "level": "CanNotDelete",
+                                                                "notes": "Prevent deletion of the resourceGroup"
+                                                            }
                                                         },
-                                                        "rules": [
-                                                            {
-                                                                "ruleType": "NetworkRule",
-                                                                "name": "DNS",
-                                                                "ipProtocols": [
-                                                                    "Any"
-                                                                ],
-                                                                "sourceAddresses": [
-                                                                    "*"
-                                                                ],
-                                                                "sourceIpGroups": [],
-                                                                "destinationAddresses": [
-                                                                    "*"
-                                                                ],
-                                                                "destinationIpGroups": [],
-                                                                "destinationFqdns": [],
-                                                                "destinationPorts": [
-                                                                    "53"
+                                                        // Deployment of vWAN resource
+                                                        {
+                                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+                                                            "type": "Microsoft.Network/virtualWans",
+                                                            "apiVersion": "[variables('apiVersions').virtualWans]",
+                                                            "name": "[variables('vWanName')]",
+                                                            "location": "[deployment().location]",
+                                                            "properties": {
+                                                                "disableVpnEncryption": false,
+                                                                "allowBranchToBranchTraffic": true,
+                                                                "allowVnetToVnetTraffic": true,
+                                                                "office365LocalBreakoutCategory": "None",
+                                                                "virtualHubs": [],
+                                                                "vpnSites": [],
+                                                                "type": "[variables('vWanSku')]"
+                                                            }
+                                                        },
+                                                        // Conditional deployment of Virtual Hub
+                                                        {
+                                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('addressPrefix'))))]",
+                                                            "type": "Microsoft.Network/virtualHubs",
+                                                            "apiVersion": "[variables('apiVersions').virtualHubs]",
+                                                            "location": "[deployment().location]",
+                                                            "name": "[variables('vHubName')]",
+                                                            "dependsOn": [
+                                                                "[concat('Microsoft.Network/virtualWans/', variables('vWanName'))]"
+                                                            ],
+                                                            "properties": {
+                                                                "virtualWan": {
+                                                                    "id": "[variables('vWanResourceId')]"
+                                                                },
+                                                                "addressPrefix": "[parameters('addressPrefix')]",
+                                                                "sku": "[variables('vHubSku')]"
+                                                            }
+                                                        },
+                                                        // Conditional deployment of Virtual Network Gateway (S2S)
+                                                        {
+                                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableVpnGw'), 'Yes'))]",
+                                                            "type": "Microsoft.Network/vpnGateways",
+                                                            "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
+                                                            "name": "[variables('vpnGwName')]",
+                                                            "location": "[parameters('location')]",
+                                                            "dependsOn": [
+                                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]"
+                                                            ],
+                                                            "properties": {
+                                                                "virtualHub": {
+                                                                    "id": "[variables('vWanHub')]"
+                                                                },
+                                                                "bgpSettings": {
+                                                                    "asn": "[variables('vpnBgpAsn')]"
+                                                                },
+                                                                "vpnGatewayScaleUnit": 1
+                                                            }
+                                                        },
+                                                        // Conditional deployment of ExpressRoute Gateway
+                                                        {
+                                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableErGw'), 'Yes'))]",
+                                                            "type": "Microsoft.Network/expressRouteGateways",
+                                                            "apiVersion": "[variables('apiVersions').expressRouteGateways]",
+                                                            "name": "[variables('erGwName')]",
+                                                            "location": "[parameters('location')]",
+                                                            "dependsOn": [
+                                                                "[concat('Microsoft.Network/virtualHubs/', variables('vHubName'))]"
+                                                            ],
+                                                            "properties": {
+                                                                "virtualHub": {
+                                                                    "id": "[variables('vWanHub')]"
+                                                                },
+                                                                "autoScaleConfiguration": {
+                                                                    "bounds": {
+                                                                        "min": 1,
+                                                                        "max": 1
+                                                                    }
+                                                                }
+                                                            }
+                                                        },
+                                                        // Deployment of Azure Firewall Policy
+                                                        {
+                                                            "type": "Microsoft.Network/firewallPolicies",
+                                                            "apiVersion": "[variables('apiVersions').firewallPolicies]",
+                                                            "name": "[variables('azFwPolicyName')]",
+                                                            "location": "[parameters('location')]",
+                                                            "properties": {
+                                                                "threatIntelMode": "Alert"
+                                                            }
+                                                        },
+                                                        // Deployment of Azure Firewall Policy Rule Collection Group (NetworkRule)
+                                                        {
+                                                            "type": "Microsoft.Network/firewallpolicies/ruleCollectionGroups",
+                                                            "apiVersion": "[variables('apiVersions').ruleCollectionGroups]",
+                                                            "name": "[concat(variables('azFwPolicyName'), '/DefaultNetworkRuleCollectionGroup')]",
+                                                            "location": "[parameters('location')]",
+                                                            "dependsOn": [
+                                                                "[resourceId('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
+                                                            ],
+                                                            "properties": {
+                                                                "priority": 200,
+                                                                "ruleCollections": [
+                                                                    {
+                                                                        "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+                                                                        "name": "DNS-Collection",
+                                                                        "priority": 101,
+                                                                        "action": {
+                                                                            "type": "Allow"
+                                                                        },
+                                                                        "rules": [
+                                                                            {
+                                                                                "ruleType": "NetworkRule",
+                                                                                "name": "DNS",
+                                                                                "ipProtocols": [
+                                                                                    "Any"
+                                                                                ],
+                                                                                "sourceAddresses": [
+                                                                                    "*"
+                                                                                ],
+                                                                                "sourceIpGroups": [],
+                                                                                "destinationAddresses": [
+                                                                                    "*"
+                                                                                ],
+                                                                                "destinationIpGroups": [],
+                                                                                "destinationFqdns": [],
+                                                                                "destinationPorts": [
+                                                                                    "53"
+                                                                                ]
+                                                                            }
+                                                                        ]
+                                                                    }
                                                                 ]
                                                             }
-                                                        ]
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Firewall
-                                        {
-                                            "condition": "[equals(parameters('enableAzFw'), 'Yes')]",
-                                            "type": "Microsoft.Network/azureFirewalls",
-                                            "apiVersion": "[variables('apiVersions').azureFirewalls]",
-                                            "name": "[variables('azFwName')]",
-                                            "location": "[parameters('location')]",
-                                            "zones": "[if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
-                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
-                                            ],
-                                            "properties": {
-                                                "sku": {
-                                                    "Name": "AZFW_Hub",
-                                                    "Tier": "Standard"
-                                                },
-                                                "hubIPAddresses": {
-                                                    "publicIPs": {
-                                                        "addresses": "[json('[]')]",
-                                                        "count": 1
-                                                    }
-                                                },
-                                                "virtualHub": {
-                                                    "id": "[variables('vWanHub')]"
-                                                },
-                                                "firewallPolicy": {
-                                                    "id": "[json('null')]"
+                                                        },
+                                                        // Conditional deployment of Azure Firewall
+                                                        {
+                                                            "condition": "[equals(parameters('enableAzFw'), 'Yes')]",
+                                                            "type": "Microsoft.Network/azureFirewalls",
+                                                            "apiVersion": "[variables('apiVersions').azureFirewalls]",
+                                                            "name": "[variables('azFwName')]",
+                                                            "location": "[parameters('location')]",
+                                                            "zones": "[if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null'))]",
+                                                            "dependsOn": [
+                                                                "[concat('Microsoft.Network/virtualHubs/',variables('vHubName'))]",
+                                                                "[concat('Microsoft.Network/firewallpolicies/', variables('azFwPolicyName'))]"
+                                                            ],
+                                                            "properties": {
+                                                                "sku": {
+                                                                    "Name": "AZFW_Hub",
+                                                                    "Tier": "Standard"
+                                                                },
+                                                                "hubIPAddresses": {
+                                                                    "publicIPs": {
+                                                                        "addresses": "[json('[]')]",
+                                                                        "count": 1
+                                                                    }
+                                                                },
+                                                                "virtualHub": {
+                                                                    "id": "[variables('vWanHub')]"
+                                                                },
+                                                                "firewallPolicy": {
+                                                                    "id": "[json('null')]"
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
                                                 }
                                             }
                                         }
