@@ -278,7 +278,7 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        // Create Resource Group
+                        // Deployment of the Network Resource Group
                         {
                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
@@ -305,7 +305,7 @@
                             },
                             "properties": {}
                         },
-                        // Nested deployment for Azure Network Watcher (Subscription Level)
+                        // Resource Group Level Deployment
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
