@@ -1295,6 +1295,33 @@
                                 }
                             ]
                         }
+                    },
+                    {
+                        "name": "esFwAz",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Availability Zones for the Azure Firewall",
+                        "defaultValue": "None",
+                        "multiselect": true,
+                        "selectAll": true,
+                        "filter": true,
+                        "visible": "[and(equals(steps('esPlatformConnectivity').esAzFw, 'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast')))]",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall to the selected region and availability zones.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Zone 1",
+                                    "value": "1"
+                                },
+                                {
+                                    "label": "Zone 2",
+                                    "value": "2"
+                                },
+                                {
+                                    "label": "Zone 3",
+                                    "value": "3"
+                                }
+                            ]
+                        }
                     }
                 ]
             },
