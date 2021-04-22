@@ -120,24 +120,6 @@
         "vWanHub": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
         "vHubSku": "Standard",
         "vpnBgpAsn": 65515,
-        "sku": {
-            "0": {
-                "name": "Standard",
-                "tier": "Standard"
-            },
-            "1": {
-                "name": "ErGw1AZ",
-                "tier": "ErGw1AZ"
-            },
-            "2": {
-                "name": "ErGw2AZ",
-                "tier": "ErGw2AZ"
-            },
-            "3": {
-                "name": "ErGw3AZ",
-                "tier": "ErGw3AZ"
-            }
-        },
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
