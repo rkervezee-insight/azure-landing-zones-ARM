@@ -4,12 +4,10 @@
     "parameters": {
         "companyPrefix": {
             "type": "string",
-            "minLength": 3,
             "maxLength": 5
         },
         "locationPrefix": {
             "type": "string",
-            "minLength": 3,
             "maxLength": 5
         },
         "environmentPrefix": {
@@ -18,32 +16,19 @@
         },
         "akvPrefix": {
             "type": "string",
-            "minLength": 3,
             "maxLength": 5
         },
         "paToken": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Provide the PA Token to authorize Git and create new repository for the organization/user."
-            }
+            "type": "securestring"
         },
         "principalId": {
-            "type": "array",
-            "metadata": {
-                "description": "Provide the principalId which is needed to create GitHub secret."
-            }
+            "type": "array"
         },
         "principalSecret": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Provide the principalId which is needed to create GitHub secret"
-            }
+            "type": "securestring"
         },
         "gitHubUserNameOrOrg": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide username or org name for GitHub."
-            }
+            "type": "string"
         },
         "appId": {
             "type": "string"

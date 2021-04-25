@@ -144,7 +144,7 @@
             // Create child management groups for landing zones
             "condition": "[not(empty(parameters('landingZoneMgs')))]",
             "type": "Microsoft.Management/managementGroups",
-           "apiVersion": "[variables('apiVersions').managementGroups]",
+            "apiVersion": "[variables('apiVersions').managementGroups]",
             "name": "[concat(parameters('companyPrefix'), '-', parameters('landingZoneMgs')[copyIndex()])]",
             "dependsOn": [
                 "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').landingZone)]"

@@ -4,12 +4,10 @@
     "parameters": {
         "companyPrefix": {
             "type": "string",
-            "minLength": 3,
             "maxLength": 5
         },
         "locationPrefix": {
             "type": "string",
-            "minLength": 3,
             "maxLength": 5
         },
         "environmentPrefix": {
@@ -21,35 +19,22 @@
         },
         "akvPrefix": {
             "type": "string",
-            "minLength": 3,
             "maxLength": 5
         },
         "principalId": {
             "type": "array"
         },
         "principalSecret": {
-            "type": "secureString",
-            "metadata": {
-                "description": "Provide the secret for the service principal."
-            }
+            "type": "secureString"
         },
         "gitHubUserNameOrOrg": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the username or org name for GitHub"
-            }
+            "type": "string"
         },
         "paToken": {
-            "type": "secureString",
-            "metadata": {
-                "description": "Provide the PA Token to authorize Git and create new repository for the organization/user"
-            }
+            "type": "secureString"
         },
         "subscriptionId": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the subscriptionId which will be used to initialize Git during deployment runtime."
-            }
+            "type": "string"
         },
         "appId": {
             "type": "string"

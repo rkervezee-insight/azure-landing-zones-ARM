@@ -16,11 +16,11 @@
         },
         "denySubnetWithoutNsg": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "denyRdp": {
             "type": "string",
@@ -163,19 +163,6 @@
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
     },
     "resources": [
-        // Conditional assignment of Azure Policy to deny NSG rules with RDP inbound access from the internet
-        {
-            "condition": "[equals(parameters('denyRdp'), 'Yes')]",
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').denyRdp]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').denyRdp]",
-                "displayName": "[variables('policyAssignmentNames').denyRdp]",
-                "policyDefinitionId": "[variables('policyDefinitions').denyRdp]",
-                "scope": "[variables('scope')]"
-            }
-        },
         // Conditional assignment of Azure Policy to deploy Backup agents to IaaS VMs
         {
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
@@ -194,7 +181,7 @@
                 "parameters": {}
             }
         },
-        // Conditional assignment of Service Principal to deploy Backup agents to IaaS VMs
+        // Conditionally assign roleAssignment for deploy Backup agents to IaaS VMs
         {
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
@@ -207,6 +194,47 @@
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbacOwner'))]",
                 "principalId": "[if(equals(parameters('enableVmBackup'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployVmBackup), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+            }
+        },
+        // Conditional assignment of Azure Policy to subnets without NSGs
+        {
+            "condition": "[equals(parameters('denySubnetWithoutNsg'), 'Yes')]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
+            "location": "[deployment().location]",
+            "properties": {
+                "description": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
+                "displayName": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
+                "policyDefinitionId": "[variables('policyDefinitions').denySubnetWithoutNsg]",
+                "scope": "[variables('scope')]"
+            }
+        },
+        // Conditional assignment of Azure Policy to deny NSG rules with RDP inbound access from the internet
+        {
+            "condition": "[equals(parameters('denyRdp'), 'Yes')]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').denyRdp]",
+            "properties": {
+                "description": "[variables('policyAssignmentNames').denyRdp]",
+                "displayName": "[variables('policyAssignmentNames').denyRdp]",
+                "policyDefinitionId": "[variables('policyDefinitions').denyRdp]",
+                "scope": "[variables('scope')]"
+            }
+        },
+        // Conditional assignment of Azure Policy to deny IP forwarding
+        {
+            "condition": "[equals(parameters('denyIpForwarding'), 'Yes')]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').denyIpForwarding]",
+            "location": "[deployment().location]",
+            "properties": {
+                "description": "[variables('policyAssignmentNames').denyIpForwarding]",
+                "displayName": "[variables('policyAssignmentNames').denyIpForwarding]",
+                "policyDefinitionId": "[variables('policyDefinitions').denyIpForwarding]",
+                "scope": "[variables('scope')]"
             }
         },
         // Conditional assignment of Azure Policy to audit SQL settings
@@ -271,6 +299,20 @@
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbacOwner'))]",
                 "principalId": "[if(equals(parameters('enableSqlEncryption'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySqlEncryption), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+            }
+        },
+        // Conditional assignment of Azure Policy to enforce secure storage
+        {
+            "condition": "[equals(parameters('enableStorageHttps'), 'Yes')]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').storageHttps]",
+            "location": "[deployment().location]",
+            "properties": {
+                "description": "[variables('policyAssignmentNames').storageHttps]",
+                "displayName": "[variables('policyAssignmentNames').storageHttps]",
+                "policyDefinitionId": "[variables('policyDefinitions').storageHttps]",
+                "scope": "[variables('scope')]"
             }
         },
         // Conditional assignment of Azure Policy to deploy AKS Policy
@@ -369,48 +411,6 @@
                         "value": "deny"
                     }
                 }
-            }
-        },
-        // Conditional assignment of Azure Policy to enforce secure storage
-        {
-            "condition": "[equals(parameters('enableStorageHttps'), 'Yes')]",
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').storageHttps]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').storageHttps]",
-                "displayName": "[variables('policyAssignmentNames').storageHttps]",
-                "policyDefinitionId": "[variables('policyDefinitions').storageHttps]",
-                "scope": "[variables('scope')]"
-            }
-        },
-        // Conditional assignment of Azure Policy to deny IP forwarding
-        {
-            "condition": "[equals(parameters('denyIpForwarding'), 'Yes')]",
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').denyIpForwarding]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').denyIpForwarding]",
-                "displayName": "[variables('policyAssignmentNames').denyIpForwarding]",
-                "policyDefinitionId": "[variables('policyDefinitions').denyIpForwarding]",
-                "scope": "[variables('scope')]"
-            }
-        },
-        // Conditional assignment of Azure Policy to subnets without NSGs
-        {
-            "condition": "[equals(parameters('denySubnetWithoutNsg'), 'Yes')]",
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
-                "displayName": "[variables('policyAssignmentNames').denySubnetWithoutNsg]",
-                "policyDefinitionId": "[variables('policyDefinitions').denySubnetWithoutNsg]",
-                "scope": "[variables('scope')]"
             }
         },
         // Conditional assignment of Azure Policy to deny NSG rules with SSH inbound access from the internet
