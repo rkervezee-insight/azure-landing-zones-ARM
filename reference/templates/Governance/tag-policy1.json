@@ -152,8 +152,8 @@
         },
         {
             "type": "Microsoft.Authorization/policyAssignments",
-            "name": "[variables('policyAssignmentName')]",
             "apiVersion": "2019-09-01",
+            "name": "[variables('policyAssignmentName')]",
             "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policyName'))]" ],
             "location": "[variables('location')]",
             "properties": {

@@ -36,19 +36,15 @@
         "policyAssignmentName": "[concat('Required-Tags-', parameters('targetMG'))]",
         "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
         "location": "eastus",
-        "policySetName": "Azure-Governance",
-        "apiVersions": {
-            "policySetDefinitions": "2018-05-01",
-            "policyAssignments": "2020-03-01"
-        }
+        "policyName": "Required Tags for Resource Groups"
     },
     "resources": [
         {
             "type": "Microsoft.Authorization/policySetDefinitions",
-            "name": "[variables('policySetName')]",
-            "apiVersion": "[variables('apiVersions').policySetDefinitions]",
+            "name": "[variables('policyName')]",
+            "apiVersion": "2018-05-01",
             "properties": {
-                "displayName": "[variables('policySetName')]",
+                "displayName": "[variables('policyName')]",
                 "description": "This initiative enforces resource group tagging, tag inheritence, allowed locations and Azure hybrid use benefits.",
                 "metadata": {
                     "category": "Tags"
@@ -156,14 +152,13 @@
         },
         {
             "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "apiVersion": "2019-09-01",
             "name": "[variables('policyAssignmentName')]",
-            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]" ],
+            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policyName'))]" ],
             "location": "[variables('location')]",
             "properties": {
-                "description": "[variables('policyAssignmentName')]",
-                "displayName": "[variables('policyAssignmentName')]",
-                "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]",
+                "displayName": "[variables('policyName')]",
+                "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policySetDefinitions', variables('policyName'))]",
                 "notScopes": []
             },
             "identity": {
@@ -174,7 +169,7 @@
     "outputs": {
         "policyId": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]"
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policyName'))]"
         }
     }
 }
