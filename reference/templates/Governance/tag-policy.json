@@ -35,8 +35,7 @@
             "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
             "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
             "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
-            "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
-            "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'), '/providers/Microsoft.Authorization/policyDefinitions/Append-AzHUB')]"
+            "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025"
         },
         "policyAssignmentName": {
             "azureGovernanceInitiative": "[concat('Required-Tags-', parameters('targetMG'))]",
@@ -221,19 +220,6 @@
                         ]
                     }
                 },
-                "scope": "[variables('scope').managementGroup]"
-            }
-        },
-        // Conditional assignment of Azure Policy to append Azure hybrid use benefits
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').appendAzHub]",
-            "location": "[variables('location')]",
-            "properties": {
-                "description": "[variables('policyAssignmentName').appendAzHub]",
-                "displayName": "[variables('policyAssignmentName').appendAzHub]",
-                "policyDefinitionId": "[variables('policyDefinitions').appendAzHub]",
                 "scope": "[variables('scope').managementGroup]"
             }
         }
