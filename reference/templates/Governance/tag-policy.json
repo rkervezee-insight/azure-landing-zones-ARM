@@ -7,27 +7,27 @@
         },
         "tag1": {
             "type": "string",
-            "defaultValue": "Application Name"
+            "defaultValue": "applicationName"
         },
         "tag2": {
             "type": "string",
-            "defaultValue": "Application Owner"
+            "defaultValue": "owner"
         },
         "tag3": {
             "type": "string",
-            "defaultValue": "Criticality"
+            "defaultValue": "businessCriticality"
         },
         "tag4": {
             "type": "string",
-            "defaultValue": "Contact Email"
+            "defaultValue": "ownerEmail"
         },
         "tag5": {
             "type": "string",
-            "defaultValue": "Cost Center"
+            "defaultValue": "costCenter"
         },
         "tag6": {
             "type": "string",
-            "defaultValue": "Data Classification"
+            "defaultValue": "dataClassification"
         }
     },
     "variables": {
