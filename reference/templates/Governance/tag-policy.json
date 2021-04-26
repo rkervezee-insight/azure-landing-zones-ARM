@@ -47,6 +47,7 @@
         "scope": {
             "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
         },
+        "location": "australiaeast",
         "policySetName": "Azure-Governance-Initiative",
         "apiVersions": {
             "policySetDefinitions": "2018-05-01",
@@ -170,7 +171,7 @@
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentName').azureGovernanceInitiative]",
             "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]" ],
-            "location": "[deployment().location]",
+            "location": "[variables('location')]",
             "properties": {
                 "description": "[variables('policyAssignmentName').azureGovernanceInitiative]",
                 "displayName": "[variables('policyAssignmentName').azureGovernanceInitiative]",
@@ -186,7 +187,7 @@
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentName').allowedAzRegions]",
-            "location": "[deployment().location]",
+            "location": "[variables('location')]",
             "properties": {
                 "description": "[variables('policyAssignmentName').allowedAzRegions]",
                 "displayName": "[variables('policyAssignmentName').allowedAzRegions]",
@@ -207,7 +208,7 @@
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-            "location": "[deployment().location]",
+            "location": "[variables('location')]",
             "properties": {
                 "description": "[variables('policyAssignmentName').allowedAzRegionsRg]",
                 "displayName": "[variables('policyAssignmentName').allowedAzRegionsRg]",
@@ -228,7 +229,7 @@
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentName').appendAzHub]",
-            "location": "[deployment().location]",
+            "location": "[variables('location')]",
             "properties": {
                 "description": "[variables('policyAssignmentName').appendAzHub]",
                 "displayName": "[variables('policyAssignmentName').appendAzHub]",
