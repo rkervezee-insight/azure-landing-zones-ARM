@@ -36,7 +36,7 @@
         "policyAssignmentName": "[concat('Required-Tags-', parameters('targetMG'))]",
         "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
         "location": "eastus",
-        "policyName": "Required Tags for Resource Groups",
+        "policyName": "Required Tags for Resource Groups"
     },
     "resources": [
         {
