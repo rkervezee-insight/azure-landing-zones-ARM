@@ -31,23 +31,12 @@
         }
     },
     "variables": {
-        "policyDefinitions": {
-            "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
-            "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
-            "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
-            "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025"
-        },
-        "policyAssignmentName": {
-            "azureGovernanceInitiative": "[concat('Required-Tags-', parameters('targetMG'))]",
-            "allowedAzRegions": "Allowed-AzRegions",
-            "allowedAzRegionsRg": "Allowed-AzRegions-RG",
-            "appendAzHub": "Append-AzHUB"
-        },
-        "scope": {
-            "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
-        },
-        "location": "australiaeast",
-        "policySetName": "Azure-Governance-Initiative",
+        "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
+        "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+        "policyAssignmentName": "[concat('Required-Tags-', parameters('targetMG'))]",
+        "mgScope": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]",
+        "location": "eastus",
+        "policySetName": "Azure-Governance",
         "apiVersions": {
             "policySetDefinitions": "2018-05-01",
             "policyAssignments": "2020-03-01"
@@ -62,12 +51,12 @@
                 "displayName": "[variables('policySetName')]",
                 "description": "This initiative enforces resource group tagging, tag inheritence, allowed locations and Azure hybrid use benefits.",
                 "metadata": {
-                    "category": "Governance"
+                    "category": "Tags"
                 },
                 "parameters": {},
                 "policyDefinitions": [
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('requireTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag1')]"
@@ -75,7 +64,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('inheritTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag1')]"
@@ -83,7 +72,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('requireTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag2')]"
@@ -91,7 +80,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('inheritTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag2')]"
@@ -99,7 +88,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('requireTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag3')]"
@@ -107,7 +96,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('inheritTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag3')]"
@@ -115,7 +104,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('requireTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag4')]"
@@ -123,7 +112,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('inheritTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag4')]"
@@ -131,7 +120,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('requireTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag5')]"
@@ -139,7 +128,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('inheritTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag5')]"
@@ -147,7 +136,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('requireTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag6')]"
@@ -155,7 +144,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('inheritTag')]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag6')]"
@@ -168,59 +157,17 @@
         {
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').azureGovernanceInitiative]",
+            "name": "[variables('policyAssignmentName')]",
             "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]" ],
             "location": "[variables('location')]",
             "properties": {
-                "description": "[variables('policyAssignmentName').azureGovernanceInitiative]",
-                "displayName": "[variables('policyAssignmentName').azureGovernanceInitiative]",
-                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]",
+                "description": "[variables('policyAssignmentName')]",
+                "displayName": "[variables('policyAssignmentName')]",
+                "policyDefinitionId": "[extensionResourceId(variables('mgScope'), 'Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]",
                 "notScopes": []
             },
             "identity": {
                 "type": "SystemAssigned"
-            }
-        },
-                // Conditional assignment of Azure Policy to enforce Azure regions for resources
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').allowedAzRegions]",
-            "location": "[variables('location')]",
-            "properties": {
-                "description": "[variables('policyAssignmentName').allowedAzRegions]",
-                "displayName": "[variables('policyAssignmentName').allowedAzRegions]",
-                "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
-                "parameters": {
-                    "listOfAllowedLocations": {
-                        "value": [
-                            "australiaeast",
-                            "australiasoutheast"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').managementGroup]"
-            }
-        },
-        // Conditional assignment of Azure Policy to enforce Azure regions for resource groups
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-            "location": "[variables('location')]",
-            "properties": {
-                "description": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-                "displayName": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-                "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
-                "parameters": {
-                    "listOfAllowedLocations": {
-                        "value": [
-                            "australiaeast",
-                            "australiasoutheast"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').managementGroup]"
             }
         }
     ],
