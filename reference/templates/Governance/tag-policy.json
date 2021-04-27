@@ -45,7 +45,7 @@
         "scope": {
             "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
         },
-        "policySetName": "Azure-Governance-Initiative",
+        "policySetName": "Azure Governance Initiative",
         "apiVersions": {
             "policySetDefinitions": "2018-05-01",
             "policyAssignments": "2020-03-01"
@@ -57,7 +57,7 @@
             "name": "[variables('policySetName')]",
             "apiVersion": "[variables('apiVersions').policySetDefinitions]",
             "properties": {
-                "displayName": "[variables('policySetName')]",
+                "displayName": "test",
                 "description": "This initiative enforces resource group tagging, tag inheritence, allowed locations and Azure hybrid use benefits.",
                 "metadata": {
                     "category": "Governance"
