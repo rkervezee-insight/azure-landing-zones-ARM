@@ -45,7 +45,7 @@
             "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
         },
         "policySet": {
-            "name": "Azure-Governance-Initiative",
+            "name": "Governance-Initiative",
             "displayName": "Azure Governance Initiative"
         },
         "apiVersions": {
