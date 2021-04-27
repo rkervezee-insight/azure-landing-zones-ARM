@@ -28,6 +28,10 @@
         "tag6": {
             "type": "string",
             "defaultValue": "Data Classification"
+        },
+        "allowedRegions": {
+            "type": "string",
+            "defaultValue": "australiaeast"
         }
     },
     "variables": {
@@ -37,15 +41,17 @@
             "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
             "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025"
         },
-        "policyAssignmentName": {
-            "azureGovernanceInitiative": "[concat('Required-Tags-', parameters('targetMG'))]",
-            "allowedAzRegions": "Allowed-AzRegions",
-            "allowedAzRegionsRg": "Allowed-AzRegions-RG"
+        "policyAssignment": {
+            "name": "Azure-Governance-Initiative",
+            "displayName": "Azure Governance Initiative"
         },
         "scope": {
             "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
         },
-        "policySetName": "Azure Governance Initiative",
+        "policySet": {
+            "name": "Azure-Governance-Initiative",
+            "displayName": "Azure Governance Initiative"
+        },
         "apiVersions": {
             "policySetDefinitions": "2018-05-01",
             "policyAssignments": "2020-03-01"
@@ -54,11 +60,11 @@
     "resources": [
         {
             "type": "Microsoft.Authorization/policySetDefinitions",
-            "name": "[variables('policySetName')]",
+            "name": "[variables('policySet').name]",
             "apiVersion": "[variables('apiVersions').policySetDefinitions]",
             "properties": {
-                "displayName": "test",
-                "description": "This initiative enforces resource group tagging, tag inheritence, allowed locations and Azure hybrid use benefits.",
+                "displayName": "[variables('policySet').displayName]",
+                "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "metadata": {
                     "category": "Governance"
                 },
@@ -159,6 +165,22 @@
                                 "value": "[parameters('tag6')]"
                             }
                         }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
+                        "parameters": {
+                            "listOfAllowedLocations": {
+                                "value": "[parameters('allowedRegions')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
+                        "parameters": {
+                            "listOfAllowedLocations": {
+                                "value": "[parameters('allowedRegions')]"
+                            }
+                        }
                     }
                 ]
             }
@@ -166,66 +188,24 @@
         {
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').azureGovernanceInitiative]",
-            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]" ],
+            "name": "[variables('policyAssignment').name]",
+            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySet').name)]" ],
             "location": "[deployment().location]",
             "properties": {
-                "description": "[variables('policyAssignmentName').azureGovernanceInitiative]",
-                "displayName": "[variables('policyAssignmentName').azureGovernanceInitiative]",
-                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]",
+                "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
+                "displayName": "[variables('policyAssignment').displayName]",
+                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('policySet').name)]",
                 "notScopes": []
             },
             "identity": {
                 "type": "SystemAssigned"
-            }
-        },
-        // Conditional assignment of Azure Policy to enforce Azure regions for resources
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').allowedAzRegions]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentName').allowedAzRegions]",
-                "displayName": "[variables('policyAssignmentName').allowedAzRegions]",
-                "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
-                "parameters": {
-                    "listOfAllowedLocations": {
-                        "value": [
-                            "australiaeast",
-                            "australiasoutheast"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').managementGroup]"
-            }
-        },
-        // Conditional assignment of Azure Policy to enforce Azure regions for resource groups
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-                "displayName": "[variables('policyAssignmentName').allowedAzRegionsRg]",
-                "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
-                "parameters": {
-                    "listOfAllowedLocations": {
-                        "value": [
-                            "australiaeast",
-                            "australiasoutheast"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').managementGroup]"
             }
         }
     ],
     "outputs": {
         "policyId": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySetName'))]"
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySet').Name)]"
         }
     }
 } 
