@@ -38,7 +38,7 @@
             "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025"
         },
         "policyAssignment": {
-            "name": "Azure-Governance-Initiative",
+            "name": "Governance-Initiative",
             "displayName": "Azure Governance Initiative"
         },
         "scope": {
