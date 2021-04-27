@@ -28,13 +28,6 @@
         "tag6": {
             "type": "string",
             "defaultValue": "Data Classification"
-        },
-        "listOfAllowedLocations": {
-            "type": "array",
-            "defaultvalue": [
-                "australiaeast",
-                "australiasoutheast"
-            ]
         }
     },
     "variables": {
@@ -173,7 +166,10 @@
                         "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
                         "parameters": {
                             "listOfAllowedLocations": {
-                                "value": "[parameters('listOfAllowedLocations')]"
+                                "value": [
+                                    "australiaeast",
+                                    "australiasoutheast"
+                                ]
                             }
                         }
                     },
@@ -181,7 +177,10 @@
                         "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
                         "parameters": {
                             "listOfAllowedLocations": {
-                                "value": "[parameters('listOfAllowedLocations')]"
+                                "value": [
+                                    "australiaeast",
+                                    "australiasoutheast"
+                                ]
                             }
                         }
                     }
