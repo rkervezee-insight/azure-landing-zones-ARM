@@ -29,9 +29,12 @@
             "type": "string",
             "defaultValue": "Data Classification"
         },
-        "allowedRegions": {
-            "type": "string",
-            "defaultValue": "australiaeast"
+        "listOfAllowedLocations": {
+            "type": "array",
+            "defaultvalue": [
+                "australiaeast",
+                "australiasoutheast"
+            ]
         }
     },
     "variables": {
@@ -170,7 +173,7 @@
                         "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
                         "parameters": {
                             "listOfAllowedLocations": {
-                                "value": "[parameters('allowedRegions')]"
+                                "value": "[parameters('listOfAllowedLocations')]"
                             }
                         }
                     },
@@ -178,7 +181,7 @@
                         "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
                         "parameters": {
                             "listOfAllowedLocations": {
-                                "value": "[parameters('allowedRegions')]"
+                                "value": "[parameters('listOfAllowedLocations')]"
                             }
                         }
                     }
@@ -208,4 +211,4 @@
             "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySet').Name)]"
         }
     }
-} 
+}
