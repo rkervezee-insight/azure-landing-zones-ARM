@@ -2,7 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "nameSpaceName": {
+        "eventHubNameSpaceName": {
             "type": "string",
             "metadata": {
                 "description": "Name of the EventHub namespace"
@@ -20,13 +20,13 @@
                 "description": "Name of the Consumer Group"
             }
         },
-        "eventHubsNamespacePrivateEndpointName": {
+        "eventHubNamespacePrivateEndpointName": {
             "type": "string",
             "metadata": {
                 "description": "Specifies the name of the private link to the storage account."
             }
         },
-        "eventhubSku": {
+        "eventHubSku": {
             "type": "string",
             "allowedValues": [ "Basic", "Standard" ],
             "defaultValue": "Standard",
@@ -34,7 +34,7 @@
                 "description": "The messaging tier for service Bus namespace"
             }
         },
-        "eventHubsNamespaceZoneRedundant": {
+        "eventHubNamespaceZoneRedundant": {
             "type": "bool",
             "defaultValue": true,
             "metadata": {
@@ -70,11 +70,8 @@
     },
     "variables": {
         "eventHubsPublicDNSZoneForwarder": "[if(equals(toLower(environment().name), 'azureusgovernment'), '.servicebus.usgovcloudapi.net', '.servicebus.windows.net')]",
-        "eventHubsNamespaceId": "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaceName'))]",
-        "eventHubsNamespacePrivateDnsZoneGroup": "[concat(parameters('eventHubsNamespacePrivateEndpointName'),'/', variables('eventHubsNamespacePrivateEndpointGroupName'), 'PrivateDnsZoneGroup')]",
+        "eventHubsNamespaceId": "[resourceId('Microsoft.EventHub/namespaces', parameters('eventHubNameSpaceName'))]",
         "eventHubsNamespacePrivateEndpointGroupName": "namespace",
-        "eventHubsNamespacePrivateEndpointId": "[resourceId('Microsoft.Network/privateEndpoints', parameters('eventHubsNamespacePrivateEndpointName'))]",
-        "eventHubsNamespacePrivateDnsZoneId": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/resourceGroups/sjt-syd-cor-arg-dns/providers/Microsoft.Network/privateDnsZones/privatelink.servicebus.windows.net",
         "subnetId": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/resourceGroups/sjt-syd-cor-arg-network/providers/Microsoft.Network/virtualNetworks/sjt-syd-cor-vnt-10.49.0.0/subnets/Management",
         "managePolicy": "ManagePolicy",
         "apiVersions": {
@@ -85,14 +82,14 @@
         {
             "type": "Microsoft.EventHub/Namespaces",
             "apiVersion": "2018-01-01-preview",
-            "name": "[parameters('nameSpaceName')]",
+            "name": "[parameters('eventHubNameSpaceName')]",
             "location": "[resourceGroup().location]",
             "sku": {
                 "name": "[parameters('eventHubSku')]",
                 "tier": "[parameters('eventHubSku')]"
             },
             "properties": {
-                "zoneRedundant": "[parameters('eventHubsNamespaceZoneRedundant')]",
+                "zoneRedundant": "[parameters('eventHubNamespaceZoneRedundant')]",
                 "isAutoInflateEnabled": "[parameters('isAutoInflateEnabled')]",
                 "maximumThroughputUnits": "[parameters('maximumThroughputUnits')]"
             },
@@ -102,7 +99,7 @@
                     "apiVersion": "[variables('apiVersions').eventHubs]",
                     "name": "[parameters('eventHubName')]",
                     "dependsOn": [
-                        "[concat('Microsoft.EventHub/namespaces/', parameters('nameSpaceName'))]"
+                        "[concat('Microsoft.EventHub/namespaces/', parameters('eventHubNameSpaceName'))]"
                     ],
                     "properties": {
                         "path": "[parameters('eventHubName')]",
@@ -115,7 +112,7 @@
                             "apiVersion": "[variables('apiVersions').eventHubs]",
                             "name": "[parameters('consumerGroupName')]",
                             "dependsOn": [
-                                "[concat('Microsoft.EventHub/namespaces/', parameters('nameSpaceName'),'/eventhubs/',parameters('eventHubName'))]"
+                                "[concat('Microsoft.EventHub/namespaces/', parameters('eventHubNameSpaceName'),'/eventhubs/',parameters('eventHubName'))]"
                             ],
                             "properties": {}
                         },
@@ -124,8 +121,8 @@
                             "apiVersion": "[variables('apiVersions').eventHubs]",
                             "name": "[variables('managePolicy')]",
                             "dependsOn": [
-                                "[concat('Microsoft.EventHub/namespaces/', parameters('namespaceName'),'/eventhubs/',parameters('eventHubName'))]",
-                                "[concat('Microsoft.EventHub/namespaces/', parameters('namespaceName'),'/eventhubs/',parameters('eventHubName'), '/consumerGroups/', parameters('consumerGroupName'))]"
+                                "[concat('Microsoft.EventHub/namespaces/', parameters('eventHubNameSpaceName'),'/eventhubs/',parameters('eventHubName'))]",
+                                "[concat('Microsoft.EventHub/namespaces/', parameters('eventHubNameSpaceName'),'/eventhubs/',parameters('eventHubName'), '/consumerGroups/', parameters('consumerGroupName'))]"
                             ],
                             "properties": {
                                 "Rights": [
@@ -140,7 +137,7 @@
                 {
                     "type": "Microsoft.Network/privateEndpoints",
                     "apiVersion": "2020-04-01",
-                    "name": "[parameters('eventHubsNamespacePrivateEndpointName')]",
+                    "name": "[parameters('eventHubNamespacePrivateEndpointName')]",
                     "location": "[resourceGroup().location]",
                     "dependsOn": [
                         "[variables('eventHubsNamespaceId')]"
@@ -148,7 +145,7 @@
                     "properties": {
                         "privateLinkServiceConnections": [
                             {
-                                "name": "[parameters('eventHubsNamespacePrivateEndpointName')]",
+                                "name": "[parameters('eventHubNamespacePrivateEndpointName')]",
                                 "properties": {
                                     "privateLinkServiceId": "[variables('eventHubsNamespaceId')]",
                                     "groupIds": [
@@ -162,7 +159,7 @@
                         },
                         "customDnsConfigs": [
                             {
-                                "fqdn": "[concat(parameters('namespaceName'), variables('eventHubsPublicDNSZoneForwarder'))]"
+                                "fqdn": "[concat(parameters('eventHubNameSpaceName'), variables('eventHubsPublicDNSZoneForwarder'))]"
                             }
                         ]
                     }
@@ -171,10 +168,10 @@
         },
         {
             "apiVersion": "2018-01-01-preview",
-            "name": "[concat(parameters('NamespaceName'), '/default')]",
+            "name": "[concat(parameters('eventHubNameSpaceName'), '/default')]",
             "type": "Microsoft.EventHub/namespaces/networkrulesets",
             "dependsOn": [
-                "[concat('Microsoft.EventHub/namespaces/', parameters('NamespaceName'))]"
+                "[concat('Microsoft.EventHub/namespaces/', parameters('eventHubNameSpaceName'))]"
             ],
             "properties": {
                 "virtualNetworkRules": [],
