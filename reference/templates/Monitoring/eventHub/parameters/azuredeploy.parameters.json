@@ -1,0 +1,18 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "namespaceName": {
+            "value": "eh-auea-pr-prd-platform-mgmt-01"
+        },
+        "eventHubName": {
+            "value": "azuread"
+        },
+        "consumerGroupName": {
+            "value": "azuread"
+        },
+        "eventHubsNamespacePrivateEndpointName": {
+            "value": "pe-01-auea-pr-prd-platform-mgmt-01"
+        }
+    }
+}

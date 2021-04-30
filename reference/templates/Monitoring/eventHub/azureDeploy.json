@@ -1,0 +1,189 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nameSpaceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the EventHub namespace"
+            }
+        },
+        "eventHubName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Event Hub"
+            }
+        },
+        "consumerGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Consumer Group"
+            }
+        },
+        "eventHubsNamespacePrivateEndpointName": {
+            "type": "string",
+            "metadata": {
+                "description": "Specifies the name of the private link to the storage account."
+            }
+        },
+        "eventhubSku": {
+            "type": "string",
+            "allowedValues": [ "Basic", "Standard" ],
+            "defaultValue": "Standard",
+            "metadata": {
+                "description": "The messaging tier for service Bus namespace"
+            }
+        },
+        "eventHubsNamespaceZoneRedundant": {
+            "type": "bool",
+            "defaultValue": true,
+            "metadata": {
+                "description": "Enabling this property creates a Event Hubs Namespace in regions that support availability zones."
+            }
+        },
+        "isAutoInflateEnabled": {
+            "type": "string",
+            "defaultValue": "True",
+            "allowedValues": [ "True", "False" ],
+            "metadata": {
+                "description": "Enable or disable AutoInflate"
+            }
+        },
+        "maximumThroughputUnits": {
+            "type": "int",
+            "defaultValue": 2,
+            "minValue": 0,
+            "maxValue": 20,
+            "metadata": {
+                "description": "Enable or disable AutoInflate"
+            }
+        },
+        "messageRetentionInDays": {
+            "type": "int",
+            "defaultValue": 1,
+            "minValue": 1,
+            "maxValue": 7,
+            "metadata": {
+                "description": "How long to retain the data in Event Hub"
+            }
+        }
+    },
+    "variables": {
+        "eventHubsPublicDNSZoneForwarder": "[if(equals(toLower(environment().name), 'azureusgovernment'), '.servicebus.usgovcloudapi.net', '.servicebus.windows.net')]",
+        "eventHubsNamespaceId": "[resourceId('Microsoft.EventHub/namespaces', parameters('namespaceName'))]",
+        "eventHubsNamespacePrivateDnsZoneGroup": "[concat(parameters('eventHubsNamespacePrivateEndpointName'),'/', variables('eventHubsNamespacePrivateEndpointGroupName'), 'PrivateDnsZoneGroup')]",
+        "eventHubsNamespacePrivateEndpointGroupName": "namespace",
+        "eventHubsNamespacePrivateEndpointId": "[resourceId('Microsoft.Network/privateEndpoints', parameters('eventHubsNamespacePrivateEndpointName'))]",
+        "eventHubsNamespacePrivateDnsZoneId": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/resourceGroups/sjt-syd-cor-arg-dns/providers/Microsoft.Network/privateDnsZones/privatelink.servicebus.windows.net",
+        "subnetId": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/resourceGroups/sjt-syd-cor-arg-network/providers/Microsoft.Network/virtualNetworks/sjt-syd-cor-vnt-10.49.0.0/subnets/Management",
+        "managePolicy": "ManagePolicy",
+        "apiVersions": {
+            "eventHubs": "2017-04-01"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.EventHub/Namespaces",
+            "apiVersion": "2018-01-01-preview",
+            "name": "[parameters('nameSpaceName')]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "[parameters('eventHubSku')]",
+                "tier": "[parameters('eventHubSku')]"
+            },
+            "properties": {
+                "zoneRedundant": "[parameters('eventHubsNamespaceZoneRedundant')]",
+                "isAutoInflateEnabled": "[parameters('isAutoInflateEnabled')]",
+                "maximumThroughputUnits": "[parameters('maximumThroughputUnits')]"
+            },
+            "resources": [
+                {
+                    "type": "EventHubs",
+                    "apiVersion": "[variables('apiVersions').eventHubs]",
+                    "name": "[parameters('eventHubName')]",
+                    "dependsOn": [
+                        "[concat('Microsoft.EventHub/namespaces/', parameters('nameSpaceName'))]"
+                    ],
+                    "properties": {
+                        "path": "[parameters('eventHubName')]",
+                        "messageRetentionInDays": "[parameters('messageRetentionInDays')]"
+                    },
+
+                    "resources": [
+                        {
+                            "type": "ConsumerGroups",
+                            "apiVersion": "[variables('apiVersions').eventHubs]",
+                            "name": "[parameters('consumerGroupName')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.EventHub/namespaces/', parameters('nameSpaceName'),'/eventhubs/',parameters('eventHubName'))]"
+                            ],
+                            "properties": {}
+                        },
+                        {
+                            "type": "authorizationRules",
+                            "apiVersion": "[variables('apiVersions').eventHubs]",
+                            "name": "[variables('managePolicy')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.EventHub/namespaces/', parameters('namespaceName'),'/eventhubs/',parameters('eventHubName'))]",
+                                "[concat('Microsoft.EventHub/namespaces/', parameters('namespaceName'),'/eventhubs/',parameters('eventHubName'), '/consumerGroups/', parameters('consumerGroupName'))]"
+                            ],
+                            "properties": {
+                                "Rights": [
+                                    "Send",
+                                    "Listen",
+                                    "Manage"
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "Microsoft.Network/privateEndpoints",
+                    "apiVersion": "2020-04-01",
+                    "name": "[parameters('eventHubsNamespacePrivateEndpointName')]",
+                    "location": "[resourceGroup().location]",
+                    "dependsOn": [
+                        "[variables('eventHubsNamespaceId')]"
+                    ],
+                    "properties": {
+                        "privateLinkServiceConnections": [
+                            {
+                                "name": "[parameters('eventHubsNamespacePrivateEndpointName')]",
+                                "properties": {
+                                    "privateLinkServiceId": "[variables('eventHubsNamespaceId')]",
+                                    "groupIds": [
+                                        "[variables('eventHubsNamespacePrivateEndpointGroupName')]"
+                                    ]
+                                }
+                            }
+                        ],
+                        "subnet": {
+                            "id": "[variables('subnetId')]"
+                        },
+                        "customDnsConfigs": [
+                            {
+                                "fqdn": "[concat(parameters('namespaceName'), variables('eventHubsPublicDNSZoneForwarder'))]"
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        {
+            "apiVersion": "2018-01-01-preview",
+            "name": "[concat(parameters('NamespaceName'), '/default')]",
+            "type": "Microsoft.EventHub/namespaces/networkrulesets",
+            "dependsOn": [
+                "[concat('Microsoft.EventHub/namespaces/', parameters('NamespaceName'))]"
+            ],
+            "properties": {
+                "virtualNetworkRules": [],
+                "ipRules": [],
+                "trustedServiceAccessEnabled": true,
+                "defaultAction": "Deny"
+            }
+        }
+    ],
+    "outputs": {
+    }
+}
