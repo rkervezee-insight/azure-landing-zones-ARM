@@ -14173,9 +14173,9 @@
           }
         },
         {
-          "Name": "Append-AzHUB",
+          "Name": "append-az-hub",
           "Properties": {
-            "DisplayName": "Append Azure Hybrid Use Benefits",
+            "DisplayName": "Append Azure Hybrid Use Benefits to VMs",
             "Description": "Append Azure Hybrid Use Benefits licensing to all Windows VMs",
             "Mode": "All",
             "metadata": {

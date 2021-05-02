@@ -1,0 +1,213 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "targetMG": {
+            "type": "string"
+        },
+        "maximumValidityInDays": {
+        "type": "Int",
+        "metadata": {
+          "displayName": "The maximum validity period in days",
+          "description": "Specify the maximum number of days a key can be valid for. Keys should be ephemeral. Using a key with a long validity period is not recommended."
+        }
+      },
+        "minimumDaysBeforeExpiration": {
+        "type": "Int",
+        "metadata": {
+          "displayName": "The minimum days before expiration",
+          "description": "Specify the minimum number of days that a secret should remain usable prior to expiration."
+        }
+      }
+    },
+    "variables": {
+        "scope": {
+            "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
+        },
+        "policies": {
+            "policyDefinitions": {
+                "auditPurgeProtection": "/providers/Microsoft.Authorization/policyDefinitions/0b60c0b2-2dc2-4e1c-b5c9-abbed971de53",
+                "auditSoftDelete": "/providers/Microsoft.Authorization/policyDefinitions/1e66c121-a66a-4b1f-9b83-0fd99bf0fc2d",
+                "auditFirewall": "/providers/Microsoft.Authorization/policyDefinitions/1e66c121-a66a-4b1f-9b83-0fd99bf0fc2d",
+                "auditPrivateEndpoints": "/providers/Microsoft.Authorization/policyDefinitions/5f0bc445-3935-4915-9981-011aa2b46147",
+                "auditPrivateLink": "/providers/Microsoft.Authorization/policyDefinitions/a6abeaec-4d90-4a02-805f-6b26c4d3fbe9",
+
+                "auditCertificateMaxValidity": "/providers/Microsoft.Authorization/policyDefinitions/0a075868-4c26-42ef-914c-5bc007359560",
+                "auditCertificateTypes": "/providers/Microsoft.Authorization/policyDefinitions/1151cede-290b-4ba0-8b38-0ad145ac888f",
+                "auditCertificateExpiry": "/providers/Microsoft.Authorization/policyDefinitions/f772fb64-8e40-40ad-87bc-7706e1949427",
+
+                "auditKeyMaxValidity": "/providers/Microsoft.Authorization/policyDefinitions/49a22571-d204-4c91-a7b6-09b1a586fbc9",
+                "auditKeyExpiry": "/providers/Microsoft.Authorization/policyDefinitions/152b15f7-8e1f-4c1f-ab71-8c010ba5dbc0",
+
+                "auditSecretMaxValidity": "/providers/Microsoft.Authorization/policyDefinitions/342e8053-e12e-4c44-be01-c3c2f318400f",
+                "auditSecretTypes": "/providers/Microsoft.Authorization/policyDefinitions/75262d3e-ba4a-4f43-85f8-9f72c090e5e3",
+                "auditSecretExpiry": "/providers/Microsoft.Authorization/policyDefinitions/98728c90-32c7-4049-8429-847dc0f4fe37",
+                "auditSecretMinExpiry": "/providers/Microsoft.Authorization/policyDefinitions/b0eb591a-5e70-4534-a8bf-04b9c489584a"
+            }
+        },
+        "initiatives": {
+            "policySetDefinitions": {
+                "name": "keyvault-initiative",
+                "displayName": "Key Vault Initiative"
+            }
+        },
+        "policyAssignment": {
+            "name": "keyvault-initiative",
+            "displayName": "Key Vault Initiative"
+        },
+        "apiVersions": {
+            "policySetDefinitions": "2018-05-01",
+            "policyAssignments": "2020-03-01"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "name": "[variables('initiatives').policySetDefinitions.name]",
+            "apiVersion": "[variables('apiVersions').policySetDefinitions]",
+            "properties": {
+                "displayName": "[variables('initiatives').policySetDefinitions.displayName]",
+                "description": "This Key Vault initiative audits settings for certificates, keys and secrets.",
+                "metadata": {
+                    "category": "Key Vault"
+                },
+                "parameters": {},
+                "policyDefinitions": [
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag1')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag1')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag2')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag2')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag3')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag3')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag4')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag4')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag5')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag5')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag6')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag6')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.auditManagedDisk]",
+                        "parameters": {
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.auditResourceLocationRg]",
+                        "parameters": {
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.appendAzHub]",
+                        "parameters": {
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignment').name]",
+            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]" ],
+            "location": "[deployment().location]",
+            "properties": {
+                "description": "This Key Vault initiative audits settings for certificates, keys and secrets.",
+                "displayName": "[variables('policyAssignment').displayName]",
+                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]",
+                "notScopes": []
+            },
+            "identity": {
+                "type": "SystemAssigned"
+            }
+        }
+    ],
+    "outputs": {
+        "policyId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.Name)]"
+        }
+    }
+}

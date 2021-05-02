@@ -31,21 +31,28 @@
         }
     },
     "variables": {
-        "policyDefinitions": {
-            "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
-            "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
-            "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
-            "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025"
-        },
-        "policyAssignment": {
-            "name": "Governance-Initiative",
-            "displayName": "Azure Governance Initiative"
-        },
         "scope": {
             "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
         },
-        "policySet": {
-            "name": "Governance-Initiative",
+        "policies": {
+            "policyDefinitions": {
+                "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
+                "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
+                "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
+                "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+                "auditManagedDisk": "/providers/Microsoft.Authorization/policyDefinitions/06a78e20-9358-41c9-923c-fb736d382a4d",
+                "auditResourceLocationRg": "/providers/Microsoft.Authorization/policyDefinitions/0a914e76-4921-4c19-b460-a2d36003525a",
+                "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'), '/providers/Microsoft.Authorization/policyDefinitions/append-az-hub')]"
+            }
+        },
+        "initiatives": {
+            "policySetDefinitions": {
+                "name": "governance-initiative",
+                "displayName": "Azure Governance Initiative"
+            }
+        },
+        "policyAssignment": {
+            "name": "governance-initiative",
             "displayName": "Azure Governance Initiative"
         },
         "apiVersions": {
@@ -56,10 +63,10 @@
     "resources": [
         {
             "type": "Microsoft.Authorization/policySetDefinitions",
-            "name": "[variables('policySet').name]",
+            "name": "[variables('initiatives').policySetDefinitions.name]",
             "apiVersion": "[variables('apiVersions').policySetDefinitions]",
             "properties": {
-                "displayName": "[variables('policySet').displayName]",
+                "displayName": "[variables('initiatives').policySetDefinitions.displayName]",
                 "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "metadata": {
                     "category": "Governance"
@@ -67,7 +74,7 @@
                 "parameters": {},
                 "policyDefinitions": [
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag1')]"
@@ -75,7 +82,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag1')]"
@@ -83,7 +90,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag2')]"
@@ -91,7 +98,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag2')]"
@@ -99,7 +106,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag3')]"
@@ -107,7 +114,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag3')]"
@@ -115,7 +122,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag4')]"
@@ -123,7 +130,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag4')]"
@@ -131,7 +138,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag5')]"
@@ -139,7 +146,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag5')]"
@@ -147,7 +154,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag6')]"
@@ -155,7 +162,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').inheritTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag6')]"
@@ -163,7 +170,22 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.auditManagedDisk]",
+                        "parameters": {
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.auditResourceLocationRg]",
+                        "parameters": {
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.appendAzHub]",
+                        "parameters": {
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.allowedAzRegions]",
                         "parameters": {
                             "listOfAllowedLocations": {
                                 "value": [
@@ -174,7 +196,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.allowedAzRegionsRg]",
                         "parameters": {
                             "listOfAllowedLocations": {
                                 "value": [
@@ -191,12 +213,12 @@
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignment').name]",
-            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySet').name)]" ],
+            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]" ],
             "location": "[deployment().location]",
             "properties": {
                 "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "displayName": "[variables('policyAssignment').displayName]",
-                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('policySet').name)]",
+                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]",
                 "notScopes": []
             },
             "identity": {
@@ -207,7 +229,7 @@
     "outputs": {
         "policyId": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('policySet').Name)]"
+            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.Name)]"
         }
     }
 }
