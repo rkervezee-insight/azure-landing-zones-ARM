@@ -582,11 +582,13 @@
                     {
                         "name": "esAscEmailContact",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Azure Security Center Email",
+                        "label": "Azure Security Center Email Contact",
                         "toolTip": "Provide the email contact for Azure Security Center alerts",
                         "defaultValue": "stephen.tulp@outlook.com",
                         "constraints": {
-                            "required": false
+                            "required": "[equals(steps('esGoalState').esAsc,'Yes')]",
+                            "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+                            "validationMessage": "Please provide a valid email address"
                         },
                         "visible": "[equals(steps('esPlatformManagement').esAsc, 'Yes')]"
                     },

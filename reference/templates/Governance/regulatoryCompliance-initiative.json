@@ -57,11 +57,16 @@
             ]
         },
         "listOfLocations": {
-        "type": "Array",
+            "type": "Array",
             "defaultvalue": [
-                "australiaeast"
-            ]
-      }
+                "Australia East"
+            ],
+            "metadata": {
+                "displayName": "Locations",
+                "description": "Audit if Network Watcher is not enabled for region(s).",
+                "strongType": "location"
+            }
+        }
     },
     "variables": {
         "scope": {

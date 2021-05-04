@@ -105,8 +105,8 @@
         }
     },
     "resources": [
-        // Create Resource Group
         {
+            "comments": "// Create Resource Group",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -119,8 +119,9 @@
             },
             "properties": {}
         },
-        // Nested deployment for Private DNS
+
         {
+            "comments": "// Nested deployment for Private DNS",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -135,8 +136,8 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        // Deploy Resource Group Lock
                         {
+                            "comments": "// Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -145,40 +146,41 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
-                        // Private DNS - Blob Storage
                         {
+                            "comments": "// Deploy Private DNS - Blob Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesBlob'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
                             "name": "[variables('privateLinkDns').blob]",
                             "location": "global"
                         },
-                        // Private DNS - File Storage
                         {
+                            "comments": "// Deploy Private DNS - File Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesFiles'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
                             "name": "[variables('privateLinkDns').files]",
                             "location": "global"
                         },
-                        // Private DNS - Queue Storage
+
                         {
+                            "comments": "// Deploy Private DNS - Queue Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesQueue'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
                             "name": "[variables('privateLinkDns').queue]",
                             "location": "global"
                         },
-                        // Private DNS - Table Storage
                         {
+                            "comments": "// Deploy Private DNS - Table Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesTable'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
                             "name": "[variables('privateLinkDns').tables]",
                             "location": "global"
                         },
-                        // Private DNS - Key Vault
                         {
+                            "comments": "// Private DNS - Key Vault",
                             "condition": "[equals(parameters('enablePrivateDnsZonesAkv'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
