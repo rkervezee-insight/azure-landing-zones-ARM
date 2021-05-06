@@ -44,7 +44,7 @@
     },
     "variables": {
         "policyDefinitions": {
-            "deployLogAnalytics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Log-Analytics')]"
+            "deployLogAnalytics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-log-analytics')]"
         },
         "policyAssignmentNames": {
             "logAnalytics": "deploy-log-analytics"

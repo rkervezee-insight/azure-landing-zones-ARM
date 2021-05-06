@@ -8,7 +8,7 @@
         },
         "locationPrefix": {
             "type": "string",
-            "maxLength": 5
+            "maxLength": 3
         },
         "environmentPrefix": {
             "type": "string",
@@ -19,7 +19,7 @@
         },
         "akvPrefix": {
             "type": "string",
-            "maxLength": 5
+            "maxLength": 3
         },
         "principalId": {
             "type": "array"

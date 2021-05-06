@@ -137,16 +137,16 @@
             "topLevel": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
         },
         "policyDefinitions": {
-            "deployActivityLog": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ActivityLog-La')]",
-            "deployActivityLogSta": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ActivityLog-sta')]",
-            "deployResourceDiagnostics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/Deploy-Diag-LogAnalytics')]",
+            "deployActivityLog": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-la')]",
+            "deployActivityLogSta": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-sta')]",
+            "deployResourceDiagnostics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/deploy-resource-diags')]",
             "deployVmMonitoring": "/providers/Microsoft.Authorization/policyDefinitions/0868462e-646c-4fe3-9ced-a733534b6a2c",
-            "deploySecurityCenterPricing": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Pricing')]",
-            "deploySecurityCenterEmail": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Email-Contact')]",
+            "deploySecurityCenterPricing": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-pricing')]",
+            "deploySecurityCenterEmail": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-email-contact')]",
             "deploySecurityCenterAutoProvision": "/providers/Microsoft.Authorization/policyDefinitions/8e7da0a5-0a0e-4bbc-bfc0-7773c018b616",
-            "deployNsgFlowLogs": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Nsg-FlowLogs')]",
+            "deployNsgFlowLogs": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-nsg-flow-logs')]",
             "enableAscMonitoring": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
-            "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF')]"
+            "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deny-appgwy-without-waf')]"
         },
         "policyAssignmentNames": {
             "deployActivityLog": "deploy-activity-log-la",
@@ -187,8 +187,8 @@
             "ascPricing": "[take(concat('ascPricing', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "ascEmail": "[take(concat('ascEmail', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "ascAutoProvision": "[take(concat('ascAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "activityLogs": "[take(concat('ActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "activityLogsSta": "[take(concat('ActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "activityLogs": "[take(concat('activityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "activityLogsSta": "[take(concat('activityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",

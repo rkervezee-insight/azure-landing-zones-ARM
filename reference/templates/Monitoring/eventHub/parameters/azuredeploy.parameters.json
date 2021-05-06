@@ -5,14 +5,29 @@
         "eventHubNameSpaceName": {
             "value": "eh-auea-pr-prd-platform-mgmt-01"
         },
-        "eventHubName": {
-            "value": "azuread"
+        "eventHubName1": {
+            "value": "azureadlogs"
         },
-        "consumerGroupName": {
-            "value": "azuread"
+        "consumerGroupName1": {
+            "value": "azureadlogs"
+        },
+        "eventHubName2": {
+            "value": "activitylogs"
+        },
+        "consumerGroupName2": {
+            "value": "activitylogs"
+        },
+        "eventHubName3": {
+            "value": "resourcelogs"
+        },
+        "consumerGroupName3": {
+            "value": "resourcelogs"
         },
         "eventHubNamespacePrivateEndpointName": {
             "value": "pe-01-auea-pr-prd-platform-mgmt-01"
+        },
+        "subnetId": {
+            "value": "/subscriptions/4dbf040a-1431-4a27-a586-99cd795a9b44/resourceGroups/rg-auea-pr-prd-plsspoke-01/providers/Microsoft.Network/virtualNetworks/vn-auea-pr-prd-platform-pls-01/subnets/Management"
         }
     }
 }

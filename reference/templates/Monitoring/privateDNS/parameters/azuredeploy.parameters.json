@@ -1,0 +1,15 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "paasPrivateDnsZoneName": {
+            "value": "privateLink.servicebus.windows.net"
+        },
+        "virtualNetworkLinkResourceId": {
+            "value": "/subscriptions/4dbf040a-1431-4a27-a586-99cd795a9b44/resourceGroups/rg-auea-pr-prd-inthub-01/providers/Microsoft.Network/virtualNetworks/vn-auea-pr-prd-platform-inthub-01"
+        },
+        "virtualNetworkName": {
+            "value": "vn-auea-pr-prd-platform-inthub-01"
+        }
+    }
+}
