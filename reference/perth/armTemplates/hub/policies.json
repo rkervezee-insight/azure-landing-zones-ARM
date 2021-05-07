@@ -16499,7 +16499,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ase')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ased')]",
                 "policyDefinitionReferenceId": "ASEDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
