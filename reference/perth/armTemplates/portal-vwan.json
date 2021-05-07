@@ -226,11 +226,23 @@
                         }
                     },
                     {
-                        "name": "esBasIdentifier",
+                        "name": "esWanIdentifier",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Azure Bastion Identifier",
-                        "toolTip": "Provide a value for the Azure Bastion Identifier",
-                        "defaultValue": "bas",
+                        "label": "Azure Virtual WAN Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure vWAN identifier",
+                        "defaultValue": "wan",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
+                        "name": "esHubIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Virtual Hub Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure vHub identifier",
+                        "defaultValue": "hub",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z0-9A-Z-]{3}$",
@@ -1011,7 +1023,7 @@
             },
             {
                 "name": "esPlatformConnectivity",
-                "label": "Network Connectivity (Hub & Spoke)",
+                "label": "Network Connectivity (Virtual WAN)",
                 "subLabel": {
                     "preValidation": "",
                     "postValidation": ""
@@ -1024,16 +1036,16 @@
                         "visible": true,
                         "options": {
                             "icon": "Info",
-                            "text": "Azure Foundations enables hybrid network connectivity with an on-premises environment using the Hub & Spoke network topology. Please note, all network connectivity components will be deployed to the Platform Subscription.",
+                            "text": "To enable Virtual WAN connectivity, you must allocate a connectivity Subscription. Please note, this Subscription will be moved to the connectivity Management Group, and ARM will deploy a Virtual WAN with the first Virtual Hub and requisite settings. We recommend using a new Subscription with no existing resources.",
                             "uri": "https://github.com/Azure/Enterprise-Scale/blob/main/docs/reference/Readme.md"
                         }
                     },
                     {
-                        "name": "esHub",
+                        "name": "esVwan",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Virtual Hub",
+                        "label": "Deploy Virtual WAN",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual WAN",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1054,7 +1066,7 @@
                         "label": "Address space (required for Virtual Hub)",
                         "toolTip": "Provide address prefix in CIDR notation (e.g 192.168.0.0/16)",
                         "defaultValue": "10.49.0.0/18",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "constraints": {
                             "required": true,
                             "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.49.0.0/18)"
@@ -1072,7 +1084,7 @@
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Region for the first virtual hub",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
@@ -1097,7 +1109,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]"
                     },
                     {
                         "name": "esEnablePrivateDnsZoneBlob",
@@ -1204,7 +1216,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy VPN Gateway",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway",
                         "constraints": {
                             "allowedValues": [
@@ -1220,71 +1232,12 @@
                         }
                     },
                     {
-                        "name": "esGwOrErAz",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Select Availability Zones for the Virtual Network Gateway/ExpressRoute Gateway",
-                        "defaultValue": "None",
-                        "multiselect": true,
-                        "selectAll": true,
-                        "filter": true,
-                        "visible": "[and(or(equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'), equals(steps('esPlatformConnectivity').esErGw, 'Yes')), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast')))]",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual Gateway/Express Route Gateway to the selected region and availability zones.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Zone 1",
-                                    "value": "1"
-                                },
-                                {
-                                    "label": "Zone 2",
-                                    "value": "2"
-                                },
-                                {
-                                    "label": "Zone 3",
-                                    "value": "3"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esVpnGwType",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Select VPN type",
-                        "defaultValue": "Route Based",
-                        "visible": "[equals(steps('esPlatformConnectivity').esVpnGw, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway. Select whether it should be policy or route based.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Policy Based",
-                                    "value": "PolicyBased"
-                                },
-                                {
-                                    "label": "Route Based",
-                                    "value": "RouteBased"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressVpnOrEr",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for VPN/ExpressRoute Gateway",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.1.0/24)",
-                        "defaultValue": "10.49.63.0/27",
-                        "visible": "[or(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'))]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
                         "name": "esErGw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy ExpressRoute Gateway",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, ARM will deploy an ExpressRoute gateway",
+                        "defaultValue": "No",
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Express Route gateway",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1303,8 +1256,8 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, an Azure Firewall will be deployed.",
+                        "visible": "[equals(steps('esPlatformConnectivity').esVwan, 'Yes')]",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1343,146 +1296,6 @@
                                     "value": "3"
                                 }
                             ]
-                        }
-                    },
-                    {
-                        "name": "esAddressFw",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Azure Firewall",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.61.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
-                        "name": "esAzBastion",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Bastion",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressBastion",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Azure Bastion",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.2.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
-                        "name": "esAppGw",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure App Gateway Subnet",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, a subnet for App Gateways will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressAppGw",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Azure App gateways",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.62.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esAppGw, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
-                        "name": "esMgmt",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Management Subnet",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, a subnet for Management Services will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressMgmt",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Management services",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.0.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esMgmt, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
-                        "name": "esIdentity",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Identity Subnet",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, a subnet for Active Directory Domain Services will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressIdentity",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Identity services",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.1.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esIdentity, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
                         }
                     }
                 ]
@@ -1880,16 +1693,13 @@
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
-            "vntPrefix": "[steps('esNaming').esVntIdentifier]",
-            "pipPrefix": "[steps('esNaming').esPipIdentifier]",
+            "vHubPrefix": "[steps('esNaming').esHubIdentifier]",
+            "vWanPrefix": "[steps('esNaming').esWanIdentifier]",
             "azFwPrefix": "[steps('esNaming').esAfwIdentifier]",
             "aaaPrefix": "[steps('esNaming').esAaaIdentifier]",
             "staPrefix": "[steps('esNaming').esStaIdentifier]",
-            "udrPrefix": "[steps('esNaming').esUdrIdentifier]",
-            "nsgPrefix": "[steps('esNaming').esNsgIdentifier]",
             "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
-            "basPrefix": "[steps('esNaming').esBasIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
@@ -1929,14 +1739,9 @@
             "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
-            "vpnOrErZones": "[steps('esPlatformConnectivity').esGwOrErAz]",
-            "enableHub": "[steps('esPlatformConnectivity').esHub]",
-            "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
+            "enableVwan": "[steps('esPlatformConnectivity').esVwan]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
-            "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
-            "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
-            "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
             "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esEnablePrivateDnsZones]",
@@ -1945,13 +1750,6 @@
             "enablePrivateDnsZonesFiles": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneFiles]",
             "enablePrivateDnsZonesBlob": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneBlob]",
             "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
-            "vpnGwType": "[steps('esPlatformConnectivity').esVpnGwType]",
-            "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
-            "subnetMaskForAzBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
-            "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
-            "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
-            "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
-            "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",

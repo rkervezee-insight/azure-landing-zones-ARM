@@ -1,0 +1,2465 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "companyPrefix": {
+            "type": "string",
+            "maxLength": 5
+        }
+    },
+    "variables": {
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
+        "apiVersions": {
+            "policyDefinitions": "2020-03-01",
+            "policySetDefinitions": "2020-03-01"
+        },
+        "policies": {
+            "policyDefinitions": [
+                {
+                    "name": "aci-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Azure Container Instances - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.ContainerInstance/containerGroups"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.ContainerInstance/containerGroups/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": []
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "acr-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Azure Container Registries - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.ContainerRegistry/registries"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.ContainerRegistry/registries/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "ContainerRegistryRepositoryEvents",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "ContainerRegistryLoginEvents",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "aks-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Azure Kubernetes Service - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.ContainerService/managedClusters"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.ContainerService/managedClusters/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "kube-apiserver",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "kube-audit",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "kube-controller-manager",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "kube-scheduler",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "cluster-autoscaler",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "kube-audit-admin",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "guard",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "mySQL-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for MySQL Databases - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.DBforMySQL/servers"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.DBforMySQL/servers/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "MySqlSlowLogs",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "MySqlAuditLogs",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "firewall-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Azure Firewalls- Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Network/azureFirewalls"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/azureFirewalls/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "AzureFirewallApplicationRule",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "AzureFirewallNetworkRule",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "AzureFirewallDnsProxy",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "kv-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Key Vaults - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.KeyVault/vaults"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "AuditEvent",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "nic-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Network Interfaces - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Network/networkInterfaces"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/networkInterfaces/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "timeGrain": null,
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "enabled": false,
+                                                                        "days": 0
+                                                                    }
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "nsg-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Network Security Groups - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Network/networkSecurityGroups"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/networkSecurityGroups/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "NetworkSecurityGroupEvent",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "NetworkSecurityGroupRuleCounter",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "pip-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Public IPs - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Network/publicIPAddresses"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/publicIPAddresses/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "timeGrain": null,
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "enabled": false,
+                                                                        "days": 0
+                                                                    }
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "DDoSProtectionNotifications",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "DDoSMitigationFlowLogs",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "DDoSMitigationReports",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "sa-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Storage Account - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    },
+                                    {
+                                        "field": "type",
+                                        "in": [
+                                            "Microsoft.Storage/storageAccounts",
+                                            "Microsoft.Storage/storageAccounts/blobServices",
+                                            "Microsoft.Storage/storageAccounts/fileServices",
+                                            "Microsoft.Storage/storageAccounts/tableServices",
+                                            "Microsoft.Storage/storageAccounts/queueServices"
+                                        ]
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.storage/storageAccounts/blobServices/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "Transaction",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                },
+                                                                {
+                                                                    "category": "Capacity",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "StorageRead",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageWrite",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageDelete",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "Microsoft.storage/storageAccounts/fileServices/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "Transaction",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                },
+                                                                {
+                                                                    "category": "Capacity",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "StorageRead",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageWrite",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageDelete",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "Microsoft.storage/storageAccounts/tableServices/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "Transaction",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                },
+                                                                {
+                                                                    "category": "Capacity",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "StorageRead",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageWrite",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageDelete",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "Microsoft.storage/storageAccounts/queueServices/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "Transaction",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                },
+                                                                {
+                                                                    "category": "Capacity",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "StorageRead",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageWrite",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "StorageDelete",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    },
+                                                    {
+                                                        "type": "Microsoft.storage/storageAccounts/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "Transaction",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                },
+                                                                {
+                                                                    "category": "Capacity",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": []
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "vnet-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Virtual Networks - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Network/virtualNetworks"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "logAnalytics": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/virtualNetworks/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "VMProtectionAlerts",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "vnetGW-diagnostic-settings-eh",
+                    "properties": {
+                        "displayName": "Apply diagnostic settings for Virtual Network Gateways - Event Hub",
+                        "description": "This policy automatically deploys and enable diagnostic settings to Event Hub",
+                        "metadata": {
+                            "category": "Monitoring"
+                        },
+                        "mode": "all",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "policyRule": {
+                            "if": {
+                                "allOf": [
+                                    {
+                                        "field": "type",
+                                        "equals": "Microsoft.Network/virtualNetworkGateways"
+                                    },
+                                    {
+                                        "field": "location",
+                                        "equals": "[parameters('resourceLocation')]"
+                                    }
+                                ]
+                            },
+                            "then": {
+                                "effect": "deployIfNotExists",
+                                "details": {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "roleDefinitionIds": [
+                                        "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                                    ],
+                                    "existenceCondition": {
+                                        "allOf": [
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                                                "equals": "True"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                                                "matchInsensitively": "[parameters('eventHubAuthorizationRuleId')]"
+                                            },
+                                            {
+                                                "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                                                "matchInsensitively": "[parameters('eventHubName')]"
+                                            }
+                                        ]
+                                    },
+                                    "deployment": {
+                                        "properties": {
+                                            "mode": "incremental",
+                                            "template": {
+                                                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                                                "contentVersion": "1.0.0.0",
+                                                "parameters": {
+                                                    "diagnosticsSettingNameToUse": {
+                                                        "type": "string"
+                                                    },
+                                                    "resourceName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubName": {
+                                                        "type": "string"
+                                                    },
+                                                    "eventHubAuthorizationRuleId": {
+                                                        "type": "string"
+                                                    },
+                                                    "location": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "variables": {},
+                                                "resources": [
+                                                    {
+                                                        "type": "Microsoft.Network/virtualNetworkGateways/providers/diagnosticSettings",
+                                                        "apiVersion": "2017-05-01-preview",
+                                                        "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('diagnosticsSettingNameToUse'))]",
+                                                        "location": "[parameters('location')]",
+                                                        "dependsOn": [],
+                                                        "properties": {
+                                                            "eventHubName": "[parameters('eventHubName')]",
+                                                            "eventHubAuthorizationRuleId": "[parameters('eventHubAuthorizationRuleId')]",
+                                                            "metrics": [
+                                                                {
+                                                                    "category": "AllMetrics",
+                                                                    "enabled": true,
+                                                                    "retentionPolicy": {
+                                                                        "days": 0,
+                                                                        "enabled": false
+                                                                    },
+                                                                    "timeGrain": null
+                                                                }
+                                                            ],
+                                                            "logs": [
+                                                                {
+                                                                    "category": "GatewayDiagnosticLog",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "IKEDiagnosticLog",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "P2SDiagnosticLog",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "RouteDiagnosticLog",
+                                                                    "enabled": true
+                                                                },
+                                                                {
+                                                                    "category": "TunnelDiagnosticLog",
+                                                                    "enabled": true
+                                                                }
+                                                            ]
+                                                        }
+                                                    }
+                                                ],
+                                                "outputs": {}
+                                            },
+                                            "parameters": {
+                                                "diagnosticsSettingNameToUse": {
+                                                    "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                                },
+                                                "eventHubName": {
+                                                    "value": "[parameters('eventHubName')]"
+                                                },
+                                                "eventHubAuthorizationRuleId": {
+                                                    "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                                },
+                                                "location": {
+                                                    "value": "[field('location')]"
+                                                },
+                                                "resourceName": {
+                                                    "value": "[field('name')]"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            ]
+        },
+        "initiatives": {
+            "policySetDefinitions": [
+                {
+                    "properties": {
+                        "description": "This initiative configures application Azure resources to forward diagnostic logs and metrics to Event Hub.",
+                        "displayName": "Deploy Resource Settings - Event Hubs",
+                        "parameters": {
+                            "diagnosticsSettingNameToUse": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Setting name",
+                                    "description": "Name of the policy for the diagnostics settings."
+                                },
+                                "defaultValue": "setByPolicyEventHub"
+                            },
+                            "resourceLocation": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Resource Location",
+                                    "description": "Resource Location must be the same as the Event Hub",
+                                    "strongType": "location"
+                                }
+                            },
+                            "eventHubName": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Name",
+                                    "description": "Specify the name of the Event Hub"
+                                }
+                            },
+                            "eventHubAuthorizationRuleId": {
+                                "type": "string",
+                                "metadata": {
+                                    "displayName": "Event Hub Authorization Rule Id",
+                                    "description": "Specify Event Hub Authorization Rule Id"
+                                }
+                            }
+                        },
+                        "PolicyDefinitionGroups": null,
+                        "metadata": {
+                            "version": "1.0.0",
+                            "category": "Monitoring"
+                        },
+                        "policyDefinitions": [
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/aci-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/acr-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/aks-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/firewall-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/kv-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/mySQL-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/nic-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/nsg-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/pip-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/vnet-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            },
+                            {
+                                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/vnetGW-diagnostic-settings-eh')]",
+                                "parameters": {
+                                    "diagnosticsSettingNameToUse": {
+                                        "value": "[parameters('diagnosticsSettingNameToUse')]"
+                                    },
+                                    "resourceLocation": {
+                                        "value": "[parameters('resourceLocation')]"
+                                    },
+                                    "eventHubName": {
+                                        "value": "[parameters('eventHubName')]"
+                                    },
+                                    "eventHubAuthorizationRuleId": {
+                                        "value": "[parameters('eventHubAuthorizationRuleId')]"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "type": null,
+                    "name": "resource-diagnostic-settings-eh"
+                }
+            ]
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/policyDefinitions",
+            "name": "[variables('policies').policyDefinitions[copyIndex()].name]",
+            "apiVersion": "[variables('apiVersions').policyDefinitions]",
+            "copy": {
+                "name": "policyDefinitionCopy",
+                "count": "[length(variables('policies').policyDefinitions)]"
+            },
+            "properties": {
+                "displayName": "[variables('policies').policyDefinitions[copyIndex()].properties.displayName]",
+                "description": "[variables('policies').policyDefinitions[copyIndex()].properties.description]",
+                "mode": "All",
+                "policyType": "Custom",
+                "parameters": "[variables('policies').policyDefinitions[copyIndex()].properties.parameters]",
+                "policyRule": "[variables('policies').policyDefinitions[copyIndex()].properties.policyRule]",
+                "metadata": "[variables('policies').policyDefinitions[copyIndex()].properties.metadata]"
+            }
+        },
+        {
+            "type": "Microsoft.Authorization/policySetDefinitions",
+            "name": "[variables('initiatives').policySetDefinitions[copyIndex()].name]",
+            "apiVersion": "[variables('apiVersions').policySetDefinitions]",
+            "dependsOn": [
+                "policyDefinitionCopy"
+            ],
+            "copy": {
+                "name": "policySetDefinitionCopy",
+                "count": "[length(variables('initiatives').policySetDefinitions)]"
+            },
+            "properties": {
+                "displayName": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.displayName]",
+                "description": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.description]",
+                "parameters": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.parameters]",
+                "policyDefinitions": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.policyDefinitions]",
+                "metadata": "[variables('initiatives').policySetDefinitions[copyIndex()].properties.metadata]"
+            }
+        }
+    ]
+}

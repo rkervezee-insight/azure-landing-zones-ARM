@@ -74,6 +74,7 @@
         },
         "subscriptionTag": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "Provide the value for the environment tag"
             }
@@ -183,7 +184,7 @@
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
         },
         "enableApp": {
             "type": "string",
@@ -191,7 +192,7 @@
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
         },
         "enableData": {
             "type": "string",
@@ -199,7 +200,7 @@
                 "Yes",
                 "No"
             ],
-            "defaultValue": "No"
+            "defaultValue": "Yes"
         },
         "subnetMaskForWeb": {
             "type": "string",
@@ -223,7 +224,7 @@
                 "displayName": "addressPrefix",
                 "description": "Address prefix"
             },
-            "defaultValue": "192.168.0.0/24"
+            "defaultValue": ""
         },
         "enableBudget": {
             "type": "string",
@@ -238,7 +239,8 @@
             "defaultValue": "[concat(utcNow('MM'), '/01/', utcNow('yyyy'))]"
         },
         "amount": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "timeGrain": {
             "type": "string",
@@ -250,7 +252,8 @@
             ]
         },
         "contactEmails": {
-            "type": "array"
+            "type": "array",
+            "defaultValue": ""
         }
     },
     "variables": {

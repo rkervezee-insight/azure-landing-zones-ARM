@@ -1,0 +1,13 @@
+{
+    "name": "resource-diagnostic-settings-eh-policySet",
+    "properties": {
+        "type": "Microsoft.Authorization/policySetDefinitions",
+        
+        
+       
+        "metadata": {
+            "category": "Monitoring"
+        },
+
+    }
+}

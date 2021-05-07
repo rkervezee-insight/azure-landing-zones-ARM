@@ -37,10 +37,7 @@
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected when also adding a subscription for the Platform Landing Zone, ARM will assign two policies to enable auditing in your environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
-            }
+            ]
         },
         "enableAsc": {
             "type": "string",
@@ -48,13 +45,11 @@
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected when also adding a subscription for management, ARM will assign two policies to enable auditing in your environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
-            }
+            ]
         },
         "ascEmailContact": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "enableAscForServers": {
             "type": "string",
@@ -142,36 +137,28 @@
             "topLevel": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
         },
         "policyDefinitions": {
-            "deployAzActivityLogLa": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ActivityLog-La')]",
-            "deployAzActivityLogSta": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Diagnostics-ActivityLog-sta')]",
-            "deployAzResourceDiagnostics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/Deploy-Diag-LogAnalytics')]",
+            "deployActivityLog": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-la')]",
+            "deployActivityLogSta": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-sta')]",
+            "deployResourceDiagnostics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/deploy-resource-diags')]",
             "deployVmMonitoring": "/providers/Microsoft.Authorization/policyDefinitions/0868462e-646c-4fe3-9ced-a733534b6a2c",
-            "deployAzSecurityCenterPricing": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Pricing')]",
-            "deployAzSecurityCenterEmail": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Email-Contact')]",
-            "deployNsgFlowLogs": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Nsg-FlowLogs')]",
-            "deployAzSecurityCenterAutoProvision": "/providers/Microsoft.Authorization/policyDefinitions/8e7da0a5-0a0e-4bbc-bfc0-7773c018b616",
+            "deploySecurityCenterPricing": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-pricing')]",
+            "deploySecurityCenterEmail": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-email-contact')]",
+            "deploySecurityCenterAutoProvision": "/providers/Microsoft.Authorization/policyDefinitions/8e7da0a5-0a0e-4bbc-bfc0-7773c018b616",
+            "deployNsgFlowLogs": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-nsg-flow-logs')]",
             "enableAscMonitoring": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
-            "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
-            "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
-            "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-AppGW-Without-WAF')]",
-            "deployAzFoundationsCIS": "/providers/Microsoft.Authorization/policySetDefinitions/1a5bb27d-173f-493e-9568-eb56638dde4d",
-            "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Append-AzHUB')]"
+            "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deny-appgwy-without-waf')]"
         },
         "policyAssignmentNames": {
-            "deployAzActivityLogLa": "Deploy-AzActivity-La",
-            "deployAzActivityLogSta": "Deploy-AzActivity-Sta",
-            "deployAzResourceDiagnostics": "Deploy-AzResource-Diag",
-            "deployVmMonitoring": "Deploy-VM-Monitoring",
-            "deployAzSecurityCenterPricing": "Deploy-ASC-Pricing",
-            "deployAzSecurityCenterEmail": "Deploy-ASC-Email-Contact",
-            "deployNsgFlowLogs": "Deploy-Nsg-FlowLogs",
-            "deployAzSecurityCenterAutoProvision": "Deploy-ASC-AutoProvision",
-            "enableAscMonitoring": "Enable-ASC-Monitoring",
-            "allowedAzRegions": "Allowed-AzRegions",
-            "allowedAzRegionsRg": "Allowed-AzRegions-RG",
-            "denyAppGwyWaf": "Deny-AppGW-Without-WAF",
-            "deployAzFoundationsCIS": "Deploy-AzureCIS",
-            "appendAzHub": "Append-AzHUB"
+            "deployActivityLog": "deploy-activity-log-la",
+            "deployActivityLogSta": "deploy-activity-log-sta",
+            "deployResourceDiagnostics": "deploy-resource-diags",
+            "deployVmMonitoring": "Ddeploy-vm-monitoring",
+            "deploySecurityCenterPricing": "deploy-asc-pricing",
+            "deploySecurityCenterEmail": "deploy-asc-email-contact",
+            "deploySecurityCenterAutoProvision": "deploy-asc-autoprovision",
+            "deployNsgFlowLogs": "deploy-nsg-flow-logs",
+            "enableAscMonitoring": "enable-asc-monitoring",
+            "denyAppGwyWaf": "deny-appgwy-without-waf"
         },
         "rbac": {
             "owner": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
@@ -180,13 +167,13 @@
             "securityAdmin": "fb1c8493-542b-48eb-b624-b4c8fea62acd"
         },
         "roleAssignmentNames": {
-            "deployAzActivityLogLa": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzActivityLogLa))]",
-            "deployAzActivityLogSta": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzActivityLogSta))]",
-            "deployAzResourceDiagnostics": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployAzResourceDiagnostics))]",
+            "deployActivityLog": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployActivityLog))]",
+            "deployActivityLogSta": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployActivityLogSta))]",
+            "deployResourceDiagnostics": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployResourceDiagnostics))]",
             "deployVmMonitoring": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployVmMonitoring))]",
-            "deployAzSecurityCenterPricing": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzSecurityCenterPricing))]",
-            "deployAzSecurityCenterEmail": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzSecurityCenterEmail))]",
-            "deployAzSecurityCenterAutoProvision": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision))]",
+            "deploySecurityCenterPricing": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deploySecurityCenterPricing))]",
+            "deploySecurityCenterEmail": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deploySecurityCenterEmail))]",
+            "deploySecurityCenterAutoProvision": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deploySecurityCenterAutoProvision))]",
             "enableAscMonitoring": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').enableAscMonitoring))]",
             "deployNsgFlowLogs": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployNsgFlowLogs))]"
         },
@@ -200,9 +187,8 @@
             "ascPricing": "[take(concat('ascPricing', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "ascEmail": "[take(concat('ascEmail', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "ascAutoProvision": "[take(concat('ascAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "azActivityLogsLa": "[take(concat('azActivityLogsLa', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "azActivityLogsSta": "[take(concat('azActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "azKeyVault": "[take(concat('azKeyVault', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "activityLogs": "[take(concat('activityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "activityLogsSta": "[take(concat('activityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -263,15 +249,15 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzActivityLogLa]",
+            "name": "[variables('policyAssignmentNames').deployActivityLog]",
             "location": "[deployment().location]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzActivityLogLa]",
-                "displayName": "[variables('policyAssignmentNames').deployAzActivityLogLa]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzActivityLogLa]",
+                "description": "[variables('policyAssignmentNames').deployActivityLog]",
+                "displayName": "[variables('policyAssignmentNames').deployActivityLog]",
+                "policyDefinitionId": "[variables('policyDefinitions').deployActivityLog]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
                     "logAnalytics": {
@@ -285,14 +271,14 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployAzActivityLogLa]",
+            "name": "[variables('roleAssignmentNames').deployActivityLog]",
             "dependsOn": [
-                "[variables('policyAssignmentNames').deployAzActivityLogLa]"
+                "[variables('policyAssignmentNames').deployActivityLog]"
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
-                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployActivityLog), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of Azure Policy to enforce activity logs from subscriptions to Storage Account
@@ -300,15 +286,15 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzActivityLogSta]",
+            "name": "[variables('policyAssignmentNames').deployActivityLogSta]",
             "location": "[deployment().location]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzActivityLogSta]",
-                "displayName": "[variables('policyAssignmentNames').deployAzActivityLogSta]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzActivityLogSta]",
+                "description": "[variables('policyAssignmentNames').deployActivityLogSta]",
+                "displayName": "[variables('policyAssignmentNames').deployActivityLogSta]",
+                "policyDefinitionId": "[variables('policyDefinitions').deployActivityLogSta]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
                     "storageAccountId": {
@@ -322,14 +308,14 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployAzActivityLogSta]",
+            "name": "[variables('roleAssignmentNames').deployActivityLogSta]",
             "dependsOn": [
-                "[variables('policyAssignmentNames').deployAzActivityLogSta]"
+                "[variables('policyAssignmentNames').deployActivityLogSta]"
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
-                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogSta), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableLtrStorage'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployActivityLogSta), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of Azure Policy to enforce Log Analytics VM extension to Windows and Linux virtual machines
@@ -374,15 +360,15 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzResourceDiagnostics]",
+            "name": "[variables('policyAssignmentNames').deployResourceDiagnostics]",
             "location": "[deployment().location]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzResourceDiagnostics]",
-                "displayName": "[variables('policyAssignmentNames').deployAzResourceDiagnostics]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzResourceDiagnostics]",
+                "description": "[variables('policyAssignmentNames').deployResourceDiagnostics]",
+                "displayName": "[variables('policyAssignmentNames').deployResourceDiagnostics]",
+                "policyDefinitionId": "[variables('policyDefinitions').deployResourceDiagnostics]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
                     "logAnalytics": {
@@ -396,14 +382,14 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployAzResourceDiagnostics]",
+            "name": "[variables('roleAssignmentNames').deployResourceDiagnostics]",
             "dependsOn": [
-                "[variables('policyAssignmentNames').deployAzResourceDiagnostics]"
+                "[variables('policyAssignmentNames').deployResourceDiagnostics]"
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').contributor)]",
-                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzResourceDiagnostics), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployResourceDiagnostics), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of Azure Policy to enforce ASC Pricing on subscriptions
@@ -411,15 +397,15 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzSecurityCenterPricing]",
+            "name": "[variables('policyAssignmentNames').deploySecurityCenterPricing]",
             "location": "[deployment().location]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzSecurityCenterPricing]",
-                "displayName": "[variables('policyAssignmentNames').deployAzSecurityCenterPricing]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzSecurityCenterPricing]",
+                "description": "[variables('policyAssignmentNames').deploySecurityCenterPricing]",
+                "displayName": "[variables('policyAssignmentNames').deploySecurityCenterPricing]",
+                "policyDefinitionId": "[variables('policyDefinitions').deploySecurityCenterPricing]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
                     "pricingTierVms": {
@@ -457,14 +443,14 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployAzSecurityCenterPricing]",
+            "name": "[variables('roleAssignmentNames').deploySecurityCenterPricing]",
             "dependsOn": [
-                "[variables('policyAssignmentNames').deployAzSecurityCenterPricing]"
+                "[variables('policyAssignmentNames').deploySecurityCenterPricing]"
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
-                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySecurityCenterPricing), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of Azure Policy to enforce ASC Auto Provisioning on subscriptions
@@ -472,15 +458,15 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision]",
+            "name": "[variables('policyAssignmentNames').deploySecurityCenterAutoProvision]",
             "location": "[deployment().location]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision]",
-                "displayName": "[variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzSecurityCenterAutoProvision]",
+                "description": "[variables('policyAssignmentNames').deploySecurityCenterAutoProvision]",
+                "displayName": "[variables('policyAssignmentNames').deploySecurityCenterAutoProvision]",
+                "policyDefinitionId": "[variables('policyDefinitions').deploySecurityCenterAutoProvision]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
                     "logAnalytics": {
@@ -494,14 +480,14 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployAzSecurityCenterAutoProvision]",
+            "name": "[variables('roleAssignmentNames').deploySecurityCenterAutoProvision]",
             "dependsOn": [
-                "[variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision]"
+                "[variables('policyAssignmentNames').deploySecurityCenterAutoProvision]"
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').contributor)]",
-                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySecurityCenterAutoProvision), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of Azure Policy to enforce ASC Email Contact
@@ -509,15 +495,15 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzSecurityCenterEmail]",
+            "name": "[variables('policyAssignmentNames').deploySecurityCenterEmail]",
             "location": "[deployment().location]",
             "identity": {
                 "type": "SystemAssigned"
             },
             "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzSecurityCenterEmail]",
-                "displayName": "[variables('policyAssignmentNames').deployAzSecurityCenterEmail]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzSecurityCenterEmail]",
+                "description": "[variables('policyAssignmentNames').deploySecurityCenterEmail]",
+                "displayName": "[variables('policyAssignmentNames').deploySecurityCenterEmail]",
+                "policyDefinitionId": "[variables('policyDefinitions').deploySecurityCenterEmail]",
                 "scope": "[variables('scope').topLevel]",
                 "parameters": {
                     "emailSecurityContact": {
@@ -537,14 +523,14 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployAzSecurityCenterEmail]",
+            "name": "[variables('roleAssignmentNames').deploySecurityCenterEmail]",
             "dependsOn": [
-                "[variables('policyAssignmentNames').deployAzSecurityCenterEmail]"
+                "[variables('policyAssignmentNames').deploySecurityCenterEmail]"
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
-                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterEmail), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+                "principalId": "[if(equals(parameters('enableAsc'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySecurityCenterEmail), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         },
         // Conditional assignment of Azure Policy to enable ASC monitoring
@@ -569,16 +555,16 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').azActivityLogsLa]",
+            "name": "[variables('deploymentNames').ActivityLogs]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzActivityLogLa)]"
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployActivityLog)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "incremental",
-                "template": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), reference(variables('policyDefinitions').deployAzActivityLogLa, '2018-05-01').policyRule.then.details.deployment.properties.template, variables('blankTemplateEscaped'))]",
-                "parameters": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogLa), '2018-05-01').parameters, json('null'))]"
+                "template": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), reference(variables('policyDefinitions').deployActivityLog, '2018-05-01').policyRule.then.details.deployment.properties.template, variables('blankTemplateEscaped'))]",
+                "parameters": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployActivityLog), '2018-05-01').parameters, json('null'))]"
             }
         },
         // Conditional deployment to invoke template from ActivityLog diagnostics Logs to Azure Storage
@@ -586,16 +572,16 @@
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').azActivityLogsSta]",
+            "name": "[variables('deploymentNames').activityLogsSta]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzActivityLogSta)]"
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployActivityLogSta)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "incremental",
-                "template": "[if(equals(parameters('enableLtrStorage'), 'Yes'), reference(variables('policyDefinitions').deployAzActivityLogSta, '2018-05-01').policyRule.then.details.deployment.properties.template, variables('blankTemplateEscaped'))]",
-                "parameters": "[if(equals(parameters('enableLtrStorage'), 'Yes'), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzActivityLogSta), '2018-05-01').parameters, json('null'))]"
+                "template": "[if(equals(parameters('enableLtrStorage'), 'Yes'), reference(variables('policyDefinitions').deployActivityLogSta, '2018-05-01').policyRule.then.details.deployment.properties.template, variables('blankTemplateEscaped'))]",
+                "parameters": "[if(equals(parameters('enableLtrStorage'), 'Yes'), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployActivityLogSta), '2018-05-01').parameters, json('null'))]"
             }
         },
         // Conditional deployment to invoke ASC Pricing deployment
@@ -606,13 +592,13 @@
             "name": "[variables('deploymentNames').ascPricing]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzSecurityCenterPricing)]"
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deploySecurityCenterPricing)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "incremental",
-                "template": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deployAzSecurityCenterPricing, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
-                "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterPricing), '2018-05-01').parameters, json('null'))]"
+                "template": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deploySecurityCenterPricing, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySecurityCenterPricing), '2018-05-01').parameters, json('null'))]"
             }
         },
         // Conditional deployment to invoke ASC Auto Provisioning deployment
@@ -623,13 +609,13 @@
             "name": "[variables('deploymentNames').ascAutoProvision]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzSecurityCenterAutoProvision)]"
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deploySecurityCenterAutoProvision)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "incremental",
-                "template": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deployAzSecurityCenterAutoProvision, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
-                "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterAutoProvision), '2018-05-01').parameters, json('null'))]"
+                "template": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deploySecurityCenterAutoProvision, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySecurityCenterAutoProvision), '2018-05-01').parameters, json('null'))]"
             }
         },
         // Conditional deployment to invoke ASC Email Contact deployment
@@ -640,55 +626,13 @@
             "name": "[variables('deploymentNames').ascEmail]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzSecurityCenterEmail)]"
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deploySecurityCenterEmail)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "incremental",
-                "template": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deployAzSecurityCenterEmail, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
-                "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzSecurityCenterEmail), '2018-05-01').parameters, json('null'))]"
-            }
-        },
-        // Conditional assignment of Azure Policy to enforce Azure regions for resources
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').allowedAzRegions]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').allowedAzRegions]",
-                "displayName": "[variables('policyAssignmentNames').allowedAzRegions]",
-                "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegions]",
-                "parameters": {
-                    "listOfAllowedLocations": {
-                        "value": [
-                            "australiaeast",
-                            "australiasoutheast"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').topLevel]"
-            }
-        },
-        // Conditional assignment of Azure Policy to enforce Azure regions for resource groups
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').allowedAzRegionsRg]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').allowedAzRegionsRg]",
-                "displayName": "[variables('policyAssignmentNames').allowedAzRegionsRg]",
-                "policyDefinitionId": "[variables('policyDefinitions').allowedAzRegionsRg]",
-                "parameters": {
-                    "listOfAllowedLocations": {
-                        "value": [
-                            "australiaeast",
-                            "australiasoutheast"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').topLevel]"
+                "template": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deploySecurityCenterEmail, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[if(and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deploySecurityCenterEmail), '2018-05-01').parameters, json('null'))]"
             }
         },
         // Conditional assignment of Azure Policy to deny Azure App Gateway without WAF
@@ -702,39 +646,6 @@
                 "displayName": "[variables('policyAssignmentNames').denyAppGwyWaf]",
                 "policyDefinitionId": "[variables('policyDefinitions').denyAppGwyWaf]",
                 "parameters": {},
-                "scope": "[variables('scope').topLevel]"
-            }
-        },
-        // Conditional assignment of Azure Policy to deploy Azure Foundations CIS
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployAzFoundationsCIS]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').deployAzFoundationsCIS]",
-                "displayName": "[variables('policyAssignmentNames').deployAzFoundationsCIS]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployAzFoundationsCIS]",
-                "parameters": {
-                    "listOfRegionsWhereNetworkWatcherShouldBeEnabled": {
-                        "value": [
-                            "[deployment().location]"
-                        ]
-                    }
-                },
-                "scope": "[variables('scope').topLevel]"
-            }
-        },
-        // Conditional assignment of Azure Policy to append Azure hybrid use benefits
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').appendAzHub]",
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "[variables('policyAssignmentNames').appendAzHub]",
-                "displayName": "[variables('policyAssignmentNames').appendAzHub]",
-                "policyDefinitionId": "[variables('policyDefinitions').appendAzHub]",
                 "scope": "[variables('scope').topLevel]"
             }
         }
