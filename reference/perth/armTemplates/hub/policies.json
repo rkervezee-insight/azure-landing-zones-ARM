@@ -10962,7 +10962,7 @@
               }
             }
           },
-          "name": "deploy-diagnostics-timeSeries-insights"
+          "name": "deploy-diagnostics-time-series-insights"
         },
         {
           "properties": {
@@ -18282,7 +18282,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-express-route')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-expressroute')]",
                 "policyDefinitionReferenceId": "ExpressRouteDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -18537,7 +18537,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-powerbi-embedded')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-power-bi-embedded')]",
                 "policyDefinitionReferenceId": "PowerBIEmbeddedDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -18642,7 +18642,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-signal-r')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-signalr')]",
                 "policyDefinitionReferenceId": "SignalRDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -18672,7 +18672,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-sql-dbs')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-sqldbs')]",
                 "policyDefinitionReferenceId": "SQLDBsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
