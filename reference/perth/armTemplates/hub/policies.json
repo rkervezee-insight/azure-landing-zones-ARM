@@ -14279,7 +14279,7 @@
               }
             }
           },
-          "name": "deny-appgw-without-waf"
+          "name": "deny-appgwy-without-waf"
         },
         {
           "properties": {
