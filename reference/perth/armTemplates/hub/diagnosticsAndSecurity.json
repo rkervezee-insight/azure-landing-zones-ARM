@@ -195,7 +195,7 @@
             "ascAutoProvision": "[take(concat('ascAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "activityLogs": "[take(concat('activityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "activityLogsSta": "[take(concat('activityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "ascConfig": "[take(concat('asc-config', deployment().location, deployment().name), 40)]"
+            "ascConfig": "[take(concat('ascConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -422,7 +422,7 @@
                         "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]"
                     },
                     "ascExportResourceGroupName": {
-                        "value": "[concat(parameters('companyPrefix'), '-asc-export')]"
+                        "value": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-ascexport'))]"
                     },
                     "ascExportResourceGroupLocation": {
                         "value": "[deployment().location]"
@@ -565,7 +565,6 @@
         },
         // Conditional deployment to invoke ASC Configuration deployment
         {
-
             "condition": "[and(not(empty(parameters('subscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
