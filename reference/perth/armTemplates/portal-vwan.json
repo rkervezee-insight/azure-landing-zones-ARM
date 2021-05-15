@@ -1745,7 +1745,7 @@
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
             "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
             "enableAscForSql": "[steps('esPlatformManagement').esAscSql]",
-            "enableAscForSqlOnVm": "[steps('esGoalState').esAscSqlOnVm]",
+            "enableAscForSqlOnVm": "[steps('esPlatformManagement').esAscSqlOnVm]",
             "enableAscForKeyVault": "[steps('esPlatformManagement').esAscKeyVault]",
             "enableAscForArm": "[steps('esPlatformManagement').esAscArm]",
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
