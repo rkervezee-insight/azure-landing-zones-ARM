@@ -582,6 +582,7 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'subscriptionSecurityConfig.json')]"
                 },
                 "parameters": {
+
                     "emailSecurityContact": {
                         "value": "[parameters('emailContactAsc')]"
                     },
