@@ -19124,7 +19124,7 @@
             },
             "PolicyDefinitions": [
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-Tde')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-tde')]",
                 "policyDefinitionReferenceId": "SqlDbTdeDeploySqlSecurity",
                 "parameters": {
                   "effect": {
@@ -19133,7 +19133,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-SecurityAlertPolicies')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-security-alert-policies')]",
                 "policyDefinitionReferenceId": "SqlDbSecurityAlertPoliciesDeploySqlSecurity",
                 "parameters": {
                   "effect": {
@@ -19142,7 +19142,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-AuditingSettings')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-auditing-Settings')]",
                 "policyDefinitionReferenceId": "SqlDbAuditingSettingsDeploySqlSecurity",
                 "parameters": {
                   "effect": {
@@ -19151,7 +19151,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-vulnerabilityAssessments')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-vulnerability-assessments')]",
                 "policyDefinitionReferenceId": "SqlDbVulnerabilityAssessmentsDeploySqlSecurity",
                 "parameters": {
                   "effect": {
