@@ -38,6 +38,10 @@
             "type": "string",
             "maxLength": 3
         },
+        "ddosPrefix": {
+            "type": "string",
+            "maxLength": 4
+        },
         "nsgPrefix": {
             "type": "string",
             "maxLength": 3
@@ -78,6 +82,17 @@
             ],
             "defaultValue": "Yes"
         },
+        "enableDdoS": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Select whether the DDoS Standard protection plan should be enabled or not."
+            }
+        },
         "enableAzFw": {
             "type": "string",
             "allowedValues": [
@@ -85,6 +100,14 @@
                 "No"
             ],
             "defaultValue": "Yes"
+        },
+        "enableAzFwDnsProxy": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
         },
         "enableVpnGw": {
             "type": "string",
@@ -182,11 +205,27 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-networking'), 64)]",
+        "deploymentNames": {
+            "hubNetwork": "[take(concat('hubNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "ddos": "[take(concat('ddosStandard', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+        },
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
         "resourceGroups": {
             "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-            "networkWatcher": "NetworkWatcherRG"
+            "networkWatcher": "NetworkWatcherRG",
+            "ddos": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-ddos'))]"
         },
+        "policyDefinitions": {
+            "ddosPolicyDefinition": "/providers/Microsoft.Authorization/policyDefinitions/94de2ad3-e0c1-4caf-ad78-5d47bbc83d3d"
+        },
+        "policyAssignmentNames": {
+            "deployDdos": "enable-ddos-vnet"
+        },
+        "roleAssignmentNames": {
+            "deployDdos": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployDdoS))]"
+        },
+        "rbacNetworkContributor": "4d97b98b-1d4f-4787-a291-c67834d212e7",
+        "ddosName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('ddosPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "azVnetCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "azVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('azVnetCidr')))]",
         "nwName": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
@@ -198,6 +237,7 @@
         "azErGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-002'))]",
         "azErGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/GatewaySubnet')]",
         "azErGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
+        "azFwPolicyName": "[toLower('parentpolicy')]",
         "azFwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-001'))]",
         "azFwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]",
         "azFwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
@@ -224,6 +264,15 @@
         "NsgId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
         "NsgName004": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
         "NsgId004": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName004'))]",
+        "azFirewallDnsSettings": {
+                "enableProxy": true
+        },
+        "ddosProtectionPlanId": {
+            "id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('dDoSName'))]"
+        },
+        "azFirewallPolicyId": {
+            "id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/firewallPolicies/', variables('azFwPolicyName'))]"
+        },
         "sku": {
             "0": {
                 "name": "Standard",
@@ -260,10 +309,107 @@
             "publicIpAddresses": "2020-05-01",
             "virtualNetworkGateways": "2020-05-01",
             "azureFirewalls": "2020-05-01",
-            "bastionHosts": "2020-05-01"
+            "bastionHosts": "2020-05-01",
+            "policyAssignments": "2020-03-01",
+            "roleAssignments": "2020-04-01-preview",
+            "ddosProtectionPlans": "2020-07-01"
         }
     },
     "resources": [
+                {
+            "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').deployDdos]",
+            "location": "[deployment().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "description": "[variables('policyAssignmentNames').deployDdos]",
+                "displayName": "[variables('policyAssignmentNames').deployDdos]",
+                "policyDefinitionId": "[variables('policyDefinitions').ddosPolicyDefinition]",
+                "parameters": {
+                    "ddosPlan": {
+                        "value": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('ddosName'))]"
+                    },
+                    "effect": {
+                        "value": "Modify"
+                    }
+                }
+            }
+        },
+        {
+            "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
+            "name": "[variables('roleAssignmentNames').deployDdoS]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/policyAssignments', variables('policyAssignmentNames').deployDdos)]"
+            ],
+            "properties": {
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbacNetworkContributor'))]",
+                "principalId": "[if(and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployDdos), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
+            }
+        },
+        {
+            // Conditionally enable DDoS Protection plan
+            "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "location": "[deployment().location]",
+            "name": "[variables('deploymentNames').ddos]",
+            "subscriptionId": "[parameters('subscriptionId')]",
+            "properties": {
+                "mode": "Incremental",
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Resources/resourceGroups",
+                            "apiVersion": "[variables('apiVersions').resourceGroups]",
+                            "location": "[deployment().location]",
+                            "name": "[variables('resourceGroups').ddos]",
+                            "tags": {
+                                "environment": "[variables('tags').environment]",
+                                "owner": "[variables('tags').owner]",
+                                "costCenter": "[variables('tags').costCenter]"
+                            },
+                            "properties": {}
+                        },
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "[variables('apiVersions').deployments]",
+                            "name": "[variables('deploymentNames').ddos]",
+                            "resourceGroup": "[variables('resourceGroups').ddos]",
+                            "dependsOn": [
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').ddos)]"
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        {
+                                            "type": "Microsoft.Network/ddosProtectionPlans",
+                                            "apiVersion": "[variables('apiVersions').ddosProtectionPlans]",
+                                            "name": "[variables('ddosName')]",
+                                            "location": "[parameters('location')]",
+                                            "properties": {}
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
         // Nested deployment for Azure Networking (Management Group Level)
         {
             "type": "Microsoft.Resources/deployments",
@@ -401,7 +547,9 @@
                                                     "addressPrefixes": [
                                                         "[parameters('addressPrefix')]"
                                                     ]
-                                                }
+                                                },
+                                                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
                                             },
                                             "resources": [
                                             ]
@@ -891,6 +1039,17 @@
                                                 "publicIPAddressVersion": "IPv4"
                                             }
                                         },
+                                        // Conditional deployment of Azure Firewall Policy
+                                        {
+                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
+                                            "type": "Microsoft.Network/firewallPolicies",
+                                            "apiVersion": "2020-11-01",
+                                            "name": "[variables('azFwPolicyName')]",
+                                            "location": "[parameters('location')]",
+                                            "properties": {
+                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('azFirewallDnsSettings'), json('null'))]"
+                                            }
+                                        },
                                         // Conditional deployment of Azure Firewall
                                         {
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
@@ -920,7 +1079,8 @@
                                                             }
                                                         }
                                                     }
-                                                ]
+                                                ],
+                                                "firewallPolicy": "[variables('azFirewallPolicyId')]"
                                             }
                                         },
                                         // Conditional deployment of Public IP for Azure Bastion   

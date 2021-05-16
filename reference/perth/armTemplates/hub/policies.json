@@ -14059,7 +14059,6 @@
           "name": "deploy-firewall-policy"
         },
         {
-          "name": "deny-rdp-from-internet",
           "properties": {
             "displayName": "Deny RDP From the Internet",
             "description": "This policy denies any network security rule that allows RDP access from Internet",
@@ -14170,10 +14169,10 @@
                 "effect": "[[parameters('effect')]"
               }
             }
-          }
+          },
+          "name": "deny-rdp-from-internet"
         },
         {
-          "Name": "append-az-hub",
           "Properties": {
             "DisplayName": "Append Azure Hybrid Use Benefits to VMs",
             "Description": "Append Azure Hybrid Use Benefits licensing to all Windows VMs",
@@ -14235,7 +14234,8 @@
                 ]
               }
             }
-          }
+          },
+          "name": "append-az-hub"
         },
         {
           "properties": {

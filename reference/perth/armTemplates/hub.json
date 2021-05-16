@@ -114,6 +114,13 @@
                 "description": "Provide the Azure Bastion prefix"
             }
         },
+        "ddosPrefix": {
+            "type": "string",
+            "maxLength": 4,
+            "metadata": {
+                "description": "Provide the Azure DDoS Protection prefix"
+            }
+        },
         "subscriptionTag": {
             "type": "string",
             "defaultValue": "",
@@ -425,6 +432,14 @@
             ],
             "defaultValue": "Yes"
         },
+        "enableDdoS": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "enablePrivateDnsZones": {
             "type": "string",
             "allowedValues": [
@@ -480,6 +495,14 @@
                 "No"
             ],
             "defaultValue": "Yes"
+        },
+        "enableAzFwDnsProxy": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
         },
         "enableVpnGw": {
             "type": "string",
@@ -1206,6 +1229,9 @@
                     "basPrefix": {
                         "value": "[parameters('basPrefix')]"
                     },
+                    "ddosPrefix": {
+                        "value": "[parameters('DdosPrefix')]"
+                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },
@@ -1218,6 +1244,9 @@
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
                     },
+                    "enableDdoS": {
+                        "value": "[parameters('enableDdoS')]"
+                    },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
                     },
@@ -1226,6 +1255,9 @@
                     },
                     "firewallZones": {
                         "value": "[parameters('firewallZones')]"
+                    },
+                    "enableAzFwDnsProxy": {
+                        "value": "[parameters('enableAzFwDnsProxy')]"
                     },
                     "addressPrefix": {
                         "value": "[parameters('addressPrefix')]"

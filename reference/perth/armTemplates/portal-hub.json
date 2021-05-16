@@ -238,6 +238,18 @@
                         }
                     },
                     {
+                        "name": "esDdosIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure DDoS Protection Identifier",
+                        "toolTip": "Provide a value for the Azure DDoS Protection Identifier",
+                        "defaultValue": "ddos",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{4}$",
+                            "validationMessage": "The prefix must be 4 characters."
+                        }
+                    },
+                    {
                         "name": "text3",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
@@ -1100,6 +1112,26 @@
                         }
                     },
                     {
+                        "name": "esDdoS",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable DDoS Protection Standard",
+                        "defaultValue": "No",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]",
+                        "toolTip": "If 'Yes' is selected when also adding a platform subscription, DDoS Protection Standard will be enabled.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "esEnablePrivateDnsZones",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Private DNS Zones",
@@ -1325,6 +1357,26 @@
                         "defaultValue": "Yes",
                         "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
                         "toolTip": "If 'Yes' is selected, an Azure Firewall will be deployed.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esAzFwDns",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable Azure Firewall as a DNS proxy",
+                        "defaultValue": "No",
+                        "visible": "[equals(steps('esPlatformConnectivity').esAzFw,'Yes')]",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will enable Azure Firewall as a DNS Proxy.",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1910,6 +1962,7 @@
             "akvPrefix": "[steps('esNaming').esAkvIdentifier]",
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
             "basPrefix": "[steps('esNaming').esBasIdentifier]",
+            "ddosPrefix": "[steps('esNaming').esDdosIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
@@ -1952,8 +2005,10 @@
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "vpnOrErZones": "[steps('esPlatformConnectivity').esGwOrErAz]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
+            "enableDdoS": "[steps('esPlatformConnectivity').esDdoS]",
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
