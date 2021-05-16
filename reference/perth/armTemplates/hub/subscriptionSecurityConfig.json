@@ -6,6 +6,18 @@
             "type": "string",
             "maxLength": 5
         },
+        "locationPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "environmentPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
+        "argPrefix": {
+            "type": "string",
+            "maxLength": 3
+        },
         "emailSecurityContact": {
             "type": "string",
             "metadata": {
@@ -145,11 +157,20 @@
         "guidValue": {
             "type": "string",
             "defaultValue": "[newGuid()]"
+        },
+        "subscriptionTag": {
+            "type": "string"
+        },
+        "ownerTag": {
+            "type": "string"
+        },
+        "costCenterTag": {
+            "type": "string"
         }
     },
     "variables": {
-        "resourceGroupName": "[concat(parameters('companyPrefix'), '-asc-export')]",
-        "resourceGroupLocation": "[deployment().location]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-ascexport'))]",
         "exportedDataTypes": "[createArray('Security recommendations', 'Security alerts', 'Overall secure score', 'Secure score controls', 'Regulatory compliance', 'Overall secure score - snapshot', 'Secure score controls - snapshot', 'Regulatory compliance - snapshot')]",
         "isSecurityFindingsEnabled": true,
         "recommendationNames": "[createArray()]",
@@ -157,8 +178,6 @@
         "alertSeverities": "[createArray('High', 'Medium', 'Low')]",
         "secureScoreControlsNames": "[createArray()]",
         "regulatoryComplianceStandardsNames": "[createArray()]",
-
-
         "scopeDescription": "scope for subscription {0}",
         "subAssessmentRuleExpectedValue": "/assessments/{0}/",
         "recommendationNamesLength": "[length(variables('recommendationNames'))]",
@@ -175,6 +194,18 @@
         "totalRuleCombinationsForOneRecommendationSeverity": 1,
         "exportedDataTypesLength": "[length(variables('exportedDataTypes'))]",
         "exportedDataTypesLengthIfEmpty": "[if(equals(variables('exportedDataTypesLength'), 0), 1, variables('exportedDataTypesLength'))]",
+        "apiVersions": {
+            "deployments": "2020-06-01",
+            "resourceGroups": "2020-06-01",
+            "securityAutomations": "2019-01-01-preview",
+            "securityContacts": "2020-01-01-preview",
+            "securityPricing": "2018-06-01"
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
+        },
         "dataTypeMap": {
             "Security recommendations": "Assessments",
             "Security alerts": "Alerts",
@@ -323,7 +354,7 @@
     "resources": [
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "VirtualMachines",
             "properties": {
                 "pricingTier": "[parameters('pricingTierVMs')]"
@@ -331,7 +362,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "SqlServers",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/VirtualMachines')]"
@@ -342,7 +373,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "AppServices",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/SqlServers')]"
@@ -353,7 +384,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "StorageAccounts",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/AppServices')]"
@@ -364,7 +395,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "SqlServerVirtualMachines",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/StorageAccounts')]"
@@ -375,7 +406,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "KubernetesService",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/SqlServerVirtualMachines')]"
@@ -386,7 +417,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "ContainerRegistry",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/KubernetesService')]"
@@ -397,7 +428,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "KeyVaults",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/ContainerRegistry')]"
@@ -408,7 +439,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "Dns",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/KeyVaults')]"
@@ -419,7 +450,7 @@
         },
         {
             "type": "Microsoft.Security/pricings",
-            "apiVersion": "2018-06-01",
+            "apiVersion": "[variables('apiVersions').securityPricing]",
             "name": "Arm",
             "dependsOn": [
                 "[concat('Microsoft.Security/pricings/Dns')]"
@@ -432,7 +463,7 @@
             "condition": "[not(empty(parameters('emailSecurityContact')))]",
             "type": "Microsoft.Security/securityContacts",
             "name": "default",
-            "apiVersion": "2020-01-01-preview",
+            "apiVersion": "[variables('apiVersions').securityContacts]",
             "properties": {
                 "emails": "[parameters('emailSecurityContact')]",
                 "notificationsByRole": {
@@ -448,17 +479,21 @@
             }
         },
         {
-            "name": "[variables('resourceGroupName')]",
             "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2019-10-01",
-            "location": "[variables('resourceGroupLocation')]",
-            "tags": {},
+            "apiVersion": "[variables('apiVersions').resourceGroups]",
+            "name": "[variables('resourceGroupName')]",
+            "location": "[deployment().location]",
+            "tags": {
+                "environment": "[variables('tags').environment]",
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
+            },
             "properties": {}
         },
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2019-10-01",
-            "name": "[concat('nestedAutomationDeployment', '_', parameters('guidValue'))]",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "[concat('nestedAutomationDeployment', '-', parameters('guidValue'))]",
             "resourceGroup": "[variables('resourceGroupName')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/resourceGroups/', variables('resourceGroupName'))]"
@@ -472,12 +507,10 @@
                     "variables": {},
                     "resources": [
                         {
-                            "tags": {},
-                            "apiVersion": "2019-01-01-preview",
-                            "location": "[variables('resourceGroupLocation')]",
-                            "name": "ExportToWorkspace",
                             "type": "Microsoft.Security/automations",
-                            "dependsOn": [],
+                            "apiVersion": "[variables('apiVersions').securityAutomations]",
+                            "location": "[deployment().location]",
+                            "name": "ExportToWorkspace",
                             "properties": {
                                 "description": "Export Azure Security Center data to Log Analytics workspace via policy",
                                 "isEnabled": true,

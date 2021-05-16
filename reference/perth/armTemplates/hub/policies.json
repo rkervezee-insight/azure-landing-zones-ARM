@@ -12447,7 +12447,7 @@
               }
             }
           },
-          "name": "Deploy-windows-domain-join"
+          "name": "deploy-windows-domain-join"
         },
         {
           "properties": {
@@ -12491,7 +12491,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-sql"
+          "name": "deny-public-endpoint-sql"
         },
         {
           "properties": {
@@ -12535,7 +12535,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-storage"
+          "name": "deny-public-endpoint-storage"
         },
         {
           "properties": {
@@ -12579,7 +12579,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-postgresql"
+          "name": "deny-public-endpoint-postgresql"
         },
         {
           "properties": {
@@ -12623,7 +12623,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-mysql"
+          "name": "deny-public-endpoint-mysql"
         },
         {
           "properties": {
@@ -12667,7 +12667,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-mariadb"
+          "name": "deny-public-endpoint-mariadb"
         },
         {
           "properties": {
@@ -12711,7 +12711,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-aks"
+          "name": "deny-public-endpoint-aks"
         },
         {
           "properties": {
@@ -12755,7 +12755,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-key-vault"
+          "name": "deny-public-endpoint-key-vault"
         },
         {
           "properties": {
@@ -12799,7 +12799,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-Cosmosdb"
+          "name": "deny-public-endpoint-cosmosdb"
         },
         {
           "properties": {
@@ -14283,481 +14283,6 @@
         },
         {
           "properties": {
-            "Description": "Deploys Azure Security Center Email Contact details.",
-            "DisplayName": "Deploy Azure Security Center Email Contacts",
-            "Mode": "All",
-            "parameters": {
-              "emailSecurityContact": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "emailSecurityContact",
-                  "description": "email address to send ASC alerts"
-                },
-                "defaultValue": "stephen.tulp@outlook.com"
-              },
-              "alertNotifications": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Alert Notifications On or Off",
-                  "description": "Set alert notifications on or off"
-                },
-                "defaultValue": "On"
-              },
-              "alertsToAdmins": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Send alerts to admins, On or Off",
-                  "description": "Set sending alerts to admins On or Off"
-                },
-                "defaultValue": "On"
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Security Center"
-            },
-            "policyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.Resources/subscriptions"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "deployIfNotExists",
-                "details": {
-                  "deploymentScope": "subscription",
-                  "existenceScope": "subscription",
-                  "type": "Microsoft.Security/securityContacts",
-                  "existenceCondition": {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Security/securityContacts/email",
-                        "equals": "[[parameters ('emailSecurityContact')]"
-                      }
-                    ]
-                  },
-                  "roleDefinitionIds": [
-                    "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
-                  ],
-                  "deployment": {
-                    "location": "westus",
-                    "properties": {
-                      "mode": "incremental",
-                      "template": {
-                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                          "emailSecurityContact": {
-                            "type": "string"
-                          },
-                          "alertNotifications": {
-                            "type": "string"
-                          },
-                          "alertsToAdmins": {
-                            "type": "string"
-                          }
-                        },
-                        "variables": {},
-                        "resources": [
-                          {
-                            "type": "Microsoft.Security/securityContacts",
-                            "name": "default1",
-                            "apiVersion": "2017-08-01-preview",
-                            "properties": {
-                              "email": "[[parameters('emailSecurityContact')]",
-                              "alertNotifications": "[[parameters('alertNotifications')]",
-                              "alertsToAdmins": "[[parameters('alertsToAdmins')]"
-                            }
-                          }
-                        ],
-                        "outputs": {}
-                      },
-                      "parameters": {
-                        "emailSecurityContact": {
-                          "value": "[[parameters('emailSecurityContact')]"
-                        },
-                        "alertNotifications": {
-                          "value": "[[parameters('alertNotifications')]"
-                        },
-                        "alertsToAdmins": {
-                          "value": "[[parameters('alertsToAdmins')]"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "name": "deploy-asc-email-contact"
-        },
-        {
-          "properties": {
-            "Description": "Deploy Azure Defender settings in Azure Security Center for the specific services.",
-            "DisplayName": "Deploy Azure Defender settings in Azure Security Center",
-            "Mode": "Indexed",
-            "Parameters": {
-              "pricingTierVMs": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierVMs",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierSqlServers": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierSqlServers",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierAppServices": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierAppServices",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierStorageAccounts": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierStorageAccounts",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierContainerRegistry": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierContainerRegistry",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierKeyVaults": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierKeyVaults",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierKubernetesService": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierKubernetesService",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierDns": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierDns",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierArm": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierArm",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "effect": {
-                "type": "string",
-                "defaultValue": "DeployIfNotExists",
-                "allowedValues": [
-                  "DeployIfNotExists",
-                  "Disabled"
-                ],
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Security Center"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.Resources/subscriptions"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]",
-                "details": {
-                  "type": "Microsoft.Security/pricings",
-                  "deploymentScope": "subscription",
-                  "existenceScope": "subscription",
-                  "roleDefinitionIds": [
-                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                  ],
-                  "existenceCondition": {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Security/pricings/pricingTier",
-                        "equals": "Standard"
-                      },
-                      {
-                        "field": "type",
-                        "equals": "Microsoft.Security/pricings"
-                      }
-                    ]
-                  },
-                  "deployment": {
-                    "location": "northeurope",
-                    "properties": {
-                      "mode": "incremental",
-                      "parameters": {
-                        "pricingTierVMs": {
-                          "value": "[[parameters('pricingTierVMs')]"
-                        },
-                        "pricingTierSqlServers": {
-                          "value": "[[parameters('pricingTierSqlServers')]"
-                        },
-                        "pricingTierAppServices": {
-                          "value": "[[parameters('pricingTierAppServices')]"
-                        },
-                        "pricingTierStorageAccounts": {
-                          "value": "[[parameters('pricingTierStorageAccounts')]"
-                        },
-                        "pricingTierContainerRegistry": {
-                          "value": "[[parameters('pricingTierContainerRegistry')]"
-                        },
-                        "pricingTierKeyVaults": {
-                          "value": "[[parameters('pricingTierKeyVaults')]"
-                        },
-                        "pricingTierKubernetesService": {
-                          "value": "[[parameters('pricingTierKubernetesService')]"
-                        },
-                        "pricingTierDns": {
-                          "value": "[[parameters('pricingTierDns')]"
-                        },
-                        "pricingTierArm": {
-                          "value": "[[parameters('pricingTierArm')]"
-                        }
-                      },
-                      "template": {
-                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                          "pricingTierVMs": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierVMs"
-                            }
-                          },
-                          "pricingTierSqlServers": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierSqlServers"
-                            }
-                          },
-                          "pricingTierAppServices": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierAppServices"
-                            }
-                          },
-                          "pricingTierStorageAccounts": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierStorageAccounts"
-                            }
-                          },
-                          "pricingTierContainerRegistry": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "ContainerRegistry"
-                            }
-                          },
-                          "pricingTierKeyVaults": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KeyVaults"
-                            }
-                          },
-                          "pricingTierKubernetesService": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KubernetesService"
-                            }
-                          },
-                          "pricingTierDns": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KubernetesService"
-                            }
-                          },
-                          "pricingTierArm": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KubernetesService"
-                            }
-                          }
-                        },
-                        "variables": {},
-                        "resources": [
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "VirtualMachines",
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierVMs')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "StorageAccounts",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/VirtualMachines')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierStorageAccounts')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "AppServices",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/StorageAccounts')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierAppServices')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "SqlServers",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/AppServices')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierSqlServers')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "KeyVaults",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/SqlServers')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierKeyVaults')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "KubernetesService",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/KeyVaults')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierKubernetesService')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "ContainerRegistry",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/KubernetesService')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierContainerRegistry')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "Dns",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/ContainerRegistry')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierDns')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "Arm",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/Dns')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierArm')]"
-                            }
-                          }
-                        ],
-                        "outputs": {}
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "name": "deploy-asc-pricing"
-        },
-        {
-          "properties": {
             "Description": "Deploys the configurations of a Private DNS Zone Group by a parameter for Storage-Blob Private Endpoint. Used enforce the configuration to a single Private DNS Zone. ",
             "DisplayName": "Deploy DNS Zone Group for Storage-Blob Private Endpoint",
             "Mode": "Indexed",
@@ -15569,1195 +15094,1195 @@
           },
           "name": "deploy-vwan"
         },
-                  {
-            "properties": {
-              "description": "Deploy Azure Security Center Security Contacts",
-              "displayName": "Deploy Azure Security Center Security Contacts",
-              "mode": "All",
-              "parameters": {
-                "emailSecurityContact": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Security contacts email address",
-                    "description": "Provide email address for Azure Security Center contact details"
-                  }
-                },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+        {
+          "properties": {
+            "description": "Deploy Azure Security Center Security Contacts",
+            "displayName": "Deploy Azure Security Center Security Contacts",
+            "mode": "All",
+            "parameters": {
+              "emailSecurityContact": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Security contacts email address",
+                  "description": "Provide email address for Azure Security Center contact details"
                 }
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/securityContacts",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/securityContacts/email",
-                          "contains": "[[parameters('emailSecurityContact')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/securityContacts"
-                        },
-                        {
-                          "field": "Microsoft.Security/securityContacts/alertNotifications",
-                          "equals": "On"
-                        },
-                        {
-                          "field": "Microsoft.Security/securityContacts/alertsToAdmins",
-                          "equals": "On"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/securityContacts",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/securityContacts/email",
+                        "contains": "[[parameters('emailSecurityContact')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/securityContacts"
+                      },
+                      {
+                        "field": "Microsoft.Security/securityContacts/alertNotifications",
+                        "equals": "On"
+                      },
+                      {
+                        "field": "Microsoft.Security/securityContacts/alertsToAdmins",
+                        "equals": "On"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "emailSecurityContact": {
+                          "value": "[[parameters('emailSecurityContact')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "emailSecurityContact": {
-                            "value": "[[parameters('emailSecurityContact')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Security contacts email address"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "emailSecurityContact": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Security contacts email address"
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/securityContacts",
+                            "name": "default",
+                            "apiVersion": "2020-01-01-preview",
+                            "properties": {
+                              "emails": "[[parameters('emailSecurityContact')]",
+                              "notificationsByRole": {
+                                "state": "On",
+                                "roles": [
+                                  "Owner"
+                                ]
+                              },
+                              "alertNotifications": {
+                                "state": "On",
+                                "minimalSeverity": "High"
                               }
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/securityContacts",
-                              "name": "default",
-                              "apiVersion": "2020-01-01-preview",
-                              "properties": {
-                                "emails": "[[parameters('emailSecurityContact')]",
-                                "notificationsByRole": {
-                                  "state": "On",
-                                  "roles": [
-                                    "Owner"
-                                  ]
-                                },
-                                "alertNotifications": {
-                                  "state": "On",
-                                  "minimalSeverity": "High"
-                                }
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-SecurityContacts"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings in Azure Security Center for Virtual Machines",
-              "displayName": "Deploy Azure Defender for Virtual Machines",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-security-contacts"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Virtual Machines",
+            "displayName": "Deploy Azure Defender for Virtual Machines",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "VirtualMachines",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "VirtualMachines",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "VirtualMachines",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "VirtualMachines",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-VMs"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings in Azure Security Center for Azure Sql Databases",
-              "displayName": "Deploy Azure Defender for Azure Sql Databases",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-vms"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Azure Sql Databases",
+            "displayName": "Deploy Azure Defender for Azure Sql Databases",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "SqlServers",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "SqlServers",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "SqlServers",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "SqlServers",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-Sql"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings in Azure Security Center for Azure App Services",
-              "displayName": "Deploy Azure Defender for Azure App Services",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-sql"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Azure App Services",
+            "displayName": "Deploy Azure Defender for Azure App Services",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "AppServices",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "AppServices",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "AppServices",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "AppServices",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-AppSrv"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings in Azure Security Center for Storage Accounts",
-              "displayName": "Deploy Azure Defender for Storage Accounts",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-appservice"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Storage Accounts",
+            "displayName": "Deploy Azure Defender for Storage Accounts",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "StorageAccounts",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "StorageAccounts",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "StorageAccounts",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "StorageAccounts",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-SA"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings in Sql Server on Virtual Machines",
-              "displayName": "Deploy Azure Defender for Sql on Virtual Machines",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-sa"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Sql Server on Virtual Machines",
+            "displayName": "Deploy Azure Defender for Sql on Virtual Machines",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "SqlServerVirtualMachines",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "SqlServerVirtualMachines",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "SqlServerVirtualMachines",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "SqlServerVirtualMachines",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-SQLVM"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings for AKS",
-              "displayName": "Deploy Azure Defender for AKS",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-sqlvm"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for AKS",
+            "displayName": "Deploy Azure Defender for AKS",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "KubernetesService",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "KubernetesService",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "KubernetesService",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "KubernetesService",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-AKS"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings for Azure Container Registry",
-              "displayName": "Deploy Azure Defender for ACR",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-aks"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for Azure Container Registry",
+            "displayName": "Deploy Azure Defender for ACR",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "ContainerRegistry",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "ContainerRegistry",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "ContainerRegistry",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "ContainerRegistry",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-ACR"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings for Azure Key Vault",
-              "displayName": "Deploy Azure Defender for AKV",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-acr"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for Azure Key Vault",
+            "displayName": "Deploy Azure Defender for AKV",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "KeyVaults",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "KeyVaults",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "KeyVaults",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "KeyVaults",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-AKV"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings for DNS",
-              "displayName": "Deploy Azure Defender for DNS",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-akv"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for DNS",
+            "displayName": "Deploy Azure Defender for DNS",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "Dns",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "Dns",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "Dns",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "Dns",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-DNS"
+            }
           },
-          {
-            "properties": {
-              "description": "Deploy the Azure Defender settings for Azure Resource Manager",
-              "displayName": "Deploy Azure Defender for ARM",
-              "mode": "All",
-              "parameters": {
-                "pricingTier": {
-                  "type": "string",
-                  "metadata": {
-                    "displayName": "Azure Defender pricing tier",
-                    "description": "Azure Defender pricing tier"
-                  },
-                  "allowedValues": [
-                    "Standard",
-                    "Free"
-                  ],
-                  "defaultValue": "Standard"
+          "name": "deploy-asc-defender-dns"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for Azure Resource Manager",
+            "displayName": "Deploy Azure Defender for ARM",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
                 },
-                "effect": {
-                  "type": "string",
-                  "defaultValue": "DeployIfNotExists",
-                  "allowedValues": [
-                    "DeployIfNotExists",
-                    "Disabled"
-                  ],
-                  "metadata": {
-                    "displayName": "Effect",
-                    "description": "Enable or disable the execution of the policy"
-                  }
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
                 }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
               },
-              "metadata": {
-                "version": "1.0.0",
-                "category": "Security Center"
-              },
-              "policyRule": {
-                "if": {
-                  "allOf": [
-                    {
-                      "field": "type",
-                      "equals": "Microsoft.Resources/subscriptions"
-                    }
-                  ]
-                },
-                "then": {
-                  "effect": "[[parameters('effect')]",
-                  "details": {
-                    "type": "Microsoft.Security/pricings",
-                    "name": "Arm",
-                    "deploymentScope": "Subscription",
-                    "existenceScope": "Subscription",
-                    "roleDefinitionIds": [
-                      "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                    ],
-                    "existenceCondition": {
-                      "allOf": [
-                        {
-                          "field": "Microsoft.Security/pricings/pricingTier",
-                          "equals": "[[parameters('pricingTier')]"
-                        },
-                        {
-                          "field": "type",
-                          "equals": "Microsoft.Security/pricings"
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "Arm",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
                         }
-                      ]
-                    },
-                    "deployment": {
-                      "location": "northeurope",
-                      "properties": {
-                        "mode": "incremental",
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
                         "parameters": {
                           "pricingTier": {
-                            "value": "[[parameters('pricingTier')]"
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
                           }
                         },
-                        "template": {
-                          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                          "contentVersion": "1.0.0.0",
-                          "parameters": {
-                            "pricingTier": {
-                              "type": "string",
-                              "metadata": {
-                                "description": "Azure Defender pricing tier"
-                              }
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "Arm",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
                             }
-                          },
-                          "variables": {},
-                          "resources": [
-                            {
-                              "type": "Microsoft.Security/pricings",
-                              "apiVersion": "2018-06-01",
-                              "name": "Arm",
-                              "properties": {
-                                "pricingTier": "[[parameters('pricingTier')]"
-                              }
-                            }
-                          ],
-                          "outputs": {}
-                        }
+                          }
+                        ],
+                        "outputs": {}
                       }
                     }
                   }
                 }
               }
-            },
-            "name": "Deploy-ASC-Defender-ARM"
-          }
+            }
+          },
+          "name": "deploy-asc-defender-arm"
+        }
       ]
     },
     "initiatives": {
@@ -16923,7 +16448,7 @@
             },
             "PolicyDefinitions": [
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-VMs')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-vms')]",
                 "policyDefinitionReferenceId": "defenderForVM",
                 "parameters": {
                   "pricingTier": {
@@ -16932,7 +16457,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-Sql')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-Sql')]",
                 "policyDefinitionReferenceId": "defenderForSqlServers",
                 "parameters": {
                   "pricingTier": {
@@ -16941,7 +16466,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-AppSrv')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-appservice')]",
                 "policyDefinitionReferenceId": "defenderForAppServices",
                 "parameters": {
                   "pricingTier": {
@@ -16950,7 +16475,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-SA')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-sa')]",
                 "policyDefinitionReferenceId": "defenderForStorageAccounts",
                 "parameters": {
                   "pricingTier": {
@@ -16959,7 +16484,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-SQLVM')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-sqlvm')]",
                 "policyDefinitionReferenceId": "defenderForSqlServerVirtualMachines",
                 "parameters": {
                   "pricingTier": {
@@ -16968,7 +16493,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-AKS')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-aks')]",
                 "policyDefinitionReferenceId": "defenderForKubernetesService",
                 "parameters": {
                   "pricingTier": {
@@ -16977,7 +16502,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-ACR')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-acr')]",
                 "policyDefinitionReferenceId": "defenderForContainerRegistry",
                 "parameters": {
                   "pricingTier": {
@@ -16986,7 +16511,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-AKV')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-akv')]",
                 "policyDefinitionReferenceId": "defenderForKeyVaults",
                 "parameters": {
                   "pricingTier": {
@@ -16995,7 +16520,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-DNS')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-dns')]",
                 "policyDefinitionReferenceId": "defenderForDns",
                 "parameters": {
                   "pricingTier": {
@@ -17004,7 +16529,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-ARM')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-arm')]",
                 "policyDefinitionReferenceId": "defenderForArm",
                 "parameters": {
                   "pricingTier": {
@@ -17013,7 +16538,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-SecurityContacts')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-security-contacts')]",
                 "policyDefinitionReferenceId": "securityEmailContact",
                 "parameters": {
                   "emailSecurityContact": {
@@ -18973,7 +18498,7 @@
             },
             "PolicyDefinitions": [
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-CosmosDB')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-cosmosdb')]",
                 "policyDefinitionReferenceId": "CosmosDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -18982,7 +18507,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-MariaDB')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-mariadb')]",
                 "policyDefinitionReferenceId": "MariaDBDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -18991,7 +18516,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-MySQL')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-mysql')]",
                 "policyDefinitionReferenceId": "MySQLDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -19000,7 +18525,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-PostgreSql')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-postgresql')]",
                 "policyDefinitionReferenceId": "PostgreSQLDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -19009,7 +18534,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-KeyVault')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-keyvault')]",
                 "policyDefinitionReferenceId": "KeyVaultDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -19018,7 +18543,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-Sql')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-sql')]",
                 "policyDefinitionReferenceId": "SqlServerDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -19027,7 +18552,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-Storage')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-storage')]",
                 "policyDefinitionReferenceId": "StorageDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -19036,7 +18561,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-Aks')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-publicendpoint-aks')]",
                 "policyDefinitionReferenceId": "AKSDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -19052,7 +18577,7 @@
         {
           "properties": {
             "Description": "Deploy auditing, Alert, TDE and SQL vulnerability to SQL Databases when it not exist in the deployment",
-            "DisplayName": "Deploy SQL Database built-in SQL security configuration",
+            "DisplayName": "Deploy SQL Database security configuration",
             "Parameters": {
               "vulnerabilityAssessmentsEmail": {
                 "metadata": {
