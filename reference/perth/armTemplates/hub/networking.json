@@ -6,11 +6,11 @@
             "type": "string",
             "maxLength": 5
         },
-        "locationPrefix": {
+        "environmentPrefix": {
             "type": "string",
             "maxLength": 3
         },
-        "environmentPrefix": {
+        "locationPrefix": {
             "type": "string",
             "maxLength": 3
         },
@@ -316,7 +316,7 @@
         }
     },
     "resources": [
-                {
+        {
             "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
