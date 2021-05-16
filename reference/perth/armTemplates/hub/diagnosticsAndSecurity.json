@@ -141,6 +141,27 @@
                 "Yes",
                 "No"
             ]
+        },
+        "subscriptionTag": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Provide the value for the environment tag"
+            }
+        },
+        "ownerTag": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Provide the value for the owner tag"
+            }
+        },
+        "costCenterTag": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Provide the value for the cost center tag"
+            }
         }
     },
     "variables": {
@@ -581,7 +602,18 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'subscriptionSecurityConfig.json')]"
                 },
                 "parameters": {
-
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "locationPrefix": {
+                        "value": "[parameters('locationPrefix')]"
+                    },
+                    "environmentPrefix": {
+                        "value": "[parameters('environmentPrefix')]"
+                    },
+                    "argPrefix": {
+                        "value": "[parameters('argPrefix')]"
+                    },
                     "emailSecurityContact": {
                         "value": "[parameters('emailContactAsc')]"
                     },
@@ -615,11 +647,17 @@
                     "pricingTierArm": {
                         "value": "[parameters('enableAscForArm')]"
                     },
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
                     "workspaceResourceId": {
                         "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }

@@ -1174,6 +1174,15 @@
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
