@@ -509,7 +509,8 @@
                             "name": "[variables('deploymentNames').hubNetwork]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]",
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').ddos)]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
