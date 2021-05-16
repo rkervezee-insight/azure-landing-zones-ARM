@@ -509,8 +509,7 @@
                             "name": "[variables('deploymentNames').hubNetwork]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]",
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').ddos)]"
+                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
@@ -541,8 +540,7 @@
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName003'))]",
                                                 "[concat('Microsoft.Network/routeTables/', variables('udrName001'))]",
                                                 "[concat('Microsoft.Network/routeTables/', variables('UdrName002'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('UdrName003'))]",
-                                                "[concat('Microsoft.Network/ddosProtectionPlans/', variables('dDoSName'))]"
+                                                "[concat('Microsoft.Network/routeTables/', variables('UdrName003'))]"
                                             ],
                                             "properties": {
                                                 "addressSpace": {
