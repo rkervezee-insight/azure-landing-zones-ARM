@@ -540,7 +540,8 @@
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName003'))]",
                                                 "[concat('Microsoft.Network/routeTables/', variables('udrName001'))]",
                                                 "[concat('Microsoft.Network/routeTables/', variables('UdrName002'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('UdrName003'))]"
+                                                "[concat('Microsoft.Network/routeTables/', variables('UdrName003'))]",
+                                                "[concat('Microsoft.Network/ddosProtectionPlans/', variables('dDoSName'))]"
                                             ],
                                             "properties": {
                                                 "addressSpace": {
