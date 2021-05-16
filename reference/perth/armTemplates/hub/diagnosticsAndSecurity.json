@@ -6,11 +6,11 @@
             "type": "string",
             "maxLength": 5
         },
-        "locationPrefix": {
+        "environmentPrefix": {
             "type": "string",
             "maxLength": 3
         },
-        "environmentPrefix": {
+        "locationPrefix": {
             "type": "string",
             "maxLength": 3
         },
