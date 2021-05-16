@@ -204,10 +204,10 @@
         }
     },
     "variables": {
-        "deploymentName": "[take(concat(deployment().name, '-networking'), 64)]",
         "deploymentNames": {
             "hubNetwork": "[take(concat('hubNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "ddos": "[take(concat('ddosStandard', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "ddos": "[take(concat('ddosStandard', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
         "resourceGroups": {
@@ -414,7 +414,7 @@
         {
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentName')]",
+            "name": "[variables('deploymentNames').hubNetwork]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
@@ -465,7 +465,7 @@
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentName')]",
+                            "name": "[variables('deploymentNames').networkWatcher]",
                             "resourceGroup": "[variables('resourceGroups').networkWatcher]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networkWatcher)]"
@@ -506,7 +506,7 @@
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentName')]",
+                            "name": "[variables('deploymentNames').hubNetwork]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
