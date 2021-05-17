@@ -264,6 +264,22 @@
         "NsgId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
         "NsgName004": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
         "NsgId004": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName004'))]",
+        "gwSubnet": [
+            {
+                "name": "GatewaySubnet",
+                "properties": {
+                    "addressPrefix": "[parameters('subnetMaskForGw')]"
+                }
+            }
+        ],
+        "fwSubnet": [
+            {
+                "name": "AzureFirewallSubnet",
+                "properties": {
+                    "addressPrefix": "[parameters('subnetMaskForAzFw')]"
+                }
+            }
+        ],
         "azFirewallDnsSettings": {
                 "enableProxy": true
         },
@@ -412,10 +428,14 @@
         },
         // Nested deployment for Azure Networking (Management Group Level)
         {
+            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').hubNetwork]",
             "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddos)]"
+            ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "Incremental",
@@ -424,17 +444,6 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        {
-                            "type": "Microsoft.Resources/tags",
-                            "name": "default",
-                            "apiVersion": "2019-10-01",
-                            "dependsOn": [],
-                            "properties": {
-                                "tags": {
-                                    "owner": "[variables('tags').owner]"
-                                }
-                            }
-                        },
                         {
                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
@@ -547,7 +556,9 @@
                                                     "addressPrefixes": [
                                                         "[parameters('addressPrefix')]"
                                                     ]
-                                                }
+                                                },
+                                                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
                                             },
                                             "resources": [
                                             ]
