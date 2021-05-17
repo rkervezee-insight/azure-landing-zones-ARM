@@ -547,9 +547,7 @@
                                                     "addressPrefixes": [
                                                         "[parameters('addressPrefix')]"
                                                     ]
-                                                },
-                                                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
+                                                }
                                             },
                                             "resources": [
                                             ]
