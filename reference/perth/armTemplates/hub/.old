@@ -282,22 +282,6 @@
         "identityNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
         "identityUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('identitySubnet')))]",
         "identityUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('identityUdr'))]",
-        "gatewaySubnet": [
-            {
-                "name": "GatewaySubnet",
-                "properties": {
-                    "addressPrefix": "[parameters('subnetMaskForGw')]"
-                }
-            }
-        ],
-        "firewallSubnet": [
-            {
-                "name": "AzureFirewallSubnet",
-                "properties": {
-                    "addressPrefix": "[parameters('subnetMaskForAzFw')]"
-                }
-            }
-        ],
         "azFirewallDnsSettings": {
             "enableProxy": true
         },
@@ -552,18 +536,36 @@
                                                     "addressPrefixes": [
                                                         "[parameters('addressPrefix')]"
                                                     ]
-                                                },
-                                                "subnets": "[
-                                                             union(
-                                                                  if(
-                                                                      not(
-                                                                          empty(parameters('subnetMaskForGw'))), variables('gatewaySubnet'), json('[]')), 
-                                                                          if(
-                                                                              not(
-                                                                                  empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')))]"
+                                                }
                                             },
                                             "resources": [
                                             ]
+                                        },
+                                        // Conditional deployment of Gateway Subnet
+                                        {
+                                            "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('vnetName'), '/', 'GatewaySubnet')]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForGw')]"
+                                            }
+                                        },
+                                        // Conditional deployment of Azure Firewall Subnet
+                                        {
+                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('vnetName'), '/', 'AzureFirewallSubnet')]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForAzFw')]"
+                                            }
                                         },
                                         // Conditional deployment of Azure app Gateway Subnet
                                         {
@@ -592,7 +594,7 @@
                                             "name": "[concat(variables('vnetName'), '/', 'AzureBastionSubnet')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
                                                 "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
                                                 "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appGwySubnet'))]",
                                                 "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
