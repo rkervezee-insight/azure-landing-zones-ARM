@@ -30,7 +30,7 @@
             "type": "string",
             "maxLength": 3
         },
-        "fwPrefix": {
+        "azFwPrefix": {
             "type": "string",
             "maxLength": 3
         },
@@ -253,7 +253,7 @@
         "erGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('erGwIpName'))]",
         "erGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
 
-        "fwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('fwPrefix'), '-001'))]",
+        "fwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-001'))]",
         "fwPolicyName": "[toLower('parentpolicy')]",
         "fwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
         "fwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
