@@ -520,9 +520,29 @@
                 "No"
             ]
         },
-        "vpnOrErZones": {
-            "type": "array",
-            "defaultValue": []
+        "gwRegionalOrAz": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "gwAzSku": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "gwRegionalSku": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "erRegionalOrAz": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "erAzSku": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "erRegionalSku": {
+            "type": "string",
+            "defaultValue": ""
         },
         "firewallZones": {
             "type": "array",
@@ -559,14 +579,6 @@
                 "No"
             ],
             "defaultValue": "No"
-        },
-        "vpnGwType": {
-            "type": "string",
-            "allowedValues": [
-                "PolicyBased",
-                "RouteBased"
-            ],
-            "defaultValue": "RouteBased"
         },
         "subnetMaskForAzBastion": {
             "type": "string",
@@ -703,7 +715,7 @@
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
-            "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
+            "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'hub/hub-connectivity.json')]",
             "azOps": "[uri(deployment().properties.templateLink.uri, 'hub/azOpsSetup.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
@@ -717,7 +729,7 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "hubConnectivity": "[take(concat('hubConnectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
@@ -1193,7 +1205,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
-            "name": "[variables('deploymentNames').hubNetworking]",
+            "name": "[variables('deploymentNames').hubConnectivity]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
@@ -1202,7 +1214,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').hubNetworking]"
+                    "uri": "[variables('deploymentUris').hubConnectivity]"
                 },
                 "parameters": {
                     "companyPrefix": {
@@ -1259,9 +1271,6 @@
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
                     },
-                    "vpnOrErZones": {
-                        "value": "[parameters('vpnOrErZones')]"
-                    },
                     "firewallZones": {
                         "value": "[parameters('firewallZones')]"
                     },
@@ -1280,14 +1289,29 @@
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
                     },
+                    "gwRegionalOrAz": {
+                        "value": "[parameters('gwRegionalOrAz')]"
+                    },
+                    "gwAzSku": {
+                        "value": "[parameters('gwAzSku')]"
+                    },
+                    "gwRegionalSku": {
+                        "value": "[parameters('gwRegionalSku')]"
+                    },
+                    "erRegionalOrAz": {
+                        "value": "[parameters('erRegionalOrAz')]"
+                    },
+                    "erAzSku": {
+                        "value": "[parameters('erAzSku')]"
+                    },
+                    "erRegionalSku": {
+                        "value": "[parameters('erRegionalSku')]"
+                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
-                    },
-                    "vpnGwType": {
-                        "value": "[parameters('vpnGwType')]"
                     },
                     "subnetMaskForAzFw": {
                         "value": "[parameters('subnetMaskForAzFw')]"
@@ -1327,7 +1351,7 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').privateDns]",
             "dependsOn": [
-                "[variables('deploymentNames').hubNetworking]",
+                "[variables('deploymentNames').hubConnectivity]",
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
             "location": "[deployment().location]",
@@ -1398,7 +1422,7 @@
                 "[variables('deploymentNames').monitoring]",
                 "[variables('deploymentNames').monitoringSolutions]",
                 "[variables('deploymentNames').policyDefinitions]",
-                "[variables('deploymentNames').hubNetworking]",
+                "[variables('deploymentNames').hubConnectivity]",
                 "policyCompletion"
             ],
             "properties": {
