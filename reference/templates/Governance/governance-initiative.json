@@ -69,6 +69,7 @@
                 "displayName": "[variables('initiatives').policySetDefinitions.displayName]",
                 "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "metadata": {
+                    "version": "1.0.0",
                     "category": "Governance"
                 },
                 "parameters": {},
