@@ -169,7 +169,7 @@
             "topLevel": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
         },
         "policyDefinitions": {
-            "deployActivityLog": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-la')]",
+            "deployActivityLog": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
             "deployActivityLogSta": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-sta')]",
             "deployResourceDiagnostics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/deploy-resource-diags')]",
             "deployVmMonitoring": "/providers/Microsoft.Authorization/policyDefinitions/0868462e-646c-4fe3-9ced-a733534b6a2c",

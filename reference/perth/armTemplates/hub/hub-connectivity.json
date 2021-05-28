@@ -329,6 +329,7 @@
         }
     },
     "resources": [
+        /*
         {
             "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
@@ -423,6 +424,9 @@
                 }
             }
         },
+
+*/
+
         // Nested deployment for Azure Networking (Management Group Level)
         {
             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
@@ -431,7 +435,7 @@
             "name": "[variables('deploymentNames').hubNetwork]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddos)]"
+              //  "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddos)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
