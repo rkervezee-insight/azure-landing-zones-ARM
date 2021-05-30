@@ -573,111 +573,193 @@
                                                                           empty(parameters('subnetMaskForGw'))), variables('gatewaySubnet'), json('[]')), 
                                                                           if(
                                                                               not(
-                                                                                  empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')))]"
+                                                                                  empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')),
+                                                                                  if(
+                                                                                    not(
+                                                                                         empty(parameters('subnetMaskForAppGw'))), variables('appGwySubnet'), json('[]')))]"
                                             },
-                                            "resources": [
+                                            " resources": [
                                             ]
                                         },
                                         // Conditional deployment of Azure app Gateway Subnet
                                         /*
                                         {
-                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
+                                            "condition": "
+                                    [ and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').subnets ]
+                                    ",
+                                            " name": "
+                                    [ concat(variables('vnetName'), '/', variables('appGwySubnet')) ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg')) ]
+                                    ",
+                                                " [ resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('managementSubnet')) ]
+                                    ",
+                                                " [ resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('identitySubnet')) ]
+                                    "
                                             ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForAppGw')]",
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('appGwyNsgId')]"
+                                            " properties": {
+                                                "addressPrefix": "
+                                    [ parameters('subnetMaskForAppGw') ]
+                                    ",
+                                                " networkSecurityGroup": {
+                                                    "id": "
+                                    [ variables('appGwyNsgId') ]
+                                    "
                                                 }
                                             }
                                         },
                                         */
                                         // Conditional deployment of Azure Bastion Subnet
                                         {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', 'AzureBastionSubnet')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appGwySubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').subnets ]
+                                    ",
+                                            " name": "
+                                    [ concat(variables('vnetName'), '/', 'AzureBastionSubnet') ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/networkSecurityGroups/', variables('bastionNsg')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    ",
+                                                " [ resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('managementSubnet')) ]
+                                    ",
+                                                " [ resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('appGwySubnet')) ]
+                                    ",
+                                                " [ resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('identitySubnet')) ]
+                                    "
                                             ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('bastionNsgId')]"
+                                            " properties": {
+                                                "addressPrefix": "
+                                    [ parameters('subnetMaskForAzBastion') ]
+                                    ",
+                                                " networkSecurityGroup": {
+                                                    "id": "
+                                    [ variables('bastionNsgId') ]
+                                    "
                                                 }
                                             }
                                         },
                                         // Conditional deployment of Azure Management Subnet
                                         {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('managementUdr'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').subnets ]
+                                    ",
+                                            " name": "
+                                    [ concat(variables('vnetName'), '/', variables('managementSubnet')) ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/routeTables/', variables('managementUdr')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/networkSecurityGroups/', variables('managementNsg')) ]
+                                    "
                                             ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForMgmt')]",
-                                                "routeTable": {
-                                                    "id": "[variables('managementUdrId')]"
+                                            " properties": {
+                                                "addressPrefix": "
+                                    [ parameters('subnetMaskForMgmt') ]
+                                    ",
+                                                " routeTable": {
+                                                    "id": "
+                                    [ variables('managementUdrId') ]
+                                    "
                                                 },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('managementNsgId')]"
+                                                " networkSecurityGroup": {
+                                                    "id": "
+                                    [ variables('managementNsgId') ]
+                                    "
                                                 }
                                             }
                                         },
                                         // Conditional deployment of Azure Identity Subnet
                                         {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('identityUdr'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').subnets ]
+                                    ",
+                                            " name": "
+                                    [ concat(variables('vnetName'), '/', variables('identitySubnet')) ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/routeTables/', variables('identityUdr')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/networkSecurityGroups/', variables('identityNsg')) ]
+                                    ",
+                                                " [ resourceId('Microsoft.Network/virtualNetworks/subnets', variables('vnetName'), variables('managementSubnet')) ]
+                                    "
                                             ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForIdentity')]",
-                                                "routeTable": {
-                                                    "id": "[variables('identityUdrId')]"
+                                            " properties": {
+                                                "addressPrefix": "
+                                    [ parameters('subnetMaskForIdentity') ]
+                                    ",
+                                                " routeTable": {
+                                                    "id": "
+                                    [ variables('identityUdrId') ]
+                                    "
                                                 },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('identityNsgId')]"
+                                                " networkSecurityGroup": {
+                                                    "id": "
+                                    [ variables('identityNsgId') ]
+                                    "
                                                 }
                                             }
                                         },
                                         // Conditional deployment of Azure Bastion NSG
                                         {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('bastionNsg')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/AzureBastionSubnet')]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').networkSecurityGroups ]
+                                    ",
+                                            " name": "
+                                    [ variables('bastionNsg') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " tags": {
+                                                "appliedSubnet": "
+                                    [ concat(variables('vnetName'), '/AzureBastionSubnet') ]
+                                    "
                                             },
-                                            "properties": {
+                                            " properties": {
                                                 "securityRules": [
                                                     {
                                                         "name": "allowHttpsInbound",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the internet.",
+                                                            "description": "This
+                                    is required
+                                    for inbound
+                                    HTTPS access
+                                    from the
+                                    internet.",
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
                                                             "sourceAddressPrefix": "Internet",
@@ -691,7 +773,12 @@
                                                     {
                                                         "name": "allowGatewayManagerInbound",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the Gateway Manager.",
+                                                            "description": "This is
+                                    required for
+                                    inbound HTTPS
+                                    access from
+                                    the Gateway
+                                    Manager.",
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
                                                             "sourceAddressPrefix": "GatewayManager",
@@ -705,7 +792,12 @@
                                                     {
                                                         "name": "allowAzureLoadBalancer",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
+                                                            "description": "This is
+                                    required for
+                                    inbound HTTPS
+                                    access from
+                                    the Azure
+                                    Load Balancer.",
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
                                                             "sourceAddressPrefix": "AzureLoadBalancer",
@@ -719,7 +811,13 @@
                                                     {
                                                         "name": "allowBastionHostCommunication",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
+                                                            "description": "This
+                                    is required
+                                    for inbound
+                                    HTTPS access
+                                    from the
+                                    Azure Load
+                                    Balancer.",
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
                                                             "sourceAddressPrefix": "VirtualNetwork",
@@ -796,20 +894,37 @@
                                         },
                                         // Conditional deployment of Azure App Gateway NSG
                                         {
-                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('appGwyNsg')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]"
+                                            "condition": " [ and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').networkSecurityGroups ]
+                                    ",
+                                            " name": "
+                                    [ variables('appGwyNsg') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " tags": {
+                                                "appliedSubnet": "
+                                    [ concat(variables('vnetName'), '/', variables('appGwySubnet')) ]
+                                    "
                                             },
-                                            "properties": {
+                                            " properties": {
                                                 "securityRules": [
                                                     {
                                                         "name": "allowAzureBackendCommunication",
                                                         "properties": {
-                                                            "description": "This is required for Azure infrastructure communication. These ports are protected & locked down by Azure certificates.",
+                                                            "description": "This
+                                    is required
+                                    for Azure
+                                    infrastructure communication.
+                                    These ports
+                                    are protected
+                                    & locked
+                                    down by
+                                    Azure certificates.",
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
                                                             "sourceAddressPrefix": "GatewayManager",
@@ -823,13 +938,19 @@
                                                     {
                                                         "name": "allowHttpsInbound",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the internet.",
+                                                            "description": "This
+                                    is required
+                                    for inbound
+                                    HTTPS access
+                                    from the
+                                    internet.",
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
                                                             "sourceAddressPrefix": "Internet",
                                                             "destinationPortRange": "443",
-                                                            "destinationAddressPrefix": "[parameters('subnetMaskForAppGw')]",
-                                                            "access": "Allow",
+                                                            "destinationAddressPrefix": " [ parameters('subnetMaskForAppGw') ]
+                                    ",
+                                                            " access": "Allow",
                                                             "priority": 110,
                                                             "direction": "Inbound"
                                                         }
@@ -839,50 +960,84 @@
                                         },
                                         // Conditional deployment of Azure Identity NSG
                                         {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('identityNsg')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]"
+                                            "condition": "
+                                    [ and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').networkSecurityGroups ]
+                                    ",
+                                            " name": "
+                                    [ variables('identityNsg') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " tags": {
+                                                "appliedSubnet": "
+                                    [ concat(variables('vnetName'), '/', variables('identitySubnet')) ]
+                                    "
                                             },
-                                            "properties": {
+                                            " properties": {
                                                 "securityRules": []
                                             }
                                         },
                                         // Conditional deployment of Azure Management NSG
                                         {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('managementNsg')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]"
+                                            "condition": "
+                                    [ and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').networkSecurityGroups ]
+                                    ",
+                                            " name": "
+                                    [ variables('managementNsg') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " tags": {
+                                                "appliedSubnet": "
+                                    [ concat(variables('vnetName'), '/', variables('managementSubnet')) ]
+                                    "
                                             },
-                                            "properties": {
+                                            " properties": {
                                                 "securityRules": []
                                             }
                                         },
                                         // Conditional deployment of Azure Identity Route Table
                                         {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/routeTables",
-                                            "apiVersion": "[variables('apiVersions').routeTables]",
-                                            "name": "[variables('identityUdr')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]"
+                                            "condition": "
+                                    [ and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/routeTables",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').routeTables ]
+                                    ",
+                                            " name": "
+                                    [ variables('identityUdr') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " tags": {
+                                                "appliedSubnet": "
+                                    [ concat(variables('vnetName'), '/', variables('identitySubnet')) ]
+                                    "
                                             },
-                                            "properties": {
+                                            " properties": {
                                                 "routes": [
                                                     {
-                                                        "name": "[variables('routeName')]",
-                                                        "properties": {
+                                                        "name": "
+                                    [ variables('routeName') ]
+                                    ",
+                                                        " properties": {
                                                             "addressPrefix": "0.0.0.0/0",
                                                             "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('vnetAddressSpace')]"
+                                                            "nextHopIpAddress": "
+                                    [ variables('vnetAddressSpace') ]
+                                    "
                                                         }
                                                     }
                                                 ]
@@ -890,22 +1045,34 @@
                                         },
                                         // Conditional deployment of Azure Management Route Table
                                         {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/routeTables",
+                                            " condition": "
+                                    [ and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/routeTables",
                                             "apiVersion": "2020-05-01",
-                                            "name": "[variables('managementUdr')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]"
+                                            "name": "
+                                    [ variables('managementUdr') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " tags": {
+                                                "appliedSubnet": "
+                                    [ concat(variables('vnetName'), '/', variables('managementSubnet')) ]
+                                    "
                                             },
-                                            "properties": {
+                                            " properties": {
                                                 "routes": [
                                                     {
-                                                        "name": "[variables('routeName')]",
-                                                        "properties": {
+                                                        "name": "
+                                    [ variables('routeName') ]
+                                    ",
+                                                        " properties": {
                                                             "addressPrefix": "0.0.0.0/0",
                                                             "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('vnetAddressSpace')]"
+                                                            "nextHopIpAddress": "
+                                    [ variables('vnetAddressSpace') ]
+                                    "
                                                         }
                                                     }
                                                 ]
@@ -913,30 +1080,53 @@
                                         },
                                         // Conditional deployment of Public IP for VPN Gateway
                                         {
-                                            "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
-                                            "type": "Microsoft.Network/publicIpAddresses",
-                                            "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('vpnGwIpName')]",
-                                            "location": "[parameters('location')]",
-                                            "sku": {
-                                                "name": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/publicIpAddresses",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').publicIpAddresses ]
+                                    ",
+                                            " name": "
+                                    [ variables('vpnGwIpName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " sku": {
+                                                "name": "
+                                    [ if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Standard', 'Basic') ]
+                                    "
                                             },
-                                            "properties": {
-                                                "publicIPAllocationMethod": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Static', 'Dynamic')]"
+                                            " properties": {
+                                                "publicIPAllocationMethod": "
+                                    [ if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Static', 'Dynamic') ]
+                                    "
                                             }
                                         },
                                         // Conditional deployment of VPN Gateway
                                         {
-                                            "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
-                                            "type": "Microsoft.Network/virtualNetworkGateways",
-                                            "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
-                                            "name": "[variables('vpnGwName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('vpnGwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/virtualNetworkGateways",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').virtualNetworkGateways ]
+                                    ",
+                                            " name": "
+                                    [ variables('vpnGwName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/publicIPAddresses/', variables('vpnGwIpName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    "
                                             ],
-                                            "properties": {
+                                            " properties": {
                                                 "gatewayType": "Vpn",
                                                 "vpnGatewayGeneration": "Generation2",
                                                 "vpnType": "RouteBased",
@@ -946,63 +1136,99 @@
                                                         "properties": {
                                                             "privateIPAllocationMethod": "Dynamic",
                                                             "subnet": {
-                                                                "id": "[variables('vpnGwSubnetId')]"
+                                                                "id": "
+                                    [ variables('vpnGwSubnetId') ]
+                                    "
                                                             },
-                                                            "publicIpAddress": {
-                                                                "id": "[variables('vpnGwPipId')]"
+                                                            " publicIpAddress": {
+                                                                "id": "
+                                    [ variables('vpnGwPipId') ]
+                                    "
                                                             }
                                                         }
                                                     }
                                                 ],
-                                                "sku": {
-                                                    "name": "[if(
-                                                                 and(
-                                                                     or(
-                                                                         empty(parameters('gwRegionalSku')), 
-                                                                         empty(parameters('gwAzSku'))), 
-                                                                         not(
-                                                                             empty(parameters('gwRegionalSku')))), 
-                                                                                parameters('gwRegionalSku'), 
-                                                                                parameters('gwAzSku'))]",
-                                                    "tier": "[if(
-                                                                and(
-                                                                    or(
-                                                                        empty(parameters('gwRegionalSku')), 
-                                                                        empty(parameters('gwAzSku'))), 
-                                                                        not(
-                                                                            empty(parameters('gwRegionalSku')))), 
-                                                                                parameters('gwRegionalSku'), 
-                                                                                parameters('gwAzSku'))]"
+                                                " sku": {
+                                                    "name": "
+                                    [
+                                        if(
+                                        and(
+                                        or(
+                                        empty(parameters('gwRegionalSku')),
+                                        empty(parameters('gwAzSku'))),
+                                        not(
+                                        empty(parameters('gwRegionalSku')))),
+                                        parameters('gwRegionalSku'),
+                                        parameters('gwAzSku'))
+                                    ]
+                                    ",
+                                                    " tier": "
+                                    [
+                                        if(
+                                        and(
+                                        or(
+                                        empty(parameters('gwRegionalSku')),
+                                        empty(parameters('gwAzSku'))),
+                                        not(
+                                        empty(parameters('gwRegionalSku')))),
+                                        parameters('gwRegionalSku'),
+                                        parameters('gwAzSku'))
+                                    ]
+                                    "
                                                 }
                                             }
                                         },
                                         // Conditional deployment of Public IP for ER Gateway
                                         {
-                                            "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
-                                            "type": "Microsoft.Network/publicIpAddresses",
-                                            "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('erGwIpName')]",
-                                            "location": "[parameters('location')]",
-                                            "sku": {
-                                                "name": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/publicIpAddresses",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').publicIpAddresses ]
+                                    ",
+                                            " name": "
+                                    [ variables('erGwIpName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " sku": {
+                                                "name": "
+                                    [ if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Standard', 'Basic') ]
+                                    "
                                             },
-                                            "properties": {
-                                                "publicIPAllocationMethod": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Static', 'Dynamic')]"
+                                            " properties": {
+                                                "publicIPAllocationMethod": "
+                                    [ if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Static', 'Dynamic') ]
+                                    "
                                             }
                                         },
                                         // Conditional deployment of ER Gateway
                                         {
-                                            "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
-                                            "type": "Microsoft.Network/virtualNetworkGateways",
-                                            "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
-                                            "name": "[variables('erGwName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('erGwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworkGateways/', variables('vpnGwName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/virtualNetworkGateways",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').virtualNetworkGateways ]
+                                    ",
+                                            " name": "
+                                    [ variables('erGwName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/publicIPAddresses/', variables('erGwIpName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/virtualNetworkGateways/', variables('vpnGwName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    "
                                             ],
-                                            "properties": {
+                                            " properties": {
                                                 "gatewayType": "ExpressRoute",
                                                 "ipConfigurations": [
                                                     {
@@ -1010,44 +1236,64 @@
                                                         "properties": {
                                                             "privateIPAllocationMethod": "Dynamic",
                                                             "subnet": {
-                                                                "id": "[variables('erGwSubnetId')]"
+                                                                "id": "
+                                    [ variables('erGwSubnetId') ]
+                                    "
                                                             },
-                                                            "publicIpAddress": {
-                                                                "id": "[variables('erGwPipId')]"
+                                                            " publicIpAddress": {
+                                                                "id": "
+                                    [ variables('erGwPipId') ]
+                                    "
                                                             }
                                                         }
                                                     }
                                                 ],
-                                                "sku": {
-                                                    "name": "[if(
-                                                                 and(
-                                                                     or(
-                                                                         empty(parameters('erRegionalSku')), 
-                                                                         empty(parameters('erAzSku'))), 
-                                                                         not(
-                                                                             empty(parameters('erRegionalSku')))), 
-                                                                                parameters('erRegionalSku'), 
-                                                                                parameters('erAzSku'))]",
-                                                    "tier": "[if(
-                                                                and(
-                                                                    or(
-                                                                        empty(parameters('erRegionalSku')), 
-                                                                        empty(parameters('erAzSku'))), 
-                                                                        not(
-                                                                            empty(parameters('erRegionalSku')))), 
-                                                                                parameters('erRegionalSku'), 
-                                                                                parameters('erAzSku'))]"
+                                                " sku": {
+                                                    "name": "
+                                    [
+                                        if(
+                                        and(
+                                        or(
+                                        empty(parameters('erRegionalSku')),
+                                        empty(parameters('erAzSku'))),
+                                        not(
+                                        empty(parameters('erRegionalSku')))),
+                                        parameters('erRegionalSku'),
+                                        parameters('erAzSku'))
+                                    ]
+                                    ",
+                                                    " tier": "
+                                    [
+                                        if(
+                                        and(
+                                        or(
+                                        empty(parameters('erRegionalSku')),
+                                        empty(parameters('erAzSku'))),
+                                        not(
+                                        empty(parameters('erRegionalSku')))),
+                                        parameters('erRegionalSku'),
+                                        parameters('erAzSku'))
+                                    ]
+                                    "
                                                 }
                                             }
                                         },
                                         // Conditional deployment of Public IP for Azure Firewall
                                         {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
-                                            "type": "Microsoft.Network/publicIpAddresses",
-                                            "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('fwIpName')]",
-                                            "location": "[parameters('location')]",
-                                            "sku": {
+                                            " condition": "
+                                    [ and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/publicIpAddresses",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').publicIpAddresses ]
+                                    ",
+                                            " name": "
+                                    [ variables('fwIpName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " sku": {
                                                 "name": "Standard"
                                             },
                                             "properties": {
@@ -1057,55 +1303,94 @@
                                         },
                                         // Conditional deployment of Azure Firewall Policy
                                         {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
-                                            "type": "Microsoft.Network/firewallPolicies",
+                                            "condition": "
+                                    [ and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/firewallPolicies",
                                             "apiVersion": "2020-11-01",
-                                            "name": "[variables('fwPolicyName')]",
-                                            "location": "[parameters('location')]",
-                                            "properties": {
-                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('fwDnsSettings'), json('null'))]"
+                                            "name": "
+                                    [ variables('fwPolicyName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " properties": {
+                                                "dnsSettings": "
+                                    [ if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('fwDnsSettings'), json('null')) ]
+                                    "
                                             }
                                         },
                                         // Conditional deployment of Azure Firewall
                                         {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
-                                            "type": "Microsoft.Network/azureFirewalls",
-                                            "apiVersion": "[variables('apiVersions').azureFirewalls]",
-                                            "name": "[variables('fwName')]",
-                                            "location": "[parameters('location')]",
-                                            "zones": "[if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('fwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/azureFirewalls",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').azureFirewalls ]
+                                    ",
+                                            " name": "
+                                    [ variables('fwName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " zones": "
+                                    [ if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null')) ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/publicIpAddresses/', variables('fwIpName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName')) ]
+                                    "
                                             ],
-                                            "properties": {
+                                            " properties": {
                                                 "ipConfigurations": [
                                                     {
-                                                        "name": "[variables('fwIpName')]",
-                                                        "properties": {
+                                                        "name": "
+                                    [ variables('fwIpName') ]
+                                    ",
+                                                        " properties": {
                                                             "subnet": {
-                                                                "id": "[variables('fwSubnetId')]"
+                                                                "id": "
+                                    [ variables('fwSubnetId') ]
+                                    "
                                                             },
-                                                            "publicIPAddress": {
-                                                                "id": "[variables('fwPipId')]"
+                                                            " publicIPAddress": {
+                                                                "id": "
+                                    [ variables('fwPipId') ]
+                                    "
                                                             }
                                                         }
                                                     }
                                                 ],
-                                                "firewallPolicy": "[variables('fwPolicyId')]"
+                                                " firewallPolicy": "
+                                    [ variables('fwPolicyId') ]
+                                    "
                                             }
                                         },
                                         // Conditional deployment of Public IP for Azure Bastion   
                                         {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "type": "Microsoft.Network/publicIpAddresses",
-                                            "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('bastionPipName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]"
+                                            " condition": "
+                                    [ and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion')))) ]
+                                    ",
+                                            " type": "Microsoft.Network/publicIpAddresses",
+                                            "apiVersion": "
+                                    [ variables('apiVersions').publicIpAddresses ]
+                                    ",
+                                            " name": "
+                                    [ variables('bastionPipName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet') ]
+                                    "
                                             ],
-                                            "sku": {
+                                            " sku": {
                                                 "name": "Standard"
                                             },
                                             "properties": {
@@ -1115,25 +1400,42 @@
                                         },
                                         // Conditional deployment of Azure Bastion
                                         {
-                                            "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
-                                            "apiVersion": "[variables('apiVersions').bastionHosts]",
-                                            "type": "Microsoft.Network/bastionHosts",
-                                            "name": "[variables('bastionName')]",
-                                            "location": "[parameters('location')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('bastionPipName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]"
+                                            "condition": "
+                                    [ and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion')))) ]
+                                    ",
+                                            " apiVersion": "
+                                    [ variables('apiVersions').bastionHosts ]
+                                    ",
+                                            " type": "Microsoft.Network/bastionHosts",
+                                            "name": "
+                                    [ variables('bastionName') ]
+                                    ",
+                                            " location": "
+                                    [ parameters('location') ]
+                                    ",
+                                            " dependsOn": [
+                                                "
+                                    [ concat('Microsoft.Network/publicIpAddresses/', variables('bastionPipName')) ]
+                                    ",
+                                                " [ concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet') ]
+                                    "
                                             ],
-                                            "properties": {
+                                            " properties": {
                                                 "ipConfigurations": [
                                                     {
-                                                        "name": "[variables('bastionPipName')]",
-                                                        "properties": {
+                                                        "name": "
+                                    [ variables('bastionPipName') ]
+                                    ",
+                                                        " properties": {
                                                             "subnet": {
-                                                                "id": "[variables('bastionSubnetId')]"
+                                                                "id": "
+                                    [ variables('bastionSubnetId') ]
+                                    "
                                                             },
-                                                            "publicIPAddress": {
-                                                                "id": "[variables('bastionPipId')]"
+                                                            " publicIPAddress": {
+                                                                "id": "
+                                    [ variables('bastionPipId') ]
+                                    "
                                                             }
                                                         }
                                                     }
