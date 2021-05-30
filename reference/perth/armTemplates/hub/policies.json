@@ -18416,7 +18416,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-keyvault')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-key-vault')]",
                 "policyDefinitionReferenceId": "KeyVaultDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
