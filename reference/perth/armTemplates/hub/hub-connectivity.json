@@ -258,6 +258,12 @@
         "fwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
         "fwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
         "fwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('fwIpName'))]",
+        "fwDnsSettings": {
+            "enableProxy": true
+        },
+        "fwPolicyId": {
+            "id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/firewallPolicies/', variables('fwPolicyName'))]"
+        },
 
         "bastionName": "[toLower(concat(variables('namingPrefix'), '-', parameters('basPrefix'), '-001'))]",
         "bastionNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
@@ -266,14 +272,13 @@
         "bastionPipName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
         "bastionPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('bastionPipName'))]",
 
-
         "managementSubnet": "Management",
         "managementNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('managementSubnet')))]",
         "managementNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
         "managementUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('managementSubnet')))]",
         "managementUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('managementUdr'))]",
 
-        "appGwySubnet": "AppGateway",
+
         "appGwyNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet')))]",
         "appGwyNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
 
@@ -298,12 +303,18 @@
                 }
             }
         ],
-        "azFirewallDnsSettings": {
-            "enableProxy": true
-        },
-        "azFirewallPolicyId": {
-            "id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/firewallPolicies/', variables('fwPolicyName'))]"
-        },
+        "appGwySubnet": [
+            {
+                "name": "AppGateway",
+                "properties": {
+                    "addressPrefix": "[parameters('subnetMaskForAppGw')]",
+                    "networkSecurityGroup": {
+                        "id": "[variables('appGwyNsgId')]"
+                    }
+                }
+            }
+        ],
+
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
@@ -424,9 +435,7 @@
                 }
             }
         },
-
 */
-
         // Nested deployment for Azure Networking (Management Group Level)
         {
             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
@@ -435,7 +444,7 @@
             "name": "[variables('deploymentNames').hubNetwork]",
             "location": "[deployment().location]",
             "dependsOn": [
-              //  "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddos)]"
+                //  "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddos)]"
             ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
@@ -570,6 +579,7 @@
                                             ]
                                         },
                                         // Conditional deployment of Azure app Gateway Subnet
+                                        /*
                                         {
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
@@ -588,6 +598,7 @@
                                                 }
                                             }
                                         },
+                                        */
                                         // Conditional deployment of Azure Bastion Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
@@ -1052,7 +1063,7 @@
                                             "name": "[variables('fwPolicyName')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
-                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('azFirewallDnsSettings'), json('null'))]"
+                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('fwDnsSettings'), json('null'))]"
                                             }
                                         },
                                         // Conditional deployment of Azure Firewall
@@ -1081,7 +1092,7 @@
                                                         }
                                                     }
                                                 ],
-                                                "firewallPolicy": "[variables('azFirewallPolicyId')]"
+                                                "firewallPolicy": "[variables('fwPolicyId')]"
                                             }
                                         },
                                         // Conditional deployment of Public IP for Azure Bastion   
