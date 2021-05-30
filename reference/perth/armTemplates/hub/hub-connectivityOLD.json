@@ -6,11 +6,11 @@
             "type": "string",
             "maxLength": 5
         },
-        "environmentPrefix": {
+        "locationPrefix": {
             "type": "string",
             "maxLength": 3
         },
-        "locationPrefix": {
+        "environmentPrefix": {
             "type": "string",
             "maxLength": 3
         },
@@ -37,10 +37,6 @@
         "udrPrefix": {
             "type": "string",
             "maxLength": 3
-        },
-        "ddosPrefix": {
-            "type": "string",
-            "maxLength": 4
         },
         "nsgPrefix": {
             "type": "string",
@@ -82,17 +78,6 @@
             ],
             "defaultValue": "Yes"
         },
-        "enableDdoS": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "Select whether the DDoS Standard protection plan should be enabled or not."
-            }
-        },
         "enableAzFw": {
             "type": "string",
             "allowedValues": [
@@ -100,14 +85,6 @@
                 "No"
             ],
             "defaultValue": "Yes"
-        },
-        "enableAzFwDnsProxy": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
         },
         "enableVpnGw": {
             "type": "string",
@@ -125,29 +102,9 @@
             ],
             "defaultValue": "No"
         },
-        "gwRegionalOrAz": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "gwAzSku": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "gwRegionalSku": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "erRegionalOrAz": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "erAzSku": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "erRegionalSku": {
-            "type": "string",
-            "defaultValue": ""
+        "vpnOrErZones": {
+            "type": "array",
+            "defaultValue": []
         },
         "firewallZones": {
             "type": "array",
@@ -190,6 +147,14 @@
             "defaultValue": "",
             "maxLength": 36
         },
+        "vpnGwType": {
+            "type": "string",
+            "allowedValues": [
+                "PolicyBased",
+                "RouteBased"
+            ],
+            "defaultValue": "RouteBased"
+        },
         "subnetMaskForAzBastion": {
             "type": "string",
             "defaultValue": ""
@@ -216,93 +181,67 @@
         }
     },
     "variables": {
-        "deploymentNames": {
-            "hubNetwork": "[take(concat('hubNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "ddos": "[take(concat('ddosStandard', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
-        },
+        "deploymentName": "[take(concat(deployment().name, '-networking'), 64)]",
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix')))]",
-        "rbacNetworkContributor": "4d97b98b-1d4f-4787-a291-c67834d212e7",
         "resourceGroups": {
             "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-            "networkWatcher": "NetworkWatcherRG",
-            "ddos": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-ddos'))]"
+            "networkWatcher": "NetworkWatcherRG"
         },
-        "policyDefinitions": {
-            "ddosPolicyDefinition": "/providers/Microsoft.Authorization/policyDefinitions/94de2ad3-e0c1-4caf-ad78-5d47bbc83d3d"
-        },
-        "policyAssignmentNames": {
-            "deployDdos": "enable-ddos-vnet"
-        },
-        "roleAssignmentNames": {
-            "deployDdos": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployDdoS))]"
-        },
-        "routeName": "[toLower(concat('subnet-to-', variables('fwName')))]",
-        "ddosName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('ddosPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-        "vnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
-        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
-        "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
-
-        "vpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
-        "vpnGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-001'))]",
-        "vpnGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('vpnGwIpName'))]",
-        "vpnGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
-
-        "erGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
-        "erGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-002'))]",
-        "erGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('erGwIpName'))]",
-        "erGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
-
-        "fwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-        "fwPolicyName": "[toLower(concat(variables('namingPrefix'), '-afp-003'))]",
-        "fwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
-        "fwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
-        "fwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('fwIpName'))]",
-        "fwDnsSettings": {
-            "enableProxy": true
-        },
-        "fwPolicyId": {
-            "id": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/firewallPolicies/', variables('fwPolicyName'))]"
-        },
-
-        "bastionName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('basPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-        "bastionNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
-        "bastionNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
-        "bastionSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]",
-        "bastionPipName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
-        "bastionPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('bastionPipName'))]",
-
-        "managementSubnet": "Management",
-        "managementNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('managementSubnet')))]",
-        "managementNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
-        "managementUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('managementSubnet')))]",
-        "managementUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('managementUdr'))]",
-
-        "appGwySubnet": "AppGateway",
-        "appGwyNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet')))]",
-        "appGwyNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-
-        "identitySubnet": "Identity",
-        "identityNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('identitySubnet')))]",
-        "identityNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-        "identityUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('identitySubnet')))]",
-        "identityUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('identityUdr'))]",
-        "gatewaySubnet": [
-            {
-                "name": "GatewaySubnet",
-                "properties": {
-                    "addressPrefix": "[parameters('subnetMaskForGw')]"
-                }
+        "azVnetCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+        "azVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('azVnetCidr')))]",
+        "nwName": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
+        "azVpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
+        "azVpnGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-001'))]",
+        "azVpnGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/GatewaySubnet')]",
+        "azVpnGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('azVpnGwIpName'))]",
+        "azErGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
+        "azErGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-002'))]",
+        "azErGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/GatewaySubnet')]",
+        "azErGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
+        "azFwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-001'))]",
+        "azFwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]",
+        "azFwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
+        "azFwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('azFwIpName'))]",
+        "azBastionName": "[toLower(concat(variables('namingPrefix'), '-', parameters('basPrefix'), '-001'))]",
+        "azBastionSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]",
+        "azBastionIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
+        "azBastionPipId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('azBastionIpName'))]",
+        "azRouteName": "[toLower(concat('Subnet-to-', variables('azFwName')))]",
+        "subnetName001": "Management",
+        "nsgName001": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('subnetName001')))]",
+        "udrName001": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('subnetName001')))]",
+        "udrId001": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('udrName001'))]",
+        "nsgId001": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName001'))]",
+        "subnetName002": "AppGateway",
+        "NsgName002": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('subnetName002')))]",
+        "UdrName002": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', 'GatewaySubnet'))]",
+        "UdrId002": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('udrName002'))]",
+        "NsgId002": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName002'))]",
+        "subnetName003": "Identity",
+        "NsgName003": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('subnetName003')))]",
+        "UdrName003": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('subnetName003')))]",
+        "UdrId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('udrName003'))]",
+        "NsgId003": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
+        "NsgName004": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
+        "NsgId004": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('nsgName004'))]",
+        "sku": {
+            "0": {
+                "name": "Standard",
+                "tier": "Standard"
+            },
+            "1": {
+                "name": "ErGw1AZ",
+                "tier": "ErGw1AZ"
+            },
+            "2": {
+                "name": "ErGw2AZ",
+                "tier": "ErGw2AZ"
+            },
+            "3": {
+                "name": "ErGw3AZ",
+                "tier": "ErGw3AZ"
             }
-        ],
-        "firewallSubnet": [
-            {
-                "name": "AzureFirewallSubnet",
-                "properties": {
-                    "addressPrefix": "[parameters('subnetMaskForAzFw')]"
-                }
-            }
-        ],
+        },
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
@@ -321,119 +260,16 @@
             "publicIpAddresses": "2020-05-01",
             "virtualNetworkGateways": "2020-05-01",
             "azureFirewalls": "2020-05-01",
-            "bastionHosts": "2020-05-01",
-            "policyAssignments": "2020-03-01",
-            "roleAssignments": "2020-04-01-preview",
-            "ddosProtectionPlans": "2020-07-01"
+            "bastionHosts": "2020-05-01"
         }
     },
     "resources": [
-        /*
-        {
-            "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployDdos]",
-            "location": "[deployment().location]",
-            "identity": {
-                "type": "SystemAssigned"
-            },
-            "properties": {
-                "description": "[variables('policyAssignmentNames').deployDdos]",
-                "displayName": "[variables('policyAssignmentNames').deployDdos]",
-                "policyDefinitionId": "[variables('policyDefinitions').ddosPolicyDefinition]",
-                "parameters": {
-                    "ddosPlan": {
-                        "value": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('ddosName'))]"
-                    },
-                    "effect": {
-                        "value": "Modify"
-                    }
-                }
-            }
-        },
-        {
-            "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployDdoS]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Authorization/policyAssignments', variables('policyAssignmentNames').deployDdos)]"
-            ],
-            "properties": {
-                "principalType": "ServicePrincipal",
-                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbacNetworkContributor'))]",
-                "principalId": "[if(and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes')), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployDdos), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
-            }
-        },
-        {
-            // Conditionally enable DDoS Protection plan
-            "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), equals(parameters('enableHub'), 'Yes'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "location": "[deployment().location]",
-            "name": "[variables('deploymentNames').ddos]",
-            "subscriptionId": "[parameters('subscriptionId')]",
-            "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "resources": [
-                        {
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
-                            "name": "[variables('resourceGroups').ddos]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]",
-                                "costCenter": "[variables('tags').costCenter]"
-                            },
-                            "properties": {}
-                        },
-                        {
-                            "type": "Microsoft.Resources/deployments",
-                            "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').ddos]",
-                            "resourceGroup": "[variables('resourceGroups').ddos]",
-                            "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').ddos)]"
-                            ],
-                            "properties": {
-                                "mode": "Incremental",
-                                "template": {
-                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                    "contentVersion": "1.0.0.0",
-                                    "parameters": {},
-                                    "resources": [
-                                        {
-                                            "type": "Microsoft.Network/ddosProtectionPlans",
-                                            "apiVersion": "[variables('apiVersions').ddosProtectionPlans]",
-                                            "name": "[variables('ddosName')]",
-                                            "location": "[parameters('location')]",
-                                            "properties": {}
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-*/
         // Nested deployment for Azure Networking (Management Group Level)
         {
-            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').hubNetwork]",
+            "name": "[variables('deploymentName')]",
             "location": "[deployment().location]",
-            "dependsOn": [
-                //  "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddos)]"
-            ],
             "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "Incremental",
@@ -442,6 +278,17 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
+                        {
+                            "type": "Microsoft.Resources/tags",
+                            "name": "default",
+                            "apiVersion": "2019-10-01",
+                            "dependsOn": [],
+                            "properties": {
+                                "tags": {
+                                    "owner": "[variables('tags').owner]"
+                                }
+                            }
+                        },
                         {
                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
@@ -472,7 +319,7 @@
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').networkWatcher]",
+                            "name": "[variables('deploymentName')]",
                             "resourceGroup": "[variables('resourceGroups').networkWatcher]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networkWatcher)]"
@@ -499,7 +346,7 @@
                                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
-                                            "name": "[variables('networkWatcher')]",
+                                            "name": "[variables('nwName')]",
                                             "location": "[deployment().location]",
                                             "tags": {},
                                             "properties": {},
@@ -513,7 +360,7 @@
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').hubNetwork]",
+                            "name": "[variables('deploymentName')]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
@@ -539,69 +386,92 @@
                                         {
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "[variables('apiVersions').virtualNetworks]",
-                                            "name": "[variables('vnetName')]",
+                                            "name": "[variables('azVnetName')]",
                                             "location": "[deployment().location]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('managementUdr'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('identityUdr'))]"
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName001'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName002'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName003'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName001'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('UdrName002'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('UdrName003'))]"
                                             ],
                                             "properties": {
                                                 "addressSpace": {
                                                     "addressPrefixes": [
                                                         "[parameters('addressPrefix')]"
                                                     ]
-                                                },
-                                                "subnets": "[
-                                                             union(
-                                                                  if(
-                                                                      not(
-                                                                          empty(parameters('subnetMaskForGw'))), variables('gatewaySubnet'), json('[]')), 
-                                                                                if(
-                                                                                     not(
-                                                                                         empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')))]"
+                                                }
                                             },
                                             "resources": [
                                             ]
+                                        },
+                                        // Conditional deployment of Gateway Subnet
+                                        {
+                                            "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('azVnetName'), '/', 'GatewaySubnet')]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName002'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForGw')]",
+                                                "routeTable": {
+                                                    "id": "[variables('udrId002')]"
+                                                }
+                                            }
+                                        },
+                                        // Conditional deployment of Azure Firewall Subnet
+                                        {
+                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('azVnetName'), '/', 'AzureFirewallSubnet')]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/GatewaySubnet')]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForAzFw')]"
+                                            }
+                                        },
+                                        // Conditional deployment of Azure app Gateway Subnet
+                                        {
+                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName002'))]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName002'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName001'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName003'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForAppGw')]",
+                                                "networkSecurityGroup": {
+                                                    "id": "[variables('nsgId002')]"
+                                                }
+                                            }
                                         },
                                         // Conditional deployment of Azure Bastion Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', 'AzureBastionSubnet')]",
+                                            "name": "[concat(variables('azVnetName'), '/', 'AzureBastionSubnet')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appGwySubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('NsgName004'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName001'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName002'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName003'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
                                                 "networkSecurityGroup": {
-                                                    "id": "[variables('bastionNsgId')]"
-                                                }
-                                            }
-                                        },
-                                         // Conditional deployment of Azure app Gateway Subnet
-                                        {
-                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForAppGw')]",
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('appGwyNsgId')]"
+                                                    "id": "[variables('nsgId004')]"
                                                 }
                                             }
                                         },
@@ -610,19 +480,19 @@
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]",
+                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('managementUdr'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName001'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName001'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForMgmt')]",
                                                 "routeTable": {
-                                                    "id": "[variables('managementUdrId')]"
+                                                    "id": "[variables('udrId001')]"
                                                 },
                                                 "networkSecurityGroup": {
-                                                    "id": "[variables('managementNsgId')]"
+                                                    "id": "[variables('nsgId001')]"
                                                 }
                                             }
                                         },
@@ -631,20 +501,20 @@
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]",
+                                            "name": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('identityUdr'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'))]",
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName003'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('nsgName003'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('azVnetName'), variables('subnetName001'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForIdentity')]",
                                                 "routeTable": {
-                                                    "id": "[variables('identityUdrId')]"
+                                                    "id": "[variables('udrId003')]"
                                                 },
                                                 "networkSecurityGroup": {
-                                                    "id": "[variables('identityNsgId')]"
+                                                    "id": "[variables('nsgId003')]"
                                                 }
                                             }
                                         },
@@ -653,10 +523,10 @@
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('bastionNsg')]",
+                                            "name": "[variables('nsgName004')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/AzureBastionSubnet')]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/AzureBastionSubnet')]"
                                             },
                                             "properties": {
                                                 "securityRules": [
@@ -785,10 +655,10 @@
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('appGwyNsg')]",
+                                            "name": "[variables('nsgName002')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName002'))]"
                                             },
                                             "properties": {
                                                 "securityRules": [
@@ -828,10 +698,10 @@
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('identityNsg')]",
+                                            "name": "[variables('nsgName003')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]"
                                             },
                                             "properties": {
                                                 "securityRules": []
@@ -842,10 +712,10 @@
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('managementNsg')]",
+                                            "name": "[variables('nsgName001')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]"
                                             },
                                             "properties": {
                                                 "securityRules": []
@@ -856,22 +726,35 @@
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/routeTables",
                                             "apiVersion": "[variables('apiVersions').routeTables]",
-                                            "name": "[variables('identityUdr')]",
+                                            "name": "[variables('udrName003')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName003'))]"
                                             },
                                             "properties": {
                                                 "routes": [
                                                     {
-                                                        "name": "[variables('routeName')]",
+                                                        "name": "[variables('azRouteName')]",
                                                         "properties": {
                                                             "addressPrefix": "0.0.0.0/0",
                                                             "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('vnetAddressSpace')]"
+                                                            "nextHopIpAddress": "[variables('azVnetCidr')]"
                                                         }
                                                     }
                                                 ]
+                                            }
+                                        },
+                                        // Conditional deployment of Gateway Route Table
+                                        {
+                                            "condition": "[and(or(equals(parameters('enableVpnGw'), 'Yes'), equals(parameters('enableErGw'), 'Yes')), not(empty(parameters('subnetMaskForGw'))))]",
+                                            "type": "Microsoft.Network/routeTables",
+                                            "apiVersion": "[variables('apiVersions').routeTables]",
+                                            "name": "[variables('udrName002')]",
+                                            "location": "[parameters('location')]",
+                                            "tags": {
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', 'GatewaySubnet')]"
+                                            },
+                                            "properties": {
                                             }
                                         },
                                         // Conditional deployment of Azure Management Route Table
@@ -879,19 +762,19 @@
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/routeTables",
                                             "apiVersion": "2020-05-01",
-                                            "name": "[variables('managementUdr')]",
+                                            "name": "[variables('udrName001')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]"
+                                                "appliedSubnet": "[concat(variables('azVnetName'), '/', variables('subnetName001'))]"
                                             },
                                             "properties": {
                                                 "routes": [
                                                     {
-                                                        "name": "[variables('routeName')]",
+                                                        "name": "[variables('azRouteName')]",
                                                         "properties": {
                                                             "addressPrefix": "0.0.0.0/0",
                                                             "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('vnetAddressSpace')]"
+                                                            "nextHopIpAddress": "[variables('azVnetCidr')]"
                                                         }
                                                     }
                                                 ]
@@ -902,13 +785,13 @@
                                             "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('vpnGwIpName')]",
+                                            "name": "[variables('azVpnGwIpName')]",
                                             "location": "[parameters('location')]",
                                             "sku": {
-                                                "name": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
+                                                "name": "[if(not(empty(parameters('vpnOrErZones'))), 'Standard', 'Basic')]"
                                             },
                                             "properties": {
-                                                "publicIPAllocationMethod": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Static', 'Dynamic')]"
+                                                "publicIPAllocationMethod": "[if(not(empty(parameters('vpnOrErZones'))), 'Static', 'Dynamic')]"
                                             }
                                         },
                                         // Conditional deployment of VPN Gateway
@@ -916,49 +799,33 @@
                                             "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworkGateways",
                                             "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
-                                            "name": "[variables('vpnGwName')]",
+                                            "name": "[variables('azVpnGwName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('vpnGwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('azVpnGwIpName'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/GatewaySubnet')]"
                                             ],
                                             "properties": {
                                                 "gatewayType": "Vpn",
                                                 "vpnGatewayGeneration": "Generation2",
-                                                "vpnType": "RouteBased",
+                                                "vpnType": "[parameters('vpnGwType')]",
                                                 "ipConfigurations": [
                                                     {
                                                         "name": "default",
                                                         "properties": {
                                                             "privateIPAllocationMethod": "Dynamic",
                                                             "subnet": {
-                                                                "id": "[variables('vpnGwSubnetId')]"
+                                                                "id": "[variables('azVpnGwSubnetId')]"
                                                             },
                                                             "publicIpAddress": {
-                                                                "id": "[variables('vpnGwPipId')]"
+                                                                "id": "[variables('azVpnGwPipId')]"
                                                             }
                                                         }
                                                     }
                                                 ],
                                                 "sku": {
-                                                    "name": "[if(
-                                                                 and(
-                                                                     or(
-                                                                         empty(parameters('gwRegionalSku')), 
-                                                                         empty(parameters('gwAzSku'))), 
-                                                                         not(
-                                                                             empty(parameters('gwRegionalSku')))), 
-                                                                                parameters('gwRegionalSku'), 
-                                                                                parameters('gwAzSku'))]",
-                                                    "tier": "[if(
-                                                                and(
-                                                                    or(
-                                                                        empty(parameters('gwRegionalSku')), 
-                                                                        empty(parameters('gwAzSku'))), 
-                                                                        not(
-                                                                            empty(parameters('gwRegionalSku')))), 
-                                                                                parameters('gwRegionalSku'), 
-                                                                                parameters('gwAzSku'))]"
+                                                    "name": "[if(not(empty(parameters('vpnOrErZones'))), 'VpnGw2AZ', 'VpnGw1')]",
+                                                    "tier": "[if(not(empty(parameters('vpnOrErZones'))), 'VpnGw2AZ', 'VpnGw1')]"
                                                 }
                                             }
                                         },
@@ -967,13 +834,13 @@
                                             "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('erGwIpName')]",
+                                            "name": "[variables('azErGwIpName')]",
                                             "location": "[parameters('location')]",
                                             "sku": {
-                                                "name": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
+                                                "name": "[if(not(empty(parameters('vpnOrErZones'))), 'Standard', 'Basic')]"
                                             },
                                             "properties": {
-                                                "publicIPAllocationMethod": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Static', 'Dynamic')]"
+                                                "publicIPAllocationMethod": "[if(not(empty(parameters('vpnOrErZones'))), 'Static', 'Dynamic')]"
                                             }
                                         },
                                         // Conditional deployment of ER Gateway
@@ -981,12 +848,12 @@
                                             "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworkGateways",
                                             "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",
-                                            "name": "[variables('erGwName')]",
+                                            "name": "[variables('azErGwName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('erGwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworkGateways/', variables('vpnGwName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
+                                                "[concat('Microsoft.Network/virtualNetworkGateways/', variables('azVpnGwName'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/GatewaySubnet')]"
                                             ],
                                             "properties": {
                                                 "gatewayType": "ExpressRoute",
@@ -996,33 +863,16 @@
                                                         "properties": {
                                                             "privateIPAllocationMethod": "Dynamic",
                                                             "subnet": {
-                                                                "id": "[variables('erGwSubnetId')]"
+                                                                "id": "[variables('azErGwSubnetId')]"
                                                             },
                                                             "publicIpAddress": {
-                                                                "id": "[variables('erGwPipId')]"
+                                                                "id": "[variables('azErGwPipId')]"
                                                             }
                                                         }
                                                     }
                                                 ],
                                                 "sku": {
-                                                    "name": "[if(
-                                                                 and(
-                                                                     or(
-                                                                         empty(parameters('erRegionalSku')), 
-                                                                         empty(parameters('erAzSku'))), 
-                                                                         not(
-                                                                             empty(parameters('erRegionalSku')))), 
-                                                                                parameters('erRegionalSku'), 
-                                                                                parameters('erAzSku'))]",
-                                                    "tier": "[if(
-                                                                and(
-                                                                    or(
-                                                                        empty(parameters('erRegionalSku')), 
-                                                                        empty(parameters('erAzSku'))), 
-                                                                        not(
-                                                                            empty(parameters('erRegionalSku')))), 
-                                                                                parameters('erRegionalSku'), 
-                                                                                parameters('erAzSku'))]"
+                                                    "sku": "[variables('sku')[string(length(parameters('vpnOrErZones')))]]"
                                                 }
                                             }
                                         },
@@ -1031,7 +881,7 @@
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('fwIpName')]",
+                                            "name": "[variables('azFwIpName')]",
                                             "location": "[parameters('location')]",
                                             "sku": {
                                                 "name": "Standard"
@@ -1041,44 +891,36 @@
                                                 "publicIPAddressVersion": "IPv4"
                                             }
                                         },
-                                        // Conditional deployment of Azure Firewall Policy
-                                        {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
-                                            "type": "Microsoft.Network/firewallPolicies",
-                                            "apiVersion": "2020-11-01",
-                                            "name": "[variables('fwPolicyName')]",
-                                            "location": "[parameters('location')]",
-                                            "properties": {
-                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('fwDnsSettings'), json('null'))]"
-                                            }
-                                        },
                                         // Conditional deployment of Azure Firewall
                                         {
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/azureFirewalls",
                                             "apiVersion": "[variables('apiVersions').azureFirewalls]",
-                                            "name": "[variables('fwName')]",
+                                            "name": "[variables('azFwName')]",
                                             "location": "[parameters('location')]",
                                             "zones": "[if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null'))]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('fwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]"
+                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('azFwIpName'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureFirewallSubnet')]"
                                             ],
                                             "properties": {
+                                                "sku": {
+                                                    "Name": "AZFW_VNet",
+                                                    "Tier": "Standard"
+                                                },
                                                 "ipConfigurations": [
                                                     {
-                                                        "name": "[variables('fwIpName')]",
+                                                        "name": "[variables('azFwIpName')]",
                                                         "properties": {
                                                             "subnet": {
-                                                                "id": "[variables('fwSubnetId')]"
+                                                                "id": "[variables('azFwSubnetId')]"
                                                             },
                                                             "publicIPAddress": {
-                                                                "id": "[variables('fwPipId')]"
+                                                                "id": "[variables('azFwPipId')]"
                                                             }
                                                         }
                                                     }
-                                                ],
-                                                "firewallPolicy": "[variables('fwPolicyId')]"
+                                                ]
                                             }
                                         },
                                         // Conditional deployment of Public IP for Azure Bastion   
@@ -1086,10 +928,10 @@
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "apiVersion": "[variables('apiVersions').publicIpAddresses]",
-                                            "name": "[variables('bastionPipName')]",
+                                            "name": "[variables('azBastionIpName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]"
                                             ],
                                             "sku": {
                                                 "name": "Standard"
@@ -1104,22 +946,22 @@
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "apiVersion": "[variables('apiVersions').bastionHosts]",
                                             "type": "Microsoft.Network/bastionHosts",
-                                            "name": "[variables('bastionName')]",
+                                            "name": "[variables('azBastionName')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('bastionPipName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]"
+                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('azBastionIpName'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('azVnetName'), '/subnets/AzureBastionSubnet')]"
                                             ],
                                             "properties": {
                                                 "ipConfigurations": [
                                                     {
-                                                        "name": "[variables('bastionPipName')]",
+                                                        "name": "[variables('azBastionIpName')]",
                                                         "properties": {
                                                             "subnet": {
-                                                                "id": "[variables('bastionSubnetId')]"
+                                                                "id": "[variables('azBastionSubnetId')]"
                                                             },
                                                             "publicIPAddress": {
-                                                                "id": "[variables('bastionPipId')]"
+                                                                "id": "[variables('azBastionPipId')]"
                                                             }
                                                         }
                                                     }
