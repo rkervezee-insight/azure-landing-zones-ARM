@@ -572,38 +572,15 @@
                                                                       not(
                                                                           empty(parameters('subnetMaskForGw'))), variables('gatewaySubnet'), json('[]')), 
                                                                           if(
-                                                                      not(
-                                                                          empty(parameters('subnetMaskForAppGw'))), variables('appGwySubnet'), json('[]')), 
-                                                                          if(
-                                                                              not(
-                                                                                  empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')))]"
+                                                                            not(
+                                                                                empty(parameters('subnetMaskForAppGw'))), variables('appGwySubnet'), json('[]')), 
+                                                                                if(
+                                                                                     not(
+                                                                                         empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')))]"
                                             },
                                             "resources": [
                                             ]
                                         },
-                                        /*
-                                        // Conditional deployment of Azure app Gateway Subnet
-                                        
-                                        {
-                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForAppGw')]",
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('appGwyNsgId')]"
-                                                }
-                                            }
-                                        },
-                                        */
-
                                         // Conditional deployment of Azure Bastion Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
