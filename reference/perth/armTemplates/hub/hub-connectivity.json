@@ -278,9 +278,9 @@
         "managementUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('managementSubnet')))]",
         "managementUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('managementUdr'))]",
 
-
+        "appGwySubnet": "Identity",
         "appGwyNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet')))]",
-        "appGwyNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet'))]",
+        "appGwyNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
 
         "identitySubnet": "Identity",
         "identityNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('identitySubnet')))]",
@@ -303,18 +303,6 @@
                 }
             }
         ],
-        "appGwySubnet": [
-            {
-                "name": "AppGateway",
-                "properties": {
-                    "addressPrefix": "[parameters('subnetMaskForAppGw')]",
-                    "networkSecurityGroup": {
-                        "id": "[variables('appGwyNsgId')]"
-                    }
-                }
-            }
-        ],
-
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
             "owner": "[parameters('ownerTag')]",
@@ -571,9 +559,6 @@
                                                                   if(
                                                                       not(
                                                                           empty(parameters('subnetMaskForGw'))), variables('gatewaySubnet'), json('[]')), 
-                                                                          if(
-                                                                            not(
-                                                                                empty(parameters('subnetMaskForAppGw'))), variables('appGwySubnet'), json('[]')), 
                                                                                 if(
                                                                                      not(
                                                                                          empty(parameters('subnetMaskForAzFw'))), variables('firewallSubnet'), json('[]')))]"
@@ -598,6 +583,25 @@
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
                                                 "networkSecurityGroup": {
                                                     "id": "[variables('bastionNsgId')]"
+                                                }
+                                            }
+                                        },
+                                         // Conditional deployment of Azure app Gateway Subnet
+                                        {
+                                            "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
+                                            "type": "Microsoft.Network/virtualNetworks/subnets",
+                                            "apiVersion": "[variables('apiVersions').subnets]",
+                                            "name": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]",
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
+                                            ],
+                                            "properties": {
+                                                "addressPrefix": "[parameters('subnetMaskForAppGw')]",
+                                                "networkSecurityGroup": {
+                                                    "id": "[variables('appGwyNsgId')]"
                                                 }
                                             }
                                         },
