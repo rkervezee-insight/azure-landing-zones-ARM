@@ -258,9 +258,9 @@
     },
     "variables": {
         "deploymentUris": {
-            "keyVault": "[uri(deployment().properties.templateLink.uri, 'common/keyVault.json')]",
-            "storage": "[uri(deployment().properties.templateLink.uri, 'common/storage.json')]",
-            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
+            "keyVault": "[uri(deployment().properties.templateLink.uri, 'spoke/keyVault.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'spoke/storage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'spoke/recoveryServicesVault.json')]",
             "spokeNetwork": "[uri(deployment().properties.templateLink.uri, 'spoke/networking.json')]",
             "vNetPeering": "[uri(deployment().properties.templateLink.uri, 'spoke/vNetPeering.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'spoke/budget.json')]"
