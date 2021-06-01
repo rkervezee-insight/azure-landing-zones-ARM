@@ -740,124 +740,6 @@
         },
         {
           "Properties": {
-            "Description": "Ensures that Activity Log Diagnostics settings are set to push logs into Log Analytics",
-            "DisplayName": "Deploy Diagnostic Settings for Azure Activity Log to Log Analytics workspace",
-            "Mode": "All",
-            "Parameters": {
-              "logAnalytics": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Primary Log Analytics workspace",
-                  "description": "Select Log Analytics workspace from dropdown list",
-                  "strongType": "omsWorkspace"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Monitoring"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.Resources/subscriptions"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "deployIfNotExists",
-                "details": {
-                  "type": "Microsoft.Insights/diagnosticSettings",
-                  "deploymentScope": "Subscription",
-                  "existenceScope": "Subscription",
-                  "existenceCondition": {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
-                        "equals": "[[parameters('logAnalytics')]"
-                      }
-                    ]
-                  },
-                  "deployment": {
-                    "location": "northeurope",
-                    "properties": {
-                      "mode": "incremental",
-                      "template": {
-                        "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                          "logAnalytics": {
-                            "type": "string"
-                          }
-                        },
-                        "variables": {},
-                        "resources": [
-                          {
-                            "name": "subscriptionLogsToLogAnalytics",
-                            "type": "Microsoft.Insights/diagnosticSettings",
-                            "apiVersion": "2017-05-01-preview",
-                            "location": "Global",
-                            "properties": {
-                              "workspaceId": "[[parameters('logAnalytics')]",
-                              "logs": [
-                                {
-                                  "category": "Administrative",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "Security",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "ServiceHealth",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "Alert",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "Recommendation",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "Policy",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "Autoscale",
-                                  "enabled": true
-                                },
-                                {
-                                  "category": "ResourceHealth",
-                                  "enabled": true
-                                }
-                              ]
-                            }
-                          }
-                        ],
-                        "outputs": {}
-                      },
-                      "parameters": {
-                        "logAnalytics": {
-                          "value": "[[parameters('logAnalytics')]"
-                        }
-                      }
-                    }
-                  },
-                  "roleDefinitionIds": [
-                    "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
-                  ]
-                }
-              }
-            }
-          },
-          "Name": "deploy-diagnostics-activity-log-la"
-        },
-        {
-          "Properties": {
             "Description": "Ensures that Activity Log Diagnostics settings are set to push logs into a Storage Account for Long term retention",
             "DisplayName": "Deploy Diagnostic Settings for Azure Activity Logs to Storage Account",
             "Mode": "All",
@@ -10962,7 +10844,7 @@
               }
             }
           },
-          "name": "deploy-diagnostics-timeSeries-insights"
+          "name": "deploy-diagnostics-time-series-insights"
         },
         {
           "properties": {
@@ -12447,7 +12329,7 @@
               }
             }
           },
-          "name": "Deploy-windows-domain-join"
+          "name": "deploy-windows-domain-join"
         },
         {
           "properties": {
@@ -12491,7 +12373,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-sql"
+          "name": "deny-public-endpoint-sql"
         },
         {
           "properties": {
@@ -12535,7 +12417,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-storage"
+          "name": "deny-public-endpoint-storage"
         },
         {
           "properties": {
@@ -12579,7 +12461,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-postgresql"
+          "name": "deny-public-endpoint-postgresql"
         },
         {
           "properties": {
@@ -12623,7 +12505,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-mysql"
+          "name": "deny-public-endpoint-mysql"
         },
         {
           "properties": {
@@ -12667,7 +12549,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-mariadb"
+          "name": "deny-public-endpoint-mariadb"
         },
         {
           "properties": {
@@ -12711,7 +12593,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-aks"
+          "name": "deny-public-endpoint-aks"
         },
         {
           "properties": {
@@ -12755,7 +12637,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-key-vault"
+          "name": "deny-public-endpoint-key-vault"
         },
         {
           "properties": {
@@ -12799,7 +12681,7 @@
               }
             }
           },
-          "name": "Deny-public-endpoint-Cosmosdb"
+          "name": "deny-public-endpoint-cosmosdb"
         },
         {
           "properties": {
@@ -14059,7 +13941,6 @@
           "name": "deploy-firewall-policy"
         },
         {
-          "name": "deny-rdp-from-internet",
           "properties": {
             "displayName": "Deny RDP From the Internet",
             "description": "This policy denies any network security rule that allows RDP access from Internet",
@@ -14170,10 +14051,10 @@
                 "effect": "[[parameters('effect')]"
               }
             }
-          }
+          },
+          "name": "deny-rdp-from-internet"
         },
         {
-          "Name": "append-az-hub",
           "Properties": {
             "DisplayName": "Append Azure Hybrid Use Benefits to VMs",
             "Description": "Append Azure Hybrid Use Benefits licensing to all Windows VMs",
@@ -14235,7 +14116,8 @@
                 ]
               }
             }
-          }
+          },
+          "name": "append-az-hub"
         },
         {
           "properties": {
@@ -14279,482 +14161,7 @@
               }
             }
           },
-          "name": "deny-appgw-without-waf"
-        },
-        {
-          "properties": {
-            "Description": "Deploys Azure Security Center Email Contact details.",
-            "DisplayName": "Deploy Azure Security Center Email Contacts",
-            "Mode": "All",
-            "parameters": {
-              "emailSecurityContact": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "emailSecurityContact",
-                  "description": "email address to send ASC alerts"
-                },
-                "defaultValue": "stephen.tulp@outlook.com"
-              },
-              "alertNotifications": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Alert Notifications On or Off",
-                  "description": "Set alert notifications on or off"
-                },
-                "defaultValue": "On"
-              },
-              "alertsToAdmins": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "Send alerts to admins, On or Off",
-                  "description": "Set sending alerts to admins On or Off"
-                },
-                "defaultValue": "On"
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Security Center"
-            },
-            "policyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.Resources/subscriptions"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "deployIfNotExists",
-                "details": {
-                  "deploymentScope": "subscription",
-                  "existenceScope": "subscription",
-                  "type": "Microsoft.Security/securityContacts",
-                  "existenceCondition": {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Security/securityContacts/email",
-                        "equals": "[[parameters ('emailSecurityContact')]"
-                      }
-                    ]
-                  },
-                  "roleDefinitionIds": [
-                    "/providers/Microsoft.Authorization/roleDefinitions/8e3af657-a8ff-443c-a75c-2fe8c4bcb635"
-                  ],
-                  "deployment": {
-                    "location": "westus",
-                    "properties": {
-                      "mode": "incremental",
-                      "template": {
-                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                          "emailSecurityContact": {
-                            "type": "string"
-                          },
-                          "alertNotifications": {
-                            "type": "string"
-                          },
-                          "alertsToAdmins": {
-                            "type": "string"
-                          }
-                        },
-                        "variables": {},
-                        "resources": [
-                          {
-                            "type": "Microsoft.Security/securityContacts",
-                            "name": "default1",
-                            "apiVersion": "2017-08-01-preview",
-                            "properties": {
-                              "email": "[[parameters('emailSecurityContact')]",
-                              "alertNotifications": "[[parameters('alertNotifications')]",
-                              "alertsToAdmins": "[[parameters('alertsToAdmins')]"
-                            }
-                          }
-                        ],
-                        "outputs": {}
-                      },
-                      "parameters": {
-                        "emailSecurityContact": {
-                          "value": "[[parameters('emailSecurityContact')]"
-                        },
-                        "alertNotifications": {
-                          "value": "[[parameters('alertNotifications')]"
-                        },
-                        "alertsToAdmins": {
-                          "value": "[[parameters('alertsToAdmins')]"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "name": "deploy-asc-email-contact"
-        },
-        {
-          "properties": {
-            "Description": "Deploy Azure Defender settings in Azure Security Center for the specific services.",
-            "DisplayName": "Deploy Azure Defender settings in Azure Security Center",
-            "Mode": "Indexed",
-            "Parameters": {
-              "pricingTierVMs": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierVMs",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierSqlServers": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierSqlServers",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierAppServices": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierAppServices",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierStorageAccounts": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierStorageAccounts",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierContainerRegistry": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierContainerRegistry",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierKeyVaults": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierKeyVaults",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierKubernetesService": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierKubernetesService",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierDns": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierDns",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "pricingTierArm": {
-                "type": "String",
-                "metadata": {
-                  "displayName": "pricingTierArm",
-                  "description": null
-                },
-                "allowedValues": [
-                  "Standard",
-                  "Free"
-                ],
-                "defaultValue": "Standard"
-              },
-              "effect": {
-                "type": "string",
-                "defaultValue": "DeployIfNotExists",
-                "allowedValues": [
-                  "DeployIfNotExists",
-                  "Disabled"
-                ],
-                "metadata": {
-                  "displayName": "Effect",
-                  "description": "Enable or disable the execution of the policy"
-                }
-              }
-            },
-            "metadata": {
-              "version": "1.0.0",
-              "category": "Security Center"
-            },
-            "PolicyRule": {
-              "if": {
-                "allOf": [
-                  {
-                    "field": "type",
-                    "equals": "Microsoft.Resources/subscriptions"
-                  }
-                ]
-              },
-              "then": {
-                "effect": "[[parameters('effect')]",
-                "details": {
-                  "type": "Microsoft.Security/pricings",
-                  "deploymentScope": "subscription",
-                  "existenceScope": "subscription",
-                  "roleDefinitionIds": [
-                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
-                  ],
-                  "existenceCondition": {
-                    "allOf": [
-                      {
-                        "field": "Microsoft.Security/pricings/pricingTier",
-                        "equals": "Standard"
-                      },
-                      {
-                        "field": "type",
-                        "equals": "Microsoft.Security/pricings"
-                      }
-                    ]
-                  },
-                  "deployment": {
-                    "location": "northeurope",
-                    "properties": {
-                      "mode": "incremental",
-                      "parameters": {
-                        "pricingTierVMs": {
-                          "value": "[[parameters('pricingTierVMs')]"
-                        },
-                        "pricingTierSqlServers": {
-                          "value": "[[parameters('pricingTierSqlServers')]"
-                        },
-                        "pricingTierAppServices": {
-                          "value": "[[parameters('pricingTierAppServices')]"
-                        },
-                        "pricingTierStorageAccounts": {
-                          "value": "[[parameters('pricingTierStorageAccounts')]"
-                        },
-                        "pricingTierContainerRegistry": {
-                          "value": "[[parameters('pricingTierContainerRegistry')]"
-                        },
-                        "pricingTierKeyVaults": {
-                          "value": "[[parameters('pricingTierKeyVaults')]"
-                        },
-                        "pricingTierKubernetesService": {
-                          "value": "[[parameters('pricingTierKubernetesService')]"
-                        },
-                        "pricingTierDns": {
-                          "value": "[[parameters('pricingTierDns')]"
-                        },
-                        "pricingTierArm": {
-                          "value": "[[parameters('pricingTierArm')]"
-                        }
-                      },
-                      "template": {
-                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                        "contentVersion": "1.0.0.0",
-                        "parameters": {
-                          "pricingTierVMs": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierVMs"
-                            }
-                          },
-                          "pricingTierSqlServers": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierSqlServers"
-                            }
-                          },
-                          "pricingTierAppServices": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierAppServices"
-                            }
-                          },
-                          "pricingTierStorageAccounts": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "pricingTierStorageAccounts"
-                            }
-                          },
-                          "pricingTierContainerRegistry": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "ContainerRegistry"
-                            }
-                          },
-                          "pricingTierKeyVaults": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KeyVaults"
-                            }
-                          },
-                          "pricingTierKubernetesService": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KubernetesService"
-                            }
-                          },
-                          "pricingTierDns": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KubernetesService"
-                            }
-                          },
-                          "pricingTierArm": {
-                            "type": "string",
-                            "metadata": {
-                              "description": "KubernetesService"
-                            }
-                          }
-                        },
-                        "variables": {},
-                        "resources": [
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "VirtualMachines",
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierVMs')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "StorageAccounts",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/VirtualMachines')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierStorageAccounts')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "AppServices",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/StorageAccounts')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierAppServices')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "SqlServers",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/AppServices')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierSqlServers')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "KeyVaults",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/SqlServers')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierKeyVaults')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "KubernetesService",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/KeyVaults')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierKubernetesService')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "ContainerRegistry",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/KubernetesService')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierContainerRegistry')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "Dns",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/ContainerRegistry')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierDns')]"
-                            }
-                          },
-                          {
-                            "type": "Microsoft.Security/pricings",
-                            "apiVersion": "2018-06-01",
-                            "name": "Arm",
-                            "dependsOn": [
-                              "[[concat('Microsoft.Security/pricings/Dns')]"
-                            ],
-                            "properties": {
-                              "pricingTier": "[[parameters('pricingTierArm')]"
-                            }
-                          }
-                        ],
-                        "outputs": {}
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "name": "deploy-asc-pricing"
+          "name": "deny-appgwy-without-waf"
         },
         {
           "properties": {
@@ -15568,11 +14975,1479 @@
             }
           },
           "name": "deploy-vwan"
+        },
+        {
+          "properties": {
+            "description": "Deploy Azure Security Center Security Contacts",
+            "displayName": "Deploy Azure Security Center Security Contacts",
+            "mode": "All",
+            "parameters": {
+              "emailSecurityContact": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Security contacts email address",
+                  "description": "Provide email address for Azure Security Center contact details"
+                }
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/securityContacts",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/securityContacts/email",
+                        "contains": "[[parameters('emailSecurityContact')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/securityContacts"
+                      },
+                      {
+                        "field": "Microsoft.Security/securityContacts/alertNotifications",
+                        "equals": "On"
+                      },
+                      {
+                        "field": "Microsoft.Security/securityContacts/alertsToAdmins",
+                        "equals": "On"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "emailSecurityContact": {
+                          "value": "[[parameters('emailSecurityContact')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "emailSecurityContact": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Security contacts email address"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/securityContacts",
+                            "name": "default",
+                            "apiVersion": "2020-01-01-preview",
+                            "properties": {
+                              "emails": "[[parameters('emailSecurityContact')]",
+                              "notificationsByRole": {
+                                "state": "On",
+                                "roles": [
+                                  "Owner"
+                                ]
+                              },
+                              "alertNotifications": {
+                                "state": "On",
+                                "minimalSeverity": "High"
+                              }
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-security-contacts"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Virtual Machines",
+            "displayName": "Deploy Azure Defender for Virtual Machines",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "VirtualMachines",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "VirtualMachines",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-vms"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Azure Sql Databases",
+            "displayName": "Deploy Azure Defender for Azure Sql Databases",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "SqlServers",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "SqlServers",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-sql"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Azure App Services",
+            "displayName": "Deploy Azure Defender for Azure App Services",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "AppServices",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "AppServices",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-appservice"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Azure Security Center for Storage Accounts",
+            "displayName": "Deploy Azure Defender for Storage Accounts",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "StorageAccounts",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "StorageAccounts",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-sa"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings in Sql Server on Virtual Machines",
+            "displayName": "Deploy Azure Defender for Sql on Virtual Machines",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "SqlServerVirtualMachines",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "SqlServerVirtualMachines",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-sqlvm"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for AKS",
+            "displayName": "Deploy Azure Defender for AKS",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "KubernetesService",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "KubernetesService",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-aks"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for Azure Container Registry",
+            "displayName": "Deploy Azure Defender for ACR",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "ContainerRegistry",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "ContainerRegistry",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-acr"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for Azure Key Vault",
+            "displayName": "Deploy Azure Defender for AKV",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "KeyVaults",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "KeyVaults",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-akv"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for DNS",
+            "displayName": "Deploy Azure Defender for DNS",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "Dns",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "Dns",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-dns"
+        },
+        {
+          "properties": {
+            "description": "Deploy the Azure Defender settings for Azure Resource Manager",
+            "displayName": "Deploy Azure Defender for ARM",
+            "mode": "All",
+            "parameters": {
+              "pricingTier": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier",
+                  "description": "Azure Defender pricing tier"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "effect": {
+                "type": "string",
+                "defaultValue": "DeployIfNotExists",
+                "allowedValues": [
+                  "DeployIfNotExists",
+                  "Disabled"
+                ],
+                "metadata": {
+                  "displayName": "Effect",
+                  "description": "Enable or disable the execution of the policy"
+                }
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "equals": "Microsoft.Resources/subscriptions"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "[[parameters('effect')]",
+                "details": {
+                  "type": "Microsoft.Security/pricings",
+                  "name": "Arm",
+                  "deploymentScope": "Subscription",
+                  "existenceScope": "Subscription",
+                  "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/fb1c8493-542b-48eb-b624-b4c8fea62acd"
+                  ],
+                  "existenceCondition": {
+                    "allOf": [
+                      {
+                        "field": "Microsoft.Security/pricings/pricingTier",
+                        "equals": "[[parameters('pricingTier')]"
+                      },
+                      {
+                        "field": "type",
+                        "equals": "Microsoft.Security/pricings"
+                      }
+                    ]
+                  },
+                  "deployment": {
+                    "location": "northeurope",
+                    "properties": {
+                      "mode": "incremental",
+                      "parameters": {
+                        "pricingTier": {
+                          "value": "[[parameters('pricingTier')]"
+                        }
+                      },
+                      "template": {
+                        "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "parameters": {
+                          "pricingTier": {
+                            "type": "string",
+                            "metadata": {
+                              "description": "Azure Defender pricing tier"
+                            }
+                          }
+                        },
+                        "variables": {},
+                        "resources": [
+                          {
+                            "type": "Microsoft.Security/pricings",
+                            "apiVersion": "2018-06-01",
+                            "name": "Arm",
+                            "properties": {
+                              "pricingTier": "[[parameters('pricingTier')]"
+                            }
+                          }
+                        ],
+                        "outputs": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "name": "deploy-asc-defender-arm"
         }
       ]
     },
     "initiatives": {
       "policySetDefinitions": [
+        {
+          "properties": {
+            "description": "Deploy Azure Security Center configuration",
+            "displayName": "Deploy Azure Security Center configuration",
+            "parameters": {
+              "emailSecurityContact": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Security contacts email address",
+                  "description": "Provide email address for Azure Security Center contact details"
+                }
+              },
+              "logAnalytics": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Primary Log Analytics workspace",
+                  "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+                  "strongType": "omsWorkspace"
+                }
+              },
+              "ascExportResourceGroupName": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Resource Group name for the export to Log Analytics workspace configuration",
+                  "description": "The resource group name where the export to Log Analytics workspace configuration is created. If you enter a name for a resource group that doesn't exist, it'll be created in the subscription. Note that each resource group can only have one export to Log Analytics workspace configured."
+                }
+              },
+              "ascExportResourceGroupLocation": {
+                "type": "String",
+                "metadata": {
+                  "displayName": "Resource Group location for the export to Log Analytics workspace configuration",
+                  "description": "The location where the resource group and the export to Log Analytics workspace configuration are created."
+                }
+              },
+              "pricingTierVMs": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for Virtual Machines",
+                  "description": "Azure Defender pricing tier for Virtual Machines"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierSqlServers": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for SQL Servers",
+                  "description": "Azure Defender pricing tier for SQL Servers"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierAppServices": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for App Services",
+                  "description": "Azure Defender pricing tier for App Services"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierStorageAccounts": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for Storage Accounts",
+                  "description": "Azure Defender pricing tier for Storage Accounts"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierSqlServerVirtualMachines": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for SQL Server Virtual Machines",
+                  "description": "Azure Defender pricing tier for SQL Server Virtual Machines"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierKubernetesService": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for AKS",
+                  "description": "Azure Defender pricing tier for AKS"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierContainerRegistry": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for ACR",
+                  "description": "Azure Defender pricing tier for ACR"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierKeyVaults": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for AKV",
+                  "description": "Azure Defender pricing tier for AKV"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierDns": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for DNS",
+                  "description": "Azure Defender pricing tier for DNS"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              },
+              "pricingTierArm": {
+                "type": "string",
+                "metadata": {
+                  "displayName": "Azure Defender pricing tier for Azure Resource Manager",
+                  "description": "Azure Defender pricing tier for Azure Resource Manager"
+                },
+                "allowedValues": [
+                  "Standard",
+                  "Free"
+                ],
+                "defaultValue": "Standard"
+              }
+            },
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Security Center"
+            },
+            "PolicyDefinitions": [
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-vms')]",
+                "policyDefinitionReferenceId": "defenderForVM",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierVMs')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-Sql')]",
+                "policyDefinitionReferenceId": "defenderForSqlServers",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierSqlServers')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-appservice')]",
+                "policyDefinitionReferenceId": "defenderForAppServices",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierAppServices')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-sa')]",
+                "policyDefinitionReferenceId": "defenderForStorageAccounts",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierStorageAccounts')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-sqlvm')]",
+                "policyDefinitionReferenceId": "defenderForSqlServerVirtualMachines",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierSqlServerVirtualMachines')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-aks')]",
+                "policyDefinitionReferenceId": "defenderForKubernetesService",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierKubernetesService')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-acr')]",
+                "policyDefinitionReferenceId": "defenderForContainerRegistry",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierContainerRegistry')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-akv')]",
+                "policyDefinitionReferenceId": "defenderForKeyVaults",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierKeyVaults')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-dns')]",
+                "policyDefinitionReferenceId": "defenderForDns",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierDns')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-defender-arm')]",
+                "policyDefinitionReferenceId": "defenderForArm",
+                "parameters": {
+                  "pricingTier": {
+                    "value": "[[parameters('pricingTierArm')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-asc-security-contacts')]",
+                "policyDefinitionReferenceId": "securityEmailContact",
+                "parameters": {
+                  "emailSecurityContact": {
+                    "value": "[[parameters('emailSecurityContact')]"
+                  }
+                }
+              },
+              {
+                "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/ffb6f416-7bd2-4488-8828-56585fef2be9",
+                "policyDefinitionReferenceId": "ascExport",
+                "parameters": {
+                  "resourceGroupName": {
+                    "value": "[[parameters('ascExportResourceGroupName')]"
+                  },
+                  "resourceGroupLocation": {
+                    "value": "[[parameters('ascExportResourceGroupLocation')]"
+                  },
+                  "workspaceResourceId": {
+                    "value": "[[parameters('logAnalytics')]"
+
+                  }
+                }
+              }
+            ]
+          },
+          "name": "deploy-asc-config"
+        },
         {
           "properties": {
             "Description": "This policy set deploys the configurations of application Azure resources to forward diagnostic logs and metrics to an Azure Log Analytics workspace. See the list of policies of the services that are included ",
@@ -16499,7 +17374,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ased')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ase')]",
                 "policyDefinitionReferenceId": "ASEDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16514,7 +17389,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-AADDS')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-aadds')]",
                 "policyDefinitionReferenceId": "AADDSDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16529,7 +17404,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-AA')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-aa')]",
                 "policyDefinitionReferenceId": "AutomationDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16544,7 +17419,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Bastion')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-bastion')]",
                 "policyDefinitionReferenceId": "BastionDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16559,7 +17434,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Batch')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-batch')]",
                 "policyDefinitionReferenceId": "BatchDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16574,7 +17449,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-BlobStorage')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-blob-storage')]",
                 "policyDefinitionReferenceId": "BlobStorageDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16589,7 +17464,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-FileStorage')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-file-storage')]",
                 "policyDefinitionReferenceId": "FileStorageDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16604,7 +17479,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-QueueStorage')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-queue-storage')]",
                 "policyDefinitionReferenceId": "QueueStorageDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16619,7 +17494,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-TableStorage')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-table-storage')]",
                 "policyDefinitionReferenceId": "TableStorageDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16634,7 +17509,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-CDNEndpoints')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-cdn-endpoints')]",
                 "policyDefinitionReferenceId": "CDNEndpointsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16649,7 +17524,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-CDNProfiles')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-cdn-profiles')]",
                 "policyDefinitionReferenceId": "CDNProfilesDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16664,7 +17539,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-CognitiveServices')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-cognitive-services')]",
                 "policyDefinitionReferenceId": "CognitiveServicesDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16679,7 +17554,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-CosmosDB')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-cosmos-db')]",
                 "policyDefinitionReferenceId": "CosmosDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16694,7 +17569,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Databricks')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-databricks')]",
                 "policyDefinitionReferenceId": "DatabricksDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16709,7 +17584,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-DataFactory')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-data-factory')]",
                 "policyDefinitionReferenceId": "DataFactoryDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16724,7 +17599,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-DataLakeStore')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-data-lake-store')]",
                 "policyDefinitionReferenceId": "DataLakeStoreDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16739,7 +17614,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-DLAnalytics')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-dl-analytics')]",
                 "policyDefinitionReferenceId": "DataLakeAnalyticsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16754,7 +17629,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-EventGridSub')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-event-grid-sub')]",
                 "policyDefinitionReferenceId": "EventGridSubDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16769,7 +17644,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-EventGridTopic')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-event-grid-topic')]",
                 "policyDefinitionReferenceId": "EventGridTopicDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16784,7 +17659,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-EventHub')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-event-hub')]",
                 "policyDefinitionReferenceId": "EventHubDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16799,7 +17674,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-EventGridSystemTopic')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-event-grid-system-topic')]",
                 "policyDefinitionReferenceId": "EventSystemTopicDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16814,7 +17689,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ExpressRoute')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-expressroute')]",
                 "policyDefinitionReferenceId": "ExpressRouteDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16829,7 +17704,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Firewall')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-firewall')]",
                 "policyDefinitionReferenceId": "FirewallDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16844,7 +17719,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-FrontDoor')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-front-door')]",
                 "policyDefinitionReferenceId": "FrontDoorDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16859,7 +17734,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Function')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-function')]",
                 "policyDefinitionReferenceId": "FunctionAppDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16874,7 +17749,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-HDInsight')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-hd-insight')]",
                 "policyDefinitionReferenceId": "HDInsightDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16889,7 +17764,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-iotHub')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-iot-hub')]",
                 "policyDefinitionReferenceId": "IotHubDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16904,7 +17779,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-KeyVault')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-key-vault')]",
                 "policyDefinitionReferenceId": "KeyVaultDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16919,7 +17794,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-LoadBalancer')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-load-balancer')]",
                 "policyDefinitionReferenceId": "LoadBalancerDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16934,7 +17809,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-LogAnalyticsWorkspace')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-log-analytics-workspace')]",
                 "policyDefinitionReferenceId": "LogAnalyticsWorkspaceDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16949,7 +17824,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-LogicAppsISE')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-logic-apps-ise')]",
                 "policyDefinitionReferenceId": "LogicAppsISEDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16964,7 +17839,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-LogicAppsWF')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-logic-apps-wf')]",
                 "policyDefinitionReferenceId": "LogicAppsWFDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16979,7 +17854,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-MariaDB')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-maria-db')]",
                 "policyDefinitionReferenceId": "MariaDBDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -16994,7 +17869,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-MlWorkspace')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ml-workspace')]",
                 "policyDefinitionReferenceId": "MlWorkspaceDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17009,7 +17884,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-MySQL')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-mysql')]",
                 "policyDefinitionReferenceId": "MySQLDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17024,7 +17899,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-NetworkSecurityGroups')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-network-security-groups')]",
                 "policyDefinitionReferenceId": "NetworkSecurityGroupsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17039,7 +17914,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-NIC')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-nic')]",
                 "policyDefinitionReferenceId": "NetworkNICDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17054,7 +17929,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-PostgreSQL')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-postgresql')]",
                 "policyDefinitionReferenceId": "PostgreSQLDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17069,7 +17944,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-PowerBIEmbedded')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-power-bi-embedded')]",
                 "policyDefinitionReferenceId": "PowerBIEmbeddedDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17084,7 +17959,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-PublicIP')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-public-ip')]",
                 "policyDefinitionReferenceId": "NetworkPublicIPNicDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17099,7 +17974,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-RecoveryVault')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-recovery-vault')]",
                 "policyDefinitionReferenceId": "RecoveryVaultDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17114,7 +17989,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-RedisCache')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-redis-cache')]",
                 "policyDefinitionReferenceId": "RedisCacheDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17129,7 +18004,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Relay')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-relay')]",
                 "policyDefinitionReferenceId": "RelayDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17144,7 +18019,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-SearchServices')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-search-services')]",
                 "policyDefinitionReferenceId": "SearchServicesDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17159,7 +18034,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-ServiceBus')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-service-bus')]",
                 "policyDefinitionReferenceId": "ServiceBusDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17174,7 +18049,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-SignalR')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-signalr')]",
                 "policyDefinitionReferenceId": "SignalRDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17189,7 +18064,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-StorageAccounts')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-storage-accounts')]",
                 "policyDefinitionReferenceId": "StorageAccountsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17204,7 +18079,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-SQLDBs')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-sqldbs')]",
                 "policyDefinitionReferenceId": "SQLDBsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17219,7 +18094,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-SQLElasticPools')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-sql-elastic-pools')]",
                 "policyDefinitionReferenceId": "SQLElasticPoolsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17234,7 +18109,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-SQLMI')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-sql-mi')]",
                 "policyDefinitionReferenceId": "SQLMDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17249,7 +18124,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-StreamAnalytics')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-stream-analytics')]",
                 "policyDefinitionReferenceId": "StreamAnalyticsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17264,7 +18139,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-TimeSeriesInsights')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-time-series-insights')]",
                 "policyDefinitionReferenceId": "TimeSeriesInsightsDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17279,7 +18154,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-TrafficManager')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-traffic-manager')]",
                 "policyDefinitionReferenceId": "TrafficManagerDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17294,7 +18169,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-VirtualNetwork')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-virtual-network')]",
                 "policyDefinitionReferenceId": "VirtualNetworkDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17309,7 +18184,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-VM')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-vm')]",
                 "policyDefinitionReferenceId": "VirtualMachinesDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17324,7 +18199,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-VMSS')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-vmss')]",
                 "policyDefinitionReferenceId": "VMSSDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17339,7 +18214,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-VNetGW')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-vnet-gw')]",
                 "policyDefinitionReferenceId": "VNetGWDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17354,7 +18229,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-WebServerFarm')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-web-server-farm')]",
                 "policyDefinitionReferenceId": "AppServiceDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17369,7 +18244,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-Website')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-website')]",
                 "policyDefinitionReferenceId": "AppServiceWebappDeployDiagnosticLogDeployLogAnalytics",
                 "parameters": {
                   "logAnalytics": {
@@ -17505,7 +18380,7 @@
             },
             "PolicyDefinitions": [
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-CosmosDB')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-cosmosdb')]",
                 "policyDefinitionReferenceId": "CosmosDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17514,7 +18389,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-MariaDB')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-mariadb')]",
                 "policyDefinitionReferenceId": "MariaDBDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17523,7 +18398,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-MySQL')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-mysql')]",
                 "policyDefinitionReferenceId": "MySQLDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17532,7 +18407,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-PostgreSql')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-postgresql')]",
                 "policyDefinitionReferenceId": "PostgreSQLDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17541,7 +18416,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-KeyVault')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-key-vault')]",
                 "policyDefinitionReferenceId": "KeyVaultDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17550,7 +18425,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-Sql')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-sql')]",
                 "policyDefinitionReferenceId": "SqlServerDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17559,7 +18434,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-Storage')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-storage')]",
                 "policyDefinitionReferenceId": "StorageDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17568,7 +18443,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deny-PublicEndpoint-Aks')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deny-public-endpoint-aks')]",
                 "policyDefinitionReferenceId": "AKSDenyPaasPublicIP",
                 "parameters": {
                   "effect": {
@@ -17584,7 +18459,7 @@
         {
           "properties": {
             "Description": "Deploy auditing, Alert, TDE and SQL vulnerability to SQL Databases when it not exist in the deployment",
-            "DisplayName": "Deploy SQL Database built-in SQL security configuration",
+            "DisplayName": "Deploy SQL Database security configuration",
             "Parameters": {
               "vulnerabilityAssessmentsEmail": {
                 "metadata": {
@@ -17656,7 +18531,7 @@
             },
             "PolicyDefinitions": [
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-Tde')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-tde')]",
                 "policyDefinitionReferenceId": "SqlDbTdeDeploySqlSecurity",
                 "parameters": {
                   "effect": {
@@ -17665,7 +18540,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-SecurityAlertPolicies')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-security-alert-policies')]",
                 "policyDefinitionReferenceId": "SqlDbSecurityAlertPoliciesDeploySqlSecurity",
                 "parameters": {
                   "effect": {
@@ -17674,7 +18549,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-AuditingSettings')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-auditing-Settings')]",
                 "policyDefinitionReferenceId": "SqlDbAuditingSettingsDeploySqlSecurity",
                 "parameters": {
                   "effect": {
@@ -17683,7 +18558,7 @@
                 }
               },
               {
-                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-Sql-vulnerabilityAssessments')]",
+                "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-sql-vulnerability-assessments')]",
                 "policyDefinitionReferenceId": "SqlDbVulnerabilityAssessmentsDeploySqlSecurity",
                 "parameters": {
                   "effect": {

@@ -107,12 +107,18 @@
                 "description": "Provide the Network Security Group identifier prefix"
             }
         },
-
         "basPrefix": {
             "type": "string",
             "maxLength": 3,
             "metadata": {
                 "description": "Provide the Azure Bastion prefix"
+            }
+        },
+        "ddosPrefix": {
+            "type": "string",
+            "maxLength": 4,
+            "metadata": {
+                "description": "Provide the Azure DDoS Protection prefix"
             }
         },
         "subscriptionTag": {
@@ -170,7 +176,7 @@
                 "description": "If 'Yes' is selected when also adding a subscription for management, ARM will assign two policies to enable auditing in your environment, into the Log Analytics workspace for platform monitoring. If 'No', it will be ignored."
             }
         },
-        "ascEmailContact": {
+        "emailContactAsc": {
             "type": "string",
             "defaultValue": "",
             "metadata": {
@@ -210,6 +216,14 @@
             ]
         },
         "enableAscForSql": {
+            "type": "string",
+            "defaultValue": "Free",
+            "allowedValues": [
+                "Standard",
+                "Free"
+            ]
+        },
+        "enableAscForSqlOnVm": {
             "type": "string",
             "defaultValue": "Free",
             "allowedValues": [
@@ -418,6 +432,14 @@
             ],
             "defaultValue": "Yes"
         },
+        "enableDdoS": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "enablePrivateDnsZones": {
             "type": "string",
             "allowedValues": [
@@ -474,6 +496,14 @@
             ],
             "defaultValue": "Yes"
         },
+        "enableAzFwDnsProxy": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
         "enableVpnGw": {
             "type": "string",
             "defaultValue": "Yes",
@@ -490,9 +520,29 @@
                 "No"
             ]
         },
-        "vpnOrErZones": {
-            "type": "array",
-            "defaultValue": []
+        "gwRegionalOrAz": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "gwAzSku": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "gwRegionalSku": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "erRegionalOrAz": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "erAzSku": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "erRegionalSku": {
+            "type": "string",
+            "defaultValue": ""
         },
         "firewallZones": {
             "type": "array",
@@ -529,14 +579,6 @@
                 "No"
             ],
             "defaultValue": "No"
-        },
-        "vpnGwType": {
-            "type": "string",
-            "allowedValues": [
-                "PolicyBased",
-                "RouteBased"
-            ],
-            "defaultValue": "RouteBased"
         },
         "subnetMaskForAzBastion": {
             "type": "string",
@@ -668,12 +710,12 @@
             "policyDefinitions": "[concat(uri(deployment().properties.templateLink.uri, variables('azEnvPolicy')))]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'hub/logAnalytics.json')]",
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'hub/logAnalyticsSolutions.json')]",
-            "storage": "[uri(deployment().properties.templateLink.uri, 'common/storage.json')]",
-            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'common/recoveryServicesVault.json')]",
-            "privateDns": "[uri(deployment().properties.templateLink.uri, 'linkedTemplates/privateDns.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'hub/storage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'hub/recoveryServicesVault.json')]",
+            "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
-            "hubNetworking": "[uri(deployment().properties.templateLink.uri, 'hub/networking.json')]",
+            "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'hub/hub-connectivity.json')]",
             "azOps": "[uri(deployment().properties.templateLink.uri, 'hub/azOpsSetup.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
@@ -687,7 +729,7 @@
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "hubNetworking": "[take(concat('hubNetworking', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "hubConnectivity": "[take(concat('hubConnectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
@@ -1106,8 +1148,8 @@
                     "enableAsc": {
                         "value": "[parameters('enableAsc')]"
                     },
-                    "ascEmailContact": {
-                        "value": "[parameters('ascEmailContact')]"
+                    "emailContactAsc": {
+                        "value": "[parameters('emailContactAsc')]"
                     },
                     "enableAscForServers": {
                         "value": "[parameters('enableAscForServers')]"
@@ -1120,6 +1162,9 @@
                     },
                     "enableAscForSql": {
                         "value": "[parameters('enableAscForSql')]"
+                    },
+                    "enableAscForSqlOnVm": {
+                        "value": "[parameters('enableAscForSqlOnVm')]"
                     },
                     "enableAscForKeyVault": {
                         "value": "[parameters('enableAscForKeyVault')]"
@@ -1141,6 +1186,15 @@
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
+                    },
+                    "subscriptionTag": {
+                        "value": "[parameters('subscriptionTag')]"
+                    },
+                    "ownerTag": {
+                        "value": "[parameters('ownerTag')]"
+                    },
+                    "costCenterTag": {
+                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
@@ -1151,7 +1205,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
-            "name": "[variables('deploymentNames').hubNetworking]",
+            "name": "[variables('deploymentNames').hubConnectivity]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
@@ -1160,7 +1214,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').hubNetworking]"
+                    "uri": "[variables('deploymentUris').hubConnectivity]"
                 },
                 "parameters": {
                     "companyPrefix": {
@@ -1196,6 +1250,9 @@
                     "basPrefix": {
                         "value": "[parameters('basPrefix')]"
                     },
+                    "ddosPrefix": {
+                        "value": "[parameters('DdosPrefix')]"
+                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },
@@ -1208,14 +1265,17 @@
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
                     },
+                    "enableDdoS": {
+                        "value": "[parameters('enableDdoS')]"
+                    },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
                     },
-                    "vpnOrErZones": {
-                        "value": "[parameters('vpnOrErZones')]"
-                    },
                     "firewallZones": {
                         "value": "[parameters('firewallZones')]"
+                    },
+                    "enableAzFwDnsProxy": {
+                        "value": "[parameters('enableAzFwDnsProxy')]"
                     },
                     "addressPrefix": {
                         "value": "[parameters('addressPrefix')]"
@@ -1229,14 +1289,29 @@
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
                     },
+                    "gwRegionalOrAz": {
+                        "value": "[parameters('gwRegionalOrAz')]"
+                    },
+                    "gwAzSku": {
+                        "value": "[parameters('gwAzSku')]"
+                    },
+                    "gwRegionalSku": {
+                        "value": "[parameters('gwRegionalSku')]"
+                    },
+                    "erRegionalOrAz": {
+                        "value": "[parameters('erRegionalOrAz')]"
+                    },
+                    "erAzSku": {
+                        "value": "[parameters('erAzSku')]"
+                    },
+                    "erRegionalSku": {
+                        "value": "[parameters('erRegionalSku')]"
+                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
                     "subscriptionId": {
                         "value": "[parameters('subscriptionId')]"
-                    },
-                    "vpnGwType": {
-                        "value": "[parameters('vpnGwType')]"
                     },
                     "subnetMaskForAzFw": {
                         "value": "[parameters('subnetMaskForAzFw')]"
@@ -1276,7 +1351,7 @@
             "subscriptionId": "[parameters('subscriptionId')]",
             "name": "[variables('deploymentNames').privateDns]",
             "dependsOn": [
-                "[variables('deploymentNames').hubNetworking]",
+                "[variables('deploymentNames').hubConnectivity]",
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
             "location": "[deployment().location]",
@@ -1347,7 +1422,7 @@
                 "[variables('deploymentNames').monitoring]",
                 "[variables('deploymentNames').monitoringSolutions]",
                 "[variables('deploymentNames').policyDefinitions]",
-                "[variables('deploymentNames').hubNetworking]",
+                "[variables('deploymentNames').hubConnectivity]",
                 "policyCompletion"
             ],
             "properties": {
