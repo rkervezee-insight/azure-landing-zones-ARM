@@ -19,7 +19,7 @@ See the following [instructions](https://docs.microsoft.com/en-us/azure/role-bas
 
 The following resources have been provisioned as part of the deployment.
 
-* A scalable Management Group hierarchy aligned to core platform capabilities, allowing Silver Chain to operationalize at scale using centrally managed Azure RBAC and Azure Policy where platform and workloads have clear separation.
+* A scalable Management Group hierarchy aligned to core platform capabilities, allowing operationalization at scale using centrally managed Azure RBAC and Azure Policy where platform and workloads have clear separation.
 * Azure Policies that will enable autonomy for the platform and the landing zones.
 * An Azure subscription dedicated for the **platform**, which enables core platform capabilities across Identity, Networking and Management services, such as:
   * A Log Analytics workspace and an Automation account
