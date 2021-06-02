@@ -873,7 +873,7 @@
                         "value": "[parameters('enableAscForArm')]"
                     },
                     "workspaceResourceId": {
-                        "value": "[toLower(concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]"
+                        "value": "[toLower(concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
