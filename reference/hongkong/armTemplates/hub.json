@@ -868,7 +868,7 @@
             }
         },
         {
-            "comments": "// Move the Subscription to the appropriate Management Group",
+            "comments": "// Move the Subscription to the appropriate Management Group (Platform Management Subscription)",
             "condition": "[not(empty(parameters('managementSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -878,8 +878,8 @@
             ],
             "properties": {}
         },
-        // Move the Subscription to the appropriate Management Group or skip if not used. (Identity Subscription)
         {
+            "comments": "// Move the Subscription to the appropriate Management Group or skip if not used. (Identity Subscription)",
             "condition": "[not(empty(parameters('identitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -889,8 +889,8 @@
             ],
             "properties": {}
         },
-        // Move the Subscription to the appropriate Management Group or skip if not used. (Connectivity Subscription)
         {
+            "comments": "// Move the Subscription to the appropriate Management Group or skip if not used. (Connectivity Subscription)",
             "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -1588,6 +1588,9 @@
                     },
                     "akvPrefix": {
                         "value": "[parameters('akvPrefix')]"
+                    },
+                    "enableAzOps": {
+                        "value": "[parameters('enableAzOps')]"
                     },
                     "principalId": {
                         "value": "[parameters('principalId')]"
