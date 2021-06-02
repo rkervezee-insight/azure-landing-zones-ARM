@@ -896,7 +896,7 @@
                         "name": "cicdOption",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy integrated CI/CD pipeline?",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "toolTip": "",
                         "constraints": {
                             "allowedValues": [
@@ -1017,7 +1017,8 @@
                                     "hideCertificate": true
                                 }
                             }
-                        ]
+                        ],
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
                     }
                 ]
             },
