@@ -145,7 +145,6 @@
         "subscriptionTag": {
             "type": "string",
             "defaultValue": ""
-
         },
         "ownerTag": {
             "type": "string",
@@ -217,53 +216,6 @@
         }
     },
     "resources": [
-        {
-            "comments": "// Conditional assignment of Azure Policy to deploy NSG Flow Logs",
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
-            "location": "[deployment().location]",
-            "identity": {
-                "type": "SystemAssigned"
-            },
-            "properties": {
-                "description": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
-                "displayName": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
-                "policyDefinitionId": "[variables('policyDefinitions').deployNsgFlowLogs]",
-                "scope": "[variables('scope').topLevel]",
-                "parameters": {
-                    "logAnalytics": {
-                        "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]"
-                    },
-                    "storageAccountResourceId": {
-                        "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.Storage/storageAccounts/', variables('storageName')))]"
-                    },
-                    "retention": {
-                        "value": 7
-                    },
-                    "trafficAnalyticsInterval": {
-                        "value": 60
-                    },
-                    "flowAnalyticsEnabled": {
-                        "value": false
-                    }
-                }
-            }
-        },
-        {
-            "comments": "// Role assignment for the conditional policy assignment to deploy NSG Flow Logs",
-            "type": "Microsoft.Authorization/roleAssignments",
-            "apiVersion": "[variables('apiVersions').roleAssignments]",
-            "name": "[variables('roleAssignmentNames').deployNsgFlowLogs]",
-            "dependsOn": [
-                "[variables('policyAssignmentNames').deployNsgFlowLogs]"
-            ],
-            "properties": {
-                "principalType": "ServicePrincipal",
-                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').logAnalyticsContributor)]",
-                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployNsgFlowLogs), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
-            }
-        },
         {
             "comments": "// Conditional assignment of Azure Policy to enforce activity logs from subscriptions to Log Analytics",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
@@ -362,8 +314,7 @@
                     }
                 }
             }
-        },
-        
+        },  
         {
             "comments": "// Role assignment for the conditional VM monitoring policy assignment",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
@@ -378,8 +329,7 @@
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').logAnalyticsContributor)]",
                 "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployVmMonitoring), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
-        },
-        
+        },      
         {
             "comments": "// Conditional assignment of Azure Policy to enforce Azure Resource Diagnostics to Log Analytics",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
@@ -673,6 +623,53 @@
                 "policyDefinitionId": "[variables('policyDefinitions').denyAppGwyWaf]",
                 "parameters": {},
                 "scope": "[variables('scope').topLevel]"
+            }
+        },
+                {
+            "comments": "// Conditional assignment of Azure Policy to deploy NSG Flow Logs",
+            "type": "Microsoft.Authorization/policyAssignments",
+            "apiVersion": "[variables('apiVersions').policyAssignments]",
+            "name": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
+            "location": "[deployment().location]",
+            "identity": {
+                "type": "SystemAssigned"
+            },
+            "properties": {
+                "description": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
+                "displayName": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
+                "policyDefinitionId": "[variables('policyDefinitions').deployNsgFlowLogs]",
+                "scope": "[variables('scope').topLevel]",
+                "parameters": {
+                    "logAnalytics": {
+                        "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]"
+                    },
+                    "storageAccountResourceId": {
+                        "value": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.Storage/storageAccounts/', variables('storageName')))]"
+                    },
+                    "retention": {
+                        "value": 7
+                    },
+                    "trafficAnalyticsInterval": {
+                        "value": 60
+                    },
+                    "flowAnalyticsEnabled": {
+                        "value": false
+                    }
+                }
+            }
+        },
+        {
+            "comments": "// Role assignment for the conditional policy assignment to deploy NSG Flow Logs",
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "[variables('apiVersions').roleAssignments]",
+            "name": "[variables('roleAssignmentNames').deployNsgFlowLogs]",
+            "dependsOn": [
+                "[variables('policyAssignmentNames').deployNsgFlowLogs]"
+            ],
+            "properties": {
+                "principalType": "ServicePrincipal",
+                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').logAnalyticsContributor)]",
+                "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployNsgFlowLogs), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         }
     ],
