@@ -355,7 +355,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment for Azure Resource Diagnostics Logs  to Log Analytics",
+            "comments": "// Conditional - Azure Policy Assignment for Azure Resource Diagnostics Logs to Log Analytics",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
