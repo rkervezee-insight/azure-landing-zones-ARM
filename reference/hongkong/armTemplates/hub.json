@@ -1135,7 +1135,7 @@
             "name": "[variables('deploymentNames').identity]",
             "dependsOn": [
                 "[variables('deploymentNames').policyDefinitions]",
-                "DeploymentDelay"
+                "policyCompletion"
             ],
             "location": "[deployment().location]",
             "properties": {
