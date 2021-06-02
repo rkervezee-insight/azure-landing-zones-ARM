@@ -2385,6 +2385,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
+
             "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSub]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
@@ -2402,7 +2403,6 @@
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
-            "enableRsv": "[steps('esPlatformManagement').esRsv]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
             "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
@@ -2413,6 +2413,7 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+
             "paToken": "[steps('esPlatformDevOps').esPaToken]",
             "principalId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.objectId]",
             "principalSecret": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.password]",
@@ -2420,6 +2421,7 @@
             "appId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.appId]",
             "enableAzOps": "[steps('esPlatformDevOps').cicdOption]",
             "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
+
             "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnSub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnSub, '')]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
@@ -2453,12 +2455,14 @@
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
             "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
+
             "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformConnectivity').esConnSub))), steps('esPlatformIdentity').esIdamSub, '')]",
             "enableIdentitySub": "[steps('esPlatformIdentity').esIdentity]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
