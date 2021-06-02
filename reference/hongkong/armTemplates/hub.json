@@ -1386,14 +1386,14 @@
                     "udrPrefix": {
                         "value": "[parameters('udrPrefix')]"
                     },
+                    "ddosPrefix": {
+                        "value": "[parameters('DdosPrefix')]"
+                    },
                     "nsgPrefix": {
                         "value": "[parameters('nsgPrefix')]"
                     },
                     "basPrefix": {
                         "value": "[parameters('basPrefix')]"
-                    },
-                    "ddosPrefix": {
-                        "value": "[parameters('DdosPrefix')]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
@@ -1403,6 +1403,9 @@
                     },
                     "costCenterTag": {
                         "value": "[parameters('costCenterTag')]"
+                    },
+                    "addressPrefix": {
+                        "value": "[parameters('addressPrefix')]"
                     },
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
@@ -1418,9 +1421,6 @@
                     },
                     "enableAzFwDnsProxy": {
                         "value": "[parameters('enableAzFwDnsProxy')]"
-                    },
-                    "addressPrefix": {
-                        "value": "[parameters('addressPrefix')]"
                     },
                     "enableAzBastion": {
                         "value": "[parameters('enableAzBastion')]"
