@@ -875,7 +875,7 @@
                     {
                         "name": "info",
                         "type": "Microsoft.Common.InfoBox",
-                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSub))]",
+                        "visible": "[not(empty(steps('esPlatformManagement').esMgmtSub))]",
                         "options": {
                             "icon": "Info",
                             "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines.",
@@ -885,7 +885,7 @@
                     {
                         "name": "correction",
                         "type": "Microsoft.Common.InfoBox",
-                        "visible": "[empty(steps('esPlatformManagement').esPlatformSub)]",
+                        "visible": "[empty(steps('esPlatformManagement').esMgmtSub)]",
                         "options": {
                             "icon": "Warning",
                             "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines, but requires a dedicated subscription for platform management in the previous step. Please add a subscription or continue without setting up the CI/CD integration.",
@@ -911,7 +911,7 @@
                             ],
                             "required": true
                         },
-                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSub))]"
+                        "visible": "[not(empty(steps('esPlatformManagement').esMgmtSub))]"
                     },
                     {
                         "name": "Instructions",
