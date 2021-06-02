@@ -268,7 +268,6 @@
                                 "publisher": "Microsoft"
                             }
                         },
-
                         {
                             "comments": "// Log Analytics Solution for Change Tracking",
                             "condition": "[equals(parameters('enableChangeTracking'), 'Yes')]",
@@ -286,7 +285,6 @@
                                 "publisher": "Microsoft"
                             }
                         },
-
                         {
                             "comments": "// Log Analytics Solution for VM Insights",
                             "condition": "[equals(parameters('enableVmInsights'), 'Yes')]",
@@ -304,7 +302,6 @@
                                 "publisher": "Microsoft"
                             }
                         },
-
                         {
                             "comments": "// Log Analytics Solution for Security",
                             "condition": "[equals(parameters('enableSecuritySolution'), 'Yes')]",

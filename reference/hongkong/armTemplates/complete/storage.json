@@ -29,6 +29,15 @@
                 "No"
             ],
             "defaultValue": "Yes"
+        },
+        "subscriptionTag": {
+            "type": "string"
+        },
+        "ownerTag": {
+            "type": "string"
+        },
+        "costCenterTag": {
+            "type": "string"
         }
     },
     "variables": {
@@ -48,17 +57,29 @@
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
             "storage": "2019-06-01"
+        },
+        "tags": {
+            "environment": "[parameters('subscriptionTag')]",
+            "owner": "[parameters('ownerTag')]",
+            "costCenter": "[parameters('costCenterTag')]"
         }
     },
     "resources": [
         {
+            "comments": "// Create Resource Group",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
-            "location": "[deployment().location]",
             "name": "[variables('resourceGroupName')]",
+            "location": "[deployment().location]",
+            "tags": {
+                "environment": "[variables('tags').environment]",
+                "owner": "[variables('tags').owner]",
+                "costCenter": "[variables('tags').costCenter]"
+            },
             "properties": {}
         },
         {
+            "comments": "// Nested deployment for Azure Storage (Subscription Level)",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -74,6 +95,7 @@
                     "parameters": {},
                     "resources": [
                         {
+                            "comments": "// Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -83,7 +105,7 @@
                             }
                         },
                         {
-                            // Nested deployment for Storage (Resource Group Level)
+                            "comments": "// Nested deployment for Storage (Resource Group Level)",
                             "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",
