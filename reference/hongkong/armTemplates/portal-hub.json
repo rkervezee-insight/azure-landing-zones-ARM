@@ -1045,7 +1045,7 @@
                         "name": "esHub",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Virtual Hub",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
                         "constraints": {
                             "allowedValues": [
