@@ -166,7 +166,7 @@
                 "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for identity."
             }
         },
-         "denySubnetWithoutNsgForIdentity": {
+        "denySubnetWithoutNsgForIdentity": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -777,13 +777,13 @@
         },
         "moveSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', parameters('managementSubscriptionId'))]",
-            "hubConnectivity": "[concat(parameters('companyPrefix'), '-hubConnectivity', '/', parameters('connectivitySubscriptionId'))]",
+            "hubConnectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', parameters('connectivitySubscriptionId'))]",
             "identity": "[concat(parameters('companyPrefix'), '-identity', '/', parameters('identitySubscriptionId'))]"
 
         },
         "noSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', 'na')]",
-            "hubConnectivity": "[concat(parameters('companyPrefix'), '-hubConnectivity', '/', 'naconn')]",
+            "hubConnectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', 'naconn')]",
             "identity": "[concat(parameters('companyPrefix'), '-identity', '/', 'naid')]"
         },
         "deploymentNames": {
