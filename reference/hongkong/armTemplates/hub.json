@@ -1498,8 +1498,6 @@
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "name": "[variables('deploymentNames').privateDns]",
             "dependsOn": [
-                "[variables('deploymentNames').hubConnectivity]",
-                "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
             "location": "[deployment().location]",
             "properties": {
