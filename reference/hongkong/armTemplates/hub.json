@@ -684,6 +684,14 @@
                 "No"
             ]
         },
+        "denyPip": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "denyIpForwarding": {
             "type": "string",
             "defaultValue": "Yes",
@@ -769,13 +777,13 @@
         },
         "moveSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', parameters('managementSubscriptionId'))]",
-            "connectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', parameters('connectivitySubscriptionId'))]",
+            "hubConnectivity": "[concat(parameters('companyPrefix'), '-hubConnectivity', '/', parameters('connectivitySubscriptionId'))]",
             "identity": "[concat(parameters('companyPrefix'), '-identity', '/', parameters('identitySubscriptionId'))]"
 
         },
         "noSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', 'na')]",
-            "connectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', 'naconn')]",
+            "hubConnectivity": "[concat(parameters('companyPrefix'), '-hubConnectivity', '/', 'naconn')]",
             "identity": "[concat(parameters('companyPrefix'), '-identity', '/', 'naid')]"
         },
         "deploymentNames": {
@@ -799,7 +807,7 @@
     },
     "resources": [
         {
-            "comments": "// Linked template for the creation of Management Groups",
+            "comments": "// Linked template for the creation of the Management Group structure",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').managementGroups]",
@@ -818,7 +826,7 @@
             }
         },
         {
-            "comments": "// Linked template for the creation of Azure Policy Definitions",
+            "comments": "// Linked template for the creation of Azure Policy Definitions at the root Management Group",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').policyDefinitions]",
@@ -879,7 +887,7 @@
             "properties": {}
         },
         {
-            "comments": "// Move the Subscription to the appropriate Management Group or skip if not used. (Identity Subscription)",
+            "comments": "// Move the Subscription to the appropriate Management Group or skip if not used. (Platform Identity Subscription)",
             "condition": "[not(empty(parameters('identitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -890,18 +898,18 @@
             "properties": {}
         },
         {
-            "comments": "// Move the Subscription to the appropriate Management Group or skip if not used. (Connectivity Subscription)",
+            "comments": "// Move the Subscription to the appropriate Management Group or skip if not used. (Platform Connectivity Subscription)",
             "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
-            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').connectivity, variables('noSubscription').connectivity)]",
+            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').hubConnectivity, variables('noSubscription').hubConnectivity)]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]"
             ],
             "properties": {}
         },
         {
-            "comments": "// Linked template for the creation of Log Analytics in the Platform Management Subscription.",
+            "comments": "// Linked template for the creation of a Log Analytics Workspace and Automation account in the Platform Management Subscription.",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1028,7 +1036,7 @@
             }
         },
         {
-            "comments": "// Linked template for the creation of Recovery Services Vaults",
+            "comments": "// Linked template for the creation of a Recovery Services Vault for the Platform Identity Subscription",
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1079,7 +1087,7 @@
             }
         },
         {
-            "comments": "// Linked template for the creation of Azure Storage.",
+            "comments": "// Linked template for the creation of an Azure Storage account in the Platform Management Subscription",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1127,7 +1135,7 @@
             }
         },
         {
-            "comments": "// Linked template for the creation of Identity Subscription",
+            "comments": "// Linked template for the creation of Identity & Access Management resources in the Platform Identity Subscription",
             "condition": "[not(empty(parameters('identitySubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1179,8 +1187,8 @@
             }
         },
         {
-            "comments": "// Linked template for Azure Policy Assignments for Landing Zones.",
-            "condition": "[or(or(or(or(or(or(equals(parameters('enableVmBackup'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes')), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'))]",
+            "comments": "// Linked template for the creation of Azure Policy Assignments for Landing Zone Subscriptions",
+            "condition": "[or(or(or(or(or(or(equals(parameters('enableVmBackup'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes')), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'), equals(parameters('denyPip'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
@@ -1243,7 +1251,7 @@
             }
         },
         {
-            "comments": "// Linked template for Diagnostics and Security controls for the Platform Subscriptions.",
+            "comments": "// Linked template for the creation of Diagnostics and Security controls for the Platform Management Subscription",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), and(equals(parameters('enableLogAnalytics'), 'Yes'),  equals(parameters('enableAsc'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1342,7 +1350,7 @@
             }
         },
         {
-            "comments": "// Linked template for Network Connectivity for the Platform Subscription.",
+            "comments": "// Linked template for the creation of Network Connectivity resources in the Platform Connectivity Subscription",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1467,26 +1475,14 @@
                     "enableAppGw": {
                         "value": "[parameters('enableAppGw')]"
                     },
-                    "enableMgmt": {
-                        "value": "[parameters('enableMgmt')]"
-                    },
-                    "enableIdentity": {
-                        "value": "[parameters('enableIdentity')]"
-                    },
                     "subnetMaskForAppGw": {
                         "value": "[parameters('subnetMaskForAppGw')]"
-                    },
-                    "subnetMaskForMgmt": {
-                        "value": "[parameters('subnetMaskForMgmt')]"
-                    },
-                    "subnetMaskForIdentity": {
-                        "value": "[parameters('subnetMaskForIdentity')]"
                     }
                 }
             }
         },
         {
-            "comments": "// Linked template for the creation of Private DNS.",
+            "comments": "// Linked template for the creation of Private DNS resources in the Platform Connectivity Subscription",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1550,7 +1546,7 @@
             }
         },
         {
-            "comments": "// Linked template for the creation of GitHub Repo.",
+            "comments": "// Linked template for the creation of the GitHub Repo for storing the current state of the Azure environment",
             "condition": "[and(equals(parameters('enableAzOps'), 'Yes'), not(empty(parameters('principalSecret'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",

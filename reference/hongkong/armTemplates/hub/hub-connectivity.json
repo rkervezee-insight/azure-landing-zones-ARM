@@ -169,22 +169,6 @@
             ],
             "defaultValue": "No"
         },
-        "enableMgmt": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
-        },
-        "enableIdentity": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
-        },
         "connectivitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
@@ -203,14 +187,6 @@
             "defaultValue": ""
         },
         "subnetMaskForGw": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "subnetMaskForMgmt": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "subnetMaskForIdentity": {
             "type": "string",
             "defaultValue": ""
         }
@@ -271,22 +247,11 @@
         "bastionSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]",
         "bastionPipName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
         "bastionPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('bastionPipName'))]",
-
-        "managementSubnet": "Management",
-        "managementNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('managementSubnet')))]",
-        "managementNsgId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
-        "managementUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('managementSubnet')))]",
-        "managementUdrId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('managementUdr'))]",
-
+        
         "appGwySubnet": "AppGateway",
         "appGwyNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet')))]",
         "appGwyNsgId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
 
-        "identitySubnet": "Identity",
-        "identityNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('identitySubnet')))]",
-        "identityNsgId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-        "identityUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('identitySubnet')))]",
-        "identityUdrId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('identityUdr'))]",
         "gatewaySubnet": [
             {
                 "name": "GatewaySubnet",
@@ -468,7 +433,7 @@
                             },
                             "properties": {}
                         },
-                        // Resource Group Level Deployment
+                        // Nested deployment for Network Watcher
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
@@ -509,7 +474,7 @@
                                 }
                             }
                         },
-                        // Nested deployment for Azure Networking (Subscription Level)
+                        // Nested deployment for Azure Networking
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
@@ -542,11 +507,7 @@
                                             "name": "[variables('vnetName')]",
                                             "location": "[deployment().location]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('managementUdr'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('identityUdr'))]"
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]"
                                             ],
                                             "properties": {
                                                 "addressSpace": {
@@ -575,9 +536,7 @@
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
                                                 "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appGwySubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appGwySubnet'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
@@ -594,9 +553,7 @@
                                             "name": "[concat(variables('vnetName'), '/', variables('appGwySubnet'))]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('identitySubnet'))]"
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAppGw')]",
@@ -605,49 +562,7 @@
                                                 }
                                             }
                                         },
-                                        // Conditional deployment of Azure Management Subnet
-                                        {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('managementUdr'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForMgmt')]",
-                                                "routeTable": {
-                                                    "id": "[variables('managementUdrId')]"
-                                                },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('managementNsgId')]"
-                                                }
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Identity Subnet
-                                        {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "[variables('apiVersions').subnets]",
-                                            "name": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('identityUdr'))]",
-                                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('managementSubnet'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('subnetMaskForIdentity')]",
-                                                "routeTable": {
-                                                    "id": "[variables('identityUdrId')]"
-                                                },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('identityNsgId')]"
-                                                }
-                                            }
-                                        },
+
                                         // Conditional deployment of Azure Bastion NSG
                                         {
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
@@ -818,80 +733,6 @@
                                                             "access": "Allow",
                                                             "priority": 110,
                                                             "direction": "Inbound"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Identity NSG
-                                        {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('identityNsg')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]"
-                                            },
-                                            "properties": {
-                                                "securityRules": []
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Management NSG
-                                        {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/networkSecurityGroups",
-                                            "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
-                                            "name": "[variables('managementNsg')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]"
-                                            },
-                                            "properties": {
-                                                "securityRules": []
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Identity Route Table
-                                        {
-                                            "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
-                                            "type": "Microsoft.Network/routeTables",
-                                            "apiVersion": "[variables('apiVersions').routeTables]",
-                                            "name": "[variables('identityUdr')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('identitySubnet'))]"
-                                            },
-                                            "properties": {
-                                                "routes": [
-                                                    {
-                                                        "name": "[variables('routeName')]",
-                                                        "properties": {
-                                                            "addressPrefix": "0.0.0.0/0",
-                                                            "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('vnetAddressSpace')]"
-                                                        }
-                                                    }
-                                                ]
-                                            }
-                                        },
-                                        // Conditional deployment of Azure Management Route Table
-                                        {
-                                            "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
-                                            "type": "Microsoft.Network/routeTables",
-                                            "apiVersion": "2020-05-01",
-                                            "name": "[variables('managementUdr')]",
-                                            "location": "[parameters('location')]",
-                                            "tags": {
-                                                "appliedSubnet": "[concat(variables('vnetName'), '/', variables('managementSubnet'))]"
-                                            },
-                                            "properties": {
-                                                "routes": [
-                                                    {
-                                                        "name": "[variables('routeName')]",
-                                                        "properties": {
-                                                            "addressPrefix": "0.0.0.0/0",
-                                                            "nextHopType": "VirtualAppliance",
-                                                            "nextHopIpAddress": "[variables('vnetAddressSpace')]"
                                                         }
                                                     }
                                                 ]
