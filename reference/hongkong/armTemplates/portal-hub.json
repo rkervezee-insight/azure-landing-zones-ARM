@@ -1072,7 +1072,7 @@
                     {
                         "name": "esConnSub",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Network Connectivity subscription (required)",
+                        "label": "Platform Connectivity Subscription",
                         "toolTip": "",
                         "multiselect": false,
                         "selectAll": true,
@@ -1691,70 +1691,6 @@
                             "required": true,
                             "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
                         }
-                    },
-                    {
-                        "name": "esMgmt",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Management Subnet",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, a subnet for Management Services will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressMgmt",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Management services",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.0.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esMgmt, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
-                    },
-                    {
-                        "name": "esIdentity",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Identity Subnet",
-                        "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "toolTip": "If 'Yes' is selected, a subnet for Active Directory Domain Services will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esAddressIdentity",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subnet for Identity services",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/24)",
-                        "defaultValue": "10.49.1.0/24",
-                        "visible": "[equals(steps('esPlatformConnectivity').esIdentity, 'Yes')]",
-                        "constraints": {
-                            "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                        }
                     }
                 ]
             },
@@ -1808,7 +1744,7 @@
                     {
                         "name": "esIdamSub",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Identity subscription",
+                        "label": "Platform Identity Subscription",
                         "toolTip": "",
                         "multiselect": false,
                         "selectAll": true,
@@ -2386,8 +2322,6 @@
             "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
-            "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
-            "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
             "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
             "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esEnablePrivateDnsZones]",
@@ -2407,8 +2341,6 @@
             "subnetMaskForAzBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
-            "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
-            "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
             "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformConnectivity').esConnSub))), steps('esPlatformIdentity').esIdamSub, '')]",
             "enableIdentitySub": "[steps('esPlatformIdentity').esIdentity]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
