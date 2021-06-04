@@ -866,9 +866,9 @@
                         "type": "Microsoft.Common.InfoBox",
                         "visible": "[not(empty(steps('esPlatformManagement').esMgmtSubSection.esMgmtSub))]",
                         "options": {
-                            "icon": "Info",
                             "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines.",
-                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction"
+                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction",
+                            "style": "Info"
                         }
                     },
                     {
@@ -876,9 +876,9 @@
                         "type": "Microsoft.Common.InfoBox",
                         "visible": "[empty(steps('esPlatformManagement').esMgmtSubSection.esMgmtSub)]",
                         "options": {
-                            "icon": "Warning",
                             "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines, but requires a dedicated subscription for platform management in the previous step. Please add a subscription or continue without setting up the CI/CD integration.",
-                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction"
+                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction",
+                            "style": "Warning"
                         }
                     },
                     {
@@ -900,12 +900,12 @@
                             ],
                             "required": true
                         },
-                        "visible": "[empty(steps('esPlatformManagement').esMgmtSubSection.esMgmtSub)]"
+                        "visible": "[not(empty(steps('esPlatformManagement').esMgmtSubSection.esMgmtSub))]"
                     },
                     {
                         "name": "Instructions",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]",
                         "options": {
                             "text": "Provide the credentials to initialize the repository with the ARM templates for Enterprise-Scale.",
                             "link": {
@@ -929,19 +929,19 @@
                             ],
                             "required": true
                         },
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]"
                     },
                     {
                         "name": "esGit",
                         "type": "Microsoft.Common.TextBox",
                         "label": "GitHub organization or username",
                         "toolTip": "Provide Git org/username.",
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]",
                         "defaultValue": "",
                         "constraints": {
                             "required": true,
-                            "regex": "^[a-z0-9A-Z-]{1,15}$",
-                            "validationMessage": "The prefix must be 1-5 characters."
+                            "regex": "^[a-z0-9A-Z-]{1,39}$",
+                            "validationMessage": "The GitHub org/username must be 1-39 characters."
                         }
                     },
                     {
@@ -950,12 +950,12 @@
                         "label": "New GitHub repository name",
                         "toolTip": "Provide a name for the new repository that will be created",
                         "defaultValue": "",
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]",
                         "placeholder": "",
                         "constraints": {
                             "required": true,
-                            "regex": "^[a-z0-9A-Z-]{1,15}$",
-                            "validationMessage": "The prefix must be 1-5 characters."
+                            "regex": "^[a-z0-9A-Z-]{1,100}$",
+                            "validationMessage": "The repository name must be 1-100 characters."
                         }
                     },
                     {
@@ -973,7 +973,7 @@
                         "options": {
                             "hideConfirmation": true
                         },
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]"
                     },
                     {
                         "name": "spnSection",
@@ -996,8 +996,8 @@
                                     "authenticationType": "Authentication Type"
                                 },
                                 "defaultValue": {
-                                    "principalId": "<default guid>",
-                                    "name": "(New) default App Id"
+                                    "principalId": "",
+                                    "name": ""
                                 },
                                 "constraints": {
                                     "required": true
