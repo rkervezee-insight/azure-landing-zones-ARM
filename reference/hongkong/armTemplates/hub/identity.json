@@ -93,29 +93,10 @@
         "roleAssignmentNames": {
             "deployVmBackup": "[guid(concat(parameters('companyPrefix'), 'identity', variables('policyAssignmentNames').deployVmBackup))]"
         },
-        "deploymentNames": {
-            "adds": "[take(concat('adds', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "network": "[take(concat('idVnet', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
-        },
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "resourceGroups": {
-            "adds": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-adds'))]",
-            "network": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-            "networkWatcher": "NetworkWatcherRG"
-        },
-        "tags": {
-            "environment": "[parameters('subscriptionTag')]",
-            "owner": "[parameters('ownerTag')]",
-            "costCenter": "[parameters('costCenterTag')]"
-        },
         "apiVersions": {
             "deployments": "2020-06-01",
-            "resourceGroups": "2020-06-01",
             "policyAssignments": "2020-03-01",
-            "locks": "2016-09-01",
-            "roleAssignments": "2020-04-01-preview",
-            "networkWatchers": "2019-04-01",
-            "virtualNetworks": "2020-07-01"
+            "roleAssignments": "2020-04-01-preview"
         }
         //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}"
     },
@@ -190,146 +171,6 @@
                 "principalType": "ServicePrincipal",
                 "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('rbac').owner)]",
                 "principalId": "[if(equals(parameters('enableVmBackupForIdentity'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployVmBackup), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
-            }
-        },
-        // Conditional deployment for the creation of a Resource Group for Active Directory Domain Services
-        {
-            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').adds]",
-            "location": "[deployment().location]",
-            "subscriptionId": "[parameters('identitySubscriptionId')]",
-            "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "resources": [
-                        {
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
-                            "name": "[variables('resourceGroups').adds]",
-                            "properties": {}
-                        },
-                        {
-                            "type": "Microsoft.Resources/deployments",
-                            "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').adds]",
-                            "resourceGroup": "[variables('resourceGroups').adds]",
-                            "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').adds)]"
-                            ],
-                            "properties": {
-                                "mode": "Incremental",
-                                "template": {
-                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                    "contentVersion": "1.0.0.0",
-                                    "parameters": {},
-                                    "resources": [
-                                        {
-                                            "type": "Microsoft.Authorization/locks",
-                                            "apiVersion": "[variables('apiVersions').locks]",
-                                            "name": "ResourceGroup-DontDelete",
-                                            "properties": {
-                                                "level": "CanNotDelete",
-                                                "notes": "Prevent deletion of the resourceGroup"
-                                            }
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ]
-                }
-            }
-        },
-        // Conditional deployment for the creation of a Resource Group for the virtual network
-        {
-            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').network]",
-            "location": "[deployment().location]",
-            "subscriptionId": "[parameters('identitySubscriptionId')]",
-            "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "resources": [
-                        {
-                            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
-                            "name": "[variables('resourceGroups').network]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]",
-                                "costCenter": "[variables('tags').costCenter]"
-                            },
-                            "properties": {}
-                        },
-                        {
-                            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
-                            "name": "[variables('resourceGroups').networkWatcher]",
-                            "tags": {
-                                "environment": "[variables('tags').environment]",
-                                "owner": "[variables('tags').owner]",
-                                "costCenter": "[variables('tags').costCenter]"
-                            },
-                            "properties": {}
-                        },
-                        {
-                            "comments": "// Nested deployment for Network Watcher",
-                            "type": "Microsoft.Resources/deployments",
-                            "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').network]",
-                            "resourceGroup": "[variables('resourceGroups').network]",
-                            "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').network)]"
-                            ],
-                            "properties": {
-                                "mode": "Incremental",
-                                "template": {
-                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                    "contentVersion": "1.0.0.0",
-                                    "parameters": {},
-                                    "resources": [
-                                        {
-                                            "comments": "// Resource Lock",
-                                            "type": "Microsoft.Authorization/locks",
-                                            "apiVersion": "[variables('apiVersions').locks]",
-                                            "name": "ResourceGroup-DontDelete",
-                                            "properties": {
-                                                "level": "CanNotDelete",
-                                                "notes": "Prevent deletion of the resourceGroup"
-                                            }
-                                        },     
-                                        {
-                                            "comments": "// Conditional deployment of Network Watcher",
-                                            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
-                                            "type": "Microsoft.Network/networkWatchers",
-                                            "apiVersion": "[variables('apiVersions').networkWatchers]",
-                                            "name": "test",
-                                            "location": "[deployment().location]",
-                                            "tags": {},
-                                            "properties": {},
-                                            "resources": []
-                                        }
-                                    ]
-                                }
-                            }
-                        }
-                    ]
-                }
             }
         }
     ],

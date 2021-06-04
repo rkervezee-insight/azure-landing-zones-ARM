@@ -79,7 +79,7 @@
             "properties": {}
         },
         {
-            "comments": "// Nested deployment for Azure Storage (Subscription Level)",
+            "comments": "// Nested deployment for Azure Storage",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -105,7 +105,7 @@
                             }
                         },
                         {
-                            "comments": "// Nested deployment for Storage (Resource Group Level)",
+                            "comments": "// Deploy Azure Storage Account",
                             "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",
