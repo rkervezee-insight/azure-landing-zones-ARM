@@ -344,28 +344,17 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "mgmtSubApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esMgmtSub",
-                        "type": "Microsoft.Common.DropDown",
+                        "name": "esMgmtSubSection",
+                        "type": "Microsoft.Common.Section",
                         "label": "Platform Management Subscription",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
-                        "constraints": {
-                            "allowedValues": "[map(steps('esPlatformManagement').mgmtSubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
-                            "required": true
-                        }
+                        "elements": [
+                            {
+                                "type": "Microsoft.Common.SubscriptionSelector",
+                                "name": "esMgmtSub",
+                                "label": "Platform Management Subscription"
+                            }
+                        ],
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "monitoring",
@@ -598,7 +587,7 @@
                         "toolTip": "Provide the email contact for Azure Security Center alerts",
                         "defaultValue": "stephen.tulp@outlook.com",
                         "constraints": {
-                            "required": "[equals(steps('esGoalState').esAsc,'Yes')]",
+                            "required": "[equals(steps('esPlatformManagement').esAsc,'Yes')]",
                             "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
                             "validationMessage": "Please provide a valid email address"
                         },
@@ -1062,28 +1051,17 @@
                         "visible": true
                     },
                     {
-                        "name": "ConnSubApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esConnSub",
-                        "type": "Microsoft.Common.DropDown",
+                        "name": "esNwSubSection",
+                        "type": "Microsoft.Common.Section",
                         "label": "Platform Connectivity Subscription",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
-                        "constraints": {
-                            "allowedValues": "[map(steps('esPlatformConnectivity').ConnSubApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
-                            "required": true
-                        }
+                        "elements": [
+                            {
+                                "type": "Microsoft.Common.SubscriptionSelector",
+                                "name": "esNwSub",
+                                "label": "Platform Connectivity Subscription"
+                            }
+                        ],
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]"
                     },
                     {
                         "name": "esAddress",
@@ -1736,15 +1714,15 @@
                     {
                         "name": "esIdentitySubSection",
                         "type": "Microsoft.Common.Section",
-                        "label": "Identity subscription",
+                        "label": "Platform Identity Subscription",
                         "elements": [
                             {
-                                "type":"Microsoft.Common.SubscriptionSelector",
+                                "type": "Microsoft.Common.SubscriptionSelector",
                                 "name": "esIdentitySub",
-                                "label": "Management subscription"
+                                "label": "Platform Identity Subscription"
                             }
                         ],
-                        "visible": "[equals(steps('esIdentityGoalState').esIdentity,'Yes')]"
+                        "visible": "[equals(steps('esPlatformIdentity').esIdentity,'Yes')]"
                     },
                     {
                         "name": "identitypolicies",
@@ -2267,7 +2245,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-            "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSub]",
+            "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
@@ -2301,7 +2279,7 @@
             "appId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.appId]",
             "enableAzOps": "[steps('esPlatformDevOps').cicdOption]",
             "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
-            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esConnSub, steps('esPlatformManagement').esMgmtSub)), steps('esPlatformConnectivity').esConnSub, '')]",
+            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId,'')]",
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
@@ -2330,7 +2308,7 @@
             "subnetMaskForAzBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
-            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformManagement').esMgmtSub)), not(equals(steps('esPlatformIdentity').esIdamSub, steps('esPlatformConnectivity').esConnSub))), steps('esPlatformIdentity').esIdamSub, '')]",
+            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId))),steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,'')]",
             "enableIdentitySub": "[steps('esPlatformIdentity').esIdentity]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
@@ -2349,7 +2327,8 @@
             "denySubnetWithoutNsg": "[steps('lzGoalState').esNsg]",
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
-            "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]"
+            "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]",
+            "subscriptionId": "[steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId]"
         }
     }
 }

@@ -142,6 +142,11 @@
                 "description": "Provide the value for the cost center tag"
             }
         },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
+        },
         "managementSubscriptionId": {
             "type": "string",
             "defaultValue": "",
@@ -1607,8 +1612,8 @@
                     "paToken": {
                         "value": "[parameters('paToken')]"
                     },
-                    "managementSubscriptionId": {
-                        "value": "[parameters('managementSubscriptionId')]"
+                    "subscriptionId": {
+                        "value": "[parameters('subscriptionId')]"
                     },
                     "appId": {
                         "value": "[parameters('appId')]"
