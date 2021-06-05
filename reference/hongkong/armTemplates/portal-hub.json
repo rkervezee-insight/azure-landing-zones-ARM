@@ -1873,12 +1873,12 @@
                         "name": "esLzConnectivity",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Connect corp landing zones to the connectivity hub (optional)?",
-                        "defaultValue": "[if(equals(steps('esConnectivityGoalState').esHub,'Yes'),'Yes (recommended)','No')]",
+                        "defaultValue": "[if(equals(steps('esPlatformConnectivity').esHub,'Yes'),'Yes','No')]",
                         "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes (recommended)",
+                                    "label": "Yes",
                                     "value": "Yes"
                                 },
                                 {
@@ -1887,7 +1887,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esConnectivityGoalState').esHub,'Yes')]"
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]"
                     },
                     {
                         "name": "lzCorpSubsApi",
@@ -1907,7 +1907,7 @@
                         "filter": true,
                         "filterPlaceholder": "Filter items ...",
                         "multiLine": true,
-                        "visible": "[or(equals(steps('esConnectivityGoalState').esHub,'No'),equals(steps('lzGoalState').esLzConnectivity,'No'))]",
+                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub,'No'),equals(steps('lzGoalState').esLzConnectivity,'No'))]",
                         "constraints": {
                             "allowedValues": "[map(steps('lzGoalState').lzCorpSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
                             "required": false
