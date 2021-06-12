@@ -241,7 +241,7 @@
                         }
                     },
                     {
-                        "name": "esLzSub",
+                        "name": "esLzSubSection",
                         "type": "Microsoft.Common.Section",
                         "label": "Landing Zone Subscription",
                         "elements": [
@@ -858,7 +858,7 @@
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
 
-            "subscriptionId": "[steps('esLz').esLzSub]",
+            "subscriptionId": "[steps('esLz').esLZSubSection.esLzSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",
