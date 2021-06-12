@@ -1013,12 +1013,12 @@
             },
             {
                 "name": "esPlatformConnectivity",
-                "label": "Network Connectivity (Hub & Spoke)",
+                "label": "Network Connectivity (Hub)",
                 "subLabel": {
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "Connectivity",
+                "bladeTitle": "Hub Connectivity",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -1067,7 +1067,7 @@
                         "name": "esAddress",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Address space (required for Virtual Hub)",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 192.168.0.0/16)",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g. 10.49.0.0/18)",
                         "defaultValue": "10.49.0.0/18",
                         "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
                         "constraints": {

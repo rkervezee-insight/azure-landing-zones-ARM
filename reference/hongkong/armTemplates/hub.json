@@ -854,7 +854,7 @@
             }
         },
         {
-            "comments": "// nested template for delay counter",
+            "comments": "// Delay Counter",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[concat('preparingToLaunch', copyIndex())]",

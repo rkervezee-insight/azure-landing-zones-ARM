@@ -12378,7 +12378,7 @@
         {
           "properties": {
             "Description": "This policy denies creation of storage accounts with IP Firewall exposed to all public endpoints",
-            "DisplayName": "Public network access onStorage accounts should be disabled",
+            "DisplayName": "Public network access on Storage accounts should be disabled",
             "Mode": "Indexed",
             "Parameters": {
               "effect": {
@@ -18265,8 +18265,8 @@
         },
         {
           "properties": {
-            "Description": "This policy denies creation of Azure PAAS services with exposed public endpoints.  This policy set includes the policy for the following services KeyVault, Storage accounts, AKS, Cosmos, SQL Servers, MariaDB, MySQL and Postgress. ",
-            "DisplayName": "Public network access should be disabled for PAAS services",
+            "Description": "This policy denies creation of Azure PaaS resources with exposed public endpoints.  This policy set includes the policy for the following services KeyVault, Storage accounts, AKS, Cosmos, SQL Servers, MariaDB, MySQL and Postgress. ",
+            "DisplayName": "Public network access should be disabled for PaaS resources",
             "Parameters": {
               "CosmosPublicIpDenyEffect": {
                 "type": "string",
