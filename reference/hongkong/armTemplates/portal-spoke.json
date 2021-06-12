@@ -241,7 +241,7 @@
                         }
                     },
                     {
-                        "name": "esLzSubSection",
+                        "name": "esLzSub",
                         "type": "Microsoft.Common.Section",
                         "label": "Landing Zone Subscription",
                         "elements": [
