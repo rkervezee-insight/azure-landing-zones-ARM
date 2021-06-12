@@ -858,7 +858,7 @@
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
 
-            "subscriptionId": "[steps('esLzConnectivity').esNwSubSection.esNwSub.subscriptionId]",
+            "SpokeSubscriptionId": "[steps('esLzConnectivity').esNwSubSection.esNwSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",
