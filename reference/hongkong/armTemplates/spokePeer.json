@@ -48,6 +48,14 @@
                 "No"
             ],
             "defaultValue": "Yes"
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "displayName": "location",
+                "description": "Location of the Platform Landing Zone"
+            },
+            "defaultValue": "[deployment().location]"
         }
     },
     "variables": {
