@@ -85,6 +85,7 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeToHub]",
             "resourceGroup": "[variables('spokeVnetRg')]",
+            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -119,6 +120,7 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').hubToSpoke]",
             "resourceGroup": "[parameters('hubVnetRg')]",
+            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
