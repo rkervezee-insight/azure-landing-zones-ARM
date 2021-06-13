@@ -197,6 +197,7 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
             "resourceGroup": "[variables('resourceGroups').spokeNetwork]",
+            "location": "[deployment().location]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').spokeNetwork)]"
             ],
@@ -378,6 +379,7 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').networkWatcher]",
             "resourceGroup": "[variables('resourceGroups').networkWatcher]",
+            "location": "[deployment().location]",
             "dependsOn": [
                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networkWatcher)]"
             ],
