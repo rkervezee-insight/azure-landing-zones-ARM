@@ -316,8 +316,9 @@
             ]
         },
         "contactEmails": {
-            "type": "string",
-            "defaultValue": ""
+             "type": "array",
+            "defaultValue": [
+            ]
         }
     },
     "variables": {
