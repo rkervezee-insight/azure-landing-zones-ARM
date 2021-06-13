@@ -2405,6 +2405,7 @@
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
+            
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
             "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
@@ -2415,6 +2416,7 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+
             "paToken": "[steps('esPlatformDevOps').esPaToken]",
             "principalId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.objectId]",
             "principalSecret": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.password]",

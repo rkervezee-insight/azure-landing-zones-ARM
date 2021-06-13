@@ -859,15 +859,18 @@
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
             "SpokeSubscriptionId": "[steps('esLzConnectivity').esNwSubSection.esNwSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
+
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",
             "enableAscForStorage": "[steps('esLz').esAscStorage]",
             "enableAscForSql": "[steps('esLz').esAscSql]",
+            "enableAscForSqlOnVm": "[steps('esLz').esAscSqlOnVm]",
             "enableAscForKeyVault": "[steps('esLz').esAscKeyVault]",
             "enableAscForArm": "[steps('esLz').esAscArm]",
             "enableAscForDns": "[steps('esLz').esAscDns]",
             "enableAscForKubernetes": "[steps('esLz').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esLz').esAscRegistries]",
+
             "enableStorage": "[steps('esLz').esSta]",
             "enableRsv": "[steps('esLz').esRsv]",
             "enableBudget": "[steps('esLz').esBudget]",
