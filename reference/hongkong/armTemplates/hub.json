@@ -776,7 +776,7 @@
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'hub/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'hub/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'hub/diagnosticsAndSecurity.json')]",
-            "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'hub/hub-connectivity.json')]",
+            "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'hub/hubConnectivity.json')]",
             "identity": "[uri(deployment().properties.templateLink.uri, 'hub/identity.json')]",
             "azOps": "[uri(deployment().properties.templateLink.uri, 'hub/azOpsSetup.json')]"
         },

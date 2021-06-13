@@ -233,8 +233,8 @@
         "deploymentUris": {
             "storage": "[uri(deployment().properties.templateLink.uri, 'storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'recoveryServicesVault.json')]",
-            "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'spoke-connectivity.json')]",
-            "spokePeer": "[uri(deployment().properties.templateLink.uri, 'spoke-peer.json')]",
+            "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'spokeConnectivity.json')]",
+            "spokePeer": "[uri(deployment().properties.templateLink.uri, 'spokePeer.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'budget.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-landingZones', '/', parameters('SpokeSubscriptionId'))]",
