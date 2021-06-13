@@ -857,7 +857,6 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-
             "SpokeSubscriptionId": "[steps('esLzConnectivity').esNwSubSection.esNwSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
@@ -875,7 +874,6 @@
             "amount": "[steps('esLz').esBudgetAmount]",
             "timeGrain": "[steps('esLz').esBudgetTimeGrain]",
             "contactEmails": "[steps('esLz').esBudgetContactEmail]",
-            
             "enableSpoke": "[steps('esLzConnectivity').esSpoke]",
             "addressPrefix": "[steps('esLzConnectivity').esAddress]",
             "location": "[steps('esLzConnectivity').esNwLocation]",
