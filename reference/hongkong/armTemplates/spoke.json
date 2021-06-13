@@ -322,7 +322,7 @@
     },
     "variables": {
         "deploymentUris": {
-            "storage": "[uri(deployment().properties.templateLink.uri, 'storage.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'hub/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'recoveryServicesVault.json')]",
             "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'spokeConnectivity.json')]",
             "spokePeer": "[uri(deployment().properties.templateLink.uri, 'spokePeer.json')]",
