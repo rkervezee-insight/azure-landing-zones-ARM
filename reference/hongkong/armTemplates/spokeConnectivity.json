@@ -122,15 +122,15 @@
         "udrRoute": "subnet-to-azureFirewall",
         "udrId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/routeTables/', variables('udrName'))]",
 
-        "webSubnet": "Web",
+        "webSubnet": "web",
         "webNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('webSubnet')))]",
         "webNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
 
-        "appsSubnet": "Apps",
+        "appsSubnet": "apps",
         "appsNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appsSubnet')))]",
         "appsNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
 
-        "dataSubnet": "Data",
+        "dataSubnet": "data",
         "dataNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('dataSubnet')))]",
         "dataNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
 
