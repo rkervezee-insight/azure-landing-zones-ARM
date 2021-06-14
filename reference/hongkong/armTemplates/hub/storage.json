@@ -66,7 +66,8 @@
     },
     "resources": [
         {
-            "comments": "// Create Resource Group",
+            "comments": "Create Resource Group",
+            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "name": "[variables('resourceGroupName')]",
@@ -79,7 +80,8 @@
             "properties": {}
         },
         {
-            "comments": "// Nested deployment for Azure Storage",
+            "comments": "Nested deployment for Azure Storage",
+            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -95,7 +97,7 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "comments": "// Deploy Resource Group Lock",
+                            "comments": "Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -105,8 +107,7 @@
                             }
                         },
                         {
-                            "comments": "// Deploy Azure Storage Account",
-                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
+                            "comments": "Deploy Azure Storage Account",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",
                             "name": "[variables('storage').name]",

@@ -30,11 +30,6 @@
             ],
             "defaultValue": "Yes"
         },
-        "SpokeSubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
         "subscriptionTag": {
             "type": "string"
         },
@@ -69,8 +64,8 @@
     },
     "resources": [
         {
-            "comments": "// Create Resource Group",
-            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "comments": "Create Resource Group",
+            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
@@ -84,6 +79,7 @@
         },
         {
             "comments": "Nested deployment for Recovery Services Vault",
+            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -109,8 +105,7 @@
                             }
                         },
                         {
-                            "comments": "Nested deployment for Recovery Services Vault",
-                            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
+                            "comments": "Deployment of the Recovery Services Vault",
                             "type": "Microsoft.RecoveryServices/vaults",
                             "apiVersion": "[variables('apiVersions').vaults]",
                             "name": "[variables('recoveryServicesVault').name]",

@@ -391,9 +391,6 @@
                     "enableRsv": {
                         "value": "[parameters('enableRsv')]"
                     },
-                    "SpokeSubscriptionId": {
-                        "value": "[parameters('SpokeSubscriptionId')]"
-                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },
