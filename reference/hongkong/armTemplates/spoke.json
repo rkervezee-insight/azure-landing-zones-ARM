@@ -316,7 +316,7 @@
             ]
         },
         "contactEmails": {
-             "type": "array",
+            "type": "array",
             "defaultValue": [
             ]
         }
@@ -324,7 +324,7 @@
     "variables": {
         "deploymentUris": {
             "storage": "[uri(deployment().properties.templateLink.uri, 'hub/storage.json')]",
-            "spokeRecoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'spokeRecoveryServicesVault.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'recoveryServicesVault.json')]",
             "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'spokeConnectivity.json')]",
             "spokePeer": "[uri(deployment().properties.templateLink.uri, 'spokePeer.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'hub/budget.json')]",
@@ -334,7 +334,7 @@
         "noSubscription": "[concat(parameters('companyPrefix'), '-landingZones', '/', 'na')]",
         "deploymentNames": {
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "spokeRecoveryServicesVault": "[take(concat('spokeRsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "spokeConnectivity": "[take(concat('spokeConnectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "spokePeer": "[take(concat('spokePeer', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "budget": "[take(concat('budget', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -362,7 +362,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "subscriptionId": "[parameters('SpokeSubscriptionId')]",
-            "name": "[variables('deploymentNames').spokeRecoveryServicesVault]",
+            "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
             ],
             "location": "[deployment().location]",
@@ -370,7 +370,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').spokeRecoveryServicesVault]"
+                    "uri": "[variables('deploymentUris').recoveryServicesVault]"
                 },
                 "parameters": {
                     "companyPrefix": {
