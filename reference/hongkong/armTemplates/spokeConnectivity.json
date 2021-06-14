@@ -260,9 +260,8 @@
                             "name": "[concat(variables('vnetName'), '/', variables('webSubnet'))]",
                             "dependsOn": [
                                 "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
-                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
-                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]",
-                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('dataSubnet'))]"
+                                "[concat('Microsoft.Network/routeTables/', variables('udrName'))]",
+                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]"
                             ],
                             "properties": {
                                 "addressPrefix": "[parameters('subnetMaskForWeb')]",
@@ -298,7 +297,8 @@
                             "dependsOn": [
                                 "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
                                 "[concat('Microsoft.Network/routeTables/', variables('udrName'))]",
-                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]"
+                                "[concat('Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
+                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]"
                             ],
                             "properties": {
                                 "addressPrefix": "[parameters('subnetMaskForApp')]",
@@ -334,6 +334,7 @@
                                 "[concat('Microsoft.Network/virtualNetworks/', variables('vnetName'))]",
                                 "[concat('Microsoft.Network/routeTables/', variables('udrName'))]",
                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
+                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]",
                                 "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]"
                             ],
                             "properties": {
