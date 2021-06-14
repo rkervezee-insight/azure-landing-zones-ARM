@@ -484,9 +484,6 @@
                     },
                     "hubVnetRg": {
                         "value": "[parameters('hubVnetRg')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
                     }
                 }
             }

@@ -48,25 +48,17 @@
                 "No"
             ],
             "defaultValue": "Yes"
-        },
-        "location": {
-            "type": "string",
-            "metadata": {
-                "displayName": "location",
-                "description": "Location of the Platform Landing Zone"
-            },
-            "defaultValue": "[deployment().location]"
         }
     },
     "variables": {
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "subscriptionid": "[subscription().subscriptionId]",
+        "spokeSubscriptionid": "[subscription().subscriptionId]",
         "hubId": "[concat('/subscriptions/',parameters('connectivitySubscriptionId'),'/resourceGroups/',parameters('hubVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
         "hubToSpokePeerName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",
         "spokeAddressPrefix": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "spokeVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('spokeAddressPrefix')))]",
         "spokeVnetRg": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-        "spokeId": "[concat('/subscriptions/',variables('subscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
+        "spokeId": "[concat('/subscriptions/',variables('spokeSubscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
         "spokeToHubPeerName": "[concat(variables('spokeVnetName'), '-to-', parameters('hubVnetName'))]",
         "deploymentNames": {
             "spokeToHub": "[take(concat('spokeToHub', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -79,13 +71,12 @@
     },
     "resources": [
         {
-            "comments": "// Nested template for vNet peering deployment (Spoke >> Hub)",
+            "comments": "// Nested deployment of vNet peering deployment (Spoke >> Hub)",
             "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeToHub]",
             "resourceGroup": "[variables('spokeVnetRg')]",
-            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -95,6 +86,8 @@
                     "variables": {},
                     "resources": [
                         {
+                            "comments": "Deploy vNet peer (Spoke >> Hub)",
+                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
                             "name": "[concat(variables('spokeVnetName'), '/',variables('spokeToHubPeerName'))]",
@@ -120,7 +113,6 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').hubToSpoke]",
             "resourceGroup": "[parameters('hubVnetRg')]",
-            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -130,6 +122,8 @@
                     "variables": {},
                     "resources": [
                         {
+                            "comments": "Deploy vNet peer (Hub >> Spoke)",
+                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
                             "name": "[concat(parameters('hubVnetName'), '/',variables('hubToSpokePeerName'))]",
