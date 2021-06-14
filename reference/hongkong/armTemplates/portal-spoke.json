@@ -229,18 +229,6 @@
                         }
                     },
                     {
-                        "name": "textBlock1",
-                        "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
-                        "options": {
-                            "text": "Select target Azure Subscription",
-                            "link": {
-                                "label": "Learn more",
-                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/management-group-and-subscription-organization"
-                            }
-                        }
-                    },
-                    {
                         "name": "esLzSubSection",
                         "type": "Microsoft.Common.Section",
                         "label": "Landing Zone Subscription",
@@ -527,20 +515,11 @@
                         "visible": true
                     },
                     {
-                        "name": "budget",
-                        "type": "Microsoft.Common.InfoBox",
-                        "visible": true,
-                        "options": {
-                            "icon": "Info",
-                            "text": "Allocate values to set the budget on the Landing Zone."
-                        }
-                    },
-                    {
                         "name": "esBudget",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy a Budget.",
+                        "label": "Deploy an Azure Budget.",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, a Budget will be deployed",
+                        "toolTip": "If 'Yes' is selected, an Azure Budget will be deployed",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -559,7 +538,7 @@
                         "name": "esBudgetAmount",
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
-                        "label": "Budget Amount",
+                        "label": "Budget Amount ($)",
                         "toolTip": "Provide the Budget amount in $",
                         "defaultValue": "1000"
                     },
@@ -591,7 +570,7 @@
                         "name": "esBudgetContactEmail",
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
-                        "label": "Budget Contact emails",
+                        "label": "Budget Contact Email Addresses",
                         "toolTip": "An array of email addresses for the budget",
                         "defaultValue": [
                             "stephen.tulp@outlook.com"

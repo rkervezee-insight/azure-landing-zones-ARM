@@ -46,14 +46,6 @@
                 "description": "Address prefix of the Platform Landing Zone"
             }
         },
-        "location": {
-            "type": "string",
-            "metadata": {
-                "displayName": "location",
-                "description": "Location of the Platform Landing Zone"
-            },
-            "defaultValue": "[deployment().location]"
-        },
         "enableSpoke": {
             "type": "string",
             "allowedValues": [
@@ -124,7 +116,7 @@
         },
         "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "vnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
-        "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
+        "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', deployment().location))]",
 
         "udrName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "udrRoute": "subnet-to-azureFirewall",
@@ -244,7 +236,7 @@
                             "type": "Microsoft.Network/routeTables",
                             "apiVersion": "[variables('apiVersions').routeTables]",
                             "name": "[variables('udrName')]",
-                            "location": "[parameters('location')]",
+                            "location": "[deployment().location]",
                             "properties": {
                                 "routes": [
                                     {
@@ -286,7 +278,7 @@
                             "type": "Microsoft.Network/networkSecurityGroups",
                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
                             "name": "[variables('webNsg')]",
-                            "location": "[parameters('location')]",
+                            "location": "[deployment().location]",
                             "tags": {
                                 "appliedSubnet": "[concat(variables('vnetName'), '/', variables('webSubnet'))]"
                             },
@@ -322,7 +314,7 @@
                             "type": "Microsoft.Network/networkSecurityGroups",
                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
                             "name": "[variables('appsNsg')]",
-                            "location": "[parameters('location')]",
+                            "location": "[deployment().location]",
                             "tags": {
                                 "appliedSubnet": "[concat(variables('vnetName'), '/', variables('appsSubnet'))]"
                             },
@@ -358,7 +350,7 @@
                             "type": "Microsoft.Network/networkSecurityGroups",
                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
                             "name": "[variables('dataNsg')]",
-                            "location": "[parameters('location')]",
+                            "location": "[deployment().location]",
                             "tags": {
                                 "appliedSubnet": "[concat(variables('vnetName'), '/', variables('dataSubnet'))]"
                             },
