@@ -30,7 +30,7 @@
             ],
             "defaultValue": "Yes"
         },
-        "identitySubscriptionId": {
+        "SpokeSubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -70,7 +70,7 @@
     "resources": [
         {
             "comments": "// Create Resource Group",
-            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
