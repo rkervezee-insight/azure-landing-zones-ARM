@@ -446,6 +446,9 @@
                     },
                     "costCenterTag": {
                         "value": "[parameters('costCenterTag')]"
+                    },
+                    "SpokeSubscriptionId": {
+                        "value": "[parameters('SpokeSubscriptionId')]"
                     }
                 }
             }
