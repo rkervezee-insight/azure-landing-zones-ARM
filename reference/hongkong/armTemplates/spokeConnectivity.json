@@ -98,11 +98,6 @@
             ],
             "defaultValue": "No"
         },
-        "spokeSubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
         "subnetMaskForWeb": {
             "type": "string",
             "defaultValue": ""
@@ -121,6 +116,7 @@
             "spokeNetwork": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
+        "spokeSubscriptionid": "[subscription().subscriptionId]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroups": {
             "spokeNetwork": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
@@ -132,19 +128,19 @@
 
         "udrName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "udrRoute": "subnet-to-azureFirewall",
-        "udrId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/routeTables/', variables('udrName'))]",
+        "udrId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/routeTables/', variables('udrName'))]",
 
         "webSubnet": "Web",
         "webNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('webSubnet')))]",
-        "webNsgId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
+        "webNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
 
         "appsSubnet": "Apps",
         "appsNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appsSubnet')))]",
-        "appsNsgId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
+        "appsNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
 
         "dataSubnet": "Data",
         "dataNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('dataSubnet')))]",
-        "dataNsgId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
+        "dataNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
 
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -165,7 +161,7 @@
     "resources": [
         {
             "comments": "Create Resource Group for network resources",
-            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "name": "[variables('resourceGroups').spokeNetwork]",
@@ -179,7 +175,7 @@
         },
         {
             "comments": "Create Resource Group for network watcher",
-            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "name": "[variables('resourceGroups').networkWatcher]",
@@ -192,7 +188,8 @@
             "properties": {}
         },
         {
-            "comments": "Nested subscription deployment",
+            "comments": "Nested deployment for Network resources",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
@@ -219,8 +216,8 @@
                             }
                         },
                         {
-                            "comments": "Nested deployment of the spoke virtual network resources",
-                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
+                            "comments": "Deploy Azure virtual network resources",
+                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks",
                             "apiVersion": "[variables('apiVersions').virtualNetworks]",
                             "name": "[variables('vnetName')]",
@@ -374,7 +371,8 @@
             }
         },
         {
-            "comments": "Nested subscription deployment",
+            "comments": "Nested deployment for Network Watcher",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').networkWatcher]",
@@ -401,8 +399,8 @@
                             }
                         },
                         {
-                            "comments": "Conditional deployment of Network watcher",
-                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
+                            "comments": "Deploy Network watcher",
+                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/networkWatchers",
                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                             "name": "[variables('networkWatcher')]",
@@ -416,7 +414,4 @@
             }
         }
     ]
-
-
-
 }

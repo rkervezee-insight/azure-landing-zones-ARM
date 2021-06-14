@@ -629,19 +629,6 @@
                         "visible": true
                     },
                     {
-                        "name": "esNwSubSection",
-                        "type": "Microsoft.Common.Section",
-                        "label": "Landing Zone Subscription",
-                        "elements": [
-                            {
-                                "type": "Microsoft.Common.SubscriptionSelector",
-                                "name": "esNwSub",
-                                "label": "Landing Zone Subscription"
-                            }
-                        ],
-                        "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]"
-                    },
-                    {
                         "name": "esAddress",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Virtual network CIDR Range",
@@ -859,7 +846,6 @@
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
             "SpokeSubscriptionId": "[steps('esLz').esLzSubSection.esLzSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
-
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",
             "enableAscForStorage": "[steps('esLz').esAscStorage]",
@@ -870,7 +856,6 @@
             "enableAscForDns": "[steps('esLz').esAscDns]",
             "enableAscForKubernetes": "[steps('esLz').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esLz').esAscRegistries]",
-
             "enableStorage": "[steps('esLz').esSta]",
             "enableRsv": "[steps('esLz').esRsv]",
             "enableBudget": "[steps('esLz').esBudget]",
