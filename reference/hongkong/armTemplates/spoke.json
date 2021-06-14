@@ -391,6 +391,9 @@
                     "enableRsv": {
                         "value": "[parameters('enableRsv')]"
                     },
+                    "SpokeSubscriptionId": {
+                        "value": "[parameters('SpokeSubscriptionId')]"
+                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },
@@ -446,9 +449,6 @@
                     },
                     "costCenterTag": {
                         "value": "[parameters('costCenterTag')]"
-                    },
-                    "SpokeSubscriptionId": {
-                        "value": "[parameters('SpokeSubscriptionId')]"
                     }
                 }
             }
