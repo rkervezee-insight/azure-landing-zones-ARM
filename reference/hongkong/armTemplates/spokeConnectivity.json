@@ -218,9 +218,9 @@
                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
                                 "[concat('Microsoft.Network/routeTables/', variables('udrName'))]",
-                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]",
-                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]",
-                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('dataSubnet'))]"
+                                //"[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]",
+                               // "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]",
+                                //"[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('dataSubnet'))]"
                             ],
                             "properties": {
                                 "addressSpace": {
