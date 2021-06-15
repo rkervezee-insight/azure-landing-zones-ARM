@@ -617,14 +617,6 @@
             ],
             "defaultValue": "No"
         },
-        "enableMgmt": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
-        },
         "enableIdentity": {
             "type": "string",
             "allowedValues": [
@@ -646,14 +638,6 @@
             "defaultValue": ""
         },
         "subnetMaskForAppGw": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "subnetMaskForMgmt": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "subnetMaskForIdentity": {
             "type": "string",
             "defaultValue": ""
         },
