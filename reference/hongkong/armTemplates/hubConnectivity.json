@@ -34,10 +34,6 @@
             "type": "string",
             "maxLength": 3
         },
-        "udrPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
         "ddosPrefix": {
             "type": "string",
             "maxLength": 4
@@ -247,7 +243,7 @@
         "bastionSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]",
         "bastionPipName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
         "bastionPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('bastionPipName'))]",
-        
+
         "appGwySubnet": "AppGateway",
         "appGwyNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet')))]",
         "appGwyNsgId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
@@ -545,7 +541,7 @@
                                                 }
                                             }
                                         },
-                                         // Conditional deployment of Azure app Gateway Subnet
+                                        // Conditional deployment of Azure app Gateway Subnet
                                         {
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
