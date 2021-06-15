@@ -755,6 +755,7 @@
         },
         "enableAzOps": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
