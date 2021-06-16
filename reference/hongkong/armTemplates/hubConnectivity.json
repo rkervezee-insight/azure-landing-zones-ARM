@@ -226,7 +226,7 @@
         "erGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
 
         "fwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-        "fwPolicyName": "[toLower(concat(variables('namingPrefix'), '-afp-003'))]",
+        "fwPolicyName": "[toLower(take(concat(variables('namingPrefix'), '-afp', '-', guid(parameters('companyPrefix'))), 24))]",
         "fwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
         "fwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
         "fwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('fwIpName'))]",
