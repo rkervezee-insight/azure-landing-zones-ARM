@@ -7,24 +7,19 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "omsPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "staPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "managementSubscriptionId": {
             "type": "string",
@@ -241,7 +236,7 @@
     },
     "resources": [
         {
-            "comments": "// Conditional - Azure Policy Assignment for Azure Activity Logs to Log Analytics",
+            "comments": "Conditional Azure Policy Assignment for Azure Activity Logs to Log Analytics",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -266,7 +261,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment for Azure Activity Logs for Platform Managenment Subscription to Log Analytics",
+            "comments": "Role assignment for Azure Policy assignment for Azure Activity Logs for Platform Managenment Subscription to Log Analytics",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -281,7 +276,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment for Azure Activity Logs to Azure Storage for LTR",
+            "comments": "Conditional Azure Policy Assignment for Azure Activity Logs to Azure Storage for LTR",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -303,7 +298,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment for Azure Activity Logs to Azure Storage for LTR",
+            "comments": "Role assignment for Azure Policy assignment for Azure Activity Logs to Azure Storage for LTR",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLtrStorage'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -318,7 +313,7 @@
             }
         },
         {
-            "comments": "// Conditional assignment of Azure Policy to enforce Log Analytics VM extension to Windows and Linux virtual machines",
+            "comments": "Conditional assignment of Azure Policy to enforce Log Analytics VM extension to Windows and Linux virtual machines",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -340,7 +335,7 @@
             }
         },
         {
-            "comments": "// Role assignment for the conditional VM monitoring policy assignment",
+            "comments": "Role assignment for the conditional VM monitoring policy assignment",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -355,7 +350,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment for Azure Resource Diagnostics Logs to Log Analytics",
+            "comments": "Conditional Azure Policy Assignment for Azure Resource Diagnostics Logs to Log Analytics",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -377,7 +372,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy for Azure Resource Diagnostic Logs to Log Analytics",
+            "comments": "Role assignment for Azure Policy for Azure Resource Diagnostic Logs to Log Analytics",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -392,7 +387,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to enforce ASC Configuration on subscriptions",
+            "comments": "Conditional Azure Policy Assignment to enforce ASC Configuration on subscriptions",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -453,7 +448,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment of ASC Configuration",
+            "comments": "Role assignment for Azure Policy assignment of ASC Configuration",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -468,7 +463,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to enforce ASC Auto Provisioning on subscriptions",
+            "comments": "Conditional Azure Policy Assignment to enforce ASC Auto Provisioning on subscriptions",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -490,7 +485,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment of ASC Auto Provisioning",
+            "comments": "Role assignment for Azure Policy assignment of ASC Auto Provisioning",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -505,7 +500,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to enable ASC monitoring on subscriptions",
+            "comments": "Conditional Azure Policy Assignment to enable ASC monitoring on subscriptions",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -542,7 +537,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to Deny Azure App Gateway without WAF",
+            "comments": "Azure Policy Assignment to Deny Azure App Gateway without WAF",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').denyAppGwyWaf]",
@@ -556,7 +551,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to Deploy NSG Flow Logs",
+            "comments": "Azure Policy Assignment to Deploy NSG Flow Logs",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').deployNsgFlowLogs]",
@@ -589,7 +584,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment to deploy NSG Flow Logs",
+            "comments": "Role assignment for Azure Policy assignment to deploy NSG Flow Logs",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
             "name": "[variables('roleAssignmentNames').deployNsgFlowLogs]",
@@ -603,7 +598,7 @@
             }
         },
         {
-            "comments": "// Conditional deployment for Azure Activity Logs to Log Analytics on Platform Management subscription",
+            "comments": "Conditional deployment for Azure Activity Logs to Log Analytics on Platform Management subscription",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -620,7 +615,7 @@
             }
         },
         {
-            "comments": "// Conditional deployment for Azure Activity Logs to Log Analytics on Platform Identity subscription",
+            "comments": "Conditional deployment for Azure Activity Logs to Log Analytics on Platform Identity subscription",
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -637,7 +632,7 @@
             }
         },
         {
-            "comments": "// Conditional deployment for Azure Activity Logs to Log Analytics on Platform Connectivity subscription",
+            "comments": "Conditional deployment for Azure Activity Logs to Log Analytics on Platform Connectivity subscription",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -654,7 +649,7 @@
             }
         },
         {
-            "comments": "// Conditional deployment for ASC Configuration on Platform Management subscription",
+            "comments": "Conditional deployment for ASC Configuration on Platform Management subscription",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
@@ -732,7 +727,7 @@
             }
         },
         {
-            "comments": "// Conditional deployment for ASC Configuration on Platform Identity subscription",
+            "comments": "Conditional deployment for ASC Configuration on Platform Identity subscription",
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
@@ -810,7 +805,7 @@
             }
         },
         {
-            "comments": "// Conditional deployment for ASC Configuration on Platform Connectivity subscription",
+            "comments": "Conditional deployment for ASC Configuration on Platform Connectivity subscription",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",

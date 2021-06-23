@@ -3,32 +3,27 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "staPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "enableStorage": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subscriptionTag": {
             "type": "string"
@@ -50,7 +45,10 @@
             "sku": "Standard_LRS",
             "kind": "StorageV2",
             "use": "diagnostics",
-            "httpsOnly": true
+            "httpsOnly": true,
+            "accessTier": "Hot",
+            "minimumTlsVersion": "TLS1_2",
+            "allowBlobPublicAccess": false
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -115,20 +113,34 @@
                             "sku": {
                                 "name": "[variables('storage').sku]"
                             },
+                            "identity": {
+                                "type": "systemAssigned"
+                            },
                             "tags": {
                                 "storageSKU": "[variables('storage').sku]",
                                 "storageUse": "[variables('storage').use]"
                             },
                             "kind": "[variables('storage').kind]",
                             "properties": {
+                                "encryption": {
+                                    "services": {
+                                        "blob": {
+                                            "enabled": true
+                                        }
+                                    },
+                                    "keySource": "Microsoft.Storage"
+                                },
+                                "accessTier": "[variables('storage').accessTier]",
                                 "supportsHttpsTrafficOnly": "[variables('storage').httpsOnly]",
+                                "minimumTlsVersion": "[variables('storage').minimumTlsVersion]",
                                 "networkAcls": {
                                     "bypass": "Logging, Metrics, AzureServices",
                                     "virtualNetworkRules": [],
                                     "ipRules": [
                                     ],
                                     "defaultAction": "Deny"
-                                }
+                                },
+                                "allowBlobPublicAccess": "[variables('storage').allowBlobPublicAccess]"
                             }
                         }
                     ]

@@ -7,28 +7,24 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "rsvPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "enableRsv": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subscriptionTag": {
             "type": "string"
@@ -105,7 +101,7 @@
                             }
                         },
                         {
-                            "comments": "Deployment of the Recovery Services Vault",
+                            "comments": "Deploy Recovery Services Vault",
                             "type": "Microsoft.RecoveryServices/vaults",
                             "apiVersion": "[variables('apiVersions').vaults]",
                             "name": "[variables('recoveryServicesVault').name]",

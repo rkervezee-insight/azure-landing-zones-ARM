@@ -118,11 +118,14 @@
         },
         "enableSpoke": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
             ],
-            "defaultValue": "Yes"
+            "metadata": {
+                "description": "If 'Yes' is selected then a Recovery Services Vault will be deployed."
+            }
         },
         "connectivitySubscriptionId": {
             "type": "string",
@@ -142,11 +145,11 @@
         },
         "enableUdr": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "hubFwIp": {
             "type": "string",
@@ -154,27 +157,27 @@
         },
         "enableWeb": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enableApp": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enableData": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subnetMaskForWeb": {
             "type": "string",
@@ -194,18 +197,18 @@
         },
         "addressPrefix": {
             "type": "string",
+            "defaultValue": "",
             "metadata": {
                 "description": "Address prefix"
-            },
-            "defaultValue": ""
+            }
         },
         "enableBudget": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "startDate": {
             "type": "string",
@@ -489,7 +492,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of a Landing Zone Subscription Budget",
+            "comments": "Linked template for the creation of a Budget in the Landing Zone Subscription",
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableBudget'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",

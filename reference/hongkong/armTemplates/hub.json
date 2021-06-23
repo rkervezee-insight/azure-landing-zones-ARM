@@ -114,13 +114,6 @@
                 "description": "Provide the Azure Bastion prefix"
             }
         },
-        "ddosPrefix": {
-            "type": "string",
-            "maxLength": 4,
-            "metadata": {
-                "description": "Provide the Azure DDoS Protection prefix"
-            }
-        },
         "subscriptionTag": {
             "type": "string",
             "defaultValue": "",
@@ -484,14 +477,6 @@
                 "No"
             ],
             "defaultValue": "Yes"
-        },
-        "enableDdoS": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
         },
         "enablePrivateDnsZones": {
             "type": "string",
@@ -1126,7 +1111,7 @@
         },
         {
             "comments": "Linked template for the creation of Identity & Access Management resources in the Platform Identity Subscription",
-            "condition": "[not(empty(parameters('identitySubscriptionId')))]",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-identity')]",
@@ -1146,15 +1131,6 @@
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
                     },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
                     "enableIdentity": {
                         "value": "[parameters('enableIdentity')]"
                     },
@@ -1172,15 +1148,6 @@
                     },
                     "identitySubscriptionId": {
                         "value": "[parameters('identitySubscriptionId')]"
-                    },
-                    "subscriptionTag": {
-                        "value": "[parameters('subscriptionTag')]"
-                    },
-                    "ownerTag": {
-                        "value": "[parameters('ownerTag')]"
-                    },
-                    "costCenterTag": {
-                        "value": "[parameters('costCenterTag')]"
                     }
                 }
             }
@@ -1390,9 +1357,6 @@
                     "azFwPrefix": {
                         "value": "[parameters('azFwPrefix')]"
                     },
-                    "ddosPrefix": {
-                        "value": "[parameters('DdosPrefix')]"
-                    },
                     "nsgPrefix": {
                         "value": "[parameters('nsgPrefix')]"
                     },
@@ -1413,9 +1377,6 @@
                     },
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
-                    },
-                    "enableDdoS": {
-                        "value": "[parameters('enableDdoS')]"
                     },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"

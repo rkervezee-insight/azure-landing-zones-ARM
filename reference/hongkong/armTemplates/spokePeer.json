@@ -7,47 +7,37 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "vntPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "addressPrefix": {
-            "type": "string",
-            "metadata": {
-                "description": "Address prefix of the Application Landing Zone Virtual Network"
-            }
+            "type": "string"
         },
         "connectivitySubscriptionId": {
             "type": "string",
-            "defaultValue": "",
             "maxLength": 36
         },
         "hubVnetName": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "hubVnetRg": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "enableSpoke": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         }
     },
     "variables": {
@@ -71,7 +61,7 @@
     },
     "resources": [
         {
-            "comments": "// Nested deployment of vNet peering deployment (Spoke >> Hub)",
+            "comments": "Nested deployment for vNet peering (Spoke >> Hub)",
             "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -86,7 +76,7 @@
                     "variables": {},
                     "resources": [
                         {
-                            "comments": "Deploy vNet peer (Spoke >> Hub)",
+                            "comments": "Deploy vNet peering (Spoke >> Hub)",
                             "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
@@ -107,7 +97,7 @@
             }
         },
         {
-            "comments": "// Nested template for vNet peering deployment (Hub >> Spoke)",
+            "comments": "Nested deployment for vNet peering (Hub >> Spoke)",
             "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -123,7 +113,7 @@
                     "variables": {},
                     "resources": [
                         {
-                            "comments": "Deploy vNet peer (Hub >> Spoke)",
+                            "comments": "Deploy vNet peering (Hub >> Spoke)",
                             "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",

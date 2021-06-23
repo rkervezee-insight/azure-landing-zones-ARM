@@ -7,28 +7,22 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "vntPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "udrPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "nsgPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "subscriptionTag": {
             "type": "string"
@@ -40,67 +34,59 @@
             "type": "string"
         },
         "addressPrefix": {
-            "type": "string",
-            "metadata": {
-                "displayName": "addressPrefix",
-                "description": "Address prefix of the Platform Landing Zone"
-            }
+            "type": "string"
         },
         "enableSpoke": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enableUdr": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "hubFwIp": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "enableWeb": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "enableApp": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "enableData": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "subnetMaskForWeb": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "subnetMaskForApp": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "subnetMaskForData": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         }
     },
     "variables": {
@@ -217,10 +203,10 @@
                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
-                                "[concat('Microsoft.Network/routeTables/', variables('udrName'))]"
-                                //"[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]",
-                               // "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]",
-                                //"[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('dataSubnet'))]"
+                                "[concat('Microsoft.Network/routeTables/', variables('udrName'))]",
+                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]",
+                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]",
+                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('dataSubnet'))]"
                             ],
                             "properties": {
                                 "addressSpace": {

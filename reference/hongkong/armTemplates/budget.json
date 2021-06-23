@@ -46,7 +46,7 @@
     },
     "resources": [
         {
-            "comments": "Deploy the Azure Budget to the Landing Zone Subscription",
+            "comments": "Deploy the Azure Budget to the Target Subscription",
             "condition": "[equals(parameters('enableBudget'), 'Yes')]",
             "type": "Microsoft.Consumption/budgets",
             "apiVersion": "[variables('apiVersions').budgets]",

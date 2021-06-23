@@ -7,152 +7,104 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "emailSecurityContact": {
-            "type": "string",
-            "metadata": {
-                "displayName": "Security contacts email address",
-                "description": "Provide email address for Azure Security Center contact details"
-            }
+            "type": "string"
         },
         "pricingTierVMs": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for Virtual Machines",
-                "description": "Azure Defender pricing tier for Virtual Machines"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierSqlServers": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for SQL Servers",
-                "description": "Azure Defender pricing tier for SQL Servers"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierAppServices": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for App Services",
-                "description": "Azure Defender pricing tier for App Services"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierStorageAccounts": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for Storage Accounts",
-                "description": "Azure Defender pricing tier for Storage Accounts"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierSqlServerVirtualMachines": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for SQL Server Virtual Machines",
-                "description": "Azure Defender pricing tier for SQL Server Virtual Machines"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierKubernetesService": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for AKS",
-                "description": "Azure Defender pricing tier for AKS"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierContainerRegistry": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for ACR",
-                "description": "Azure Defender pricing tier for ACR"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierKeyVaults": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for AKV",
-                "description": "Azure Defender pricing tier for AKV"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierDns": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for DNS",
-                "description": "Azure Defender pricing tier for DNS"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierArm": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for Azure Resource Manager",
-                "description": "Azure Defender pricing tier for Azure Resource Manager"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "workspaceResourceId": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Log Analytics workspace",
-                "description": "The Log Analytics workspace of where the data should be exported to.",
-                "strongType": "Microsoft.OperationalInsights/workspaces",
-                "assignPermissions": true
-            }
+            "type": "string",
+            "defaultValue": "Standard",
+            "allowedValues": [
+                "Standard",
+                "Free"
+            ]
         },
         "guidValue": {
             "type": "string",

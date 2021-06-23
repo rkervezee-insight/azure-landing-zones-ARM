@@ -44,14 +44,14 @@
     },
     "resources": [
         {
-            "comments": "// Create top level management group under tenant root",
+            "comments": "Create top level management group under tenant root",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
             "name": "[parameters('companyPrefix')]",
             "properties": {}
         },
         {
-            "comments": "// Create management group for platform management groups",
+            "comments": "Create the Platform Management Group",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
             "name": "[variables('managementGroups').platform]",
@@ -68,7 +68,7 @@
             }
         },
         {
-            "comments": "// Create management group for landing zones",
+            "comments": "Create the Landing Zone Management Group",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
             "name": "[variables('managementGroups').landingZone]",
@@ -85,7 +85,7 @@
             }
         },
         {
-            "comments": "// Create management group for sandbox subscriptions",
+            "comments": "Create the Sandbox Management Group",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
             "name": "[variables('managementGroups').sandboxes]",
@@ -102,7 +102,7 @@
             }
         },
         {
-            "comments": "// Create management group for decommissioned subscriptions",
+            "comments": "Create the Decommissioned Management Group",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
             "name": "[variables('managementGroups').decommissioned]",
@@ -119,7 +119,7 @@
             }
         },
         {
-            "comments": "// Create child management groups for platform resources",
+            "comments": "Create child Management Groups for Platform subscriptions",
             "condition": "[not(empty(parameters('platformMgs')))]",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",
@@ -141,7 +141,7 @@
             }
         },
         {
-            "comments": "// Create child management groups for landing zones",
+            "comments": "Create child Management Groups for Landing Zones",
             "condition": "[not(empty(parameters('landingZoneMgs')))]",
             "type": "Microsoft.Management/managementGroups",
             "apiVersion": "[variables('apiVersions').managementGroups]",

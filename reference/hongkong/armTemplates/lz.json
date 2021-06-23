@@ -96,55 +96,42 @@
         },
         "denySubnetWithoutNsg": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "enableLzDdoS": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "connectivitySubscriptionId": {
             "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Provide subscription Id for the connectivity subscription where DDoS is enabled."
-            }
+            "maxLength": 36
         },
         "denyPublicEndpoints": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No",
-            "metadata": {
-                "description": "Select if policy to deny public endpoint should be assigned or not."
-            }
+            ]
         },
         "enableEncryptionInTransit": {
             "type": "string",
+            "defaultValue": "No",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No",
-            "metadata": {
-                "description": "Select if encryption in transit policy should be assigned or not."
-            }
+            ]
         },
         "location": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Provide the location for the connectivity resources in the connectivity subscription."
-            }
+            "type": "string"
         },
         "denySsh": {
             "type": "string",
@@ -228,16 +215,16 @@
         },
         "dDoSRgName": "[concat(parameters('companyPrefix'), '-ddos')]",
         "dDoSName": "[concat(parameters('companyPrefix'), '-ddos-', parameters('location'))]",
-        //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}",
         "apiVersions": {
             "policyAssignments": "2020-03-01",
             "deployments": "2020-06-01",
             "roleAssignments": "2020-04-01-preview"
         }
+        //"blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}",
     },
     "resources": [
         {
-            "comments": "// Conditional - Azure Policy Assignment for Azure DDoS Protection Standard",
+            "comments": "Conditional Azure Policy Assignment for Azure DDoS Protection Standard",
             "condition": "[and(equals(parameters('enableLzDdoS'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -261,7 +248,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment for Azure DDoS Protection Standard",
+            "comments": "Conditional role assignment for Azure Policy assignment for Azure DDoS Protection Standard",
             "condition": "[and(equals(parameters('enableLzDdoS'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -276,7 +263,7 @@
             }
         },
         {
-            "comments": "// Conditional - Deployment of Public Endpoint Policy Initiative",
+            "comments": "Conditional Azure Policy Assignment for Public Endpoint Policy Initiative",
             "condition": "[equals(parameters('denyPublicEndpoints'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -300,7 +287,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deploy Encryption in Transit Controls",
+            "comments": "Conditional Azure Policy Assignment to deploy Encryption in Transit Controls",
             "condition": "[equals(parameters('enableEncryptionInTransit'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -317,7 +304,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment to deploy Encryption in Transit Controls",
+            "comments": "Conditional role assignment for Azure Policy assignment to deploy Encryption in Transit Controls",
             "condition": "[equals(parameters('enableEncryptionInTransit'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -332,7 +319,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deploy Backup agents to IaaS VMs",
+            "comments": "Conditional Azure Policy Assignment to deploy Backup agents to IaaS VMs",
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -350,7 +337,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy Assignment to deploy Backup agents to IaaS VMs",
+            "comments": "Conditional role assignment for Azure Policy Assignment to deploy Backup agents to IaaS VMs",
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -365,7 +352,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny subnets without NSGs",
+            "comments": "Conditional Azure Policy Assignment to deny subnets without NSGs",
             "condition": "[equals(parameters('denySubnetWithoutNsg'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -379,7 +366,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny the creation of Public IPs",
+            "comments": "Conditional Azure Policy Assignment to deny the creation of Public IPs",
             "condition": "[equals(parameters('denyPip'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -392,7 +379,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny NSG rules with RDP inbound access from the internet",
+            "comments": "Conditional Azure Policy Assignment to deny NSG rules with RDP inbound access from the internet",
             "condition": "[equals(parameters('denyRdp'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -405,7 +392,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny IP forwarding",
+            "comments": "Conditional Azure Policy Assignment to deny IP forwarding",
             "condition": "[equals(parameters('denyIpForwarding'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -419,7 +406,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to audit SQL settings",
+            "comments": "Conditional Azure Policy Assignment to audit SQL settings",
             "condition": "[equals(parameters('enableSqlAudit'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -436,7 +423,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment to audit SQL settings",
+            "comments": "Conditional role assignment for Azure Policy assignment to audit SQL settings",
             "condition": "[equals(parameters('enableSqlAudit'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -451,7 +438,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deploy SQL Encryption",
+            "comments": "Conditional Azure Policy Assignment to deploy SQL Encryption",
             "condition": "[equals(parameters('enableSqlEncryption'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -468,7 +455,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment to deploy SQL Encryption",
+            "comments": "Conditional role assignment for Azure Policy assignment to deploy SQL Encryption",
             "condition": "[equals(parameters('enableSqlEncryption'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -483,7 +470,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to enforce secure storage",
+            "comments": "Conditional Azure Policy Assignment to enforce secure storage",
             "condition": "[equals(parameters('enableStorageHttps'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -497,7 +484,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deploy AKS Policy",
+            "comments": "Conditional Azure Policy Assignment to deploy AKS Policy",
             "condition": "[equals(parameters('enableAksPolicy'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -514,7 +501,7 @@
             }
         },
         {
-            "comments": "// Role assignment for Azure Policy assignment to deploy AKS Policy",
+            "comments": "Conditional role assignment for Azure Policy assignment to deploy AKS Policy",
             "condition": "[equals(parameters('enableAksPolicy'), 'Yes')]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -529,7 +516,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny privilaged containers for AKS",
+            "comments": "Conditional Azure Policy Assignment to deny privilaged containers for AKS",
             "condition": "[equals(parameters('denyAksPrivileged'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -551,7 +538,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny privilaged escalations for AKS",
+            "comments": "Conditional Azure Policy Assignment to deny privilaged escalations for AKS",
             "condition": "[equals(parameters('denyAksPrivilegedEscalation'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -573,7 +560,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny privilaged escalations for AKS",
+            "comments": "Conditional Azure Policy Assignment to deny privilaged escalations for AKS",
             "condition": "[equals(parameters('denyHttpIngressForAks'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -595,7 +582,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny NSG rules with SSH inbound access from the internet",
+            "comments": "Conditional Azure Policy Assignment to deny NSG rules with SSH inbound access from the internet",
             "condition": "[equals(parameters('denySsh'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -608,7 +595,7 @@
             }
         },
         {
-            "comments": "// Conditional - Azure Policy Assignment to deny the creation of Private DNS Zones",
+            "comments": "Conditional Azure Policy Assignment to deny the creation of Private DNS Zones",
             "condition": "[equals(parameters('denyPrivateDnsZones'), 'Yes')]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
