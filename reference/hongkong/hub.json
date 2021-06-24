@@ -733,7 +733,7 @@
     },
     "variables": {
         "azPolicyEnvMapping": {
-            "https://management.azure.com/": "policies.json"
+            "https://management.azure.com/": "armTemplates/policies.json"
         },
         "azEnvPolicy": "[variables('azPolicyEnvMapping')[environment().resourceManager]]",
         "deploymentUris": {
