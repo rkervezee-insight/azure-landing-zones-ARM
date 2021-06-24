@@ -191,10 +191,6 @@
             "type": "string",
             "defaultValue": ""
         },
-        "location": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
-        },
         "addressPrefix": {
             "type": "string",
             "defaultValue": "",
@@ -365,7 +361,7 @@
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('SpokeSubscriptionId')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
             "name": "[variables('deploymentNames').spokeConnectivity]",
             "dependsOn": [
             ],
@@ -436,6 +432,9 @@
                     },
                     "subnetMaskForData": {
                         "value": "[parameters('subnetMaskForData')]"
+                    },
+                    "SpokeSubscriptionId": {
+                        "value": "[parameters('SpokeSubscriptionId')]"
                     }
                 }
             }
