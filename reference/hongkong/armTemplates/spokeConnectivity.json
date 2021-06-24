@@ -151,7 +151,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
-            "location": "[deployment().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
             ],
             "subscriptionId": "[parameters('SpokeSubscriptionId')]",
@@ -167,7 +167,7 @@
                             "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
+                            "location": "[parameters('location')]",
                             "name": "[variables('resourceGroups').spokeNetwork]",
                             "tags": {
                                 "environment": "[variables('tags').environment]",
@@ -181,7 +181,7 @@
                             "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[deployment().location]",
+                            "location": "[parameters('location')]",
                             "name": "[variables('resourceGroups').networkWatcher]",
                             "tags": {
                                 "environment": "[variables('tags').environment]",
@@ -222,7 +222,7 @@
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                                             "name": "[variables('networkWatcher')]",
-                                            "location": "[deployment().location]",
+                                            "location": "[parameters('location')]",
                                             "tags": {},
                                             "properties": {},
                                             "resources": []
