@@ -235,11 +235,11 @@
     },
     "variables": {
         "deploymentUris": {
-            "storage": "[uri(deployment().properties.templateLink.uri, 'storage.json')]",
-            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'recoveryServicesVault.json')]",
-            "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'spokeConnectivity.json')]",
-            "spokePeer": "[uri(deployment().properties.templateLink.uri, 'spokePeer.json')]",
-            "budget": "[uri(deployment().properties.templateLink.uri, 'budget.json')]"
+            "storage": "[uri(deployment().properties.templateLink.uri, 'armTemplates/storage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'armTemplates/recoveryServicesVault.json')]",
+            "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokeConnectivity.json')]",
+            "spokePeer": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokePeer.json')]",
+            "budget": "[uri(deployment().properties.templateLink.uri, 'armTemplates/budget.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-landingZones', '/', parameters('SpokeSubscriptionId'))]",
         "noSubscription": "[concat(parameters('companyPrefix'), '-landingZones', '/', 'na')]",
