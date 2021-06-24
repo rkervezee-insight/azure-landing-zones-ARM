@@ -85,7 +85,8 @@
         },
         "SpokeSubscriptionId": {
             "type": "string",
-            "maxLength": 36
+            "maxLength": 36,
+            "defaultValue": ""
         },
         "subnetMaskForWeb": {
             "type": "string"
