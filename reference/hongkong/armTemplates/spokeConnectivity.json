@@ -147,7 +147,7 @@
     "resources": [
         {
             "comments": "Conditional deployment for Azure Network Resources in the spoke subscription",
-            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
+            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
@@ -164,7 +164,7 @@
                     "resources": [
                         {
                             "comments": "Create Resource Group for Azure Network Resources",
-                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
+                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -178,7 +178,7 @@
                         },
                         {
                             "comments": "Create Resource Group for Network Watcher",
-                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
+                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -218,7 +218,7 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
+                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                                             "name": "[variables('networkWatcher')]",
@@ -259,7 +259,7 @@
                                         },
                                         {
                                             "comments": "Deploy Azure Network Resources",
-                                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
+                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "[variables('apiVersions').virtualNetworks]",
                                             "name": "[variables('vnetName')]",
