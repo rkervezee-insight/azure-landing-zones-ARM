@@ -227,6 +227,10 @@
             "type": "array",
             "defaultValue": [
             ]
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
         }
     },
     "variables": {
@@ -435,6 +439,9 @@
                     },
                     "SpokeSubscriptionId": {
                         "value": "[parameters('SpokeSubscriptionId')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
                     }
                 }
             }

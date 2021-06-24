@@ -91,6 +91,10 @@
         "SpokeSubscriptionId": {
             "type": "string",
             "maxLength": 36
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
         }
     },
     "variables": {
@@ -259,7 +263,7 @@
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "[variables('apiVersions').virtualNetworks]",
                                             "name": "[variables('vnetName')]",
-                                            "location": "[deployment().location]",
+                                            "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
@@ -285,7 +289,7 @@
                                             "type": "Microsoft.Network/routeTables",
                                             "apiVersion": "[variables('apiVersions').routeTables]",
                                             "name": "[variables('udrName')]",
-                                            "location": "[deployment().location]",
+                                            "location": "[parameters('location')]",
                                             "properties": {
                                                 "routes": [
                                                     {
@@ -326,7 +330,7 @@
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
                                             "name": "[variables('webNsg')]",
-                                            "location": "[deployment().location]",
+                                            "location": "[parameters('location')]",
                                             "tags": {
                                                 "appliedSubnet": "[concat(variables('vnetName'), '/', variables('webSubnet'))]"
                                             },
@@ -363,7 +367,7 @@
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
                                             "name": "[variables('appsNsg')]",
-                                            "location": "[deployment().location]",
+                                            "location": "[parameters('location')]",
                                             "tags": {
                                                 "appliedSubnet": "[concat(variables('vnetName'), '/', variables('appsSubnet'))]"
                                             },
@@ -400,7 +404,7 @@
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
                                             "name": "[variables('dataNsg')]",
-                                            "location": "[deployment().location]",
+                                            "location": "[parameters('location')]",
                                             "tags": {
                                                 "appliedSubnet": "[concat(variables('vnetName'), '/', variables('dataSubnet'))]"
                                             },
