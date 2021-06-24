@@ -36,6 +36,10 @@
         "addressPrefix": {
             "type": "string"
         },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
+        },
         "enableSpoke": {
             "type": "string",
             "defaultValue": "Yes",
@@ -79,6 +83,10 @@
                 "No"
             ]
         },
+        "SpokeSubscriptionId": {
+            "type": "string",
+            "maxLength": 36
+        },
         "subnetMaskForWeb": {
             "type": "string"
         },
@@ -87,14 +95,6 @@
         },
         "subnetMaskForData": {
             "type": "string"
-        },
-        "SpokeSubscriptionId": {
-            "type": "string",
-            "maxLength": 36
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
         }
     },
     "variables": {
@@ -268,10 +268,7 @@
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
-                                                "[concat('Microsoft.Network/routeTables/', variables('udrName'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('webSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('appsSubnet'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vnetName'), variables('dataSubnet'))]"
+                                                "[concat('Microsoft.Network/routeTables/', variables('udrName'))]"
                                             ],
                                             "properties": {
                                                 "addressSpace": {

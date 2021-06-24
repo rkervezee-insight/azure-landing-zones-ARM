@@ -7,28 +7,22 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "vntPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "udrPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "nsgPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "subscriptionTag": {
             "type": "string"
@@ -40,80 +34,67 @@
             "type": "string"
         },
         "addressPrefix": {
-            "type": "string",
-            "metadata": {
-                "displayName": "addressPrefix",
-                "description": "Address prefix of the Platform Landing Zone"
-            }
+            "type": "string"
         },
         "location": {
             "type": "string",
-            "metadata": {
-                "displayName": "location",
-                "description": "Location of the Platform Landing Zone"
-            },
             "defaultValue": "[deployment().location]"
         },
         "enableSpoke": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enableUdr": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "hubFwIp": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "enableWeb": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "enableApp": {
-            "type": "string",
+           "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "enableData": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "No"
+            ]
         },
         "subscriptionId": {
             "type": "string",
-            "defaultValue": "",
             "maxLength": 36
         },
         "subnetMaskForWeb": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "subnetMaskForApp": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "subnetMaskForData": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         }
     },
     "variables": {
