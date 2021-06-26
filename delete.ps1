@@ -1,5 +1,5 @@
 #Use a filter to select resource groups by substring
-$filter = 'zoc'
+$filter = 'stt'
  
 #Find Resource Groups by Filter -> Verify Selection
 #Get-AzResourceGroup | ? ResourceGroupName -match $filter | Select-Object ResourceGroupName

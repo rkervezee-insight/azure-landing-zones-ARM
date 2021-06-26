@@ -150,7 +150,6 @@
         },
         "connectivitySubscriptionId": {
             "type": "string",
-            "defaultValue": "",
             "maxLength": 36,
             "metadata": {
                 "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for networking."
