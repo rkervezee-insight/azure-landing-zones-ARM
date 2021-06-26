@@ -65,6 +65,7 @@
         },
         "connectivitySubscriptionId": {
             "type": "string",
+            "defaultValue": "",
             "maxLength": 36
         },
         "subscriptionTag": {

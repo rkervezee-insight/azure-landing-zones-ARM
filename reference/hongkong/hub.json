@@ -93,13 +93,6 @@
                 "description": "Provide the Azure Firewall identifier prefix"
             }
         },
-        "udrPrefix": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "Provide the Route Table identifier prefix"
-            }
-        },
         "nsgPrefix": {
             "type": "string",
             "maxLength": 3,

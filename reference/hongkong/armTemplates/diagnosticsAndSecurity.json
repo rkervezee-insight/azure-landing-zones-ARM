@@ -23,7 +23,6 @@
         },
         "managementSubscriptionId": {
             "type": "string",
-            "maxLength": 36,
             "defaultValue": ""
         },
         "identitySubscriptionId": {
