@@ -94,10 +94,7 @@
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "metadata": {
-                "description": "Azure Defender pricing tier for Azure SQL on VMs"
-            }
+            ]
         },
         "enableAscForKeyVault": {
             "type": "string",

@@ -6,9 +6,13 @@
             "type": "string",
             "maxLength": 5
         },
+        "location": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "enableSqlAudit": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -16,7 +20,7 @@
         },
         "enableAksPolicy": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -24,7 +28,7 @@
         },
         "denyAksPrivileged": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -32,7 +36,7 @@
         },
         "denyAksPrivilegedEscalation": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -40,7 +44,7 @@
         },
         "denyHttpIngressForAks": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -48,7 +52,7 @@
         },
         "enableSqlEncryption": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -56,7 +60,7 @@
         },
         "enableVmBackup": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -72,7 +76,7 @@
         },
         "denyRdp": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -80,7 +84,7 @@
         },
         "enableStorageHttps": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -88,7 +92,7 @@
         },
         "denyIpForwarding": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -96,7 +100,7 @@
         },
         "denySubnetWithoutNsg": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -104,20 +108,15 @@
         },
         "enableLzDdoS": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
             ]
         },
-        "connectivitySubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
         "denyPublicEndpoints": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -125,15 +124,11 @@
         },
         "enableEncryptionInTransit": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
             ]
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": ""
         },
         "denySsh": {
             "type": "string",
@@ -150,6 +145,11 @@
                 "Yes",
                 "No"
             ]
+        },
+        "connectivitySubscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
         }
     },
     "variables": {

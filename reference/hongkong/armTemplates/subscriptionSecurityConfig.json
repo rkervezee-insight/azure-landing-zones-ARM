@@ -100,12 +100,13 @@
             ]
         },
         "workspaceResourceId": {
-            "type": "string",
-            "defaultValue": "Standard",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Analytics workspace",
+                "description": "The Log Analytics workspace of where the data should be exported to.",
+                "strongType": "Microsoft.OperationalInsights/workspaces",
+                "assignPermissions": true
+            }
         },
         "guidValue": {
             "type": "string",

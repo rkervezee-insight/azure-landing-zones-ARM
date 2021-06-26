@@ -69,13 +69,16 @@
             "maxLength": 36
         },
         "subscriptionTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "ownerTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "costCenterTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
