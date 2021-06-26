@@ -23,6 +23,7 @@
         },
         "managementSubscriptionId": {
             "type": "string",
+            "defaultValue": "",
             "maxLength": 36
         },
         "enableLogAnalytics": {

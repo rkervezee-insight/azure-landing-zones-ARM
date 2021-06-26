@@ -19,7 +19,8 @@
             "type": "string"
         },
         "managementSubscriptionId": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "enableSecuritySolution": {
             "type": "string",
