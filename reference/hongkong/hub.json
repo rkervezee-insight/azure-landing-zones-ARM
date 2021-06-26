@@ -148,20 +148,20 @@
                 "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for management. If you don't want to bring a subscription, leave this parameter empty as is."
             }
         },
-        "connectivitySubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36,
-            "metadata": {
-                "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for networking."
-            }
-        },
         "identitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36,
             "metadata": {
                 "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for identity."
+            }
+        },
+        "connectivitySubscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36,
+            "metadata": {
+                "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for networking."
             }
         },
         "denySubnetWithoutNsgForIdentity": {
@@ -857,7 +857,9 @@
             "apiVersion": "[variables('apiVersions').subscriptions]",
             "name": "[if(not(empty(parameters('managementSubscriptionId'))), variables('moveSubscription').management, variables('noSubscription').management)]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
             ],
             "properties": {}
         },
@@ -868,7 +870,9 @@
             "apiVersion": "[variables('apiVersions').subscriptions]",
             "name": "[if(not(empty(parameters('identitySubscriptionId'))), variables('moveSubscription').identity, variables('noSubscription').identity)]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
             ],
             "properties": {}
         },
@@ -879,7 +883,9 @@
             "apiVersion": "[variables('apiVersions').subscriptions]",
             "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').hubConnectivity, variables('noSubscription').hubConnectivity)]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
             ],
             "properties": {}
         },

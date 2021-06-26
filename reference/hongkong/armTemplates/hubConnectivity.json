@@ -262,6 +262,7 @@
                     "parameters": {},
                     "resources": [
                         {
+                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "comments": "Create Resource Group for Azure Network Resources",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -275,6 +276,7 @@
                             "properties": {}
                         },
                         {
+                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "comments": "Create Resource Group for Network Watcher",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -314,6 +316,7 @@
                                             }
                                         },
                                         {
+                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "comments": "Deploy Network Watcher",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
