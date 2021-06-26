@@ -112,6 +112,7 @@
         },
         "connectivitySubscriptionId": {
             "type": "string",
+            "defaultValue": "",
             "maxLength": 36
         },
         "denyPublicEndpoints": {
