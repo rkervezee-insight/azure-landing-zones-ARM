@@ -132,7 +132,8 @@
             ]
         },
         "location": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "denySsh": {
             "type": "string",
