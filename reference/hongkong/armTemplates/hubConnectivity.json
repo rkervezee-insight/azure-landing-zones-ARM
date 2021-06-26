@@ -34,15 +34,19 @@
             "type": "string"
         },
         "subscriptionTag": {
+            "defaultValue": "",
             "type": "string"
         },
         "ownerTag": {
+            "defaultValue": "",
             "type": "string"
         },
         "costCenterTag": {
+            "defaultValue": "",
             "type": "string"
         },
         "addressPrefix": {
+            "defaultValue": "",
             "type": "string"
         },
         "location": {
@@ -135,6 +139,7 @@
         },
         "connectivitySubscriptionId": {
             "type": "string",
+            "defaultValue": "",
             "maxLength": 36
         },
         "subnetMaskForAzBastion": {
