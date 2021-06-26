@@ -20,7 +20,8 @@
         },
         "managementSubscriptionId": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "",
+            "maxLength": 36
         },
         "enableSecuritySolution": {
             "type": "string",
@@ -103,13 +104,16 @@
             "defaultValue": "Yes"
         },
         "subscriptionTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "ownerTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "costCenterTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {

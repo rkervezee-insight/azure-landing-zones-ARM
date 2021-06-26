@@ -16,7 +16,8 @@
             "type": "string"
         },
         "emailSecurityContact": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "pricingTierVMs": {
             "type": "string",
@@ -111,13 +112,16 @@
             "defaultValue": "[newGuid()]"
         },
         "subscriptionTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "ownerTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "costCenterTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {

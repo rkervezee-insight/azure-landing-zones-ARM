@@ -1045,9 +1045,6 @@
                     "enableRsv": {
                         "value": "[parameters('enableRsv')]"
                     },
-                    "identitySubscriptionId": {
-                        "value": "[parameters('identitySubscriptionId')]"
-                    },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
                     },

@@ -35,7 +35,8 @@
             ]
         },
         "retentionInDays": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {

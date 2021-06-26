@@ -23,15 +23,18 @@
         },
         "managementSubscriptionId": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "",
+            "maxLength": 36
         },
         "identitySubscriptionId": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "",
+            "maxLength": 36
         },
         "connectivitySubscriptionId": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "",
+            "maxLength": 36
         },
         "enableLogAnalytics": {
             "type": "string",
