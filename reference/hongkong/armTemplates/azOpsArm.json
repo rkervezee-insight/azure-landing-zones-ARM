@@ -9,7 +9,7 @@
         "locationPrefix": {
             "type": "string"
         },
-        "environmentPrefix": {
+        "platformMgmtPrefix": {
             "type": "string"
         },
         "akvPrefix": {
@@ -36,7 +36,7 @@
     },
     "variables": {
         "formattingPrincipalIdToString": "[replace(replace(replace(string(parameters('principalId')), '\"', ''), '[', ''), ']', '')]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix'))]",
         "keyVaultName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "keyVaultRbacName": "[concat(variables('keyVaultName'), '/Microsoft.Authorization/', guid(variables('keyVaultName')))]",
         "patSecretName": "PATSecret",

@@ -9,7 +9,7 @@
         "locationPrefix": {
             "type": "string"
         },
-        "environmentPrefix": {
+        "platformMgmtPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -58,7 +58,7 @@
             "azOpsSub": "[take(concat(parameters('companyPrefix'), '-', deployment().location, '-azOpsSub'), 64)]",
             "azOpsRg": "[take(concat(parameters('companyPrefix'), '-', deployment().location, '-azOpsRg'), 64)]"
         },
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-azops'))]",
         "formattedPrincipalId": "[replace(replace(replace(string(parameters('principalId')), '\"', ''), '[', ''), ']', '')]",
         "roleDefinitionOwner": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
@@ -138,8 +138,8 @@
                                     "locationPrefix": {
                                         "value": "[parameters('locationPrefix')]"
                                     },
-                                    "environmentPrefix": {
-                                        "value": "[parameters('environmentPrefix')]"
+                                    "platformMgmtPrefix": {
+                                        "value": "[parameters('platformMgmtPrefix')]"
                                     },
                                     "akvPrefix": {
                                         "value": "[parameters('akvPrefix')]"

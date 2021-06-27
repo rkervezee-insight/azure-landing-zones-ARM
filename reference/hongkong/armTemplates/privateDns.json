@@ -9,7 +9,7 @@
         "locationPrefix": {
             "type": "string"
         },
-        "environmentPrefix": {
+        "platformConnPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -83,7 +83,7 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-privateDns'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformConnPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-privatedns'))]",
         "privateLinkDns": {
             "blob": "privatelink.blob.core.windows.net",

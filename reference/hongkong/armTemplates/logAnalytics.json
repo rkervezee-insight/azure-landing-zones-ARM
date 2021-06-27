@@ -9,7 +9,7 @@
         "locationPrefix": {
             "type": "string"
         },
-        "environmentPrefix": {
+        "platformMgmtPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -51,7 +51,7 @@
             "deployLogAnalytics": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').logAnalytics))]"
         },
         "resourceDeploymentName": "[take(concat('logAnalytics', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "azAutomationName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('aaaPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",

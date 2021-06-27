@@ -23,6 +23,27 @@
                 "description": "Provide the environment identifier prefix (3 characters)"
             }
         },
+        "platformMgmtPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the PLatform Management Subscription identifier prefix (4 characters)"
+            }
+        },
+        "platformIdamPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the PLatform Identity Subscription identifier prefix (4 characters)"
+            }
+        },
+        "platformConnPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the PLatform Connectivity Subscription identifier prefix (4 characters)"
+            }
+        },
         "argPrefix": {
             "type": "string",
             "maxLength": 3,
@@ -907,8 +928,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -955,8 +976,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1033,8 +1054,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformIdamPrefix": {
+                        "value": "[parameters('platformIdamPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1081,8 +1102,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1236,8 +1257,14 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
+                    },
+                    "platformIdamPrefix": {
+                        "value": "[parameters('platformIdamPrefix')]"
+                    },
+                    "platformConnPrefix": {
+                        "value": "[parameters('platformConnPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1335,8 +1362,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformConnPrefix": {
+                        "value": "[parameters('platformConnPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1457,8 +1484,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformConnPrefix": {
+                        "value": "[parameters('platformConnPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1527,8 +1554,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"

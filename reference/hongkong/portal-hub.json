@@ -74,6 +74,42 @@
                         }
                     },
                     {
+                        "name": "esPlatformMgmtIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Platform Management Subscription Identifier Prefix",
+                        "toolTip": "Provide a value for the Platform Management Subscription Identifier.",
+                        "defaultValue": "mgmt",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{4}$",
+                            "validationMessage": "The prefix must be 4 characters."
+                        }
+                    },
+                    {
+                        "name": "esPlatformIdamIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Platform Identity Subscription Identifier Prefix",
+                        "toolTip": "Provide a value for the Platform Identity Subscription Identifier.",
+                        "defaultValue": "idam",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{4}$",
+                            "validationMessage": "The prefix must be 4 characters."
+                        }
+                    },
+                    {
+                        "name": "esPlatformConnIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Platform Connectivity Subscription Identifier Prefix",
+                        "toolTip": "Provide a value for the Platform Connectivity Subscription Identifier.",
+                        "defaultValue": "conn",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{4}$",
+                            "validationMessage": "The prefix must be 4 characters."
+                        }
+                    },
+                    {
                         "name": "text2",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
@@ -2371,6 +2407,7 @@
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
             "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
+            "platformMgmtPrefix": "[steps('esNaming').esPlatformMgmtIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
