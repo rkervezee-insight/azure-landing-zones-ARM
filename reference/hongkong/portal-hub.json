@@ -2408,6 +2408,8 @@
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
             "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
             "platformMgmtPrefix": "[steps('esNaming').esPlatformMgmtIdentifier]",
+            "platformIdamPrefix": "[steps('esNaming').esPlatformIdamIdentifier]",
+            "platformConnPrefix": "[steps('esNaming').esPlatformConnIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
