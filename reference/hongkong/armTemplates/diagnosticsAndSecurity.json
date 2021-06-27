@@ -671,18 +671,6 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'subscriptionSecurityConfig.json')]"
                 },
                 "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "platformMgmtPrefix": {
-                        "value": "[parameters('platformMgmtPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
                     "emailSecurityContact": {
                         "value": "[parameters('emailContactAsc')]"
                     },
@@ -749,18 +737,6 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'subscriptionSecurityConfig.json')]"
                 },
                 "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "platformIdamPrefix": {
-                        "value": "[parameters('platformIdamPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
                     "emailSecurityContact": {
                         "value": "[parameters('emailContactAsc')]"
                     },
@@ -827,18 +803,6 @@
                     "uri": "[uri(deployment().properties.templateLink.uri, 'subscriptionSecurityConfig.json')]"
                 },
                 "parameters": {
-                    "companyPrefix": {
-                        "value": "[parameters('companyPrefix')]"
-                    },
-                    "locationPrefix": {
-                        "value": "[parameters('locationPrefix')]"
-                    },
-                    "platformConnPrefix": {
-                        "value": "[parameters('platformConnPrefix')]"
-                    },
-                    "argPrefix": {
-                        "value": "[parameters('argPrefix')]"
-                    },
                     "emailSecurityContact": {
                         "value": "[parameters('emailContactAsc')]"
                     },
