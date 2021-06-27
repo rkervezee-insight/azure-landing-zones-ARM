@@ -25,21 +25,21 @@
         },
         "platformMgmtPrefix": {
             "type": "string",
-            "maxLength": 3,
+            "maxLength": 4,
             "metadata": {
                 "description": "Provide the PLatform Management Subscription identifier prefix (4 characters)"
             }
         },
         "platformIdamPrefix": {
             "type": "string",
-            "maxLength": 3,
+            "maxLength": 4,
             "metadata": {
                 "description": "Provide the PLatform Identity Subscription identifier prefix (4 characters)"
             }
         },
         "platformConnPrefix": {
             "type": "string",
-            "maxLength": 3,
+            "maxLength": 4,
             "metadata": {
                 "description": "Provide the PLatform Connectivity Subscription identifier prefix (4 characters)"
             }
