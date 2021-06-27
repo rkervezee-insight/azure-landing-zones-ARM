@@ -4,11 +4,11 @@
     "parameters": {
         "enableBudget": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "amount": {
             "type": "string",

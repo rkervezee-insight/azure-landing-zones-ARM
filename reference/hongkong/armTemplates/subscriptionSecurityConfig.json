@@ -2,19 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
-        },
-        "locationPrefix": {
-            "type": "string"
-        },
-        "environmentPrefix": {
-            "type": "string"
-        },
-        "argPrefix": {
-            "type": "string"
-        },
         "emailSecurityContact": {
             "type": "string",
             "defaultValue": ""
@@ -126,8 +113,7 @@
         }
     },
     "variables": {
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-ascexport'))]",
+        "resourceGroupName": "ascExportRG",
         "exportedDataTypes": "[createArray('Security recommendations', 'Security alerts', 'Overall secure score', 'Secure score controls', 'Regulatory compliance', 'Overall secure score - snapshot', 'Secure score controls - snapshot', 'Regulatory compliance - snapshot')]",
         "isSecurityFindingsEnabled": true,
         "recommendationNames": "[createArray()]",
