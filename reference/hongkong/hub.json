@@ -1260,12 +1260,6 @@
                     "platformMgmtPrefix": {
                         "value": "[parameters('platformMgmtPrefix')]"
                     },
-                    "platformIdamPrefix": {
-                        "value": "[parameters('platformIdamPrefix')]"
-                    },
-                    "platformConnPrefix": {
-                        "value": "[parameters('platformConnPrefix')]"
-                    },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
                     },

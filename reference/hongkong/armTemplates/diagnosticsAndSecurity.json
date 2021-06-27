@@ -12,12 +12,6 @@
         "platformMgmtPrefix": {
             "type": "string"
         },
-        "platformIdamPrefix": {
-            "type": "string"
-        },
-        "platformConnPrefix": {
-            "type": "string"
-        },
         "argPrefix": {
             "type": "string"
         },
