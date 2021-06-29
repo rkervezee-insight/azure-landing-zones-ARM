@@ -235,8 +235,8 @@
     },
     "variables": {
         "deploymentUris": {
-            "storage": "[uri(deployment().properties.templateLink.uri, 'armTemplates/storage.json')]",
-            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'armTemplates/recoveryServicesVault.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokeStorage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokeRecoveryServicesVault.json')]",
             "spokeConnectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokeConnectivity.json')]",
             "spokePeer": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokePeer.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'armTemplates/budget.json')]"
