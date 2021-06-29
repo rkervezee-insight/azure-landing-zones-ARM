@@ -8,7 +8,7 @@
         "locationPrefix": {
             "type": "string"
         },
-        "platformMgmtPrefix": {
+        "subscriptionPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -40,8 +40,8 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-storage'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix'))]",
-        "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
+        "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('subscriptionPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "storage": {
             "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",

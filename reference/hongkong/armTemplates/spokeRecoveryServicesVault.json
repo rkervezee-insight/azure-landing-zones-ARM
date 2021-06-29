@@ -9,7 +9,7 @@
         "locationPrefix": {
             "type": "string"
         },
-        "platformIdamPrefix": {
+        "subscriptionPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -41,7 +41,7 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformIdamPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
