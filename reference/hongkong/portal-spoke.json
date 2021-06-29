@@ -8,15 +8,15 @@
         "steps": [
             {
                 "name": "esNaming",
-                "label": "Naming Prefixes",
+                "label": "Naming Conventions",
                 "subLabel": {
-                    "preValidation": "Provide naming prefix values for all Azure resources that will be created.",
+                    "preValidation": "Provide naming prefix values for all Azure resources that will be created for the Landing Zone",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "Naming Prefixes",
+                "bladeTitle": "Naming Conventions",
                 "elements": [
                     {
-                        "name": "infoBox1",
+                        "name": "text0",
                         "type": "Microsoft.Common.InfoBox",
                         "visible": true,
                         "options": {
@@ -26,7 +26,7 @@
                         }
                     },
                     {
-                        "name": "textBlock0",
+                        "name": "text1",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
@@ -811,7 +811,7 @@
         ],
         "outputs": {
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
-            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
+            "subscriptionPrefix": "[steps('esNaming').esSubIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "vntPrefix": "[steps('esNaming').esVntIdentifier]",

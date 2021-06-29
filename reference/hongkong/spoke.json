@@ -16,11 +16,11 @@
                 "description": "Provide the location identifier prefix (3 characters)"
             }
         },
-        "environmentPrefix": {
+        "subscriptionPrefix": {
             "type": "string",
             "maxLength": 3,
             "metadata": {
-                "description": "Provide the environment identifier prefix (3 characters)"
+                "description": "Provide the Subscription identifier prefix (3 characters)"
             }
         },
         "argPrefix": {
@@ -257,7 +257,7 @@
     },
     "resources": [
         {
-            "comments": "Move the spoke subscription to the appropriate Management Group (Landing Zone MGs)",
+            "comments": "Move the spoke subscription to the appropriate Management Group (Landing Zone)",
             "condition": "[not(empty(parameters('SpokeSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
@@ -267,7 +267,7 @@
             "properties": {}
         },
         {
-            "comments": "Linked template for the creation of a Recovery Services Vault for the Landing Zone Subscription",
+            "comments": "Linked template deployment of Recovery Services Vault for the Landing Zone Subscription",
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -289,8 +289,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "subscriptionPrefix": {
+                        "value": "[parameters('subscriptionPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -314,7 +314,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of an Azure storage account for the Landing Zone Subscription",
+            "comments": "Linked template deployment of Azure Storage Account for the Landing Zone Subscription",
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -336,8 +336,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "subscriptionPrefix": {
+                        "value": "[parameters('subscriptionPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -361,7 +361,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of the spoke virtual network for the Landing Zone Subscription",
+            "comments": "Linked template deployment of virtual network for the Landing Zone Subscription",
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -383,8 +383,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "subscriptionPrefix": {
+                        "value": "[parameters('subscriptionPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -447,7 +447,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of the Virtual Network Peer between the Spoke and Connectivity Hub",
+            "comments": "Linked template deployment of Virtual Network Peer between the Spoke and Connectivity Hub",
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -470,8 +470,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "environmentPrefix": {
-                        "value": "[parameters('environmentPrefix')]"
+                    "subscriptionPrefix": {
+                        "value": "[parameters('subscriptionPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -498,7 +498,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of a Budget in the Landing Zone Subscription",
+            "comments": "Linked template deployment of Azure Budget in the Landing Zone Subscription",
             "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableBudget'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",

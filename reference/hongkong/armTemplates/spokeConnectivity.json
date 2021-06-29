@@ -3,13 +3,12 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "locationPrefix": {
             "type": "string"
         },
-        "environmentPrefix": {
+        "subscriptionPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -104,7 +103,7 @@
             "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "spokeSubscriptionid": "[subscription().subscriptionId]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
         "resourceGroups": {
             "spokeNetwork": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
             "networkWatcher": "NetworkWatcherRG"

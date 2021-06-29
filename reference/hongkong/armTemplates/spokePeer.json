@@ -3,13 +3,12 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "locationPrefix": {
             "type": "string"
         },
-        "environmentPrefix": {
+        "subscriptionPrefix": {
             "type": "string"
         },
         "argPrefix": {
@@ -41,7 +40,7 @@
         }
     },
     "variables": {
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
         "spokeSubscriptionid": "[subscription().subscriptionId]",
         "hubId": "[concat('/subscriptions/',parameters('connectivitySubscriptionId'),'/resourceGroups/',parameters('hubVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
         "hubToSpokePeerName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",

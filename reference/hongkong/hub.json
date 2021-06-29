@@ -16,13 +16,6 @@
                 "description": "Provide the location identifier prefix (3 characters)"
             }
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3,
-            "metadata": {
-                "description": "Provide the environment identifier prefix (3 characters)"
-            }
-        },
         "platformMgmtPrefix": {
             "type": "string",
             "maxLength": 4,
