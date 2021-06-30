@@ -13,7 +13,7 @@
                     "preValidation": "Provide naming prefix values for all Azure resources that will be created for the Landing Zone",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "Naming Conventions",
+                "bladeTitle": "namingConventions",
                 "elements": [
                     {
                         "name": "text0",
@@ -203,12 +203,12 @@
             },
             {
                 "name": "esLz",
-                "label": "Landing Zone",
+                "label": "Landing Zone Resources",
                 "subLabel": {
                     "preValidation": "Select 'Yes' if goal state should be enforced during deployment. Select 'No' if you want to do it post deployment using Azure Policy.",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "Landing Zone",
+                "bladeTitle": "landingZoneResources",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -580,12 +580,12 @@
             },
             {
                 "name": "esLzConnectivity",
-                "label": "Network Connectivity (Spoke)",
+                "label": "Network Topology & Connectivity",
                 "subLabel": {
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "Spoke Connectivity",
+                "bladeTitle": "spokeConnectivity",
                 "elements": [
                     {
                         "name": "esSpoke",

@@ -13,7 +13,7 @@
                     "preValidation": "Provide naming prefix values for all Azure resources that will be created.",
                     "postValidation": "Done"
                 },
-                "bladeTitle": "Naming Conventions",
+                "bladeTitle": "namingConventions",
                 "elements": [
                     {
                         "name": "text0",
@@ -894,8 +894,11 @@
             {
                 "name": "esPlatformDevOps",
                 "label": "Platform DevOps and Automation",
-                "subLabel": {},
-                "bladeTitle": "platformdevops",
+                "subLabel": {
+                    "preValidation": "",
+                    "postValidation": ""
+                },
+                "bladeTitle": "platformDevops",
                 "elements": [
                     {
                         "name": "info",
@@ -1049,12 +1052,12 @@
             },
             {
                 "name": "esPlatformConnectivity",
-                "label": "Network Connectivity (Hub)",
+                "label": "Platform Network Topology & Connectivity",
                 "subLabel": {
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "Hub Connectivity",
+                "bladeTitle": "platformConnectivity",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -1710,12 +1713,12 @@
             },
             {
                 "name": "esPlatformIdentity",
-                "label": "Identity & Access Management",
+                "label": "Platform Identity & Access Management",
                 "subLabel": {
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "Identity",
+                "bladeTitle": "platformIdentity",
                 "elements": [
                     {
                         "name": "infoBox1",
