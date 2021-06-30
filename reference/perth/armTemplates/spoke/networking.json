@@ -98,7 +98,10 @@
         }
     },
     "variables": {
-        "deploymentName": "[take(concat(deployment().name, '-networking'), 64)]",
+        "deploymentNames": {
+            "spokeNetwork": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+        },
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
         "azVnetCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",

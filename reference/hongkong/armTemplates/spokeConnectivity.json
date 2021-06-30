@@ -102,7 +102,6 @@
             "spokeNetwork": "[take(concat('spokeNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
-        "spokeSubscriptionid": "[subscription().subscriptionId]",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
         "resourceGroups": {
             "spokeNetwork": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
@@ -114,19 +113,19 @@
 
         "udrName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "udrRoute": "subnet-to-azureFirewall",
-        "udrId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/routeTables/', variables('udrName'))]",
+        "udrId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/routeTables/', variables('udrName'))]",
 
         "webSubnet": "web",
         "webNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('webSubnet')))]",
-        "webNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
+        "webNsgId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('webNsg'))]",
 
         "appsSubnet": "apps",
         "appsNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appsSubnet')))]",
-        "appsNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
+        "appsNsgId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appsNsg'))]",
 
         "dataSubnet": "data",
         "dataNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('dataSubnet')))]",
-        "dataNsgId": "[concat('/subscriptions/', variables('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
+        "dataNsgId": "[concat('/subscriptions/', parameters('spokeSubscriptionId'), '/resourceGroups/', variables('resourceGroups').spokeNetwork,'/providers/Microsoft.Network/networkSecurityGroups/', variables('dataNsg'))]",
 
         "apiVersions": {
             "deployments": "2020-06-01",
