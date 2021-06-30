@@ -60,7 +60,7 @@
         },
         "enableWeb": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -68,7 +68,7 @@
         },
         "enableApp": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -76,7 +76,7 @@
         },
         "enableData": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -147,13 +147,10 @@
     "resources": [
         {
             "comments": "Conditional deployment for Azure Network Resources in the spoke subscription",
-            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-            ],
+            "location": "[deployment().location]",
             "subscriptionId": "[parameters('SpokeSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
@@ -167,8 +164,8 @@
                             "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
-                            "location": "[parameters('location')]",
                             "name": "[variables('resourceGroups').spokeNetwork]",
+                            "location": "[deployment().location]",
                             "tags": {
                                 "environment": "[variables('tags').environment]",
                                 "owner": "[variables('tags').owner]",

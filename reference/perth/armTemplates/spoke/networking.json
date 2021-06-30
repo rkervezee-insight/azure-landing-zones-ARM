@@ -3,8 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "locationPrefix": {
             "type": "string"
@@ -68,7 +67,7 @@
             ]
         },
         "enableApp": {
-           "type": "string",
+            "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
@@ -85,7 +84,8 @@
         },
         "subscriptionId": {
             "type": "string",
-            "maxLength": 36
+            "maxLength": 36,
+            "defaultValue": ""
         },
         "subnetMaskForWeb": {
             "type": "string"
@@ -135,6 +135,7 @@
     "resources": [
         // Nested deployment for Azure Key Vault (Management Group Level)
         {
+            "comments": "Conditional deployment for Azure Network Resources in the spoke subscription",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -147,8 +148,8 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        // Create Resource Group
                         {
+                            "comments": "Create Resource Group for Azure Network Resources",
                             "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
