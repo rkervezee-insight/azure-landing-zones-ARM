@@ -221,14 +221,6 @@
                         }
                     },
                     {
-                        "name": "subApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
                         "name": "esLzSubSection",
                         "type": "Microsoft.Common.Section",
                         "label": "Landing Zone Subscription",
@@ -823,7 +815,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-            "SpokeSubscriptionId": "[steps('esLz').esLzSubSection.esLzSub.subscriptionId]",
+            "spokeSubscriptionId": "[steps('esLz').esLzSubSection.esLzSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",
