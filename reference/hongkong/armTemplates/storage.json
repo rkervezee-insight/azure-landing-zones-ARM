@@ -26,16 +26,13 @@
             ]
         },
         "subscriptionTag": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "ownerTag": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "costCenterTag": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         }
     },
     "variables": {
@@ -109,6 +106,7 @@
                         },
                         {
                             "comments": "Deploy Azure Storage Account",
+                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",
                             "name": "[variables('storage').name]",

@@ -39,6 +39,13 @@
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix'))]",
         "keyVaultName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "keyVaultRbacName": "[concat(variables('keyVaultName'), '/Microsoft.Authorization/', guid(variables('keyVaultName')))]",
+        "keyVaultSku": "Standard",
+        "enabledForDeployment": true,
+        "enabledForDiskEncryption": true,
+        "enabledForTemplateDeployment": true,
+        "enableRbacAuthorization": true,
+        "enablePurgeProtection": true,
+        "enableSoftDelete": true,
         "patSecretName": "PATSecret",
         "spnSecretName": "SPNSecret",
         "userManagedIdentityName": "[toLower(concat(variables('namingPrefix'), '-umi-azops'))]",
@@ -70,16 +77,16 @@
                 "[variables('userManagedIdentityName')]"
             ],
             "properties": {
-                "enabledForDeployment": true,
-                "enabledForDiskEncryption": true,
-                "enabledForTemplateDeployment": true,
-                "enableRbacAuthorization": true,
-                "enablePurgeProtection": true,
-                "enableSoftDelete": true,
+                "enabledForDeployment": "[variables('enabledForDeployment')]",
+                "enabledForDiskEncryption": "[variables('enabledForDiskEncryption')]",
+                "enabledForTemplateDeployment": "[variables('enabledForTemplateDeployment')]",
+                "enableRbacAuthorization": "[variables('enableRbacAuthorization')]",
+                "enablePurgeProtection": "[variables('enablePurgeProtection')]",
+                "enableSoftDelete": "[variables('enableSoftDelete')]",
                 "tenantId": "[subscription().tenantId]",
                 "sku": {
-                    "family": "A",
-                    "name": "standard"
+                    "name": "[variables('keyVaultSku')]",
+                    "family": "A"
                 },
                 "networkAcls": {
                     "defaultAction": "Allow",

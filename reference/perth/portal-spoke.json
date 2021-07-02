@@ -10,13 +10,13 @@
                 "name": "esNaming",
                 "label": "Naming Conventions",
                 "subLabel": {
-                    "preValidation": "Provide naming prefix values for all Azure resources that will be created.",
+                    "preValidation": "Provide naming prefix values for all Azure resources that will be created for the Landing Zone",
                     "postValidation": "Done"
                 },
                 "bladeTitle": "namingConventions",
                 "elements": [
                     {
-                        "name": "infoBox1",
+                        "name": "text0",
                         "type": "Microsoft.Common.InfoBox",
                         "visible": true,
                         "options": {
@@ -26,7 +26,7 @@
                         }
                     },
                     {
-                        "name": "textBlock0",
+                        "name": "text0",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
@@ -229,39 +229,24 @@
                         }
                     },
                     {
-                        "name": "textBlock1",
-                        "type": "Microsoft.Common.TextBlock",
-                        "visible": true,
-                        "options": {
-                            "text": "Select target Azure Subscription",
-                            "link": {
-                                "label": "Learn more",
-                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/management-group-and-subscription-organization"
+                        "name": "esLzSubSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Landing Zone Subscription",
+                        "elements": [
+                            {
+                                "type": "Microsoft.Common.SubscriptionSelector",
+                                "name": "esLzSub",
+                                "label": "Landing Zone Subscription"
                             }
-                        }
-                    },
-                    {
-                        "name": "esLzSub",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Choose the Landing Zone Subscription",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
-                        "constraints": {
-                            "allowedValues": "[map(steps('esLz').subApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
-                            "required": true
-                        }
+                        ],
+                        "visible": true
                     },
                     {
                         "name": "esAsc",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Security Center and enable security monitoring for the Platform and resources",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continous compliance",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -275,6 +260,19 @@
                             ]
                         },
                         "visible": true
+                    },
+                    {
+                        "name": "esAscEmailContact",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Security Center Email Contact",
+                        "toolTip": "Provide the email contact for Azure Security Center alerts",
+                        "defaultValue": "stephen.tulp@outlook.com",
+                        "constraints": {
+                            "required": "[equals(steps('esLz').esAsc,'Yes')]",
+                            "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
+                            "validationMessage": "Please provide a valid email address"
+                        },
+                        "visible": "[equals(steps('esLz').esAsc, 'Yes')]"
                     },
                     {
                         "name": "esAscVms",
@@ -342,6 +340,26 @@
                         "label": "Enable Azure Defender for SQL",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for SQL.",
+                        "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Standard"
+                                },
+                                {
+                                    "label": "No, Azure Defender Off",
+                                    "value": "Free"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esAscSqlOnVm",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable Azure Defender for SQL servers on machines",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for SQL servers on machines.",
                         "visible": "[equals(steps('esLz').esAsc, 'Yes')]",
                         "constraints": {
                             "allowedValues": [
@@ -457,49 +475,6 @@
                         }
                     },
                     {
-                        "name": "esAkv",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Azure Key Vault.",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, an Azure Key Vault will be deployed",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": true
-                    },
-                    {
-                        "name": "tenantApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "tenants?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esAzureAdTenant",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Azure AD Tenant (required)",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": "[equals(steps('esLz').esAkv, 'Yes')]",
-                        "constraints": {
-                            "allowedValues": "[map(steps('esLz').tenantApi.value, (tenant) => parse(concat('{\"label\":\"', tenant.displayName, '\",\"description\":\"', tenant.tenantId, '\",\"value\":\"', toLower(tenant.tenantId), '\"}')) )]"
-                        }
-                    },
-                    {
                         "name": "esSta",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy a Storage account for diagnostics.",
@@ -540,20 +515,11 @@
                         "visible": true
                     },
                     {
-                        "name": "budget",
-                        "type": "Microsoft.Common.InfoBox",
-                        "visible": true,
-                        "options": {
-                            "icon": "Info",
-                            "text": "Allocate values to set the budget on the Landing Zone."
-                        }
-                    },
-                    {
                         "name": "esBudget",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy a Budget.",
+                        "label": "Deploy an Azure Budget.",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, a Budget will be deployed",
+                        "toolTip": "If 'Yes' is selected, an Azure Budget will be deployed",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -572,7 +538,7 @@
                         "name": "esBudgetAmount",
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
-                        "label": "Budget Amount",
+                        "label": "Budget Amount ($)",
                         "toolTip": "Provide the Budget amount in $",
                         "defaultValue": "1000"
                     },
@@ -604,8 +570,8 @@
                         "name": "esBudgetContactEmail",
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLz').esBudget, 'Yes')]",
-                        "label": "Budget Contact Eamils",
-                        "toolTip": "Provide the Budget amount in $",
+                        "label": "Budget Contact Email Addresses",
+                        "toolTip": "An array of email addresses for the budget",
                         "defaultValue": [
                             "stephen.tulp@outlook.com"
                         ]
@@ -616,8 +582,8 @@
                 "name": "esLzConnectivity",
                 "label": "Network Topology & Connectivity",
                 "subLabel": {
-                    "preValidation": "Select 'Yes' if goal state should be enforced during deployment. Select 'No' if you want to do it post deployment using Azure Policy.",
-                    "postValidation": "Done"
+                    "preValidation": "",
+                    "postValidation": ""
                 },
                 "bladeTitle": "spokeConnectivity",
                 "elements": [
@@ -645,12 +611,12 @@
                         "name": "esAddress",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Virtual network CIDR Range",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 10.100.0.0/16)",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g. 10.50.0.0/18)",
                         "defaultValue": "10.50.0.0/18",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 192.168.1.0/24)"
+                            "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.50.0.0/18)"
                         }
                     },
                     {
@@ -664,7 +630,7 @@
                     {
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Azure Region for the Virtual Network.",
+                        "label": "Azure Region for the Landing Zone Virtual Network",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
@@ -804,7 +770,7 @@
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "options": {
-                            "text": "Please provide details for the Hub virtual network"
+                            "text": "Please provide details for the Platform Connectivity Hub virtual network"
                         }
                     },
                     {
@@ -812,7 +778,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "label": "Hub subscription Id",
-                        "toolTip": "Provide the Hub subscription Id",
+                        "text": "Please provide details for the Platform Connectivity Hub virtual network",
                         "defaultValue": "8f8224ca-1a9c-46d1-9206-1cf2a7c51de8",
                         "constraints": {
                             "required": true
@@ -830,7 +796,7 @@
                         }
                     },
                     {
-                        "name": "esHubVnetRG",
+                        "name": "esHubVnetRg",
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "label": "Hub virtual network resource group ",
@@ -845,7 +811,7 @@
         ],
         "outputs": {
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
-            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
+            "subscriptionPrefix": "[steps('esNaming').esSubIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "vntPrefix": "[steps('esNaming').esVntIdentifier]",
@@ -857,27 +823,24 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-
-            "subscriptionId": "[steps('esLz').esLzSub]",
+            "SpokeSubscriptionId": "[steps('esLz').esLzSubSection.esLzSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",
             "enableAscForStorage": "[steps('esLz').esAscStorage]",
             "enableAscForSql": "[steps('esLz').esAscSql]",
+            "enableAscForSqlOnVm": "[steps('esLz').esAscSqlOnVm]",
             "enableAscForKeyVault": "[steps('esLz').esAscKeyVault]",
             "enableAscForArm": "[steps('esLz').esAscArm]",
             "enableAscForDns": "[steps('esLz').esAscDns]",
             "enableAscForKubernetes": "[steps('esLz').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esLz').esAscRegistries]",
-            "enableAkv": "[steps('esLz').esAkv]",
-            "tenantId": "[steps('esLz').esAzureAdTenant]",
             "enableStorage": "[steps('esLz').esSta]",
             "enableRsv": "[steps('esLz').esRsv]",
             "enableBudget": "[steps('esLz').esBudget]",
             "amount": "[steps('esLz').esBudgetAmount]",
             "timeGrain": "[steps('esLz').esBudgetTimeGrain]",
             "contactEmails": "[steps('esLz').esBudgetContactEmail]",
-            
             "enableSpoke": "[steps('esLzConnectivity').esSpoke]",
             "addressPrefix": "[steps('esLzConnectivity').esAddress]",
             "location": "[steps('esLzConnectivity').esNwLocation]",
@@ -889,9 +852,9 @@
             "subnetMaskForApp": "[steps('esLzConnectivity').esAddressApp]",
             "enableData": "[steps('esLzConnectivity').esData]",
             "subnetMaskForData": "[steps('esLzConnectivity').esAddressData]",
-            "hubSubscriptionId": "[steps('esLzConnectivity').esHubSubId]",
+            "connectivitySubscriptionId": "[steps('esLzConnectivity').esHubSubId]",
             "hubVnetName": "[steps('esLzConnectivity').esHubVnetName]",
-            "hubVnetRG": "[steps('esLzConnectivity').esHubVnetRG]"
+            "hubVnetRg": "[steps('esLzConnectivity').esHubVnetRg]"
         }
     }
 }

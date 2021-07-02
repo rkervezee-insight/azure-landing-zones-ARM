@@ -86,7 +86,7 @@
                 "description": "Provide the value for the cost center tag"
             }
         },
-        "SpokeSubscriptionId": {
+        "spokeSubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36,
@@ -122,10 +122,7 @@
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "metadata": {
-                "description": "If 'Yes' is selected then a Recovery Services Vault will be deployed."
-            }
+            ]
         },
         "connectivitySubscriptionId": {
             "type": "string",
@@ -191,6 +188,10 @@
             "type": "string",
             "defaultValue": ""
         },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
+        },
         "addressPrefix": {
             "type": "string",
             "defaultValue": "",
@@ -225,12 +226,7 @@
         },
         "contactEmails": {
             "type": "array",
-            "defaultValue": [
-            ]
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
+            "defaultValue": []
         }
     },
     "variables": {
@@ -241,8 +237,8 @@
             "spokePeer": "[uri(deployment().properties.templateLink.uri, 'armTemplates/spokePeer.json')]",
             "budget": "[uri(deployment().properties.templateLink.uri, 'armTemplates/budget.json')]"
         },
-        "moveSubscription": "[concat(parameters('companyPrefix'), '-landingZones', '/', parameters('SpokeSubscriptionId'))]",
-        "noSubscription": "[concat(parameters('companyPrefix'), '-landingZones', '/', 'na')]",
+        "moveSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', parameters('spokeSubscriptionId'))]",
+        "noSubscription": "[concat(parameters('companyPrefix'), '-landingzones', '/', 'na')]",
         "deploymentNames": {
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -257,21 +253,21 @@
     },
     "resources": [
         {
-            "comments": "Move the spoke subscription to the appropriate Management Group (Landing Zone)",
-            "condition": "[not(empty(parameters('SpokeSubscriptionId')))]",
+            "comments": "Move Azure subscription to the appropriate Management Group (Landing Zone)",
+            "condition": "[not(empty(parameters('spokeSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
-            "name": "[if(not(empty(parameters('SpokeSubscriptionId'))), variables('moveSubscription'), variables('noSubscription'))]",
+            "name": "[if(not(empty(parameters('spokeSubscriptionId'))), variables('moveSubscription'), variables('noSubscription'))]",
             "dependsOn": [
             ],
             "properties": {}
         },
         {
             "comments": "Linked template deployment of Recovery Services Vault for the Landing Zone Subscription",
-            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('SpokeSubscriptionId')]",
+            "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
             ],
@@ -315,10 +311,10 @@
         },
         {
             "comments": "Linked template deployment of Azure Storage Account for the Landing Zone Subscription",
-            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('SpokeSubscriptionId')]",
+            "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "name": "[variables('deploymentNames').storage]",
             "dependsOn": [
             ],
@@ -362,7 +358,7 @@
         },
         {
             "comments": "Linked template deployment of virtual network for the Landing Zone Subscription",
-            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
@@ -428,6 +424,12 @@
                     "enableData": {
                         "value": "[parameters('enableData')]"
                     },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "spokeSubscriptionId": {
+                        "value": "[parameters('spokeSubscriptionId')]"
+                    },
                     "subnetMaskForWeb": {
                         "value": "[parameters('subnetMaskForWeb')]"
                     },
@@ -436,22 +438,16 @@
                     },
                     "subnetMaskForData": {
                         "value": "[parameters('subnetMaskForData')]"
-                    },
-                    "SpokeSubscriptionId": {
-                        "value": "[parameters('SpokeSubscriptionId')]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
                     }
                 }
             }
         },
         {
             "comments": "Linked template deployment of Virtual Network Peer between the Spoke and Connectivity Hub",
-            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('SpokeSubscriptionId')]",
+            "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "name": "[variables('deploymentNames').spokePeer]",
             "dependsOn": [
                 "[variables('deploymentNames').spokeConnectivity]"
@@ -499,10 +495,10 @@
         },
         {
             "comments": "Linked template deployment of Azure Budget in the Landing Zone Subscription",
-            "condition": "[and(not(empty(parameters('SpokeSubscriptionId'))),equals(parameters('enableBudget'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableBudget'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('SpokeSubscriptionId')]",
+            "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "name": "[variables('deploymentNames').budget]",
             "dependsOn": [
             ],

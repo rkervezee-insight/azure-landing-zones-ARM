@@ -82,7 +82,7 @@
                 "No"
             ]
         },
-        "SpokeSubscriptionId": {
+        "spokeSubscriptionId": {
             "type": "string",
             "maxLength": 36,
             "defaultValue": ""
@@ -109,7 +109,7 @@
         },
         "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "vnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
-        "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', deployment().location))]",
+        "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
 
         "udrName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "udrRoute": "subnet-to-azureFirewall",
@@ -150,7 +150,7 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
             "location": "[deployment().location]",
-            "subscriptionId": "[parameters('SpokeSubscriptionId')]",
+            "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -160,7 +160,7 @@
                     "resources": [
                         {
                             "comments": "Create Resource Group for Azure Network Resources",
-                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
+                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "name": "[variables('resourceGroups').spokeNetwork]",
@@ -174,7 +174,7 @@
                         },
                         {
                             "comments": "Create Resource Group for Network Watcher",
-                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
+                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[parameters('location')]",
@@ -214,7 +214,7 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                                             "name": "[variables('networkWatcher')]",
@@ -255,7 +255,7 @@
                                         },
                                         {
                                             "comments": "Deploy Azure Network Resources",
-                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('SpokeSubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('spokeSubscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "[variables('apiVersions').virtualNetworks]",
                                             "name": "[variables('vnetName')]",

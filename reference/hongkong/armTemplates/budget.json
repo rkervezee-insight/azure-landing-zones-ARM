@@ -11,8 +11,7 @@
             ]
         },
         "amount": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "startDate": {
             "type": "string",
@@ -30,8 +29,7 @@
             }
         },
         "contactEmails": {
-            "type": "array",
-            "defaultValue": []
+            "type": "array"
         }
     },
     "variables": {

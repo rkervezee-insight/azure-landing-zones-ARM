@@ -12378,7 +12378,7 @@
         {
           "properties": {
             "Description": "This policy denies creation of storage accounts with IP Firewall exposed to all public endpoints",
-            "DisplayName": "Public network access onStorage accounts should be disabled",
+            "DisplayName": "Public network access on Storage accounts should be disabled",
             "Mode": "Indexed",
             "Parameters": {
               "effect": {

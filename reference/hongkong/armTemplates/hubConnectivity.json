@@ -27,6 +27,9 @@
         "azFwPrefix": {
             "type": "string"
         },
+        "udrPrefix": {
+            "type": "string"
+        },
         "nsgPrefix": {
             "type": "string"
         },
@@ -34,15 +37,12 @@
             "type": "string"
         },
         "subscriptionTag": {
-            "defaultValue": "",
             "type": "string"
         },
         "ownerTag": {
-            "defaultValue": "",
             "type": "string"
         },
         "costCenterTag": {
-            "defaultValue": "",
             "type": "string"
         },
         "addressPrefix": {
@@ -71,7 +71,7 @@
         },
         "enableAzFwDnsProxy": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -79,7 +79,7 @@
         },
         "enableVpnGw": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -87,7 +87,7 @@
         },
         "enableErGw": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -123,7 +123,7 @@
         },
         "enableAppGw": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -131,7 +131,7 @@
         },
         "enableAzBastion": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -169,6 +169,7 @@
             "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
             "networkWatcher": "NetworkWatcherRG"
         },
+        "routeName": "[toLower(concat('subnet-to-', variables('fwName')))]",
         "vnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
         "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
@@ -262,8 +263,8 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "comments": "Create Resource Group for Azure Network Resources",
+                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -276,8 +277,8 @@
                             "properties": {}
                         },
                         {
-                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "comments": "Create Resource Group for Network Watcher",
+                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -316,8 +317,8 @@
                                             }
                                         },
                                         {
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "comments": "Deploy Network Watcher",
+                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                                             "name": "[variables('networkWatcher')]",

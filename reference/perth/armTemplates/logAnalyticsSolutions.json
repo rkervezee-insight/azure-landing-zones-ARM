@@ -7,23 +7,21 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "platformPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "omsPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "subscriptionId": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
         },
         "enableSecuritySolution": {
             "type": "string",
@@ -117,7 +115,7 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-monSolutions'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "logAnalyticsResourceId": "[toLower(concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroupName'), '/providers/Microsoft.OperationalInsights/workspaces/', variables('logAnalyticsName')))]",
@@ -181,7 +179,7 @@
     },
     "resources": [
         {
-            "comments": "// Create Resource Group",
+            "comments": "Create Resource Group",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
@@ -194,7 +192,7 @@
             "properties": {}
         },
         {
-            "comments": "// Nested deployment for Log Analytics Solutions",
+            "comments": "Nested deployment for the Log Analytics Solutions",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -208,7 +206,7 @@
                     "variables": {},
                     "resources": [
                         {
-                            "comments": "// Deploy Resource Group Lock",
+                            "comments": "Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -218,7 +216,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Agent Health",
+                            "comments": "Deploy the Log Analytics Solution for Agent Health",
                             "condition": "[equals(parameters('enableAgentHealth'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -235,7 +233,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for AntiMalware",
+                            "comments": "Deploy the Log Analytics Solution for AntiMalware",
                             "condition": "[equals(parameters('enableAntiMalware'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -252,7 +250,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Azure Activity Logs",
+                            "comments": "Deploy the Log Analytics Solution for Azure Activity Logs",
                             "condition": "[equals(parameters('enableActivityLog'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -269,7 +267,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Change Tracking",
+                            "comments": "Deploy the Log Analytics Solution for Change Tracking",
                             "condition": "[equals(parameters('enableChangeTracking'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -286,7 +284,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for VM Insights",
+                            "comments": "Deploy the Log Analytics Solution for VM Insights",
                             "condition": "[equals(parameters('enableVmInsights'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -303,7 +301,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Security",
+                            "comments": "Deploy the Log Analytics Solution for Security",
                             "condition": "[equals(parameters('enableSecuritySolution'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -320,7 +318,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Security Insights",
+                            "comments": "Deploy the Log Analytics Solution for Security Insights",
                             "condition": "[equals(parameters('enableSecuritySolution'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -337,7 +335,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Service Map",
+                            "comments": "Deploy the Log Analytics Solution for Service Map",
                             "condition": "[equals(parameters('enableServiceMap'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -354,7 +352,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for SQL Assessment",
+                            "comments": "Deploy the Log Analytics Solution for SQL Assessment",
                             "condition": "[equals(parameters('enableSqlAssessment'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -371,7 +369,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Update Management",
+                            "comments": "Deploy the Log Analytics Solution for Update Management",
                             "condition": "[equals(parameters('enableUpdateMgmt'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
@@ -388,7 +386,7 @@
                             }
                         },
                         {
-                            "comments": "// Log Analytics Solution for Key Vault Analytics",
+                            "comments": "Deploy the Log Analytics Solution for Key Vault Analytics",
                             "condition": "[equals(parameters('enableKeyVaultAnalytics'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",

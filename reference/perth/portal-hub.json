@@ -8,7 +8,7 @@
         "steps": [
             {
                 "name": "esNaming",
-                "label": "Naming Prefixes",
+                "label": "Naming Conventions",
                 "subLabel": {
                     "preValidation": "Provide naming prefix values for all Azure resources that will be created.",
                     "postValidation": "Done"
@@ -16,7 +16,7 @@
                 "bladeTitle": "namingConventions",
                 "elements": [
                     {
-                        "name": "infoBox1",
+                        "name": "text0",
                         "type": "Microsoft.Common.InfoBox",
                         "visible": true,
                         "options": {
@@ -26,7 +26,7 @@
                         }
                     },
                     {
-                        "name": "textBlock0",
+                        "name": "text1",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
@@ -64,7 +64,7 @@
                     {
                         "name": "esSubIdentifier",
                         "type": "Microsoft.Common.TextBox",
-                        "label": "Subscription Identifier Prefix",
+                        "label": "Platform Subscription Identifier Prefix",
                         "toolTip": "Provide a value for the subscription identifier.",
                         "defaultValue": "cor",
                         "constraints": {
@@ -309,30 +309,6 @@
                         }
                     },
                     {
-                        "name": "subApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esPlatformSub",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Platform Subscription",
-                        "toolTip": "",
-                        "multiselect": false,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
-                        "constraints": {
-                            "allowedValues": "[map(steps('esPlatformManagement').subApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
-                            "required": true
-                        }
-                    },
-                    {
                         "name": "esLogAnalytics",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Log Analytics Workspace",
@@ -365,6 +341,19 @@
                         "constraints": {
                             "required": false
                         },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
+                        "name": "esPlatformSubSection",
+                        "type": "Microsoft.Common.Section",
+                        "label": "Platform Management Subscription",
+                        "elements": [
+                            {
+                                "type": "Microsoft.Common.SubscriptionSelector",
+                                "name": "esPlatformSub",
+                                "label": "Platform Subscription"
+                            }
+                        ],
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
@@ -598,7 +587,7 @@
                         "toolTip": "Provide the email contact for Azure Security Center alerts",
                         "defaultValue": "stephen.tulp@outlook.com",
                         "constraints": {
-                            "required": "[equals(steps('esGoalState').esAsc,'Yes')]",
+                            "required": "[equals(steps('esPlatformManagement').esAsc,'Yes')]",
                             "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
                             "validationMessage": "Please provide a valid email address"
                         },
@@ -690,7 +679,7 @@
                         "label": "Enable Azure Defender for SQL servers on machines",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for SQL servers on machines.",
-                        "visible": "[equals(steps('esGoalState').esAsc,'Yes')]",
+                        "visible": "[equals(steps('esPlatformManagement').esAsc,'Yes')]",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -889,27 +878,30 @@
             {
                 "name": "esPlatformDevOps",
                 "label": "Platform DevOps and Automation",
-                "subLabel": {},
+                "subLabel": {
+                    "preValidation": "",
+                    "postValidation": ""
+                },
                 "bladeTitle": "platformDevops",
                 "elements": [
                     {
                         "name": "info",
                         "type": "Microsoft.Common.InfoBox",
-                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSub))]",
+                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSubSection.esPlatformSub))]",
                         "options": {
-                            "icon": "Info",
                             "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines.",
-                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction"
+                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction",
+                            "style": "Info"
                         }
                     },
                     {
                         "name": "correction",
                         "type": "Microsoft.Common.InfoBox",
-                        "visible": "[empty(steps('esPlatformManagement').esPlatformSub)]",
+                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSubSection.esPlatformSub))]",
                         "options": {
-                            "icon": "Warning",
                             "text": "Azure Foundations provides an integrated CI/CD pipeline via AzOps that can be used with either GitHub Actions or Azure DevOps pipelines, but requires a dedicated subscription for platform management in the previous step. Please add a subscription or continue without setting up the CI/CD integration.",
-                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction"
+                            "uri": "https://github.com/azure/azops-accelerator/wiki/introduction",
+                            "style": "Warning"
                         }
                     },
                     {
@@ -931,7 +923,7 @@
                             ],
                             "required": true
                         },
-                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSub))]"
+                        "visible": "[not(empty(steps('esPlatformManagement').esPlatformSubSection.esPlatformSub))]"
                     },
                     {
                         "name": "Instructions",
@@ -971,8 +963,8 @@
                         "defaultValue": "",
                         "constraints": {
                             "required": true,
-                            "regex": "^[a-z0-9A-Z-]{1,15}$",
-                            "validationMessage": "The prefix must be 1-5 characters."
+                            "regex": "^[a-z0-9A-Z-]{1,39}$",
+                            "validationMessage": "The GitHub org/username must be 1-39 characters."
                         }
                     },
                     {
@@ -985,8 +977,8 @@
                         "placeholder": "",
                         "constraints": {
                             "required": true,
-                            "regex": "^[a-z0-9A-Z-]{1,15}$",
-                            "validationMessage": "The prefix must be 1-5 characters."
+                            "regex": "^[a-z0-9A-Z-]{1,100}$",
+                            "validationMessage": "The repository name must be 1-100 characters."
                         }
                     },
                     {
@@ -1027,8 +1019,8 @@
                                     "authenticationType": "Authentication Type"
                                 },
                                 "defaultValue": {
-                                    "principalId": "<default guid>",
-                                    "name": "(New) default App Id"
+                                    "principalId": "",
+                                    "name": ""
                                 },
                                 "constraints": {
                                     "required": true
@@ -1037,7 +1029,8 @@
                                     "hideCertificate": true
                                 }
                             }
-                        ]
+                        ],
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
                     }
                 ]
             },
@@ -1048,7 +1041,7 @@
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "Connectivity",
+                "bladeTitle": "platformConnectivity",
                 "elements": [
                     {
                         "name": "infoBox1",
@@ -1084,7 +1077,7 @@
                         "name": "esAddress",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Address space (required for Virtual Hub)",
-                        "toolTip": "Provide address prefix in CIDR notation (e.g 192.168.0.0/16)",
+                        "toolTip": "Provide address prefix in CIDR notation (e.g. 10.49.0.0/18)",
                         "defaultValue": "10.49.0.0/18",
                         "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
                         "constraints": {
@@ -1773,14 +1766,133 @@
                         }
                     },
                     {
+                        "name": "corpText",
+                        "type": "Microsoft.Common.TextBlock",
+                        "visible": true,
+                        "options": {
+                            "text": "Select the subscriptions you want to move to corp management group.",
+                            "link": {
+                                "label": "Learn more",
+                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/design-principles#subscription-democratization"
+                            }
+                        }
+                    },
+                    {
+                        "name": "esLzConnectivity",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Connect corp landing zones to the connectivity hub (optional)?",
+                        "defaultValue": "[if(equals(steps('esPlatformConnectivity').esHub,'Yes'),'Yes','No')]",
+                        "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]"
+                    },
+                    {
+                        "name": "lzCorpSubsApi",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "request": {
+                            "method": "GET",
+                            "path": "subscriptions?api-version=2020-01-01"
+                        }
+                    },
+                    {
+                        "name": "esCorpLzSub",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Corp landing zone subscriptions (optional)",
+                        "toolTip": "",
+                        "multiselect": true,
+                        "selectAll": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub,'No'),equals(steps('lzGoalState').esLzConnectivity,'No'))]",
+                        "constraints": {
+                            "allowedValues": "[map(steps('lzGoalState').lzCorpSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "lzConnectedSubs",
+                        "type": "Microsoft.Common.EditableGrid",
+                        "ariaLabel": "Add existing subscriptions into the management group landing zone and provide address space for virtual network peering",
+                        "label": "Corp connected landing zone subscriptions (optional)",
+                        "visible": "[equals(steps('lzGoalState').esLzConnectivity,'Yes')]",
+                        "constraints": {
+                            "width": "Full",
+                            "rows": {
+                                "count": {
+                                    "min": 1,
+                                    "max": 10
+                                }
+                            },
+                            "columns": [
+                                {
+                                    "id": "subs",
+                                    "header": "Subscription",
+                                    "width": "1fr",
+                                    "element": {
+                                        "name": "esLzConnectedSub",
+                                        "type": "Microsoft.Common.DropDown",
+                                        "label": "Landing zone subscription",
+                                        "toolTip": "",
+                                        "multiselect": false,
+                                        "selectAll": false,
+                                        "filter": true,
+                                        "filterPlaceholder": "Filter items ...",
+                                        "multiLine": false,
+                                        "constraints": {
+                                            "allowedValues": "[map(steps('lzGoalState').lzSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
+                                            "required": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "addresses",
+                                    "header": "Virtual Network Address space",
+                                    "width": "1fr",
+                                    "element": {
+                                        "type": "Microsoft.Common.TextBox",
+                                        "placeholder": "Ensure there are no overlapping IP addresses!",
+                                        "constraints": {
+                                            "required": true,
+                                            "validations": [
+                                                {
+                                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "lzSubsApi",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "request": {
+                            "method": "GET",
+                            "path": "subscriptions?api-version=2020-01-01"
+                        }
+                    },
+                    {
                         "name": "onlineText",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
+                        "visible": true,
                         "options": {
                             "text": "Select the subscriptions you want to move to online management group.",
                             "link": {
                                 "label": "Learn more",
-                                "uri": "https://docs.microsoft.com/azure/azure-monitor/insights/solutions"
+                                "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/design-principles#subscription-democratization"
                             }
                         }
                     },
@@ -1804,43 +1916,7 @@
                         "multiLine": true,
                         "visible": true,
                         "constraints": {
-                            "allowedValues": "[map(steps('lzGoalState').lzOnlineSubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
-                            "required": false
-                        }
-                    },
-                    {
-                        "name": "corpText",
-                        "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
-                        "options": {
-                            "text": "Select the subscriptions you want to move to corp management group.",
-                            "link": {
-                                "label": "Learn more",
-                                "uri": "https://docs.microsoft.com/azure/azure-monitor/insights/solutions"
-                            }
-                        }
-                    },
-                    {
-                        "name": "lzCorpSubsApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esCorpLzSub",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Corp landing zone subscriptions (optional)",
-                        "toolTip": "",
-                        "multiselect": true,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
-                        "constraints": {
-                            "allowedValues": "[map(steps('lzGoalState').lzCorpSubsApi.value, (sub) => parse(concat('{\"label\":\"', sub.displayName, '\",\"description\":\"', sub.subscriptionId, '\",\"value\":\"', toLower(sub.subscriptionId), '\"}')) )]",
+                            "allowedValues": "[map(steps('lzGoalState').lzOnlineSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
                             "required": false
                         }
                     },
@@ -1854,6 +1930,66 @@
                                 "label": "Learn more",
                                 "uri": "https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/ready/enterprise-scale/design-principles#policy-driven-governance"
                             }
+                        }
+                    },
+                    {
+                        "name": "esLzDdoS",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable DDoS Protection Standard",
+                        "defaultValue": "No",
+                        "visible": "[and(equals(steps('esPlatformConnectivity').esHub,'Yes'),equals(steps('esPlatformConnectivity').esDdoS,'Yes'))]",
+                        "toolTip": "If 'Yes' is selected when also adding a connectivity subscription earlier, DDoS Protection Standard will be enabled.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esLzPrivateLink",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Prevent usage of Public Endpoints for PaaS services in the corp connected landing zones",
+                        "defaultValue": "Yes",
+                        "visible": true,
+                        "toolTip": "If 'Yes' is selected then Azure Policy will prevent PaaS resources to use public endpoints.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esEncryptionInTransit",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Ensure encryption in transit is enabled for PaaS services",
+                        "defaultValue": "Yes",
+                        "visible": true,
+                        "toolTip": "If 'Yes' is selected then Azure Policy will ensure PaaS resources uses TLS and SSL.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
                         }
                     },
                     {
@@ -2142,7 +2278,7 @@
         "outputs": {
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
-            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
+            "platformPrefix": "[steps('esNaming').esSubIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
             "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
@@ -2160,7 +2296,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-            "subscriptionId": "[steps('esPlatformManagement').esPlatformSub]",
+            "subscriptionId": "[steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
@@ -2230,6 +2366,9 @@
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
+            "enableLzDdoS": "[steps('lzGoalState').esLzDdoS]",
+            "denyPublicEndpoints": "[steps('lzGoalState').esLzPrivateLink]",
+            "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
             "denyAksPrivileged": "[steps('lzGoalState').esAksPriv]",
             "denyAksPrivilegedEscalation": "[steps('lzGoalState').esAksNoPriv]",

@@ -26,7 +26,7 @@
                         }
                     },
                     {
-                        "name": "text1",
+                        "name": "text0",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
@@ -630,7 +630,7 @@
                     {
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Azure Region for the Landing Zone Virtual Network.",
+                        "label": "Azure Region for the Landing Zone Virtual Network",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
@@ -778,7 +778,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "label": "Hub subscription Id",
-                        "toolTip": "Provide the Platform Connectivity Hub subscription id",
+                        "text": "Please provide details for the Platform Connectivity Hub virtual network",
                         "defaultValue": "47b81534-e1db-4076-bdc8-470b377783bc",
                         "constraints": {
                             "required": true
@@ -796,7 +796,7 @@
                         }
                     },
                     {
-                        "name": "esHubVnetRG",
+                        "name": "esHubVnetRg",
                         "type": "Microsoft.Common.TextBox",
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "label": "Hub virtual network resource group ",
@@ -854,7 +854,7 @@
             "subnetMaskForData": "[steps('esLzConnectivity').esAddressData]",
             "connectivitySubscriptionId": "[steps('esLzConnectivity').esHubSubId]",
             "hubVnetName": "[steps('esLzConnectivity').esHubVnetName]",
-            "hubVnetRG": "[steps('esLzConnectivity').esHubVnetRG]"
+            "hubVnetRg": "[steps('esLzConnectivity').esHubVnetRg]"
         }
     }
 }

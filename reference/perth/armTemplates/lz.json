@@ -8,7 +8,7 @@
         },
         "enableSqlAudit": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -16,7 +16,7 @@
         },
         "enableAksPolicy": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -24,7 +24,7 @@
         },
         "denyAksPrivileged": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -32,7 +32,7 @@
         },
         "denyAksPrivilegedEscalation": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -40,7 +40,7 @@
         },
         "denyHttpIngressForAks": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -48,7 +48,7 @@
         },
         "enableSqlEncryption": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -56,7 +56,7 @@
         },
         "enableVmBackup": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -64,7 +64,7 @@
         },
         "denyPip": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -72,7 +72,7 @@
         },
         "denyRdp": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -80,7 +80,7 @@
         },
         "enableStorageHttps": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -88,7 +88,7 @@
         },
         "denyIpForwarding": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -96,7 +96,7 @@
         },
         "denySubnetWithoutNsg": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -104,7 +104,7 @@
         },
         "denySsh": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -112,7 +112,7 @@
         },
         "denyPrivateDnsZones": {
             "type": "string",
-            "defaultValue": "No",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
@@ -140,6 +140,8 @@
             "denyPrivateDnsZones": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deny-private-dns-zones')]"
         },
         "policyAssignmentNames": {
+            "deployEncryptionInTransit": "enforce-tls-ssl",
+            "denyPublicEndpoint": "deny-public-endpoints",
             "deployVmBackup": "deploy-vm-backup",
             "denySubnetWithoutNsg": "deny-subnet-without-nsg",
             "denyRdp": "deny-rdp-from-internet",

@@ -7,42 +7,41 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "subscriptionPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "rsvPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "enableRsv": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subscriptionTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "ownerTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "costCenterTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
         "recoveryServicesVault": {
             "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
@@ -64,7 +63,8 @@
     },
     "resources": [
         {
-            "comments": "// Create Resource Group",
+            "comments": "Create Resource Group",
+            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
@@ -77,7 +77,8 @@
             "properties": {}
         },
         {
-            "comments": "// Nested deployment for Recovery Services Vault (Subscription Level)",
+            "comments": "Nested deployment for Recovery Services Vault",
+            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -93,7 +94,7 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "comments": "// Deploy Resource Group Lock",
+                            "comments": "Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -103,7 +104,7 @@
                             }
                         },
                         {
-                            "comments": "// Nested deployment for Recovery Services Vault (Resource Group Level)",
+                            "comments": "Deploy Recovery Services Vault",
                             "condition": "[equals(parameters('enableRsv'), 'Yes')]",
                             "type": "Microsoft.RecoveryServices/vaults",
                             "apiVersion": "[variables('apiVersions').vaults]",

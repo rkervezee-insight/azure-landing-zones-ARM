@@ -2,148 +2,89 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
-        },
-        "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
-        "argPrefix": {
-            "type": "string",
-            "maxLength": 3
-        },
         "emailSecurityContact": {
             "type": "string",
-            "metadata": {
-                "displayName": "Security contacts email address",
-                "description": "Provide email address for Azure Security Center contact details"
-            }
+            "defaultValue": ""
         },
         "pricingTierVMs": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for Virtual Machines",
-                "description": "Azure Defender pricing tier for Virtual Machines"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierSqlServers": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for SQL Servers",
-                "description": "Azure Defender pricing tier for SQL Servers"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierAppServices": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for App Services",
-                "description": "Azure Defender pricing tier for App Services"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierStorageAccounts": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for Storage Accounts",
-                "description": "Azure Defender pricing tier for Storage Accounts"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierSqlServerVirtualMachines": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for SQL Server Virtual Machines",
-                "description": "Azure Defender pricing tier for SQL Server Virtual Machines"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierKubernetesService": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for AKS",
-                "description": "Azure Defender pricing tier for AKS"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierContainerRegistry": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for ACR",
-                "description": "Azure Defender pricing tier for ACR"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierKeyVaults": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for AKV",
-                "description": "Azure Defender pricing tier for AKV"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierDns": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for DNS",
-                "description": "Azure Defender pricing tier for DNS"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "pricingTierArm": {
             "type": "string",
-            "metadata": {
-                "displayName": "Azure Defender pricing tier for Azure Resource Manager",
-                "description": "Azure Defender pricing tier for Azure Resource Manager"
-            },
+            "defaultValue": "Standard",
             "allowedValues": [
                 "Standard",
                 "Free"
-            ],
-            "defaultValue": "Standard"
+            ]
         },
         "workspaceResourceId": {
             "type": "String",
@@ -169,8 +110,7 @@
         }
     },
     "variables": {
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-ascexport'))]",
+        "resourceGroupName": "ascExportRG",
         "exportedDataTypes": "[createArray('Security recommendations', 'Security alerts', 'Overall secure score', 'Secure score controls', 'Regulatory compliance', 'Overall secure score - snapshot', 'Secure score controls - snapshot', 'Regulatory compliance - snapshot')]",
         "isSecurityFindingsEnabled": true,
         "recommendationNames": "[createArray()]",

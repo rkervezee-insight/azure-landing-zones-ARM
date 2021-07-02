@@ -209,21 +209,26 @@
             "mgmtAscConfig": "[take(concat('mgmtAscConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "mgmtAscAutoProvision": "[take(concat('mgAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "mgmtActivityLogs": "[take(concat('mgmtActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "mgActivityLogsSta": "[take(concat('mgmtActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "mgmtActivityLogsSta": "[take(concat('mgmtActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "noMgmtAscAutoProvisionDeployment": "noMgmtAscAuto",
+            "noMgmtActivityDeployment": "noMgmtActivity",
+            "noMgmtAscDeployment": "noMgmtAsc"
         },
         "identityDeploymentNames": {
             "idamAscConfig": "[take(concat('idamAscConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "idamAscAutoProvision": "[take(concat('idamAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "idamActivityLogs": "[take(concat('idamActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "idamActivityLogsSta": "[take(concat('idamActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "noIdamActivityDeployment": "noIdActivity",
-            "noIdamAscDeployment": "noIdAsc"
+            "noIdamAscAutoProvisionDeployment": "noIdamAscAuto",
+            "noIdamActivityDeployment": "noIdamActivity",
+            "noIdamAscDeployment": "noIdamAsc"
         },
         "connectivityDeploymentNames": {
             "connAscConfig": "[take(concat('connAscConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "connAscAutoProvision": "[take(concat('connAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "connActivityLogs": "[take(concat('connActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "connActivityLogsSta": "[take(concat('connActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "noConnAscAutoProvisionDeployment": "noConnAscAuto",
             "noConnActivityDeployment": "noConnActivity",
             "noConnAscDeployment": "noConnAscDeployment"
         },
@@ -260,7 +265,7 @@
             }
         },
         {
-            "comments": "Role assignment for Azure Policy assignment for Azure Activity Logs for Platform Managenment Subscription to Log Analytics",
+            "comments": "Role assignment for Azure Policy assignment for Azure Activity Logs to Log Analytics",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -313,7 +318,7 @@
         },
         {
             "comments": "Conditional assignment of Azure Policy to enforce Log Analytics VM extension to Windows and Linux virtual machines",
-            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableLogAnalytics'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
             "name": "[variables('policyAssignmentNames').deployVmMonitoring]",
@@ -601,7 +606,7 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('managementDeploymentNames').mgmtActivityLogs]",
+            "name": "[if(not(empty(parameters('managementSubscriptionId'))), variables('managementDeploymentNames').mgmtActivityLogs, variables('managementDeploymentNames').noMgmtActivityDeployment)]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployActivityLog)]"
@@ -652,7 +657,7 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "[variables('managementDeploymentNames').mgmtAscConfig]",
+            "name": "[if(not(empty(parameters('managementSubscriptionId'))), variables('managementDeploymentNames').mgmtAscConfig, variables('managementDeploymentNames').noMgmtAscDeployment)]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzureSecurity)]"
@@ -843,6 +848,57 @@
                         "value": "[parameters('costCenterTag')]"
                     }
                 }
+            }
+        },
+        {
+            "comments": "Conditional deployment for ASC Auto Provisioning on Platform Management subscription",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "[if(not(empty(parameters('managementSubscriptionId'))), variables('managementDeploymentNames').mgmtAscAutoProvision, variables('managementDeploymentNames').noMgmtAscAutoProvisionDeployment)]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzureSecurityAutoProvision)]"
+            ],
+            "subscriptionId": "[parameters('managementSubscriptionId')]",
+            "properties": {
+                "mode": "incremental",
+                "template": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deployAzureSecurityAutoProvision, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[if(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzureSecurityAutoProvision), '2018-05-01').parameters, json('null'))]"
+            }
+        },
+        {
+            "comments": "Conditional deployment for ASC Auto Provisioning on Platform Identity subscription",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "[if(not(empty(parameters('identitySubscriptionId'))), variables('identityDeploymentNames').idamAscAutoProvision, variables('identityDeploymentNames').noIdamAscAutoProvisionDeployment)]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzureSecurityAutoProvision)]"
+            ],
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "properties": {
+                "mode": "incremental",
+                "template": "[if(and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deployAzureSecurityAutoProvision, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[if(and(not(empty(parameters('identitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzureSecurityAutoProvision), '2018-05-01').parameters, json('null'))]"
+            }
+        },
+        {
+            "comments": "Conditional deployment for ASC Auto Provisioning on Platform Connectivity subscription",
+            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('connectivityDeploymentNames').connAscAutoProvision, variables('connectivityDeploymentNames').noConnAscAutoProvisionDeployment)]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Authorization/roleAssignments/', variables('roleAssignmentNames').deployAzureSecurityAutoProvision)]"
+            ],
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "properties": {
+                "mode": "incremental",
+                "template": "[if(and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(variables('policyDefinitions').deployAzureSecurityAutoProvision, '2018-05-01').policyRule.then.details.deployment.properties.template, 'na')]",
+                "parameters": "[if(and(not(empty(parameters('connectivitySubscriptionId'))), equals(parameters('enableAsc'), 'Yes')), reference(concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployAzureSecurityAutoProvision), '2018-05-01').parameters, json('null'))]"
             }
         }
     ],

@@ -109,6 +109,7 @@
                         },
                         {
                             "comments": "Deploy Azure Storage Account",
+                            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",
                             "name": "[variables('storage').name]",

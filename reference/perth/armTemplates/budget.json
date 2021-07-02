@@ -4,11 +4,11 @@
     "parameters": {
         "enableBudget": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "amount": {
             "type": "string"
@@ -30,28 +30,24 @@
         },
         "contactEmails": {
             "type": "array"
-        },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
         }
     },
     "variables": {
         "apiVersions": {
             "budgets": "2019-10-01"
         },
+        "subscriptionid": "[subscription().subscriptionId]",
         "budget": {
-            "name": "[toLower(concat(parameters('subscriptionId'), '-budget'))]",
+            "name": "[toLower(concat(variables('subscriptionId'), '-budget'))]",
             "firstThreshold": "80",
             "secondThreshold": "100",
             "contactRoles": "Owner"
         }
     },
     "resources": [
-        // Deploy Azure Budget to the Subscription
         {
-            "condition": "[and(equals(parameters('enableBudget'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+            "comments": "Deploy the Azure Budget to the Target Subscription",
+            "condition": "[equals(parameters('enableBudget'), 'Yes')]",
             "type": "Microsoft.Consumption/budgets",
             "apiVersion": "[variables('apiVersions').budgets]",
             "name": "[variables('budget').name]",

@@ -3,80 +3,68 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "subscriptionPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "vntPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "addressPrefix": {
-            "type": "string",
-            "metadata": {
-                "displayName": "addressPrefix",
-                "description": "Address prefix of the Application Landing Zone"
-            }
+            "type": "string"
         },
-        "subscriptionId": {
+        "connectivitySubscriptionId": {
             "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
-        "hubSubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
             "maxLength": 36
         },
         "hubVnetName": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
-        "hubVnetRG": {
-            "type": "string",
-            "defaultValue": ""
+        "hubVnetRg": {
+            "type": "string"
         },
         "enableSpoke": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         }
     },
     "variables": {
-        "hubVnetId": "[concat('/subscriptions/',parameters('hubSubscriptionId'),'/resourceGroups/',parameters('hubVnetRG'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
-        "hubVnetToSpokeVnetPeeringName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "spokeVnetCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
-        "spokeVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('spokeVnetCidr')))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
+        "spokeSubscriptionid": "[subscription().subscriptionId]",
+        "hubId": "[concat('/subscriptions/',parameters('connectivitySubscriptionId'),'/resourceGroups/',parameters('hubVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
+        "hubToSpokePeerName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",
+        "spokeAddressPrefix": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+        "spokeVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('spokeAddressPrefix')))]",
         "spokeVnetRg": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-        "spokeVnetId": "[concat('/subscriptions/',parameters('subscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
-        "spokeVnetToHubVnetPeeringName": "[concat(variables('spokeVnetName'), '-to-', parameters('hubVnetName'))]",
+        "spokeId": "[concat('/subscriptions/',variables('spokeSubscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
+        "spokeToHubPeerName": "[concat(variables('spokeVnetName'), '-to-', parameters('hubVnetName'))]",
+        "deploymentNames": {
+            "spokeToHub": "[take(concat('spokeToHub', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "hubToSpoke": "[take(concat('hubToSpoke', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+        },
         "apiVersions": {
             "deployments": "2020-06-01",
-            "virtualNetworkPeerings": "2020-05-01"
+            "virtualNetworkPeerings": "2020-07-01"
         }
     },
     "resources": [
-        // Nested template for vNet peering deployment (Spoke >> Hub)
         {
-            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+            "comments": "Nested deployment for vNet peering (Spoke >> Hub)",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "spoke-hub",
+            "name": "[variables('deploymentNames').spokeToHub]",
             "resourceGroup": "[variables('spokeVnetRg')]",
             "properties": {
                 "mode": "Incremental",
@@ -87,9 +75,11 @@
                     "variables": {},
                     "resources": [
                         {
+                            "comments": "Deploy vNet peering (Spoke >> Hub)",
+                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
-                            "name": "[concat(variables('spokeVnetName'), '/',variables('spokeVnetToHubVnetPeeringName'))]",
+                            "name": "[concat(variables('spokeVnetName'), '/',variables('spokeToHubPeerName'))]",
                             "location": "[deployment().location]",
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
@@ -97,7 +87,7 @@
                                 "allowGatewayTransit": false,
                                 "useRemoteGateways": true,
                                 "remoteVirtualNetwork": {
-                                    "id": "[variables('hubVnetId')]"
+                                    "id": "[variables('hubId')]"
                                 }
                             }
                         }
@@ -105,13 +95,14 @@
                 }
             }
         },
-        // Nested template for vNet peering deployment (Hub >> Spoke)
         {
-            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+            "comments": "Nested deployment for vNet peering (Hub >> Spoke)",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "hub-spoke",
-            "resourceGroup": "[parameters('hubVnetRG')]",
+            "name": "[variables('deploymentNames').hubToSpoke]",
+            "resourceGroup": "[parameters('hubVnetRg')]",
+            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -121,9 +112,11 @@
                     "variables": {},
                     "resources": [
                         {
+                            "comments": "Deploy vNet peering (Hub >> Spoke)",
+                            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
-                            "name": "[concat(parameters('hubVnetName'), '/',variables('hubVnetToSpokeVnetPeeringName'))]",
+                            "name": "[concat(parameters('hubVnetName'), '/',variables('hubToSpokePeerName'))]",
                             "location": "[deployment().location]",
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
@@ -131,7 +124,7 @@
                                 "allowGatewayTransit": true,
                                 "useRemoteGateways": false,
                                 "remoteVirtualNetwork": {
-                                    "id": "[variables('spokeVnetId')]"
+                                    "id": "[variables('spokeId')]"
                                 }
                             }
                         }

@@ -3,54 +3,55 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "subscriptionPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "staPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "enableStorage": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subscriptionTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "ownerTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "costCenterTag": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-storage'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
+        "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('subscriptionPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "storage": {
             "name": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
             "sku": "Standard_LRS",
             "kind": "StorageV2",
             "use": "diagnostics",
-            "httpsOnly": true
+            "httpsOnly": true,
+            "accessTier": "Hot",
+            "minimumTlsVersion": "TLS1_2",
+            "allowBlobPublicAccess": false
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -66,7 +67,8 @@
     },
     "resources": [
         {
-            "comments": "// Create Resource Group",
+            "comments": "Create Resource Group",
+            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "name": "[variables('resourceGroupName')]",
@@ -79,7 +81,8 @@
             "properties": {}
         },
         {
-            "comments": "// Nested deployment for Azure Storage (Subscription Level)",
+            "comments": "Nested deployment for Azure Storage",
+            "condition": "[equals(parameters('enableStorage'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -95,7 +98,7 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "comments": "// Deploy Resource Group Lock",
+                            "comments": "Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -105,7 +108,7 @@
                             }
                         },
                         {
-                            "comments": "// Nested deployment for Storage (Resource Group Level)",
+                            "comments": "Deploy Azure Storage Account",
                             "condition": "[equals(parameters('enableStorage'), 'Yes')]",
                             "type": "Microsoft.Storage/storageAccounts",
                             "apiVersion": "[variables('apiVersions').storage]",
@@ -114,20 +117,34 @@
                             "sku": {
                                 "name": "[variables('storage').sku]"
                             },
+                            "identity": {
+                                "type": "systemAssigned"
+                            },
                             "tags": {
                                 "storageSKU": "[variables('storage').sku]",
                                 "storageUse": "[variables('storage').use]"
                             },
                             "kind": "[variables('storage').kind]",
                             "properties": {
+                                "encryption": {
+                                    "services": {
+                                        "blob": {
+                                            "enabled": true
+                                        }
+                                    },
+                                    "keySource": "Microsoft.Storage"
+                                },
+                                "accessTier": "[variables('storage').accessTier]",
                                 "supportsHttpsTrafficOnly": "[variables('storage').httpsOnly]",
+                                "minimumTlsVersion": "[variables('storage').minimumTlsVersion]",
                                 "networkAcls": {
                                     "bypass": "Logging, Metrics, AzureServices",
                                     "virtualNetworkRules": [],
                                     "ipRules": [
                                     ],
                                     "defaultAction": "Deny"
-                                }
+                                },
+                                "allowBlobPublicAccess": "[variables('storage').allowBlobPublicAccess]"
                             }
                         }
                     ]

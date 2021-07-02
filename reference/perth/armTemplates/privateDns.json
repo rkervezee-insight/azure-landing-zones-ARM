@@ -7,64 +7,61 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "platformPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "enablePrivateDnsZones": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enablePrivateDnsZonesTable": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enablePrivateDnsZonesQueue": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enablePrivateDnsZonesFiles": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enablePrivateDnsZonesBlob": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "enablePrivateDnsZonesAkv": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subscriptionId": {
             "type": "string",
@@ -83,7 +80,7 @@
     },
     "variables": {
         "deploymentName": "[take(concat(deployment().name, '-privateDns'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-privatedns'))]",
         "privateLinkDns": {
             "blob": "privatelink.blob.core.windows.net",
@@ -106,7 +103,7 @@
     },
     "resources": [
         {
-            "comments": "// Create Resource Group",
+            "comments": "Create Resource Group",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
@@ -120,7 +117,7 @@
             "properties": {}
         },
         {
-            "comments": "// Nested deployment for Private DNS",
+            "comments": "Nested deployment for Private DNS",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -136,7 +133,7 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "comments": "// Deploy Resource Group Lock",
+                            "comments": "Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -146,7 +143,7 @@
                             }
                         },
                         {
-                            "comments": "// Deploy Private DNS - Blob Storage",
+                            "comments": "Deploy Private DNS - Blob Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesBlob'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
@@ -154,7 +151,7 @@
                             "location": "global"
                         },
                         {
-                            "comments": "// Deploy Private DNS - File Storage",
+                            "comments": "Deploy Private DNS - File Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesFiles'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
@@ -162,7 +159,7 @@
                             "location": "global"
                         },
                         {
-                            "comments": "// Deploy Private DNS - Queue Storage",
+                            "comments": "Deploy Private DNS - Queue Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesQueue'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
@@ -170,7 +167,7 @@
                             "location": "global"
                         },
                         {
-                            "comments": "// Deploy Private DNS - Table Storage",
+                            "comments": "Deploy Private DNS - Table Storage",
                             "condition": "[equals(parameters('enablePrivateDnsZonesTable'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",
@@ -178,7 +175,7 @@
                             "location": "global"
                         },
                         {
-                            "comments": "// Private DNS - Key Vault",
+                            "comments": "Private DNS - Key Vault",
                             "condition": "[equals(parameters('enablePrivateDnsZonesAkv'), 'Yes')]",
                             "type": "Microsoft.Network/privateDnsZones",
                             "apiVersion": "[variables('apiVersions').privateDnsZones]",

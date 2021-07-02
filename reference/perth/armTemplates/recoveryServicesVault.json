@@ -7,28 +7,24 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 5
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "platformPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
-        "akvPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "rsvPrefix": {
+            "type": "string"
         },
-        "enableAkv": {
+        "enableRsv": {
             "type": "string",
+            "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ],
-            "defaultValue": "Yes"
+            ]
         },
         "subscriptionTag": {
             "type": "string"
@@ -38,29 +34,23 @@
         },
         "costCenterTag": {
             "type": "string"
-        },
-        "tenantId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
         }
     },
     "variables": {
-        "deploymentName": "[take(concat(deployment().name, '-keyVault'), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
-        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-security'))]",
-        "keyVault": {
-            "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('akvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-            "enabledForDeployment": true,
-            "enabledForDiskEncryption": true,
-            "enabledForTemplateDeployment": true,
-            "sku": "Standard"
+        "deploymentName": "[take(concat(deployment().name, '-rsv'), 64)]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformPrefix'))]",
+        "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-backup'))]",
+        "recoveryServicesVault": {
+            "name": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('rsvPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
+            "policyName": "[toLower(concat(parameters('companyPrefix'),'-backuppolicy'))]",
+            "vaultStorageType": "LocallyRedundant"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
             "locks": "2016-09-01",
-            "KeyVault": "2019-09-01"
+            "vaults": "2020-02-02",
+            "backupstorageconfig": "2018-01-10"
         },
         "tags": {
             "environment": "[parameters('subscriptionTag')]",
@@ -69,8 +59,9 @@
         }
     },
     "resources": [
-        // Create Resource Group
         {
+            "comments": "Create Resource Group",
+            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
             "type": "Microsoft.Resources/resourceGroups",
             "apiVersion": "[variables('apiVersions').resourceGroups]",
             "location": "[deployment().location]",
@@ -82,8 +73,9 @@
             },
             "properties": {}
         },
-        // Nested deployment for Azure Key Vault (Subscription Level)
         {
+            "comments": "Nested deployment for Recovery Services Vault",
+            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentName')]",
@@ -98,8 +90,8 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        // Deploy Resource Group Lock
                         {
+                            "comments": "Deploy Resource Group Lock",
                             "type": "Microsoft.Authorization/locks",
                             "apiVersion": "[variables('apiVersions').locks]",
                             "name": "ResourceGroup-DontDelete",
@@ -108,30 +100,29 @@
                                 "notes": "Prevent deletion of the resourceGroup"
                             }
                         },
-                        // Nested deployment for Azure Key Vault (Resource Group Level)
                         {
-                            "condition": "[equals(parameters('enableAkv'), 'Yes')]",
-                            "type": "Microsoft.KeyVault/vaults",
-                            "apiVersion": "[variables('apiVersions').KeyVault]",
-                            "name": "[variables('keyVault').name]",
+                            "comments": "Deploy Recovery Services Vault",
+                            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
+                            "type": "Microsoft.RecoveryServices/vaults",
+                            "apiVersion": "[variables('apiVersions').vaults]",
+                            "name": "[variables('recoveryServicesVault').name]",
+                            "tags": { "vaultStorageType": "[variables('recoveryServicesVault').vaultStorageType]" },
                             "location": "[deployment().location]",
+                            "sku": {
+                                "name": "RS0",
+                                "tier": "Standard"
+                            },
+                            "properties": {}
+                        },
+                        {
+                            "type": "Microsoft.RecoveryServices/vaults/backupstorageconfig",
+                            "apiVersion": "[variables('apiVersions').backupstorageconfig]",
+                            "name": "[concat(variables('recoveryServicesVault').name, '/vaultstorageconfig')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.RecoveryServices/vaults/', variables('recoveryServicesVault').name)]"
+                            ],
                             "properties": {
-                                "enabledForDeployment": "[variables('keyVault').enabledForDeployment]",
-                                "enabledForDiskEncryption": "[variables('keyVault').enabledForDiskEncryption]",
-                                "enabledForTemplateDeployment": "[variables('keyVault').enabledForTemplateDeployment]",
-                                "tenantId": "[parameters('tenantId')]",
-                                "accessPolicies": [],
-                                "sku": {
-                                    "name": "[variables('keyVault').sku]",
-                                    "family": "A"
-                                },
-                                "networkAcls": {
-                                    "defaultAction": "Deny",
-                                    "bypass": "AzureServices",
-                                    "ipRules": [
-                                    ],
-                                    "virtualNetworkRules": []
-                                }
+                                "StorageModelType": "[variables('recoveryServicesVault').vaultStorageType]"
                             }
                         }
                     ]

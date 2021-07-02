@@ -107,6 +107,13 @@
                 "description": "Provide the Azure Firewall identifier prefix"
             }
         },
+        "udrPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Route Table identifier prefix"
+            }
+        },
         "nsgPrefix": {
             "type": "string",
             "maxLength": 3,
@@ -754,8 +761,8 @@
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'armTemplates/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/diagnosticsAndSecurity.json')]",
             "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/hubConnectivity.json')]",
-            "identity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/identity.json')]",
-            "azOps": "[uri(deployment().properties.templateLink.uri, 'armTemplates/azOpsSetup.json')]"
+            "azOps": "[uri(deployment().properties.templateLink.uri, 'armTemplates/azOpsSetup.json')]",
+            "identity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/identity.json')]"
         },
         "moveSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', parameters('managementSubscriptionId'))]",
@@ -779,8 +786,8 @@
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "identity": "[take(concat('identity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "identity": "[take(concat('identity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -842,7 +849,7 @@
             ],
             "copy": {
                 "batchSize": 1,
-                "count": 5,
+                "count": 10,
                 "mode": "Serial",
                 "name": "policyCompletion"
             },
@@ -946,7 +953,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of Log Analytics Solutions in the Platform Subscription.",
+            "comments": "Linked template for the creation of Log Analytics Solutions in the Platform Subscription",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableAntiMalware'), 'Yes'), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes'), equals(parameters('enableKeyVaultAnalytics'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1366,6 +1373,9 @@
                     },
                     "azFwPrefix": {
                         "value": "[parameters('azFwPrefix')]"
+                    },
+                    "udrPrefix": {
+                        "value": "[parameters('udrPrefix')]"
                     },
                     "nsgPrefix": {
                         "value": "[parameters('nsgPrefix')]"

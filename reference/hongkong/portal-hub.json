@@ -867,7 +867,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                        "visible": true
                     },
                     {
                         "name": "esActivityLogSta",
@@ -924,7 +924,7 @@
                         "name": "cicdOption",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy integrated CI/CD pipeline?",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "",
                         "constraints": {
                             "allowedValues": [
@@ -944,7 +944,7 @@
                     {
                         "name": "Instructions",
                         "type": "Microsoft.Common.TextBlock",
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
                         "options": {
                             "text": "Provide the credentials to initialize the repository with the ARM templates for Enterprise-Scale.",
                             "link": {
@@ -968,14 +968,14 @@
                             ],
                             "required": true
                         },
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]"
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
                     },
                     {
                         "name": "esGit",
                         "type": "Microsoft.Common.TextBox",
                         "label": "GitHub organization or username",
                         "toolTip": "Provide Git org/username.",
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
                         "defaultValue": "",
                         "constraints": {
                             "required": true,
@@ -989,7 +989,7 @@
                         "label": "New GitHub repository name",
                         "toolTip": "Provide a name for the new repository that will be created",
                         "defaultValue": "",
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]",
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]",
                         "placeholder": "",
                         "constraints": {
                             "required": true,
@@ -1012,7 +1012,7 @@
                         "options": {
                             "hideConfirmation": true
                         },
-                        "visible": "[equals(steps('esPlatformDevOps').cicdOption,'Yes')]"
+                        "visible": "[equals(steps('esPlatformDevOps').cicdOption, 'Yes')]"
                     },
                     {
                         "name": "spnSection",
@@ -1073,7 +1073,7 @@
                         "name": "esHub",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Virtual Hub",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
                         "constraints": {
                             "allowedValues": [

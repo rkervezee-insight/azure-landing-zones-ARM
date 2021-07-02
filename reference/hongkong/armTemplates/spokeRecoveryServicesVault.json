@@ -105,6 +105,7 @@
                         },
                         {
                             "comments": "Deploy Recovery Services Vault",
+                            "condition": "[equals(parameters('enableRsv'), 'Yes')]",
                             "type": "Microsoft.RecoveryServices/vaults",
                             "apiVersion": "[variables('apiVersions').vaults]",
                             "name": "[variables('recoveryServicesVault').name]",

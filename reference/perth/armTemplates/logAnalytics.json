@@ -7,27 +7,23 @@
             "maxLength": 5
         },
         "locationPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
-        "environmentPrefix": {
-            "type": "string",
-            "maxLength": 3
+        "platformPrefix": {
+            "type": "string"
         },
         "argPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "omsPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "aaaPrefix": {
-            "type": "string",
-            "maxLength": 3
+            "type": "string"
         },
         "subscriptionId": {
             "type": "string",
+            "defaultValue": "",
             "maxLength": 36
         },
         "enableLogAnalytics": {
@@ -39,7 +35,8 @@
             ]
         },
         "retentionInDays": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
@@ -54,7 +51,7 @@
             "deployLogAnalytics": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').logAnalytics))]"
         },
         "resourceDeploymentName": "[take(concat('logAnalytics', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('environmentPrefix'))]",
+        "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "azAutomationName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('aaaPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
@@ -66,7 +63,7 @@
     },
     "resources": [
         {
-            "comments": "// Conditionally assign policy to enable Log Analytics and Azure Automation",
+            "comments": "Conditional Azure Policy Assignment to enable Log Analytics and Azure Automation",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/policyAssignments",
             "apiVersion": "[variables('apiVersions').policyAssignments]",
@@ -103,7 +100,7 @@
             }
         },
         {
-            "comments": "// Conditionally role assignment for the policy that will deploy Log Analytics and Azure Automation",
+            "comments": "Conditional role assignment for the policy that will deploy Log Analytics and Azure Automation",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Authorization/roleAssignments",
             "apiVersion": "[variables('apiVersions').roleAssignments]",
@@ -118,7 +115,7 @@
             }
         },
         {
-            "comments": "// Conditionally invoke the template in the 'deployIfNotExist' policy to deploy Log Analytics and Azure Automation",
+            "comments": "Conditional deployment for Log Analytics & Azure Automation in the Platform subscription",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
