@@ -149,7 +149,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
-            "location": "[deployment().location]",
+            "location": "[parameters('location')]",
             "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
@@ -164,7 +164,7 @@
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "name": "[variables('resourceGroups').spokeNetwork]",
-                            "location": "[deployment().location]",
+                            "location": "[parameters('location')]",
                             "tags": {
                                 "environment": "[variables('tags').environment]",
                                 "owner": "[variables('tags').owner]",
