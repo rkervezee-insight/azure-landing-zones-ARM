@@ -150,6 +150,8 @@
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeNetwork]",
             "location": "[parameters('location')]",
+            "dependsOn": [
+            ],
             "subscriptionId": "[parameters('spokeSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
