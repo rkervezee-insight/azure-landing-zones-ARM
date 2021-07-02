@@ -823,7 +823,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-            "SpokeSubscriptionId": "[steps('esLz').esLzSubSection.esLzSub.subscriptionId]",
+            "spokeSubscriptionId": "[steps('esLz').esLzSubSection.esLzSub.subscriptionId]",
             "enableAsc": "[steps('esLz').esAsc]",
             "enableAscForServers": "[steps('esLz').esAscVms]",
             "enableAscForAppServices": "[steps('esLz').esAscApps]",

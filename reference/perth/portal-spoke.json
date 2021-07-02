@@ -221,6 +221,14 @@
                         }
                     },
                     {
+                        "name": "subApi",
+                        "type": "Microsoft.Solutions.ArmApiControl",
+                        "request": {
+                            "method": "GET",
+                            "path": "subscriptions?api-version=2020-01-01"
+                        }
+                    },
+                    {
                         "name": "esLzSubSection",
                         "type": "Microsoft.Common.Section",
                         "label": "Landing Zone Subscription",
