@@ -25,10 +25,12 @@
             "maxLength": 36
         },
         "hubVnetName": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "hubVnetRg": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "enableSpoke": {
             "type": "string",
