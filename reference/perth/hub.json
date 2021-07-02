@@ -811,7 +811,7 @@
             "properties": {}
         },
         {
-            "comments": "Linked template for the creation of a Log Analytics Workspace and Automation account in the Platform Management Subscription.",
+            "comments": "Linked template for the creation of a Log Analytics Workspace and Automation account in the Platform Management Subscription",
             "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",

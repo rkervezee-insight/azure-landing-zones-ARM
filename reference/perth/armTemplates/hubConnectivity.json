@@ -49,10 +49,6 @@
             "defaultValue": "",
             "type": "string"
         },
-        "location": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
-        },
         "enableHub": {
             "type": "string",
             "defaultValue": "Yes",
@@ -153,11 +149,7 @@
                 "No"
             ]
         },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
+
         "subnetMaskForAzBastion": {
             "type": "string",
             "defaultValue": ""
@@ -181,6 +173,15 @@
         "subnetMaskForIdentity": {
             "type": "string",
             "defaultValue": ""
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
+        },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
         }
     },
     "variables": {
@@ -273,8 +274,9 @@
             "networkSecurityGroups": "2020-05-01",
             "routeTables": "2020-05-01",
             "publicIpAddresses": "2020-05-01",
-            "virtualNetworkGateways": "2020-05-01",
-            "azureFirewalls": "2020-05-01",
+            "virtualNetworkGateways": "2020-06-01",
+            "azureFirewalls": "2020-06-01",
+            "firewallPolicies": "2020-06-01",
             "bastionHosts": "2020-05-01",
             "policyAssignments": "2020-03-01",
             "roleAssignments": "2020-04-01-preview",
@@ -904,7 +906,7 @@
                                             "comments": "Conditional deployment of the Azure Firewall Policy",
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/firewallPolicies",
-                                            "apiVersion": "2020-11-01",
+                                            "apiVersion": "[variables('apiVersions').firewallPolicies]",
                                             "name": "[variables('fwPolicyName')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
