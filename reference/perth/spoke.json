@@ -358,7 +358,8 @@
         },
         {
             "comments": "Linked template deployment of virtual network for the Landing Zone Subscription",
-            "condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
+            //"condition": "[and(not(empty(parameters('spokeSubscriptionId'))),equals(parameters('enableSpoke'), 'Yes'))]",
+            "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
