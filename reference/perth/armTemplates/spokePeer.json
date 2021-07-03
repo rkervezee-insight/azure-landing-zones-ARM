@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
@@ -49,7 +49,6 @@
     },
     "variables": {
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
-        "spokeSubscriptionid": "[subscription().subscriptionId]",
         "hubId": "[concat('/subscriptions/',parameters('connectivitySubscriptionId'),'/resourceGroups/',parameters('hubVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
         "hubToSpokePeerName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",
         "spokeAddressPrefix": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
@@ -73,6 +72,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeToHub]",
+            "subscriptionId": "[parameters('spokeSubscriptionid')]",
             "resourceGroup": "[variables('spokeVnetRg')]",
             "properties": {
                 "mode": "Incremental",
@@ -109,6 +109,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').hubToSpoke]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "resourceGroup": "[parameters('hubVnetRg')]",
             "properties": {
                 "mode": "Incremental",
