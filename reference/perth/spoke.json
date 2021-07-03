@@ -484,6 +484,9 @@
                     "connectivitySubscriptionId": {
                         "value": "[parameters('connectivitySubscriptionId')]"
                     },
+                    "spokeSubscriptionId": {
+                        "value": "[parameters('spokeSubscriptionId')]"
+                    },
                     "hubVnetName": {
                         "value": "[parameters('hubVnetName')]"
                     },
