@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "companyPrefix": {
@@ -22,7 +22,13 @@
         },
         "connectivitySubscriptionId": {
             "type": "string",
-            "maxLength": 36
+            "maxLength": 36,
+            "defaultValue": ""
+        },
+        "spokeSubscriptionid": {
+            "type": "string",
+            "maxLength": 36,
+            "defaultValue": ""
         },
         "hubVnetName": {
             "type": "string"
@@ -41,13 +47,12 @@
     },
     "variables": {
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('subscriptionPrefix'))]",
-        "spokeSubscriptionid": "[subscription().subscriptionId]",
         "hubId": "[concat('/subscriptions/',parameters('connectivitySubscriptionId'),'/resourceGroups/',parameters('hubVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',parameters('hubVnetName'))]",
         "hubToSpokePeerName": "[concat(parameters('hubVnetName'), '-to-', variables('spokeVnetName'))]",
         "spokeAddressPrefix": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "spokeVnetName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vntPrefix'), '-', variables('spokeAddressPrefix')))]",
         "spokeVnetRg": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
-        "spokeId": "[concat('/subscriptions/',variables('spokeSubscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
+        "spokeId": "[concat('/subscriptions/',parameters('spokeSubscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
         "spokeToHubPeerName": "[concat(variables('spokeVnetName'), '-to-', parameters('hubVnetName'))]",
         "deploymentNames": {
             "spokeToHub": "[take(concat('spokeToHub', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -65,6 +70,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').spokeToHub]",
+            "subscriptionId": "[parameters('spokeSubscriptionid')]",
             "resourceGroup": "[variables('spokeVnetRg')]",
             "properties": {
                 "mode": "Incremental",
@@ -101,8 +107,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "name": "[variables('deploymentNames').hubToSpoke]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "resourceGroup": "[parameters('hubVnetRg')]",
-            "location": "[deployment().location]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -121,7 +127,7 @@
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
                                 "allowForwardedTraffic": true,
-                                "allowGatewayTransit": true,
+                                "allowGatewayTransit": false,
                                 "useRemoteGateways": false,
                                 "remoteVirtualNetwork": {
                                     "id": "[variables('spokeId')]"

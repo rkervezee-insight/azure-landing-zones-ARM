@@ -31,12 +31,10 @@
             "defaultValue": ""
         },
         "hubVnetName": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "hubVnetRg": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "enableSpoke": {
             "type": "string",
