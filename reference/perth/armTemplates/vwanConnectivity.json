@@ -28,14 +28,7 @@
         "vWanPrefix": {
             "type": "string"
         },
-        "enableVwan": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
+
         "subscriptionTag": {
             "type": "string"
         },
@@ -44,6 +37,17 @@
         },
         "costCenterTag": {
             "type": "string"
+        },
+        "addressPrefix": {
+            "type": "string"
+        },
+        "enableVwan": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
         },
         "enableAzFw": {
             "type": "string",
@@ -64,13 +68,6 @@
         "firewallZones": {
             "type": "array",
             "defaultValue": []
-        },
-        "addressPrefix": {
-            "type": "string",
-            "metadata": {
-                "displayName": "addressPrefix",
-                "description": "Address prefix of the VHUB"
-            }
         },
         "enableVpnGw": {
             "type": "string",
@@ -108,10 +105,10 @@
             "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
             "networkWatcher": "NetworkWatcherRG"
         },
-        "vHubCidr": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]",
         "vWanName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vWanPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
-        "vHubName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-', variables('vHubCidr')))]",
+        "vHubName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-', variables('vnetAddressSpace')))]",
         "vpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
         "erGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
         "fwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",

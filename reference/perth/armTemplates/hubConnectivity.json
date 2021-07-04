@@ -46,7 +46,6 @@
             "type": "string"
         },
         "addressPrefix": {
-            "defaultValue": "",
             "type": "string"
         },
         "enableHub": {

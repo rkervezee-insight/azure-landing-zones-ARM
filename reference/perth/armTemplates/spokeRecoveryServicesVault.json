@@ -27,16 +27,13 @@
             ]
         },
         "subscriptionTag": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "ownerTag": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         },
         "costCenterTag": {
-            "type": "string",
-            "defaultValue": ""
+            "type": "string"
         }
     },
     "variables": {
