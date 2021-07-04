@@ -790,7 +790,7 @@
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "label": "Hub virtual network",
                         "toolTip": "Provide the name of the Hub virtual network",
-                        "defaultValue": "stt-syd-cor-vnt-10.49.0.0",
+                        "defaultValue": "stt-syd-conn-vnt-10.49.0.0",
                         "constraints": {
                             "required": true
                         }
@@ -801,7 +801,7 @@
                         "visible": "[equals(steps('esLzConnectivity').esSpoke, 'Yes')]",
                         "label": "Hub virtual network resource group ",
                         "toolTip": "Provide the Resource Group of the Hub virtual network",
-                        "defaultValue": "stt-syd-cor-arg-network",
+                        "defaultValue": "stt-syd-conn-arg-network",
                         "constraints": {
                             "required": true
                         }
