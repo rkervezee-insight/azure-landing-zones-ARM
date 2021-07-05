@@ -1722,7 +1722,7 @@
                         "name": "esIdentity",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable identity subscription",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will move selected subscription into identity management group",
                         "constraints": {
                             "allowedValues": [
@@ -2461,7 +2461,7 @@
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId))),steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,'')]",
-            "enableIdentitySub": "[steps('esPlatformIdentity').esIdentity]",
+            "enableIdentity": "[steps('esPlatformIdentity').esIdentity]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
