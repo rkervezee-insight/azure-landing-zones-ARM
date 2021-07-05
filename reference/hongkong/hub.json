@@ -648,14 +648,6 @@
             "type": "string",
             "defaultValue": ""
         },
-        "enableVmBackup": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
         "denySubnetWithoutNsg": {
             "type": "string",
             "allowedValues": [
@@ -1171,7 +1163,7 @@
         },
         {
             "comments": "Linked template for the creation of Azure Policy Assignments for Landing Zone Subscriptions",
-            "condition": "[or(or(or(or(or(or(equals(parameters('enableVmBackup'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes')), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'), equals(parameters('denyPip'), 'Yes'))]",
+            "condition": "[or(or(or(or(or(equals(parameters('denySubnetWithoutNsg'), 'Yes'), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'), equals(parameters('denyPip'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
@@ -1190,9 +1182,6 @@
                 "parameters": {
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
-                    },
-                    "enableVmBackup": {
-                        "value": "[parameters('enableVmBackup')]"
                     },
                     "denySubnetWithoutNsg": {
                         "value": "[parameters('denySubnetWithoutNsg')]"
@@ -1226,6 +1215,9 @@
                     },
                     "denySsh": {
                         "value": "[parameters('denySsh')]"
+                    },
+                    "denyPip": {
+                        "value": "[parameters('denyPip')]"
                     },
                     "denyPrivateDnsZones": {
                         "value": "[parameters('denyPrivateDnsZones')]"

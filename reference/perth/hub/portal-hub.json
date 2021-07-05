@@ -2133,26 +2133,6 @@
                         "visible": true
                     },
                     {
-                        "name": "esAzBackup",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure Azure VMs (Windows & Linux) are enabled for Azure Backup",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned and enable Azure Backup on all VMs in the landing zones.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": true
-                    },
-                    {
                         "name": "esDenyRdp",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Prevent inbound RDP from internet",
@@ -2365,7 +2345,6 @@
             "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
-            "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
             "enableLzDdoS": "[steps('lzGoalState').esLzDdoS]",
             "denyPublicEndpoints": "[steps('lzGoalState').esLzPrivateLink]",
             "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",
