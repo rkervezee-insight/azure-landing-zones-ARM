@@ -751,7 +751,7 @@
         },
         "azEnvPolicy": "[variables('azPolicyEnvMapping')[environment().resourceManager]]",
         "deploymentUris": {
-            "managementGroups": "[uri(deployment().properties.templateLink.uri, '../armTemplates/mgmtGroups.json')]",
+            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'armTemplates/mgmtGroups.json')]",
             "policyDefinitions": "[concat(uri(deployment().properties.templateLink.uri, variables('azEnvPolicy')))]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'armTemplates/logAnalytics.json')]",
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'armTemplates/logAnalyticsSolutions.json')]",
