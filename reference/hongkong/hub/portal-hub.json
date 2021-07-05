@@ -62,18 +62,6 @@
                         }
                     },
                     {
-                        "name": "esSubIdentifier",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subscription Identifier Prefix",
-                        "toolTip": "Provide a value for the subscription identifier.",
-                        "defaultValue": "cor",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z-]{3}$",
-                            "validationMessage": "The prefix must be 3 characters."
-                        }
-                    },
-                    {
                         "name": "esPlatformMgmtIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Platform Management Subscription Identifier Prefix",
@@ -2409,7 +2397,6 @@
         "outputs": {
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
-            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
             "platformMgmtPrefix": "[steps('esNaming').esPlatformMgmtIdentifier]",
             "platformIdamPrefix": "[steps('esNaming').esPlatformIdamIdentifier]",
             "platformConnPrefix": "[steps('esNaming').esPlatformConnIdentifier]",
