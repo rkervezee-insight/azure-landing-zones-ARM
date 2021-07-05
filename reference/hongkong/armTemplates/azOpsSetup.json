@@ -47,6 +47,9 @@
         },
         "costCenterTag": {
             "type": "string"
+        },
+        "enableAzOps": {
+            "type": "string"
         }
     },
     "variables": {
@@ -118,6 +121,7 @@
                         },
                         {
                             "comments": "Nested deployment for AzOps",
+                            "condition": "[and(equals(parameters('enableAzOps'), 'Yes'), not(empty(parameters('principalSecret'))))]",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
                             "name": "[variables('deploymentNames').azOpsRg]",
