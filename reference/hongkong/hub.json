@@ -752,19 +752,19 @@
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'armTemplates/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'armTemplates/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/diagnosticsAndSecurity.json')]",
-            "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/hubConnectivity.json')]",
+            "connectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/hubConnectivity.json')]",
             "azOps": "[uri(deployment().properties.templateLink.uri, 'armTemplates/azOpsSetup.json')]",
             "identity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/identity.json')]"
         },
         "moveSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', parameters('managementSubscriptionId'))]",
-            "hubConnectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', parameters('connectivitySubscriptionId'))]",
+            "connectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', parameters('connectivitySubscriptionId'))]",
             "identity": "[concat(parameters('companyPrefix'), '-identity', '/', parameters('identitySubscriptionId'))]"
 
         },
         "noSubscription": {
             "management": "[concat(parameters('companyPrefix'), '-management', '/', 'na')]",
-            "hubConnectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', 'naconn')]",
+            "connectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', 'naconn')]",
             "identity": "[concat(parameters('companyPrefix'), '-identity', '/', 'naid')]"
         },
         "deploymentNames": {
@@ -773,7 +773,7 @@
             "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "hubConnectivity": "[take(concat('hubConnectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "connectivity": "[take(concat('connectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -887,7 +887,7 @@
             "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
-            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').hubConnectivity, variables('noSubscription').hubConnectivity)]",
+            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').connectivity, variables('noSubscription').connectivity)]",
             "dependsOn": [
                 "[variables('deploymentNames').managementGroups]",
                 "[variables('deploymentNames').policyDefinitions]",
@@ -896,7 +896,7 @@
             "properties": {}
         },
         {
-            "comments": "Linked template for the creation of a Log Analytics Workspace and Automation account in the Platform Management Subscription.",
+            "comments": "Linked template for the creation of a Log Analytics Workspace and Automation account in the Platform Management Subscription",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
@@ -1330,7 +1330,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-connectivity')]",
-            "name": "[variables('deploymentNames').hubConnectivity]",
+            "name": "[variables('deploymentNames').connectivity]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
@@ -1339,7 +1339,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').hubConnectivity]"
+                    "uri": "[variables('deploymentUris').connectivity]"
                 },
                 "parameters": {
                     "companyPrefix": {
@@ -1527,7 +1527,7 @@
                 "[variables('deploymentNames').monitoring]",
                 "[variables('deploymentNames').monitoringSolutions]",
                 "[variables('deploymentNames').policyDefinitions]",
-                "[variables('deploymentNames').hubConnectivity]",
+                "[variables('deploymentNames').connectivity]",
                 "policyCompletion"
             ],
             "properties": {

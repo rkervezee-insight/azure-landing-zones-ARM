@@ -6,7 +6,7 @@
             "type": "string",
             "maxLength": 5
         },
-        "platformPrefix": {
+        "platformConnPrefix": {
             "type": "string"
         },
         "locationPrefix": {
@@ -17,18 +17,28 @@
         },
         "vngPrefix": {
             "type": "string"
-
+        },
+        "vHubPrefix": {
+            "type": "string"
+        },
+        "pipPrefix": {
+            "type": "string"
         },
         "azFwPrefix": {
             "type": "string"
         },
-        "vHubPrefix": {
+        "udrPrefix": {
+            "type": "string"
+        },
+        "nsgPrefix": {
+            "type": "string"
+        },
+        "basPrefix": {
             "type": "string"
         },
         "vWanPrefix": {
             "type": "string"
         },
-
         "subscriptionTag": {
             "type": "string"
         },
@@ -40,6 +50,10 @@
         },
         "addressPrefix": {
             "type": "string"
+        },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
         },
         "enableVwan": {
             "type": "string",
@@ -65,31 +79,27 @@
                 "No"
             ]
         },
+        "enableVpnGw": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableErGw": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "firewallZones": {
             "type": "array",
             "defaultValue": []
         },
-        "enableVpnGw": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
-        },
-        "enableErGw": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "No"
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
-        },
-        "subscriptionId": {
+        "connectivitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
@@ -97,10 +107,10 @@
     },
     "variables": {
         "deploymentNames": {
-            "vwanNetwork": "[take(concat('vwanNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "network": "[take(concat('network', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
-        "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformPrefix')))]",
+        "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformConnPrefix')))]",
         "resourceGroups": {
             "networking": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-network'))]",
             "networkWatcher": "NetworkWatcherRG"
@@ -117,8 +127,8 @@
             "enableProxy": true
         },
         "vWanSku": "Standard",
-        "vWanResourceId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/' ,variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
-        "vWanHub": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
+        "vWanResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualWans/', variables('vWanName'))]",
+        "vWanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualHubs/', variables('vHubName'))]",
         "vHubSku": "Standard",
         "vpnBgpAsn": 65515,
         "tags": {
@@ -143,13 +153,14 @@
     "resources": [
         {
             "comments": "Conditional deployment for Azure Network Resources in the Platform Connectivity subscription",
+            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').vwanNetwork]",
+            "name": "[variables('deploymentNames').network]",
             "location": "[deployment().location]",
             "dependsOn": [
             ],
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -159,7 +170,7 @@
                     "resources": [
                         {
                             "comments": "Create Resource Group for Azure Network Resources",
-                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -173,7 +184,7 @@
                         },
                         {
                             "comments": "Create Resource Group for Network Watcher",
-                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                             "type": "Microsoft.Resources/resourceGroups",
                             "apiVersion": "[variables('apiVersions').resourceGroups]",
                             "location": "[deployment().location]",
@@ -213,7 +224,7 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "[variables('apiVersions').networkWatchers]",
                                             "name": "[variables('networkWatcher')]",
@@ -230,7 +241,7 @@
                             "comments": "Nested deployment for Azure Network Resources",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').vwanNetwork]",
+                            "name": "[variables('deploymentNames').network]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
@@ -254,7 +265,6 @@
                                         },
                                         {
                                             "comments": "Deploy Azure Network Resources",
-                                            "condition": "[and(equals(parameters('enableVwan'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualWans",
                                             "apiVersion": "[variables('apiVersions').virtualWans]",
                                             "name": "[variables('vWanName')]",
@@ -287,8 +297,8 @@
                                                 "sku": "[variables('vHubSku')]"
                                             }
                                         },
-                                        // Conditional deployment of Virtual Network Gateway (S2S)
                                         {
+                                            "comments": "Conditional deployment of the VPN Gateway",
                                             "condition": "[and(equals(parameters('enableVwan'), 'Yes'), equals(parameters('enableVpnGw'), 'Yes'))]",
                                             "type": "Microsoft.Network/vpnGateways",
                                             "apiVersion": "[variables('apiVersions').virtualNetworkGateways]",

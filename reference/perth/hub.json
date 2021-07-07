@@ -698,7 +698,7 @@
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'armTemplates/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'armTemplates/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/diagnosticsAndSecurity.json')]",
-            "hubConnectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/hubConnectivity.json')]",
+            "connectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/hubConnectivity.json')]",
             "azOps": "[uri(deployment().properties.templateLink.uri, 'armTemplates/azOpsSetup.json')]"
         },
         "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
@@ -709,7 +709,7 @@
             "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "hubConnectivity": "[take(concat('hubConnectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "connectivity": "[take(concat('connectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
@@ -1188,7 +1188,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
-            "name": "[variables('deploymentNames').hubConnectivity]",
+            "name": "[variables('deploymentNames').connectivity]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
@@ -1197,7 +1197,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').hubConnectivity]"
+                    "uri": "[variables('deploymentUris').connectivity]"
                 },
                 "parameters": {
                     "companyPrefix": {
@@ -1397,7 +1397,7 @@
                 "[variables('deploymentNames').monitoring]",
                 "[variables('deploymentNames').monitoringSolutions]",
                 "[variables('deploymentNames').policyDefinitions]",
-                "[variables('deploymentNames').hubConnectivity]",
+                "[variables('deploymentNames').connectivity]",
                 "policyCompletion"
             ],
             "properties": {

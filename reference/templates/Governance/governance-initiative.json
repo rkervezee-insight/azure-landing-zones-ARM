@@ -2,32 +2,56 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "targetMG": {
+         "targetMG": {
             "type": "string"
         },
-        "tag1": {
+        "tag1Name": {
             "type": "string",
-            "defaultValue": "Application Name"
+            "defaultValue": "applicationName"
         },
-        "tag2": {
+        "tag1Value": {
             "type": "string",
-            "defaultValue": "Application Owner"
+            "defaultValue": ""
         },
-        "tag3": {
+        "tag2Name": {
             "type": "string",
-            "defaultValue": "Criticality"
+            "defaultValue": "owner"
         },
-        "tag4": {
+        "tag2Value": {
             "type": "string",
-            "defaultValue": "Contact Email"
+            "defaultValue": ""
         },
-        "tag5": {
+        "tag3Name": {
             "type": "string",
-            "defaultValue": "Cost Center"
+            "defaultValue": "criticality"
         },
-        "tag6": {
+        "tag3Value": {
             "type": "string",
-            "defaultValue": "Data Classification"
+            "defaultValue": ""
+        },
+        "tag4Name": {
+            "type": "string",
+            "defaultValue": "contactEmail"
+        },
+        "tag4Value": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "tag5Name": {
+            "type": "string",
+            "defaultValue": "costCenter"
+        },
+        "tag5Value": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "tag6Name": {
+            "type": "string",
+            "defaultValue": "dataClassification"
+        },
+        "tag6Value": {
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
@@ -39,7 +63,7 @@
                 "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
                 "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
                 "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
-                "requireTag": "/providers/Microsoft.Authorization/policyDefinitions/96670d01-0a4d-4649-9c89-2d3abc0a5025",
+                "addTag": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                 "auditManagedDisk": "/providers/Microsoft.Authorization/policyDefinitions/06a78e20-9358-41c9-923c-fb736d382a4d",
                 "auditResourceLocationRg": "/providers/Microsoft.Authorization/policyDefinitions/0a914e76-4921-4c19-b460-a2d36003525a",
                 "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'), '/providers/Microsoft.Authorization/policyDefinitions/append-az-hub')]"
@@ -48,12 +72,12 @@
         "initiatives": {
             "policySetDefinitions": {
                 "name": "governance-initiative",
-                "displayName": "Azure Governance Initiative"
+                "displayName": "Governance Initiative"
             }
         },
         "policyAssignment": {
             "name": "governance-initiative",
-            "displayName": "Azure Governance Initiative"
+            "displayName": "governance-initiative"
         },
         "apiVersions": {
             "policySetDefinitions": "2018-05-01",
@@ -74,11 +98,14 @@
                 },
                 "parameters": {},
                 "policyDefinitions": [
-                    {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+  {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag1')]"
+                                "value": "[parameters('tag1Name')]"
+                            },
+                            "tagValue": {
+                                "value": "[parameters('tag1Value')]"
                             }
                         }
                     },
@@ -86,31 +113,18 @@
                         "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag1')]"
+                                "value": "[parameters('tag1Name')]"
                             }
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag2')]"
-                            }
-                        }
-                    },
-                    {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
-                        "parameters": {
-                            "tagName": {
-                                "value": "[parameters('tag2')]"
-                            }
-                        }
-                    },
-                    {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
-                        "parameters": {
-                            "tagName": {
-                                "value": "[parameters('tag3')]"
+                                "value": "[parameters('tag2Name')]"
+                            },
+                            "tagValue": {
+                                "value": "[parameters('tag2Value')]"
                             }
                         }
                     },
@@ -118,31 +132,18 @@
                         "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag3')]"
+                                "value": "[parameters('tag2Name')]"
                             }
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag4')]"
-                            }
-                        }
-                    },
-                    {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
-                        "parameters": {
-                            "tagName": {
-                                "value": "[parameters('tag4')]"
-                            }
-                        }
-                    },
-                    {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
-                        "parameters": {
-                            "tagName": {
-                                "value": "[parameters('tag5')]"
+                                "value": "[parameters('tag3Name')]"
+                            },
+                            "tagValue": {
+                                "value": "[parameters('tag3Value')]"
                             }
                         }
                     },
@@ -150,15 +151,18 @@
                         "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag5')]"
+                                "value": "[parameters('tag3Name')]"
                             }
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.requireTag]",
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag6')]"
+                                "value": "[parameters('tag4Name')]"
+                            },
+                            "tagValue": {
+                                "value": "[parameters('tag4Value')]"
                             }
                         }
                     },
@@ -166,7 +170,45 @@
                         "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
                         "parameters": {
                             "tagName": {
-                                "value": "[parameters('tag6')]"
+                                "value": "[parameters('tag4Name')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag5Name')]"
+                            },
+                            "tagValue": {
+                                "value": "[parameters('tag5Value')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag5Name')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag6Name')]"
+                            },
+                            "tagValue": {
+                                "value": "[parameters('tag6Value')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "parameters": {
+                            "tagName": {
+                                "value": "[parameters('tag6Name')]"
                             }
                         }
                     },
@@ -217,7 +259,7 @@
             "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]" ],
             "location": "[deployment().location]",
             "properties": {
-                "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
+                "description": "This Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "displayName": "[variables('policyAssignment').displayName]",
                 "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]",
                 "notScopes": []

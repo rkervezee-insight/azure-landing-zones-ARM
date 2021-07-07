@@ -46,7 +46,6 @@
             "type": "string"
         },
         "addressPrefix": {
-            "defaultValue": "",
             "type": "string"
         },
         "location": {
@@ -161,7 +160,7 @@
     },
     "variables": {
         "deploymentNames": {
-            "hubNetwork": "[take(concat('hubNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "network": "[take(concat('network', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformConnPrefix')))]",
@@ -236,8 +235,9 @@
             "networkSecurityGroups": "2020-05-01",
             "routeTables": "2020-05-01",
             "publicIpAddresses": "2020-05-01",
-            "virtualNetworkGateways": "2020-05-01",
-            "azureFirewalls": "2020-05-01",
+            "virtualNetworkGateways": "2020-06-01",
+            "azureFirewalls": "2020-06-01",
+            "firewallPolicies": "2020-06-01",
             "bastionHosts": "2020-05-01",
             "policyAssignments": "2020-03-01",
             "roleAssignments": "2020-04-01-preview",
@@ -250,7 +250,7 @@
             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').hubNetwork]",
+            "name": "[variables('deploymentNames').network]",
             "location": "[deployment().location]",
             "dependsOn": [
             ],
@@ -335,7 +335,7 @@
                             "comments": "Nested deployment for Azure Network Resources",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').hubNetwork]",
+                            "name": "[variables('deploymentNames').network]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
@@ -742,7 +742,7 @@
                                             "comments": "Conditional deployment of the Azure Firewall Policy",
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
                                             "type": "Microsoft.Network/firewallPolicies",
-                                            "apiVersion": "2020-11-01",
+                                            "apiVersion": "[variables('apiVersions').firewallPolicies]",
                                             "name": "[variables('fwPolicyName')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
