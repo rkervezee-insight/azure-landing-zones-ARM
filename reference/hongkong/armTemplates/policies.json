@@ -915,7 +915,7 @@
               }
             }
           },
-          "name": "deny-Sqlmi-min-tls"
+          "name": "deny-sqlmi-min-tls"
         },
         {
           "properties": {
@@ -1030,7 +1030,7 @@
               }
             }
           },
-          "name": "deploy-Sqlmi-min-tls"
+          "name": "deploy-sqlmi-min-tls"
         },
         {
           "properties": {
