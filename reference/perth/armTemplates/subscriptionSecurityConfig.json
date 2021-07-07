@@ -137,6 +137,7 @@
         "apiVersions": {
             "deployments": "2020-06-01",
             "resourceGroups": "2020-06-01",
+            "locks": "2016-09-01",
             "securityAutomations": "2019-01-01-preview",
             "securityContacts": "2020-01-01-preview",
             "securityPricing": "2018-06-01"
@@ -446,6 +447,16 @@
                     "parameters": {},
                     "variables": {},
                     "resources": [
+                        {
+                            "comments": "Deploy Resource Group Lock",
+                            "type": "Microsoft.Authorization/locks",
+                            "apiVersion": "[variables('apiVersions').locks]",
+                            "name": "ResourceGroup-DontDelete",
+                            "properties": {
+                                "level": "CanNotDelete",
+                                "notes": "Prevent deletion of the resourceGroup"
+                            }
+                        },
                         {
                             "type": "Microsoft.Security/automations",
                             "apiVersion": "[variables('apiVersions').securityAutomations]",

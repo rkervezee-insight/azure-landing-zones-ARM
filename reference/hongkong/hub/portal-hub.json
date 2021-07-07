@@ -62,18 +62,6 @@
                         }
                     },
                     {
-                        "name": "esSubIdentifier",
-                        "type": "Microsoft.Common.TextBox",
-                        "label": "Subscription Identifier Prefix",
-                        "toolTip": "Provide a value for the subscription identifier.",
-                        "defaultValue": "cor",
-                        "constraints": {
-                            "required": true,
-                            "regex": "^[a-z0-9A-Z-]{3}$",
-                            "validationMessage": "The prefix must be 3 characters."
-                        }
-                    },
-                    {
                         "name": "esPlatformMgmtIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Platform Management Subscription Identifier Prefix",
@@ -1734,7 +1722,7 @@
                         "name": "esIdentity",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable identity subscription",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will move selected subscription into identity management group",
                         "constraints": {
                             "allowedValues": [
@@ -2264,26 +2252,6 @@
                         "visible": true
                     },
                     {
-                        "name": "esAzBackup",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure Azure VMs (Windows & Linux) are enabled for Azure Backup",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned and enable Azure Backup on all VMs in the landing zones.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": true
-                    },
-                    {
                         "name": "esDenyRdp",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Prevent inbound RDP from internet",
@@ -2409,7 +2377,6 @@
         "outputs": {
             "companyPrefix": "[steps('esNaming').esComIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
-            "environmentPrefix": "[steps('esNaming').esSubIdentifier]",
             "platformMgmtPrefix": "[steps('esNaming').esPlatformMgmtIdentifier]",
             "platformIdamPrefix": "[steps('esNaming').esPlatformIdamIdentifier]",
             "platformConnPrefix": "[steps('esNaming').esPlatformConnIdentifier]",
@@ -2494,14 +2461,13 @@
             "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId))),steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,'')]",
-            "enableIdentitySub": "[steps('esPlatformIdentity').esIdentity]",
+            "enableIdentity": "[steps('esPlatformIdentity').esIdentity]",
             "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
-            "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
             "enableLzDdoS": "[steps('lzGoalState').esLzDdoS]",
             "denyPublicEndpoints": "[steps('lzGoalState').esLzPrivateLink]",
             "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",

@@ -48,6 +48,10 @@
         "addressPrefix": {
             "type": "string"
         },
+        "location": {
+            "type": "string",
+            "defaultValue": "[deployment().location]"
+        },
         "enableHub": {
             "type": "string",
             "defaultValue": "Yes",
@@ -132,6 +136,11 @@
                 "No"
             ]
         },
+        "subscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36
+        },
         "enableMgmt": {
             "type": "string",
             "defaultValue": "Yes",
@@ -172,20 +181,11 @@
         "subnetMaskForIdentity": {
             "type": "string",
             "defaultValue": ""
-        },
-        "location": {
-            "type": "string",
-            "defaultValue": "[deployment().location]"
-        },
-        "subscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
         }
     },
     "variables": {
         "deploymentNames": {
-            "hubNetwork": "[take(concat('hubNetwork', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "network": "[take(concat('network', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "networkWatcher": "[take(concat('networkWatcher', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "namingPrefix": "[toLower(concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformPrefix')))]",
@@ -288,7 +288,7 @@
             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "name": "[variables('deploymentNames').hubNetwork]",
+            "name": "[variables('deploymentNames').network]",
             "location": "[deployment().location]",
             "dependsOn": [
             ],
@@ -373,7 +373,7 @@
                             "comments": "Nested deployment for Azure Network Resources",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "[variables('apiVersions').deployments]",
-                            "name": "[variables('deploymentNames').hubNetwork]",
+                            "name": "[variables('deploymentNames').network]",
                             "resourceGroup": "[variables('resourceGroups').networking]",
                             "dependsOn": [
                                 "[concat('Microsoft.Resources/resourceGroups/', variables('resourceGroups').networking)]"
@@ -465,8 +465,8 @@
                                                 }
                                             }
                                         },
-                                        // Conditional deployment of Azure Management Subnet
                                         {
+                                            "comments": "Conditional deployment of the Management Subnet",
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "[variables('apiVersions').subnets]",
@@ -486,8 +486,8 @@
                                                 }
                                             }
                                         },
-                                        // Conditional deployment of Azure Identity Subnet
                                         {
+                                            "comments": "Conditional deployment of the Identity Subnet",
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "[variables('apiVersions').subnets]",
@@ -683,8 +683,8 @@
                                                 ]
                                             }
                                         },
-                                        // Conditional deployment of Azure Identity NSG
                                         {
+                                            "comments": "Conditional deployment of the Azure Identity NSG",
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
@@ -697,8 +697,8 @@
                                                 "securityRules": []
                                             }
                                         },
-                                        // Conditional deployment of Azure Management NSG
                                         {
+                                            "comments": "Conditional deployment of the Azure Management NSG",
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/networkSecurityGroups",
                                             "apiVersion": "[variables('apiVersions').networkSecurityGroups]",
@@ -711,8 +711,8 @@
                                                 "securityRules": []
                                             }
                                         },
-                                        // Conditional deployment of Azure Identity Route Table
                                         {
+                                            "comments": "Conditional deployment of the Azure Identity Route Table",
                                             "condition": "[and(equals(parameters('enableIdentity'), 'Yes'), not(empty(parameters('subnetMaskForIdentity'))))]",
                                             "type": "Microsoft.Network/routeTables",
                                             "apiVersion": "[variables('apiVersions').routeTables]",
@@ -734,8 +734,8 @@
                                                 ]
                                             }
                                         },
-                                        // Conditional deployment of Azure Management Route Table
                                         {
+                                            "comments": "Conditional deployment of the Azure Management Route Table",
                                             "condition": "[and(equals(parameters('enableMgmt'), 'Yes'), not(empty(parameters('subnetMaskForMgmt'))))]",
                                             "type": "Microsoft.Network/routeTables",
                                             "apiVersion": "2020-05-01",

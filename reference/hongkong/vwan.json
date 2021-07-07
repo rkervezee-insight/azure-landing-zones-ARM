@@ -16,11 +16,25 @@
                 "description": "Provide the location identifier prefix (3 characters)"
             }
         },
-        "platformPrefix": {
+        "platformMgmtPrefix": {
             "type": "string",
-            "maxLength": 3,
+            "maxLength": 4,
             "metadata": {
-                "description": "Provide the Platform identifier prefix (3 characters)"
+                "description": "Provide the PLatform Management Subscription identifier prefix (4 characters)"
+            }
+        },
+        "platformIdamPrefix": {
+            "type": "string",
+            "maxLength": 4,
+            "metadata": {
+                "description": "Provide the PLatform Identity Subscription identifier prefix (4 characters)"
+            }
+        },
+        "platformConnPrefix": {
+            "type": "string",
+            "maxLength": 4,
+            "metadata": {
+                "description": "Provide the PLatform Connectivity Subscription identifier prefix (4 characters)"
             }
         },
         "argPrefix": {
@@ -86,11 +100,39 @@
                 "description": "Provide the virtual WAN prefix"
             }
         },
+        "pipPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the public IP identifier prefix"
+            }
+        },
         "azFwPrefix": {
             "type": "string",
             "maxLength": 3,
             "metadata": {
                 "description": "Provide the Azure Firewall identifier prefix"
+            }
+        },
+        "udrPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Route Table identifier prefix"
+            }
+        },
+        "nsgPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Network Security Group identifier prefix"
+            }
+        },
+        "basPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Bastion prefix"
             }
         },
         "subscriptionTag": {
@@ -118,6 +160,62 @@
             "type": "string",
             "defaultValue": "",
             "maxLength": 36
+        },
+        "managementSubscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36,
+            "metadata": {
+                "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for management. If you don't want to bring a subscription, leave this parameter empty as is."
+            }
+        },
+        "identitySubscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36,
+            "metadata": {
+                "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for identity."
+            }
+        },
+        "connectivitySubscriptionId": {
+            "type": "string",
+            "defaultValue": "",
+            "maxLength": 36,
+            "metadata": {
+                "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for networking."
+            }
+        },
+        "denySubnetWithoutNsgForIdentity": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
+        "denyRdpForIdentity": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
+        "denyPipForIdentity": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
+        "enableVmBackupForIdentity": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
         },
         "enableLogAnalytics": {
             "type": "string",
@@ -393,6 +491,14 @@
                 "description": "If 'Yes' is selected then a Recovery Services Vault will be deployed."
             }
         },
+        "enableVwan": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
         "enablePrivateDnsZones": {
             "type": "string",
             "allowedValues": [
@@ -477,13 +583,13 @@
             "type": "array",
             "defaultValue": []
         },
-        "enableVwan": {
+        "enableIdentity": {
             "type": "string",
             "allowedValues": [
                 "Yes",
                 "No"
             ],
-            "defaultValue": "Yes"
+            "defaultValue": "No"
         },
         "location": {
             "type": "string",
@@ -492,14 +598,6 @@
         "addressPrefix": {
             "type": "string",
             "defaultValue": ""
-        },
-        "enableVmBackup": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
         },
         "denySubnetWithoutNsg": {
             "type": "string",
@@ -605,23 +703,34 @@
             "privateDns": "[uri(deployment().properties.templateLink.uri, 'armTemplates/privateDns.json')]",
             "landingZone": "[uri(deployment().properties.templateLink.uri, 'armTemplates/lz.json')]",
             "diagnosticsAndSecurity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/diagnosticsAndSecurity.json')]",
-            "vwanConnectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/vwanConnectivity.json')]",
-            "azOps": "[uri(deployment().properties.templateLink.uri, 'armTemplates/azOpsSetup.json')]"
+            "connectivity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/vwanConnectivity.json')]",
+            "azOps": "[uri(deployment().properties.templateLink.uri, 'armTemplates/azOpsSetup.json')]",
+            "identity": "[uri(deployment().properties.templateLink.uri, 'armTemplates/identity.json')]"
         },
-        "moveSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', parameters('subscriptionId'))]",
-        "noSubscription": "[concat(parameters('companyPrefix'), '-platform', '/', 'na')]",
+        "moveSubscription": {
+            "management": "[concat(parameters('companyPrefix'), '-management', '/', parameters('managementSubscriptionId'))]",
+            "connectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', parameters('connectivitySubscriptionId'))]",
+            "identity": "[concat(parameters('companyPrefix'), '-identity', '/', parameters('identitySubscriptionId'))]"
+
+        },
+        "noSubscription": {
+            "management": "[concat(parameters('companyPrefix'), '-management', '/', 'na')]",
+            "connectivity": "[concat(parameters('companyPrefix'), '-connectivity', '/', 'naconn')]",
+            "identity": "[concat(parameters('companyPrefix'), '-identity', '/', 'naid')]"
+        },
         "deploymentNames": {
             "managementGroups": "[take(concat('mgmtGroups', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "policyDefinitions": "[take(concat('policyDef', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "diagnosticsAndSecurity": "[take(concat('diagSecurity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "vwanConnectivity": "[take(concat('vWanConn', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "connectivity": "[take(concat('connectivity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "landingZone": "[take(concat('lz', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
             "privateDns": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
+            "identity": "[take(concat('identity', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
@@ -699,22 +808,50 @@
             }
         },
         {
-            "comments": "Move the Subscription to the appropriate Management Group or skip if not used. (Platform Subscription)",
-            "condition": "[not(empty(parameters('subscriptionId')))]",
+            "comments": "Move the Subscription to the appropriate Management Group or skip if not used. (Platform Management Subscription)",
+            "condition": "[not(empty(parameters('managementSubscriptionId')))]",
             "type": "Microsoft.Management/managementGroups/subscriptions",
             "apiVersion": "[variables('apiVersions').subscriptions]",
-            "name": "[if(not(empty(parameters('subscriptionId'))), variables('moveSubscription'), variables('noSubscription'))]",
+            "name": "[if(not(empty(parameters('managementSubscriptionId'))), variables('moveSubscription').management, variables('noSubscription').management)]",
             "dependsOn": [
-                "[variables('deploymentNames').managementGroups]"
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
+            ],
+            "properties": {}
+        },
+        {
+            "comments": "Move the Subscription to the appropriate Management Group or skip if not used. (Platform Identity Subscription)",
+            "condition": "[not(empty(parameters('identitySubscriptionId')))]",
+            "type": "Microsoft.Management/managementGroups/subscriptions",
+            "apiVersion": "[variables('apiVersions').subscriptions]",
+            "name": "[if(not(empty(parameters('identitySubscriptionId'))), variables('moveSubscription').identity, variables('noSubscription').identity)]",
+            "dependsOn": [
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
+            ],
+            "properties": {}
+        },
+        {
+            "comments": "Move the Subscription to the appropriate Management Group or skip if not used. (Platform Connectivity Subscription)",
+            "condition": "[not(empty(parameters('connectivitySubscriptionId')))]",
+            "type": "Microsoft.Management/managementGroups/subscriptions",
+            "apiVersion": "[variables('apiVersions').subscriptions]",
+            "name": "[if(not(empty(parameters('connectivitySubscriptionId'))), variables('moveSubscription').connectivity, variables('noSubscription').connectivity)]",
+            "dependsOn": [
+                "[variables('deploymentNames').managementGroups]",
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
             ],
             "properties": {}
         },
         {
             "comments": "Linked template for the creation of a Log Analytics Workspace and Automation account in the Platform Management Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableLogAnalytics'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-management')]",
             "name": "[variables('deploymentNames').monitoring]",
             "dependsOn": [
                 "[variables('deploymentNames').policyDefinitions]",
@@ -734,8 +871,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -746,8 +883,8 @@
                     "aaaPrefix": {
                         "value": "[parameters('aaaPrefix')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "managementSubscriptionId": {
+                        "value": "[parameters('managementSubscriptionId')]"
                     },
                     "enableLogAnalytics": {
                         "value": "[parameters('enableLogAnalytics')]"
@@ -760,10 +897,10 @@
         },
         {
             "comments": "Linked template for the creation of Log Analytics Solutions in the Platform Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableAntiMalware'), 'Yes'), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes'), equals(parameters('enableKeyVaultAnalytics'), 'Yes')))]",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableAntiMalware'), 'Yes'), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes'), equals(parameters('enableKeyVaultAnalytics'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('managementSubscriptionId')]",
             "name": "[variables('deploymentNames').monitoringSolutions]",
             "dependsOn": [
                 "[variables('deploymentNames').monitoring]"
@@ -782,8 +919,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -791,8 +928,8 @@
                     "omsPrefix": {
                         "value": "[parameters('omsPrefix')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "managementSubscriptionId": {
+                        "value": "[parameters('managementSubscriptionId')]"
                     },
                     "enableSecuritySolution": {
                         "value": "[parameters('enableSecuritySolution')]"
@@ -837,11 +974,11 @@
             }
         },
         {
-            "comments": "Linked template for the creation of a Recovery Services Vault for the Platform Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
+            "comments": "Linked template for the creation of a Recovery Services Vault for the Platform Identity Subscription",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableRsv'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
             "name": "[variables('deploymentNames').recoveryServicesVault]",
             "dependsOn": [
                 "policyCompletion"
@@ -860,8 +997,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformIdamPrefix": {
+                        "value": "[parameters('platformIdamPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -885,11 +1022,11 @@
             }
         },
         {
-            "comments": "Linked template for the creation of an Azure Storage account in the Platform Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
+            "comments": "Linked template for the creation of an Azure Storage account in the Platform Management Subscription",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))),equals(parameters('enableStorage'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('managementSubscriptionId')]",
             "name": "[variables('deploymentNames').storage]",
             "dependsOn": [
                 "policyCompletion"
@@ -908,8 +1045,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -933,8 +1070,51 @@
             }
         },
         {
+            "comments": "Linked template for the creation of Identity & Access Management resources in the Platform Identity Subscription",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentity'), 'Yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "[variables('apiVersions').deployments]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-identity')]",
+            "name": "[variables('deploymentNames').identity]",
+            "dependsOn": [
+                "[variables('deploymentNames').policyDefinitions]",
+                "policyCompletion"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').identity]"
+                },
+                "parameters": {
+                    "companyPrefix": {
+                        "value": "[parameters('companyPrefix')]"
+                    },
+                    "enableIdentity": {
+                        "value": "[parameters('enableIdentity')]"
+                    },
+                    "denyRdpForIdentity": {
+                        "value": "[parameters('denyRdpForIdentity')]"
+                    },
+                    "denySubnetWithoutNsgForIdentity": {
+                        "value": "[parameters('denySubnetWithoutNsgForIdentity')]"
+                    },
+                    "denyPipForIdentity": {
+                        "value": "[parameters('denyPipForIdentity')]"
+                    },
+                    "enableVmBackupForIdentity": {
+                        "value": "[parameters('enableVmBackupForIdentity')]"
+                    },
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
+                    }
+                }
+            }
+        },
+        {
             "comments": "Linked template for the creation of Azure Policy Assignments for Landing Zone Subscriptions",
-            "condition": "[or(or(or(or(or(or(equals(parameters('enableVmBackup'), 'Yes'), equals(parameters('denySubnetWithoutNsg'), 'Yes')), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'), equals(parameters('denyPip'), 'Yes'))]",
+            "condition": "[or(or(or(or(or(equals(parameters('denySubnetWithoutNsg'), 'Yes'), equals(parameters('denyRdp'), 'Yes'), equals(parameters('denyIpForwarding'), 'Yes')), equals(parameters('enableSqlEncryption'), 'Yes'), equals(parameters('enableSqlAudit'), 'Yes')), equals(parameters('enableStorageHttps'), 'Yes'), equals(parameters('enableAksPolicy'), 'Yes')), equals(parameters('denyAksPrivileged'), 'Yes'), equals(parameters('denyAksPrivilegedEscalation'), 'Yes')), equals(parameters('denyHttpIngressForAks'), 'Yes'), equals(parameters('denySsh'), 'Yes'), equals(parameters('denyPrivateDnsZones'), 'Yes'), equals(parameters('denyPip'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-landingzones')]",
@@ -953,9 +1133,6 @@
                 "parameters": {
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
-                    },
-                    "enableVmBackup": {
-                        "value": "[parameters('enableVmBackup')]"
                     },
                     "denySubnetWithoutNsg": {
                         "value": "[parameters('denySubnetWithoutNsg')]"
@@ -990,6 +1167,9 @@
                     "denySsh": {
                         "value": "[parameters('denySsh')]"
                     },
+                    "denyPip": {
+                        "value": "[parameters('denyPip')]"
+                    },
                     "denyPrivateDnsZones": {
                         "value": "[parameters('denyPrivateDnsZones')]"
                     }
@@ -997,8 +1177,8 @@
             }
         },
         {
-            "comments": "Linked template for the creation of Diagnostics and Security controls for the Platform Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))), and(equals(parameters('enableLogAnalytics'), 'Yes'),  equals(parameters('enableAsc'), 'Yes')))]",
+            "comments": "Linked template for the creation of Diagnostics and Security controls for the Platform Management Subscription",
+            "condition": "[and(not(empty(parameters('managementSubscriptionId'))), and(equals(parameters('enableLogAnalytics'), 'Yes'),  equals(parameters('enableAsc'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
             "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'))]",
@@ -1020,8 +1200,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1074,8 +1254,14 @@
                     "enableLtrStorage": {
                         "value": "[parameters('enableLtrStorage')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "managementSubscriptionId": {
+                        "value": "[parameters('managementSubscriptionId')]"
+                    },
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
+                    },
+                    "connectivitySubscriptionId": {
+                        "value": "[parameters('connectivitySubscriptionId')]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
@@ -1090,12 +1276,12 @@
             }
         },
         {
-            "comments": "Linked template for the creation of Network Connectivity resources in the Platform Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enableVwan'), 'Yes'))]",
+            "comments": "Linked template for the creation of Network Connectivity resources in the Platform Connectivity Subscription",
+            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableVwan'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-platform')]",
-            "name": "[variables('deploymentNames').vwanConnectivity]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('companyPrefix'), '-connectivity')]",
+            "name": "[variables('deploymentNames').connectivity]",
             "dependsOn": [
                 "[variables('deploymentNames').diagnosticsAndSecurity]"
             ],
@@ -1104,7 +1290,7 @@
                 "mode": "Incremental",
                 "templateLink": {
                     "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').vwanConnectivity]"
+                    "uri": "[variables('deploymentUris').connectivity]"
                 },
                 "parameters": {
                     "companyPrefix": {
@@ -1113,8 +1299,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformConnPrefix": {
+                        "value": "[parameters('platformConnPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1122,17 +1308,26 @@
                     "vngPrefix": {
                         "value": "[parameters('vngPrefix')]"
                     },
-                    "azFwPrefix": {
-                        "value": "[parameters('azFwPrefix')]"
-                    },
                     "vHubPrefix": {
                         "value": "[parameters('vHubPrefix')]"
                     },
                     "vWanPrefix": {
                         "value": "[parameters('vWanPrefix')]"
                     },
-                    "enableVwan": {
-                        "value": "[parameters('enableVwan')]"
+                    "pipPrefix": {
+                        "value": "[parameters('pipPrefix')]"
+                    },
+                    "azFwPrefix": {
+                        "value": "[parameters('azFwPrefix')]"
+                    },
+                    "udrPrefix": {
+                        "value": "[parameters('udrPrefix')]"
+                    },
+                    "nsgPrefix": {
+                        "value": "[parameters('nsgPrefix')]"
+                    },
+                    "basPrefix": {
+                        "value": "[parameters('basPrefix')]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
@@ -1143,14 +1338,20 @@
                     "costCenterTag": {
                         "value": "[parameters('costCenterTag')]"
                     },
+                    "addressPrefix": {
+                        "value": "[parameters('addressPrefix')]"
+                    },
+                    "enableVwan": {
+                        "value": "[parameters('enableVwan')]"
+                    },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
                     },
                     "firewallZones": {
                         "value": "[parameters('firewallZones')]"
                     },
-                    "addressPrefix": {
-                        "value": "[parameters('addressPrefix')]"
+                    "enableAzFwDnsProxy": {
+                        "value": "[parameters('enableAzFwDnsProxy')]"
                     },
                     "enableVpnGw": {
                         "value": "[parameters('enableVpnGw')]"
@@ -1161,18 +1362,18 @@
                     "location": {
                         "value": "[parameters('location')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "connectivitySubscriptionId": {
+                        "value": "[parameters('connectivitySubscriptionId')]"
                     }
                 }
             }
         },
         {
-            "comments": "Linked template for the creation of Private DNS resources in the Platform Subscription",
-            "condition": "[and(not(empty(parameters('subscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
+            "comments": "Linked template for the creation of Private DNS resources in the Platform Connectivity Subscription",
+            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enablePrivateDnsZones'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "[variables('apiVersions').deployments]",
-            "subscriptionId": "[parameters('subscriptionId')]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "name": "[variables('deploymentNames').privateDns]",
             "dependsOn": [
             ],
@@ -1190,8 +1391,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformConnPrefix": {
+                        "value": "[parameters('platformConnPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
@@ -1214,8 +1415,8 @@
                     "enablePrivateDnsZonesAkv": {
                         "value": "[parameters('enablePrivateDnsZonesAkv')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('subscriptionId')]"
+                    "connectivitySubscriptionId": {
+                        "value": "[parameters('connectivitySubscriptionId')]"
                     },
                     "subscriptionTag": {
                         "value": "[parameters('subscriptionTag')]"
@@ -1244,7 +1445,7 @@
                 "[variables('deploymentNames').monitoring]",
                 "[variables('deploymentNames').monitoringSolutions]",
                 "[variables('deploymentNames').policyDefinitions]",
-                "[variables('deploymentNames').vwanConnectivity]",
+                "[variables('deploymentNames').connectivity]",
                 "policyCompletion"
             ],
             "properties": {
@@ -1260,8 +1461,8 @@
                     "locationPrefix": {
                         "value": "[parameters('locationPrefix')]"
                     },
-                    "platformPrefix": {
-                        "value": "[parameters('platformPrefix')]"
+                    "platformMgmtPrefix": {
+                        "value": "[parameters('platformMgmtPrefix')]"
                     },
                     "argPrefix": {
                         "value": "[parameters('argPrefix')]"
