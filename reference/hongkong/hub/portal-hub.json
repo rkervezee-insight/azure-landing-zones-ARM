@@ -2506,7 +2506,6 @@
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
-
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
             "denyAksPrivileged": "[steps('lzGoalState').esAksPriv]",
@@ -2521,7 +2520,6 @@
             "denySsh": "[steps('lzGoalState').esDenySsh]",
             "denyPublicEndpoints": "[steps('lzGoalState').esLzPrivateLink]",
             "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",
-
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]",

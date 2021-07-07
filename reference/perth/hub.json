@@ -173,14 +173,6 @@
                 "description": "Provide the Azure Security Center Email Contact"
             }
         },
-        "enableAksPolicy": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
         "enableAscForServers": {
             "type": "string",
             "defaultValue": "Free",
@@ -262,46 +254,6 @@
             ]
         },
         "enableSecuritySolution": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyAksPrivileged": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyAksPrivilegedEscalation": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyHttpIngressForAks": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denySsh": {
-            "type": "string",
-            "defaultValue": "Yes",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "denyPrivateDnsZones": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -594,15 +546,7 @@
             "type": "string",
             "defaultValue": ""
         },
-        "denySubnetWithoutNsg": {
-            "type": "string",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "defaultValue": "Yes"
-        },
-        "denyRdp": {
+        "enableSqlAudit": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -610,7 +554,7 @@
                 "No"
             ]
         },
-        "denyPip": {
+        "enableAksPolicy": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -618,7 +562,23 @@
                 "No"
             ]
         },
-        "denyIpForwarding": {
+        "denyAksPrivileged": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyAksPrivilegedEscalation": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyHttpIngressForAks": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -634,7 +594,15 @@
                 "No"
             ]
         },
-        "enableSqlAudit": {
+        "denyPip": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyRdp": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -643,6 +611,54 @@
             ]
         },
         "enableStorageHttps": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyIpForwarding": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denySubnetWithoutNsg": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "denySsh": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyPublicEndpoints": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableEncryptionInTransit": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "denyPrivateDnsZones": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
@@ -1043,45 +1059,51 @@
                     "contentVersion": "1.0.0.0",
                     "uri": "[variables('deploymentUris').landingZone]"
                 },
-                "parameters": {
+               "parameters": {
                     "companyPrefix": {
                         "value": "[parameters('companyPrefix')]"
-                    },
-                    "denySubnetWithoutNsg": {
-                        "value": "[parameters('denySubnetWithoutNsg')]"
-                    },
-                    "denyRdp": {
-                        "value": "[parameters('denyRdp')]"
-                    },
-                    "denyIpForwarding": {
-                        "value": "[parameters('denyIpForwarding')]"
                     },
                     "enableSqlAudit": {
                         "value": "[parameters('enableSqlAudit')]"
                     },
-                    "enableSqlEncryption": {
-                        "value": "[parameters('enableSqlEncryption')]"
-                    },
-                    "enableStorageHttps": {
-                        "value": "[parameters('enableStorageHttps')]"
-                    },
-                    "denyHttpIngressForAks": {
-                        "value": "[parameters('denyHttpIngressForAks')]"
-                    },
-                    "denyAksPrivilegedEscalation": {
-                        "value": "[parameters('denyAksPrivilegedEscalation')]"
+                    "enableAksPolicy": {
+                        "value": "[parameters('enableAksPolicy')]"
                     },
                     "denyAksPrivileged": {
                         "value": "[parameters('denyAksPrivileged')]"
                     },
-                    "enableAksPolicy": {
-                        "value": "[parameters('enableAksPolicy')]"
+                    "denyAksPrivilegedEscalation": {
+                        "value": "[parameters('denyAksPrivilegedEscalation')]"
+                    },
+                    "denyHttpIngressForAks": {
+                        "value": "[parameters('denyHttpIngressForAks')]"
+                    },
+                    "enableSqlEncryption": {
+                        "value": "[parameters('enableSqlEncryption')]"
+                    },
+                    "denyPip": {
+                        "value": "[parameters('denyPip')]"
+                    },
+                    "denyRdp": {
+                        "value": "[parameters('denyRdp')]"
+                    },
+                    "enableStorageHttps": {
+                        "value": "[parameters('enableStorageHttps')]"
+                    },
+                    "denyIpForwarding": {
+                        "value": "[parameters('denyIpForwarding')]"
+                    },
+                    "denySubnetWithoutNsg": {
+                        "value": "[parameters('denySubnetWithoutNsg')]"
                     },
                     "denySsh": {
                         "value": "[parameters('denySsh')]"
                     },
-                    "denyPip": {
-                        "value": "[parameters('denyPip')]"
+                    "denyPublicEndpoints": {
+                        "value": "[parameters('denyPublicEndpoints')]"
+                    },
+                    "enableEncryptionInTransit": {
+                        "value": "[parameters('enableEncryptionInTransit')]"
                     },
                     "denyPrivateDnsZones": {
                         "value": "[parameters('denyPrivateDnsZones')]"

@@ -1933,71 +1933,11 @@
                         }
                     },
                     {
-                        "name": "esLzDdoS",
+                        "name": "esSqlAudit",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Enable DDoS Protection Standard",
-                        "defaultValue": "No",
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esHub,'Yes'),equals(steps('esPlatformConnectivity').esDdoS,'Yes'))]",
-                        "toolTip": "If 'Yes' is selected when also adding a connectivity subscription earlier, DDoS Protection Standard will be enabled.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esLzPrivateLink",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Prevent usage of Public Endpoints for PaaS services in the corp connected landing zones",
+                        "label": "Ensure auditing is enabled on Azure SQL",
                         "defaultValue": "Yes",
-                        "visible": true,
-                        "toolTip": "If 'Yes' is selected then Azure Policy will prevent PaaS resources to use public endpoints.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esEncryptionInTransit",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure encryption in transit is enabled for PaaS services",
-                        "defaultValue": "Yes",
-                        "visible": true,
-                        "toolTip": "If 'Yes' is selected then Azure Policy will ensure PaaS resources uses TLS and SSL.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        }
-                    },
-                    {
-                        "name": "esVmMonitoring",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure Azure VMs (Windows & Linux) are being monitored",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure auditing is enabled on Azure SQL",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -2010,47 +1950,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
-                    },
-                    {
-                        "name": "esVmssMonitoring",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure Azure VMSS (Windows & Linux) are being monitored",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
-                    },
-                    {
-                        "name": "esArcVmMonitoring",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure Azure Arc VMs (Windows & Linux) are being monitored",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                        "visible": true
                     },
                     {
                         "name": "esAksPolicy",
@@ -2133,6 +2033,46 @@
                         "visible": true
                     },
                     {
+                        "name": "esSqlEncryption",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Ensure Azure SQL is enabled with transparent data encryption",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "esDenyPip",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Prevent Public IP Addresses",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned and prevent Public IP Addresses",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
                         "name": "esDenyRdp",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Prevent inbound RDP from internet",
@@ -2153,11 +2093,11 @@
                         "visible": true
                     },
                     {
-                        "name": "esNsg",
+                        "name": "esHttpsStorage",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure subnets are associated with NSG",
+                        "label": "Ensure secure connections (HTTPS) to storage accounts",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure Network Security Groups must be associated with subnets being created",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure storage can only be accessed using HTTPS",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -2193,9 +2133,109 @@
                         "visible": true
                     },
                     {
-                        "name": "esSqlEncryption",
+                        "name": "esNsg",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure Azure SQL is enabled with transparent data encryption",
+                        "label": "Ensure subnets are associated with NSG",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure Network Security Groups must be associated with subnets being created",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "esDenySsh",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Prevent inbound SSH from internet",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned and prevent inbound SSH from internet",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": true
+                    },
+                    {
+                        "name": "esLzPrivateLink",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Prevent usage of Public Endpoints for PaaS services in the corp connected landing zones",
+                        "defaultValue": "Yes",
+                        "visible": true,
+                        "toolTip": "If 'Yes' is selected then Azure Policy will prevent PaaS resources to use public endpoints.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esEncryptionInTransit",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Ensure encryption in transit is enabled for PaaS services",
+                        "defaultValue": "Yes",
+                        "visible": true,
+                        "toolTip": "If 'Yes' is selected then Azure Policy will ensure PaaS resources uses TLS and SSL.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esDenyPrivateDnsZones",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Prevent usage of Azure Private DNS Zones in the corp connected landing zones",
+                        "defaultValue": "Yes",
+                        "visible": true,
+                        "toolTip": "If 'Yes' is selected then Azure Policy will prevent creation of Azure Private DNS Zones",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "esVmMonitoring",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Ensure Azure VMs (Windows & Linux) are being monitored",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
@@ -2210,14 +2250,14 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "esSqlAudit",
+                        "name": "esVmssMonitoring",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure auditing is enabled on Azure SQL",
+                        "label": "Ensure Azure VMSS (Windows & Linux) are being monitored",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure auditing is enabled on Azure SQL",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -2230,14 +2270,14 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
-                        "name": "esHttpsStorage",
+                        "name": "esArcVmMonitoring",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Ensure secure connections (HTTPS) to storage accounts",
+                        "label": "Ensure Azure Arc VMs (Windows & Linux) are being monitored",
                         "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected, Azure Policy will be assigned to ensure storage can only be accessed using HTTPS",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -2250,7 +2290,7 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     }
                 ]
             }
@@ -2344,18 +2384,19 @@
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
             "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
-            "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
-            "enableLzDdoS": "[steps('lzGoalState').esLzDdoS]",
-            "denyPublicEndpoints": "[steps('lzGoalState').esLzPrivateLink]",
-            "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
             "denyAksPrivileged": "[steps('lzGoalState').esAksPriv]",
             "denyAksPrivilegedEscalation": "[steps('lzGoalState').esAksNoPriv]",
             "denyHttpIngressForAks": "[steps('lzGoalState').esAksIngress]",
+            "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
+            "denyPip": "[steps('lzGoalState').esDenyPip]",
             "denyRdp": "[steps('lzGoalState').esDenyRdp]",
             "enableStorageHttps": "[steps('lzGoalState').esHttpsStorage]",
             "denyIpForwarding": "[steps('lzGoalState').esIpForwarding]",
             "denySubnetWithoutNsg": "[steps('lzGoalState').esNsg]",
+            "denySsh": "[steps('lzGoalState').esDenySsh]",
+            "denyPublicEndpoints": "[steps('lzGoalState').esLzPrivateLink]",
+            "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]"
