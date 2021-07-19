@@ -274,6 +274,30 @@
                         }
                     },
                     {
+                        "name": "esWanIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Virtual WAN Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure vWAN identifier",
+                        "defaultValue": "wan",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
+                        "name": "esHubIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Virtual Hub Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure vHub identifier",
+                        "defaultValue": "hub",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
                         "name": "text3",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
@@ -2374,6 +2398,8 @@
             "rsvPrefix": "[steps('esNaming').esRsvIdentifier]",
             "basPrefix": "[steps('esNaming').esBasIdentifier]",
             "ddosPrefix": "[steps('esNaming').esDdosIdentifier]",
+            "vHubPrefix": "[steps('esNaming').esHubIdentifier]",
+            "vWanPrefix": "[steps('esNaming').esWanIdentifier]",
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
