@@ -818,6 +818,7 @@
             "storageAccount": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('enterpriseScaleCompanyPrefix')))), 20)]"
 
         },
+        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "platformConnectivityResourceNames": {
             "vpnGwy": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vngPrefix'), '-vpn'))]",
             "vpnGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-vpn'))]",
@@ -833,8 +834,7 @@
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]"
         },
-        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
-        // Declaring deterministic resourceId's for platform resources that will be created
+        
         "platformManagementResourceIds": {
             "logAnalyticsWorkspace": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.OperationalInsights/workspaces/', variables('platformManagementResourceNames').logAnalyticsWorkspace)]",
             "automationAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.Automation/automationAccounts/', variables('platformManagementResourceNames').automationAccount)]",
