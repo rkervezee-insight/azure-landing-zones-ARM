@@ -1909,22 +1909,6 @@
                         }
                     },
                     {
-                        "name": "esOnlineLzSub",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Online landing zone subscriptions (optional)",
-                        "toolTip": "",
-                        "multiselect": true,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": true,
-                        "constraints": {
-                            "allowedValues": "[map(steps('lzGoalState').lzOnlineSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
-                            "required": false
-                        }
-                    },
-                    {
                         "name": "azMonText",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
