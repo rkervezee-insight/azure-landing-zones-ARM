@@ -111,7 +111,7 @@
         },
         "ddosPrefix": {
             "type": "string",
-            "maxLength": 3,
+            "maxLength": 4,
             "metadata": {
                 "description": "Provide the Azure ddos Protection prefix"
             }
