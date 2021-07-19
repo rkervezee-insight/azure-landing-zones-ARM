@@ -2389,7 +2389,7 @@
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
             "vntPrefix": "[steps('esNaming').esVntIdentifier]",
             "pipPrefix": "[steps('esNaming').esPipIdentifier]",
-            "azFwPrefix": "[steps('esNaming').esAfwIdentifier]",
+            "afwPrefix": "[steps('esNaming').esAfwIdentifier]",
             "aaaPrefix": "[steps('esNaming').esAaaIdentifier]",
             "staPrefix": "[steps('esNaming').esStaIdentifier]",
             "udrPrefix": "[steps('esNaming').esUdrIdentifier]",
