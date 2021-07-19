@@ -891,47 +891,11 @@
                         }
                     },
                     {
-                        "name": "esLzConnectivity",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Connect corp landing zones to the connectivity hub (optional)?",
-                        "defaultValue": "[if(equals(steps('esPlatformConnectivity').esHub,'Yes'),'Yes','No')]",
-                        "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]"
-                    },
-                    {
                         "name": "lzCorpSubsApi",
                         "type": "Microsoft.Solutions.ArmApiControl",
                         "request": {
                             "method": "GET",
                             "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
-                        "name": "esCorpLzSub",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Corp landing zone subscriptions (optional)",
-                        "toolTip": "",
-                        "multiselect": true,
-                        "selectAll": true,
-                        "filter": true,
-                        "filterPlaceholder": "Filter items ...",
-                        "multiLine": true,
-                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub,'No'),equals(steps('lzGoalState').esLzConnectivity,'No'))]",
-                        "constraints": {
-                            "allowedValues": "[map(steps('lzGoalState').lzCorpSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
-                            "required": false
                         }
                     },
                     {
