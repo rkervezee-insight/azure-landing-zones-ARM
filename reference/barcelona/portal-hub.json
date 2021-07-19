@@ -1857,11 +1857,102 @@
                         }
                     },
                     {
+                        "name": "esLzConnectivity",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Connect corp landing zones to the connectivity hub (optional)?",
+                        "defaultValue": "[if(equals(steps('esPlatformConnectivity').esHub,'Yes'),'Yes','No')]",
+                        "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]"
+                    },
+                    {
                         "name": "lzCorpSubsApi",
                         "type": "Microsoft.Solutions.ArmApiControl",
                         "request": {
                             "method": "GET",
                             "path": "subscriptions?api-version=2020-01-01"
+                        }
+                    },
+                    {
+                        "name": "esCorpLzSub",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Corp landing zone subscriptions (optional)",
+                        "toolTip": "",
+                        "multiselect": true,
+                        "selectAll": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub,'No'),equals(steps('lzGoalState').esLzConnectivity,'No'))]",
+                        "constraints": {
+                            "allowedValues": "[map(steps('lzGoalState').lzCorpSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
+                            "required": false
+                        }
+                    },
+                    {
+                        "name": "lzConnectedSubs",
+                        "type": "Microsoft.Common.EditableGrid",
+                        "ariaLabel": "Add existing subscriptions into the management group landing zone and provide address space for virtual network peering",
+                        "label": "Corp connected landing zone subscriptions (optional)",
+                        "visible": "[equals(steps('lzGoalState').esLzConnectivity,'Yes')]",
+                        "constraints": {
+                            "width": "Full",
+                            "rows": {
+                                "count": {
+                                    "min": 1,
+                                    "max": 10
+                                }
+                            },
+                            "columns": [
+                                {
+                                    "id": "subs",
+                                    "header": "Subscription",
+                                    "width": "1fr",
+                                    "element": {
+                                        "name": "esLzConnectedSub",
+                                        "type": "Microsoft.Common.DropDown",
+                                        "label": "Landing zone subscription",
+                                        "toolTip": "",
+                                        "multiselect": false,
+                                        "selectAll": false,
+                                        "filter": true,
+                                        "filterPlaceholder": "Filter items ...",
+                                        "multiLine": false,
+                                        "constraints": {
+                                            "allowedValues": "[map(steps('lzGoalState').lzSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
+                                            "required": false
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": "addresses",
+                                    "header": "Virtual Network Address space",
+                                    "width": "1fr",
+                                    "element": {
+                                        "type": "Microsoft.Common.TextBox",
+                                        "placeholder": "Ensure there are no overlapping IP addresses!",
+                                        "constraints": {
+                                            "required": true,
+                                            "validations": [
+                                                {
+                                                    "message": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     },
                     {
@@ -1890,6 +1981,22 @@
                         "request": {
                             "method": "GET",
                             "path": "subscriptions?api-version=2020-01-01"
+                        }
+                    },
+                    {
+                        "name": "esOnlineLzSub",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Online landing zone subscriptions (optional)",
+                        "toolTip": "",
+                        "multiselect": true,
+                        "selectAll": true,
+                        "filter": true,
+                        "filterPlaceholder": "Filter items ...",
+                        "multiLine": true,
+                        "visible": true,
+                        "constraints": {
+                            "allowedValues": "[map(steps('lzGoalState').lzOnlineSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
+                            "required": false
                         }
                     },
                     {
@@ -2299,6 +2406,48 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+            "paToken": "[steps('esPlatformDevOps').esPaToken]",
+            "principalId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.objectId]",
+            "principalSecret": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.password]",
+            "gitHubUserNameOrOrg": "[steps('esPlatformDevOps').esGit]",
+            "appId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.appId]",
+            "enableAzOps": "[steps('esPlatformDevOps').cicdOption]",
+            "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
+            "connectivitySubscriptionId": "[if(not(equals(steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId,'')]",
+            "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
+            "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
+            "enableHub": "[steps('esPlatformConnectivity').esHub]",
+            "enableDdoS": "[steps('esPlatformConnectivity').esDdoS]",
+            "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
+            "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
+            "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
+            "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
+            "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
+            "addressPrefix": "[steps('esPlatformConnectivity').esAddress]",
+            "location": "[steps('esPlatformConnectivity').esNwLocation]",
+            "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esEnablePrivateDnsZones]",
+            "enablePrivateDnsZonesTable": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneTable]",
+            "enablePrivateDnsZonesQueue": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneQueue]",
+            "enablePrivateDnsZonesFiles": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneFiles]",
+            "enablePrivateDnsZonesBlob": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneBlob]",
+            "enablePrivateDnsZonesAkv": "[steps('esPlatformConnectivity').esEnablePrivateDnsZoneAkv]",
+            "vpnOrErZones": "[steps('esPlatformConnectivity').esGwRegionalOrAz]",
+            "gwRegionalOrAz": "[steps('esPlatformConnectivity').esGwRegionalOrAz]",
+            "gwRegionalSku": "[if(empty(steps('esPlatformConnectivity').esGwRegionalSku), steps('esPlatformConnectivity').esGwNoAzSku, steps('esPlatformConnectivity').esGwRegionalSku)]",
+            "gwAzSku": "[steps('esPlatformConnectivity').esGwAzSku]",
+            "erRegionalOrAz": "[steps('esPlatformConnectivity').esErRegionalOrAz]",
+            "erRegionalSku": "[if(empty(steps('esPlatformConnectivity').esErRegionalSku), steps('esPlatformConnectivity').esErNoAzSku, steps('esPlatformConnectivity').esErRegionalSku)]",
+            "erAzSku": "[steps('esPlatformConnectivity').esErAzSku]",
+            "subnetMaskForGw": "[steps('esPlatformConnectivity').esAddressVpnOrEr]",
+            "subnetMaskForAzBastion": "[steps('esPlatformConnectivity').esAddressBastion]",
+            "subnetMaskForAzFw": "[steps('esPlatformConnectivity').esAddressFw]",
+            "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
+            "identitySubscriptionId": "[if(or(not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),not(equals(steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId))),steps('esPlatformIdentity').esIdentitySubSection.esIdentitySub.subscriptionId,'')]",
+            "enableIdentity": "[steps('esPlatformIdentity').esIdentity]",
+            "denyRdpForIdentity": "[steps('esPlatformIdentity').esIdDenyRdp]",
+            "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
+            "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
+            "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
 
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
