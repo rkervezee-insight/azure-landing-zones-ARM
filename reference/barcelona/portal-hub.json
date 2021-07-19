@@ -2403,14 +2403,11 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-
             "managementSubscriptionId": "[steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId]",
-
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
             "emailContactAsc": "[steps('esPlatformManagement').esAscEmailContact]",
-
             "enableSecuritySolution": "[steps('esPlatformManagement').esSecuritySolution]",
             "enableAgentHealth": "[steps('esPlatformManagement').esAgentSolution]",
             "enableChangeTracking": "[steps('esPlatformManagement').esChangeTracking]",
@@ -2421,7 +2418,6 @@
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
-
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
             "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
@@ -2474,7 +2470,6 @@
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
-
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
