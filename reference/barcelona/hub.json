@@ -743,10 +743,10 @@
             "managementSubscriptionPlacement": "[take(concat('mgmtSubscription', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "connectivitySubscriptionPlacement": "[take(concat('connSubscription', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "identitySubscriptionPlacement": "[take(concat('idamSubscription', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "policyDeploymentName": "[take(concat('EntScale-Policy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "azOpsRbacDeploymentName": "[take(concat('EntScale-AzOpsRbac', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "azopsDeploymentName": "[take(concat('EntScale-azops', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "ddosDeploymentName": "[take(concat('EntScale-ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "policyDeploymentName": "[take(concat('policyDef', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "azOpsRbacDeploymentName": "[take(concat('azOpsRbac', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "azopsDeploymentName": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "ddosDeploymentName": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosHubPolicyDeploymentName": "[take(concat('EntScale-DDoSHubPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosLzPolicyDeploymentName": "[take(concat('EntScale-DDoSLZPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsSetupDeploymentName": "[take(concat('EntScale-AzOpsSetup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -818,7 +818,7 @@
             "storageAccount": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('enterpriseScaleCompanyPrefix')))), 20)]"
 
         },
-        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+       // "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "platformConnectivityResourceNames": {
             "vpnGwy": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vngPrefix'), '-vpn'))]",
             "vpnGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-vpn'))]",
@@ -828,11 +828,11 @@
             "azfw": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afwPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
-            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-', variables('vnetAddressSpace')))]",
+            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-', parameters('addressPrefix')))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
         "platformIdentityResourceNames": {
-            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]"
+            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]"
         },
         
         "platformManagementResourceIds": {
