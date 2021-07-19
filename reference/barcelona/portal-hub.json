@@ -2355,7 +2355,7 @@
             }
         ],
         "outputs": {
-            "companyPrefix": "[steps('esNaming').esComIdentifier]",
+            "enterpriseScaleCompanyPrefix": "[steps('esNaming').esComIdentifier]",
             "locationPrefix": "[steps('esNaming').esLocIdentifier]",
             "platformMgmtPrefix": "[steps('esNaming').esPlatformMgmtIdentifier]",
             "platformIdamPrefix": "[steps('esNaming').esPlatformIdamIdentifier]",
