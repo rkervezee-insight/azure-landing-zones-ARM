@@ -746,7 +746,7 @@
             "policyDeploymentName": "[take(concat('policyDef', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsRbacDeploymentName": "[take(concat('azOpsRbac', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azopsDeploymentName": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "ddosDeploymentName": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "ddosDeploymentName": "[take(concat('ddosD', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosHubPolicyDeploymentName": "[take(concat('EntScale-DDoSHubPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosLzPolicyDeploymentName": "[take(concat('EntScale-DDoSLZPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsSetupDeploymentName": "[take(concat('EntScale-AzOpsSetup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
