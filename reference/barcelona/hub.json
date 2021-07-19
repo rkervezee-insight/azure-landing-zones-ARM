@@ -696,14 +696,14 @@
             "azOpsRBAC": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/azOpsRoleAssignment.json')]",
             "roleAssignments": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/roleAssignment.json')]",
 
-            "vnetConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/hubspoke-connectivity.json')]",
-            "vwanConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/vwan-connectivity.json')]",
-            "monitoring": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/logAnalyticsWorkspace.json')]",
-            "resourceGroup": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/resourceGroup.json')]",
-            "corpVnetPeering": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/vnetPeering.json')]",
-            "corpVwanPeering": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/vnetPeeringVwan.json')]",
-            "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/logAnalyticsSolutions.json')]",
-            "storage": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/storage.json')]",
+            "vnetConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/hubspoke-connectivity.json')]",
+            "vwanConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vwan-connectivity.json')]",
+            "monitoring": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsWorkspace.json')]",
+            "resourceGroup": "[uri(deployment().properties.templateLink.uri, 'subTemplates/resourceGroup.json')]",
+            "corpVnetPeering": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vnetPeering.json')]",
+            "corpVwanPeering": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vnetPeeringVwan.json')]",
+            "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
+            "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
             "activityDiagnosticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-activityLogPolicyAssignment.json')]",
             "ascConfigPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-ascConfigPolicyAssignment.json')]",
@@ -732,9 +732,9 @@
             "ddosPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/modify-ddosProtectionPlanPolicyAssignment.json')]",
 
 
-            "privateDnsZones": "[uri(deployment().properties.templateLink.uri, 'resourceGroupTemplates/privateDnsZones.json')]",
-            "ddosProtection": "[uri(deployment().properties.templateLink.uri, 'resourceGroupTemplates/ddosProtection.json')]",
-            "azOpsSetup": "[uri(deployment().properties.templateLink.uri, 'resourceGroupTemplates/azOpsArm.json')]"
+            "privateDnsZones": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/privateDnsZones.json')]",
+            "ddosProtection": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/ddosProtection.json')]",
+            "azOpsSetup": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/azOpsArm.json')]"
 
         },
         // Declaring deterministic deployment names
