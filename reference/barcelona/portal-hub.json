@@ -42,7 +42,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Company Identifier Prefix",
                         "toolTip": "Provide a value for the company identifier, 1-5 characters.",
-                        "defaultValue": "stt",
+                        "defaultValue": "sjj",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z0-9A-Z-]{1,5}$",
@@ -872,7 +872,7 @@
                         "name": "cicdOption",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy integrated CI/CD pipeline?",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "toolTip": "",
                         "constraints": {
                             "allowedValues": [
@@ -1021,7 +1021,7 @@
                         "name": "esHub",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Virtual Hub",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
                         "constraints": {
                             "allowedValues": [
@@ -1682,7 +1682,7 @@
                         "name": "esIdentity",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable identity subscription",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will move selected subscription into identity management group",
                         "constraints": {
                             "allowedValues": [
