@@ -740,10 +740,9 @@
         // Declaring deterministic deployment names
         "deploymentNames": {
             "mgmtGroupDeploymentName": "[take(concat('mgmtGroups', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "mgmtSubscriptionPlacement": "[take(concat('subscriptionPlacement', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "corpPeeringDeploymentName": "[take(concat('EntScale-CorpPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "connectivitySubscriptionPlacement": "[take(concat('EntScale-ConnectivitySub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "identitySubscriptionPlacement": "[take(concat('EntScale-IdentitySub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "managementSubscriptionPlacement": "[take(concat('mgmtSubscription', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "connectivitySubscriptionPlacement": "[take(concat('connSubscription', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "identitySubscriptionPlacement": "[take(concat('idamSubscription', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "policyDeploymentName": "[take(concat('EntScale-Policy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsRbacDeploymentName": "[take(concat('EntScale-AzOpsRbac', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azopsDeploymentName": "[take(concat('EntScale-azops', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1008,7 +1007,7 @@
             "condition": "[not(empty(parameters('managementSubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').mgmtSubscriptionPlacement]",
+            "name": "[variables('deploymentNames').managementSubscriptionPlacement]",
             "location": "[deployment().location]",
             "scope": "[variables('scopes').managementManagementGroup]",
             "dependsOn": [
@@ -1093,7 +1092,7 @@
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]",
                 "policyCompletion"
             ],
             "properties": {
@@ -1191,7 +1190,7 @@
             "scope": "[variables('scopes').managementManagementGroup]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]",
                 "policyCompletion"
             ],
             "properties": {
@@ -1234,7 +1233,7 @@
             "scope": "[variables('scopes').topLevelManagementGroup]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]",
                 "policyCompletion",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
             ],
@@ -1256,7 +1255,7 @@
             "scope": "[variables('scopes').topLevelManagementGroup]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
             ],
             "properties": {
@@ -1702,7 +1701,7 @@
             "scope": "[variables('scopes').topLevelManagementGroup]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1729,7 +1728,7 @@
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').azOpsRbacDeploymentName)]"
             ],
             "properties": {
@@ -1757,7 +1756,7 @@
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mgmtSubscriptionPlacement)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').managementSubscriptionPlacement)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').azOpsRbacDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').azopsDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').policyDeploymentName)]",
