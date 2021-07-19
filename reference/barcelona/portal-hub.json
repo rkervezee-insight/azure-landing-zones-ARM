@@ -178,6 +178,18 @@
                         }
                     },
                     {
+                        "name": "esAfpIdentifier",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Azure Firewall Policy Identifier",
+                        "toolTip": "Provide a naming prefix for the Azure Firewall Policy identifier",
+                        "defaultValue": "afp",
+                        "constraints": {
+                            "required": true,
+                            "regex": "^[a-z0-9A-Z-]{3}$",
+                            "validationMessage": "The prefix must be 3 characters."
+                        }
+                    },
+                    {
                         "name": "esAaaIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Azure Automation Identifier",
@@ -2390,6 +2402,7 @@
             "vntPrefix": "[steps('esNaming').esVntIdentifier]",
             "pipPrefix": "[steps('esNaming').esPipIdentifier]",
             "afwPrefix": "[steps('esNaming').esAfwIdentifier]",
+            "afPrefix": "[steps('esNaming').esAfpIdentifier]",
             "aaaPrefix": "[steps('esNaming').esAaaIdentifier]",
             "staPrefix": "[steps('esNaming').esStaIdentifier]",
             "udrPrefix": "[steps('esNaming').esUdrIdentifier]",
