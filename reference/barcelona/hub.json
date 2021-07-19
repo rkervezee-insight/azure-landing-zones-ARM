@@ -819,16 +819,16 @@
 
         },
         "platformConnectivityResourceNames": {
-            "vpnGwy": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
-            "vpnGwyIp": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-vpn'))]",
-            "erGwy": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
-            "erGwyIp": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-er'))]",
-            "ddos": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('ddosPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
-            "azfw": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('afwPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
-            "azfwPolicy": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
-            "azFwIp": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-afw'))]",
-            "vhub": "[toLower(concat(variables('namingPrefix'), '-', parameters('vHubPrefix'), '-', variables('vnetAddressSpace')))]",
-            "vwan": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
+            "vpnGwy": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vngPrefix'), '-vpn'))]",
+            "vpnGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-vpn'))]",
+            "erGwy": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vngPrefix'), '-er'))]",
+            "erGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-er'))]",
+            "ddos": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('ddosPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "azfw": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afwPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
+            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-', variables('vnetAddressSpace')))]",
+            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]"
