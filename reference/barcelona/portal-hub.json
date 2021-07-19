@@ -118,11 +118,11 @@
                         }
                     },
                     {
-                        "name": "esOmsIdentifier",
+                        "name": "esLawIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Log Analytics Identifier",
                         "toolTip": "Provide a naming prefix for the Log Analytics workspace identifier",
-                        "defaultValue": "oms",
+                        "defaultValue": "law",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z0-9A-Z-]{3}$",
@@ -2361,7 +2361,7 @@
             "platformIdamPrefix": "[steps('esNaming').esPlatformIdamIdentifier]",
             "platformConnPrefix": "[steps('esNaming').esPlatformConnIdentifier]",
             "argPrefix": "[steps('esNaming').esArgIdentifier]",
-            "omsPrefix": "[steps('esNaming').esOmsIdentifier]",
+            "lawPrefix": "[steps('esNaming').esLawIdentifier]",
             "vngPrefix": "[steps('esNaming').esVngIdentifier]",
             "vntPrefix": "[steps('esNaming').esVntIdentifier]",
             "pipPrefix": "[steps('esNaming').esPipIdentifier]",
