@@ -1407,8 +1407,6 @@
 
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
-            "enableVmBackup": "[steps('lzGoalState').esAzBackup]",
-            "enableLzDdoS": "[steps('lzGoalState').esLzDdoS]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
             "denyAksPrivileged": "[steps('lzGoalState').esAksPriv]",
             "denyAksPrivilegedEscalation": "[steps('lzGoalState').esAksNoPriv]",
