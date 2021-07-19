@@ -746,7 +746,8 @@
             "policyDeploymentName": "[take(concat('policyDef', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsRbacDeploymentName": "[take(concat('azOpsRbac', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azopsDeploymentName": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "ddosDeploymentName": "[take(concat('ddosD', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "ddosDeploymentName": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "ddosRgDeploymentName": "[take(concat('ddosRg', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosHubPolicyDeploymentName": "[take(concat('EntScale-DDoSHubPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosLzPolicyDeploymentName": "[take(concat('EntScale-DDoSLZPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsSetupDeploymentName": "[take(concat('EntScale-AzOpsSetup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1397,7 +1398,7 @@
             "condition": "[and(equals(parameters('enableDdoS'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').ddosDeploymentName]",
+            "name": "[variables('deploymentNames').ddosRgDeploymentName]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -1432,7 +1433,7 @@
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddosDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddosRgDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]"
             ],
