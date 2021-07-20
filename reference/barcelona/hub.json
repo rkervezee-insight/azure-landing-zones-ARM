@@ -742,6 +742,8 @@
                 "publicEndpointPolicyDefinition": "[take(concat('policySet-publicEndpoints', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveManagementSubscription": "[take(concat('moveMgmtSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveConnectivitySubscription": "[take(concat('moveConnSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "moveOnlineSubscription": "[take(concat('moveOnlineSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "moveCorpSubscription": "[take(concat('moveCorpSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveIdentitySubscription": "[take(concat('moveIdamSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azPolicyForAksPolicyAssignment": "[take(concat('policyAss-aksPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivEscalationPolicyAssignment": "[take(concat('policyAss-aksPrivEsc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -749,15 +751,34 @@
                 "aksPrivilegedPolicyAssignment": "[take(concat('policyAss-aksPriv', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "sqlAuditPolicyAssignment": "[take(concat('PolicyAss-sqlAudit', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "sqlEncryptionPolicyAssignment": "[take(concat('policyAss-sqlEncrypt', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-
+                "pipPolicyAssignment": "[take(concat('policyAss-publicIp', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "rdpFromInternetLandingZonePolicyAssignment": "[take(concat('policyAss-rdpLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "rdpFromInternetIdentityPolicyAssignment": "[take(concat('policyAss-rdpIdam', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "storageHttpsPolicyAssignment": "[take(concat('policyAss-storageHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "subnetNsgLandingZonePolicyAssignment": "[take(concat('policyAss-subnetNsgLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "subnetNsgIdentityPolicyAssignment": "[take(concat('policyAss-subnetNsgIdam', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "resourceDiagnosticsPolicyAssignment": "[take(concat('policyAss-resourceDiag', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "activityDiagnosticsPolicyAssignment": "[take(concat('policyAss-activityDiag', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "logAnalyticsPolicyAssignment": "[take(concat('policyAss-logAnalytics', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azVmMonitorPolicyAssignment": "[take(concat('policyAss-azVmMonitor', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azVmssMonitorPolicyAssignment": "[take(concat('policyAss-azVmssMonitor', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azBackupLzPolicyAssignment": "[take(concat('policyAss-azBackupLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azBackupIdentityPolicyAssignment": "[take(concat('policyAss-azBackupIdam', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "tlsSslPolicyAssignment": "[take(concat('policyAss-tls-ssl', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "ipFwPolicyAssignment": "[take(concat('policyAss-ipForwarding', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "publicEndpointPolicyAssignment": "[take(concat('policyAss-publicEndpoints', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "privateDnsPolicyAssignment": "[take(concat('policyAss-privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "sub": {
-
+                "asbPolicyAssignment": "[take(concat('policyAss-asb', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "ascPolicyAssignment": "[take(concat('policyAss-asc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
             },
-            
-           
+
             "azOpsRbacDeploymentName": "[take(concat('azOpsRbac', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azopsDeploymentName": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosDeploymentName": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -765,49 +786,22 @@
             "ddosHubPolicyDeploymentName": "[take(concat('EntScale-DDoSHubPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "ddosLzPolicyDeploymentName": "[take(concat('EntScale-DDoSLZPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "azOpsSetupDeploymentName": "[take(concat('EntScale-AzOpsSetup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "monitoringDeploymentName": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "logAnalyticsPolicyDeploymentName": "[take(concat('Policy-logAnalytics', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "monitoringSolutionsDeploymentName": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "asbPolicyDeploymentName": "[take(concat('EntScale-ASB', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "resourceDiagnosticsPolicyDeploymentName": "[take(concat('EntScale-ResourceDiagnostics', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "activityDiagnosticsPolicyDeploymentName": "[take(concat('EntScale-ActivityDiagnostics', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "ascPolicyDeploymentName": "[take(concat('EntScale-ASC', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+
+            
             "vnetConnectivityHubDeploymentName": "[take(concat('EntScale-HubSpoke', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "vwanConnectivityHubDeploymentName": "[take(concat('EntScale-VWanHub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "azVmMonitorPolicyDeploymentName": "[take(concat('EntScale-AzVmMonitor', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "azVmssMonitorPolicyDeploymentName": "[take(concat('EntScale-AzVmssMonitor', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "azBackupLzPolicyDeploymentName": "[take(concat('EntScale-AzBackupLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "azBackupIdentityPolicyDeploymentName": "[take(concat('EntScale-AzBackupIdentity', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-
-            "tlsSslPolicyDeploymentName": "[take(concat('EntScale-TLSSSL', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "ipFwPolicyDeploymentName": "[take(concat('EntScale-IPFwd', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "publicEndpointPolicyDeploymentName": "[take(concat('EntScale-PEndpoint', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            
-            
-            "privateDnsPolicyDeploymentName": "[take(concat('EntScale-PrivDNSAssignment', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "pipPolicyDeploymentName": "[take(concat('EntScale-PIP', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "rdpFromInternetLandingZonePolicyDeploymentName": "[take(concat('policyAss-rdpLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "rdpFromInternetIdentityPolicyDeploymentName": "[take(concat('policyAss-rdpIdam', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "storageHttpsPolicyDeploymentName": "[take(concat('policyAss-storageHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "subnetNsgLandingZonePolicyDeploymentName": "[take(concat('policyAss-subnetNsgLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "subnetNsgIdentityPolicyDeploymentName": "[take(concat('policyAss-subnetNsgIdam', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-
-
 
             "privateDnsZoneRgDeploymentName": "[take(concat('privateDnsZoneRg', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "privateDnsZonesDeploymentName": "[take(concat('PrivateDnsZone', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "storageDeploymentName": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+        
             "dnsZoneRoleAssignmentDeploymentName": "[take(concat('EntScale-DNSZoneRole', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
 
-            "onlinelandingZonesubs": "[take(concat('EntScale-OnlinelandingZones', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "corplandingZonesubs": "[take(concat('EntScale-CorplandingZones', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "corpConnectedMovelandingZonesubs": "[take(concat('EntScale-CorpConnlandingZones', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "corpConnectedlandingZonesubs": "[take(concat('EntScale-CorpPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "identityPeeringDeploymentName": "[take(concat('EntScale-IDPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "identityVwanPeeringDeploymentName": "[take(concat('EntScale-IDVwanPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "corpConnectedLzVwanSubs": "[take(concat('EntScale-CorpConnlandingZonesVwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
         },
-        // Declaring deterministic names for Resource Groups that will be created for platform resources
         "storageNamingPrefix": "[concat(parameters('enterpriseScaleCompanyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
         "namingPrefix": {
             "management": "[toLower(concat(parameters('enterpriseScaleCompanyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix')))]",
@@ -1102,7 +1096,7 @@
             "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').monitoringDeploymentName]",
+            "name": "[variables('deploymentNames').sub.monitoring]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "dependsOn": [
@@ -1142,11 +1136,11 @@
             "condition": "[and(and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')),  equals(parameters('enableLogAnalytics'), 'Yes'), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes'), equals(parameters('enableKeyVaultAnalytics'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').monitoringSolutionsDeploymentName]",
+            "name": "[variables('deploymentNames').sub.monitoringSolutions]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
                 "policyCompletion"
             ],
             "properties": {
@@ -1200,7 +1194,7 @@
             "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').logAnalyticsPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.logAnalyticsPolicyAssignment]",
             "scope": "[variables('MgScopes').management]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -1243,13 +1237,13 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), or(equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableAsc'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').asbPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').sub.asbPolicyAssignment]",
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
                 "policyCompletion",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1265,12 +1259,12 @@
             "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment]",
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1293,11 +1287,11 @@
             "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').activityDiagnosticsPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment]",
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1320,11 +1314,11 @@
             "condition": "[and(equals(parameters('enableAsc'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').ascPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').sub.ascPolicyAssignment]",
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1380,11 +1374,11 @@
             "condition": "[and(equals(parameters('enableStorage'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').storageDeploymentName]",
+            "name": "[variables('deploymentNames').sub.storage]",
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
                 "policyCompletion"
             ],
             "properties": {
@@ -1416,10 +1410,10 @@
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').asbPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1447,8 +1441,8 @@
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddosRgDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1505,10 +1499,10 @@
             "name": "[variables('deploymentNames').vnetConnectivityHubDeploymentName]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').asbPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddosDeploymentName)]"
             ],
             "location": "[deployment().location]",
@@ -1591,10 +1585,10 @@
             "name": "[variables('deploymentNames').vwanConnectivityHubDeploymentName]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').asbPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ddosDeploymentName)]"
             ],
             "location": "[deployment().location]",
@@ -1648,10 +1642,10 @@
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').asbPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]"
             ],
@@ -1681,8 +1675,8 @@
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').privateDnsZoneRgDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]"
             ],
@@ -1774,12 +1768,12 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').azOpsRbacDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').azopsDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringSolutionsDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoringSolutions)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "corplandingZones",
                 "onlinelandingZones"
             ],
@@ -1816,7 +1810,7 @@
             "condition": "[equals(parameters('enablePrivateDnsZonesForlandingZones'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
-            "name": "[variables('deploymentNames').privateDnsPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.privateDnsPolicyAssignment]",
             "location": "[deployment().location]",
             "scope": "[variables('MgScopes').landingZones]",
             "dependsOn": [
@@ -1852,7 +1846,7 @@
             "location": "[deployment().location]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "dependsOn": [
-                "[variables('deploymentNames').privateDnsPolicyDeploymentName]"
+                "[variables('deploymentNames').mg.privateDnsPolicyAssignment]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1865,7 +1859,7 @@
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
                     },
                     "principalId": {
-                        "value": "[if(equals(parameters('enablePrivateDnsZonesForlandingZones'), 'Yes'), reference(variables('deploymentNames').privateDnsPolicyDeploymentName).outputs.principalId.value, 'na')]"
+                        "value": "[if(equals(parameters('enablePrivateDnsZonesForlandingZones'), 'Yes'), reference(variables('deploymentNames').mg.privateDnsPolicyAssignment).outputs.principalId.value, 'na')]"
                     },
                     "roleDefinitionId": {
                         "value": "[variables('roleDefinitions').networkContributor]"
@@ -1878,11 +1872,11 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmMonitoring'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').azVmMonitorPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.azVmMonitorPolicyAssignment]",
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1908,11 +1902,11 @@
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmssMonitoring'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').azVmssMonitorPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.azVmssMonitorPolicyAssignment]",
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').monitoringDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1938,7 +1932,7 @@
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').azBackupLzPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.azBackupLzPolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2094,7 +2088,7 @@
             "condition": "[equals(parameters('enableEncryptionInTransit'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').tlsSslPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.tlsSslPolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2122,7 +2116,7 @@
             "condition": "[equals(parameters('denyIpForwarding'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').ipFwPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.ipFwPolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2147,7 +2141,7 @@
             "condition": "[equals(parameters('denyPublicEndpoints'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').publicEndpointPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.publicEndpointPolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2175,7 +2169,7 @@
             "condition": "[equals(parameters('denyRdp'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').rdpFromInternetLandingZonePolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.rdpFromInternetLandingZonePolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2203,7 +2197,7 @@
             "condition": "[equals(parameters('enableStorageHttps'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').storageHttpsPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.storageHttpsPolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2228,7 +2222,7 @@
             "condition": "[equals(parameters('denySubnetWithoutNsg'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').subnetNsgIdentityPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.subnetNsgLandingZonePolicyAssignment]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2310,7 +2304,7 @@
             "condition": "[and(equals(parameters('enableVmBackupForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').azBackupIdentityPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.azBackupIdentityPolicyAssignment]",
             "scope": "[variables('MgScopes').identity]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2337,7 +2331,7 @@
             "condition": "[and(equals(parameters('denyPipForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').pipPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.pipPolicyAssignment]",
             "scope": "[variables('MgScopes').identity]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2365,7 +2359,7 @@
             "condition": "[and(equals(parameters('denySubnetWithoutNsgForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').subnetNsgIdentityPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.subnetNsgIdentityPolicyAssignment]",
             "scope": "[variables('MgScopes').identity]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2393,7 +2387,7 @@
             "condition": "[and(equals(parameters('denyRdpForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').rdpFromInternetIdentityPolicyDeploymentName]",
+            "name": "[variables('deploymentNames').mg.rdpFromInternetIdentityPolicyAssignment]",
             "scope": "[variables('MgScopes').identity]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -2428,9 +2422,9 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]"
             ],
             "properties": {
@@ -2473,9 +2467,9 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]"
             ],
             "properties": {
@@ -2511,14 +2505,14 @@
             "condition": "[not(empty(parameters('onlinelandingZonesubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[concat(variables('deploymentNames').onlinelandingZonesubs, copyIndex())]",
+            "name": "[concat(variables('deploymentNames').mg.moveOnlineSubscription, copyIndex())]",
             "scope": "[variables('MgScopes').online]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "copy": {
                 "name": "onlinelandingZones",
@@ -2545,14 +2539,14 @@
             "condition": "[not(empty(parameters('corplandingZonesubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[concat(variables('deploymentNames').corplandingZonesubs, copyIndex())]",
+            "name": "[concat(variables('deploymentNames').mg.moveCorpSubscription, copyIndex())]",
             "scope": "[variables('MgScopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').activityDiagnosticsPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').ascPolicyDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').resourceDiagnosticsPolicyDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "copy": {
                 "name": "corplandingZones",
