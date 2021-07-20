@@ -169,7 +169,7 @@
     "resources": [
         {
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-05-01",
+            "apiVersion": "2021-04-01",
             "name": "[take(concat('monSolutions-', guid(deployment().name)), 64)]",
             "resourceGroup": "[parameters('rgName')]",
             "properties": {

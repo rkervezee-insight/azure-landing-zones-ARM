@@ -703,6 +703,7 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
+            "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-denyAppGwyWafPolicyAssignment.json')]",
             "activityDiagnosticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-activityLogPolicyAssignment.json')]",
             "ascConfigPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-ascConfigPolicyAssignment.json')]",
             "asbPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-asbPolicyAssignment.json')]",
@@ -746,6 +747,7 @@
                 "moveIdentitySubscription": "[take(concat('moveIdamSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azPolicyForAksPolicyAssignment": "[take(concat('policyAss-aksPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivEscalationPolicyAssignment": "[take(concat('policyAss-aksPrivEsc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "appGatewayPolicyAssignment": "[take(concat('policyAss-appGwy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksHttpsPolicyAssignment": "[take(concat('policyAss-aksHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivilegedPolicyAssignment": "[take(concat('policyAss-aksPriv', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "sqlAuditPolicyAssignment": "[take(concat('PolicyAss-sqlAudit', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1297,6 +1299,33 @@
                     },
                     "topLevelManagementGroupPrefix": {
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deny application Gateways without WAF",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').mg.appGatewayPolicyAssignment]",
+            "scope": "[variables('MgScopes').topLevel]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
+                "policyCompletion"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').appGatewayPolicyAssignment]"
+                },
+                "parameters": {
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    },
+                    "enforcementMode": {
+                        "value": "Default"
                     }
                 }
             }
