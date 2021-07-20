@@ -703,6 +703,7 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
+            "nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
             "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-denyAppGwyWafPolicyAssignment.json')]",
             "activityDiagnosticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-activityLogPolicyAssignment.json')]",
             "ascConfigPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-ascConfigPolicyAssignment.json')]",
@@ -747,6 +748,7 @@
                 "moveIdentitySubscription": "[take(concat('moveIdamSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azPolicyForAksPolicyAssignment": "[take(concat('policyAss-aksPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivEscalationPolicyAssignment": "[take(concat('policyAss-aksPrivEsc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "nsgFlowLogsPolicyAssignment": "[take(concat('policyAss-nsgFlowLogs', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "appGatewayPolicyAssignment": "[take(concat('policyAss-appGwy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksHttpsPolicyAssignment": "[take(concat('policyAss-aksHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivilegedPolicyAssignment": "[take(concat('policyAss-aksPriv', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -795,7 +797,7 @@
             "identityVwanPeeringDeploymentName": "[take(concat('EntScale-IDVwanPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "corpConnectedLzVwanSubs": "[take(concat('EntScale-CorpConnlandingZonesVwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
         },
-        
+
         "namingPrefix": {
             "storage": "[concat(parameters('enterpriseScaleCompanyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
             "management": "[toLower(concat(parameters('enterpriseScaleCompanyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix')))]",
@@ -1299,6 +1301,37 @@
                     },
                     "topLevelManagementGroupPrefix": {
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deploy NSG Flow Log policy definition",
+            "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').mg.nsgFlowLogsPolicyAssignment]",
+            "scope": "[variables('MgScopes').topLevel]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.storage)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').nsgFlowLogsPolicyAssignment]"
+                },
+                "parameters": {
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    },
+                    "logAnalyticsResourceId": {
+                        "value": "[variables('platformManagementResourceIds').logAnalyticsWorkspace]"
+                    },
+                    "storageAccountResourceId": {
+                        "value": "[variables('platformManagementResourceIds').storageAccount]"
                     }
                 }
             }
