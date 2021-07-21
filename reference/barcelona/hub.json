@@ -1327,6 +1327,9 @@
                     "topLevelManagementGroupPrefix": {
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
                     },
+                    "enforcementMode": {
+                        "value": "Default"
+                    },
                     "logAnalyticsResourceId": {
                         "value": "[variables('platformManagementResourceIds').logAnalyticsWorkspace]"
                     },
@@ -1922,7 +1925,7 @@
             }
         },
         {
-            // Assigning Azure Monitor for VMs policy initiative to intermediate root management group if condition is true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deploy the VM Policy Initiative",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmMonitoring'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -1952,7 +1955,7 @@
             }
         },
         {
-            // Assigning Azure Monitor for VMSS policy initiative to intermediate root management group if condition is true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deploy the VMSS Policy Initiative",
             "condition": "[and(not(empty(parameters('managementSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes'), equals(parameters('enableVmssMonitoring'), 'Yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2009,7 +2012,7 @@
             }
         },
         {
-            // Assigning DDoS Policy to enforce DDoS on virtual networks in landing zones management group if condition evaluates to true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to enable DDoS Protection Plan",
             "condition": "[and(equals(parameters('enableLzDdoS'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2114,7 +2117,7 @@
             }
         },
         {
-            // Assigning Https enforcement for AKS policy to landing zones management group if condition is true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deny HTTP traffic for AKS",
             "condition": "[equals(parameters('denyHttpIngressForAks'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2138,7 +2141,7 @@
             }
         },
         {
-            // Assigning TLS-SSL policy initiative to landing zones management group if condition is true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to enforce TLS and SSL",
             "condition": "[equals(parameters('enableEncryptionInTransit'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2166,7 +2169,7 @@
             }
         },
         {
-            // Assigning IP Fwd policy to landing zones management group if condition is true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deny IP forwarding",
             "condition": "[equals(parameters('denyIpForwarding'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2191,7 +2194,7 @@
             }
         },
         {
-            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deny the Public endpoint Policy Initiative",
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deny the Public Endpoint Policy Initiative",
             "condition": "[equals(parameters('denyPublicEndpoints'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2409,7 +2412,7 @@
             }
         },
         {
-            "comments": "Linked template for the Azure Policy Assignment at the Platform Identity Management Group to deny subnets without nsg",
+            "comments": "Linked template for the Azure Policy Assignment at the Platform Identity Management Group to deny subnets without NSG",
             "condition": "[and(equals(parameters('denySubnetWithoutNsgForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
