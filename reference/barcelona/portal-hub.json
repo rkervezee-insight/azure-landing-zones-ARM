@@ -1538,7 +1538,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Bastion",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'vhub')]",
                         "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
                         "constraints": {
                             "allowedValues": [
@@ -1570,7 +1570,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure App Gateway Subnet",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'vhub')]",
                         "toolTip": "If 'Yes' is selected, a subnet for App Gateways will be deployed.",
                         "constraints": {
                             "allowedValues": [
