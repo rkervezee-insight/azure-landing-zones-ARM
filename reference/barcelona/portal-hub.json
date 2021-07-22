@@ -1088,7 +1088,7 @@
                                 "label": "Platform Connectivity Subscription"
                             }
                         ],
-                        "visible": "[and(not(equals(steps('esPlatformConnectivity').esHub, 'No')))]"
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]"
                     },
                     {
                         "name": "esAddress",
@@ -1159,7 +1159,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'vhub')]"
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]"
                     },
                     {
                         "name": "esVpnGw",
@@ -1186,7 +1186,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy zone redundant or regional VPN Gateway",
                         "defaultValue": "Zone redundant",
-                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esVpnGw,'Yes')or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual Gateway to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
@@ -1346,7 +1346,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy zone redundant or regional ExpressRoute Gateway",
                         "defaultValue": "Zone redundant",
-                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))),equals(steps('esPlatformConnectivity').esErGw,'Yes'),or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))),equals(steps('esPlatformConnectivity').esErGw,'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Express Route Gateway to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
@@ -1376,17 +1376,17 @@
                             "allowedValues": [
                                 {
                                     "label": "ErGw1AZ",
-                                    "description": "Megabits per second 1000, packets per second 100,000, connections per second 7000, max number of cicuit connections is 4",
+                                    "description": "Megabits per second 1000, packets per second 100,000, connections per second 7000, max number of circuit connections is 4",
                                     "value": "ErGw1AZ"
                                 },
                                 {
                                     "label": "ErGw2AZ",
-                                    "description": "Megabits per second 2000, packets per second 250,000, connections per second 14000, max number of cicuit connections is 8",
+                                    "description": "Megabits per second 2000, packets per second 250,000, connections per second 14000, max number of circuit connections is 8",
                                     "value": "ErGw2AZ"
                                 },
                                 {
                                     "label": "ErGw3AZ",
-                                    "description": "Megabits per second 10,000, packets per second 1,000,000, connections per second 28,000, max number of cicuit connections is 16",
+                                    "description": "Megabits per second 10,000, packets per second 1,000,000, connections per second 28,000, max number of circuit connections is 16",
                                     "value": "ErGw3AZ"
                                 }
                             ]
@@ -1407,17 +1407,17 @@
                             "allowedValues": [
                                 {
                                     "label": "Standard",
-                                    "description": "Megabits per second 1000, packets per second 100,000, connections per second 7000, max number of cicuit connections is 4",
+                                    "description": "Megabits per second 1000, packets per second 100,000, connections per second 7000, max number of circuit connections is 4",
                                     "value": "Standard"
                                 },
                                 {
                                     "label": "HighPerformance",
-                                    "description": "Megabits per second 2000, packets per second 250,000, connections per second 14000, max number of cicuit connections is 8",
+                                    "description": "Megabits per second 2000, packets per second 250,000, connections per second 14000, max number of circuit connections is 8",
                                     "value": "HighPerformance"
                                 },
                                 {
                                     "label": "UltraPerformance",
-                                    "description": "Megabits per second 10,000, packets per second 1,000,000, connections per second 28,000, max number of cicuit connections is 16",
+                                    "description": "Megabits per second 10,000, packets per second 1,000,000, connections per second 28,000, max number of circuit connections is 16",
                                     "value": "UltraPerformance"
                                 }
                             ]
@@ -1438,17 +1438,17 @@
                             "allowedValues": [
                                 {
                                     "label": "Standard",
-                                    "description": "Megabits per second 1000, packets per second 100,000, connections per second 7000, max number of cicuit connections is 4",
+                                    "description": "Megabits per second 1000, packets per second 100,000, connections per second 7000, max number of circuit connections is 4",
                                     "value": "Standard"
                                 },
                                 {
                                     "label": "HighPerformance",
-                                    "description": "Megabits per second 2000, packets per second 250,000, connections per second 14000, max number of cicuit connections is 8",
+                                    "description": "Megabits per second 2000, packets per second 250,000, connections per second 14000, max number of circuit connections is 8",
                                     "value": "HighPerformance"
                                 },
                                 {
                                     "label": "UltraPerformance",
-                                    "description": "Megabits per second 10,000, packets per second 1,000,000, connections per second 28,000, max number of cicuit connections is 16",
+                                    "description": "Megabits per second 10,000, packets per second 1,000,000, connections per second 28,000, max number of circuit connections is 16",
                                     "value": "UltraPerformance"
                                 }
                             ]
@@ -1502,7 +1502,7 @@
                         "multiselect": true,
                         "selectAll": true,
                         "filter": true,
-                        "visible": "[if(equals(steps('esPlatformConnectivity').esHub, 'vhub'), and(equals(steps('esPlatformConnectivity').esAzFw,'Yes'),or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast'))))]",
+                        "visible": "[if(equals(steps('esPlatformConnectivity').esHub, 'vhub'), and(equals(steps('esPlatformConnectivity').esAzFw,'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast'))))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
