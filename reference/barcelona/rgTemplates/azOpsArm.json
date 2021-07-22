@@ -8,6 +8,12 @@
                 "description": "Provide the prefix for your ESLZ setup."
             }
         },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Provide a location for the deployments"
+            }
+        },
         "paToken": {
             "type": "securestring",
             "metadata": {
@@ -55,14 +61,14 @@
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2018-11-30",
             "name": "[variables('userManagedIdentityName')]",
-            "location": "[resourceGroup().location]"
+            "location": "[parameters('location')]"
         },
         {
             "comments": "Deploy the Azure Key Vault instance",
             "type": "Microsoft.KeyVault/vaults",
             "apiVersion": "2019-09-01",
             "name": "[parameters('keyVaultName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[variables('userManagedIdentityName')]"
             ],
@@ -92,7 +98,7 @@
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "2019-09-01",
             "name": "[concat(parameters('keyVaultName'), '/', variables('patSecretName'))]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
             ],
@@ -105,7 +111,7 @@
             "type": "Microsoft.KeyVault/vaults/secrets",
             "apiVersion": "2019-09-01",
             "name": "[concat(parameters('keyVaultName'), '/', variables('spnSecretName'))]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
             ],
@@ -133,7 +139,7 @@
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentScriptName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "kind": "AzurePowerShell",
             "identity": {
                 "type": "userAssigned",
