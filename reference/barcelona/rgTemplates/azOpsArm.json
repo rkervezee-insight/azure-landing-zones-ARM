@@ -1,5 +1,5 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "topLevelManagementGroupPrefix": {
@@ -32,9 +32,6 @@
         "repositoryName": {
             "type": "string"
         },
-        "rgName": {
-            "type": "String"
-        },
         "namingPrefix": {
             "type": "String"
         },
@@ -54,128 +51,104 @@
     },
     "resources": [
         {
-            "type": "Microsoft.Resources/resourceGroups",
-            "apiVersion": "2018-05-01",
-            "name": "[parameters('rgName')]",
-            "location": "[deployment().location]",
-            "properties": {}
+            "comments": "Deploy the User Managed Identity",
+            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
+            "apiVersion": "2018-11-30",
+            "name": "[variables('userManagedIdentityName')]",
+            "location": "[resourceGroup().location]"
         },
         {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2021-04-01",
-            "name": "[take(concat('azOps-', guid(deployment().name)), 64)]",
-            "resourceGroup": "[parameters('rgName')]",
+            "comments": "Deploy the Azure Key Vault instance",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2019-09-01",
+            "name": "[parameters('keyVaultName')]",
+            "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/resourceGroups/', parameters('rgName'))]"
+                "[variables('userManagedIdentityName')]"
             ],
             "properties": {
-                "mode": "Incremental",
-                "template": {
-                    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
-                    "contentVersion": "1.0.0.0",
-                    "parameters": {},
-                    "variables": {},
-                    "resources": [
-
-                        {
-                            "comments": "Deploy the User Managed Identity",
-                            "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
-                            "apiVersion": "2018-11-30",
-                            "name": "[variables('userManagedIdentityName')]",
-                            "location": "[resourceGroup().location]"
-                        },
-                        {
-                            "comments": "Deploy the Azure Key Vault instance",
-                            "type": "Microsoft.KeyVault/vaults",
-                            "apiVersion": "2019-09-01",
-                            "name": "[parameters('keyVaultName')]",
-                            "location": "[resourceGroup().location]",
-                            "dependsOn": [
-                                "[variables('userManagedIdentityName')]"
-                            ],
-                            "properties": {
-                                "enabledForDeployment": true,
-                                "enabledForDiskEncryption": true,
-                                "enabledForTemplateDeployment": true,
-                                "enableRbacAuthorization": true,
-                                "enablePurgeProtection": true,
-                                "enableSoftDelete": true,
-                                "tenantId": "[subscription().tenantId]",
-                                "sku": {
-                                    "family": "A",
-                                    "name": "standard"
-                                },
-                                "networkAcls": {
-                                    "defaultAction": "Allow",
-                                    "bypass": "AzureServices",
-                                    "ipRules": [
-                                    ],
-                                    "virtualNetworkRules": []
-                                }
-                            }
-                        },
-                        {
-                            "comments": "Add the PAT Token secret into the Key Vault",
-                            "type": "Microsoft.KeyVault/vaults/secrets",
-                            "apiVersion": "2019-09-01",
-                            "name": "[concat(parameters('keyVaultName'), '/', variables('patSecretName'))]",
-                            "location": "[resourceGroup().location]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
-                            ],
-                            "properties": {
-                                "value": "[parameters('paToken')]"
-                            }
-                        },
-                        {
-                            "comments": "Add the SPN secret into the Key Vault",
-                            "type": "Microsoft.KeyVault/vaults/secrets",
-                            "apiVersion": "2019-09-01",
-                            "name": "[concat(parameters('keyVaultName'), '/', variables('spnSecretName'))]",
-                            "location": "[resourceGroup().location]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
-                            ],
-                            "properties": {
-                                "value": "[parameters('principalSecret')]"
-                            }
-                        },
-                        {
-                            "comments": "Role assignment for the Azure Key Vault instance",
-                            "type": "Microsoft.KeyVault/vaults/providers/roleAssignments",
-                            "apiVersion": "2020-04-01-preview",
-                            "name": "[variables('keyVaultRbacName')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
-                                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userManagedIdentityName'))]"
-                            ],
-                            "properties": {
-                                "principalType": "ServicePrincipal",
-                                "principalId": "[reference(variables('userManagedIdentityName'), '2018-11-30').principalId]",
-                                "roleDefinitionId": "[variables('rbac').keyVaultAdmin]"
-                            }
-                        },
-                        {
-                            "comments": "Deploy the deployment script for the GitHub repo",
-                            "type": "Microsoft.Resources/deploymentScripts",
-                            "apiVersion": "2020-10-01",
-                            "name": "[variables('deploymentScriptName')]",
-                            "location": "[resourceGroup().location]",
-                            "kind": "AzurePowerShell",
-                            "identity": {
-                                "type": "userAssigned",
-                                "userAssignedIdentities": {
-                                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userManagedIdentityName'))]": {}
-                                }
-                            },
-                            "dependsOn": [
-                                "[resourceId('Microsoft.KeyVault/vaults/providers/roleAssignments', parameters('keyVaultName'), 'Microsoft.Authorization', guid(parameters('keyVaultName')))]",
-                                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), variables('patSecretName'))]",
-                                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), variables('spnSecretName'))]"
-                            ],
-                            "properties": {
-                                "primaryScriptUri": "[base64ToString('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2tybmVzZS9ucy9tYXN0ZXIvdW1pQXpPcHNTZXR1cC5wczE=')]",
-                                "arguments": "[concat('-KeyVault', ' ', parameters('keyVaultName'), ' ',
+                "enabledForDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enabledForTemplateDeployment": true,
+                "enableRbacAuthorization": true,
+                "enablePurgeProtection": true,
+                "enableSoftDelete": true,
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                    "family": "A",
+                    "name": "standard"
+                },
+                "networkAcls": {
+                    "defaultAction": "Allow",
+                    "bypass": "AzureServices",
+                    "ipRules": [
+                    ],
+                    "virtualNetworkRules": []
+                }
+            }
+        },
+        {
+            "comments": "Add the PAT Token secret into the Key Vault",
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('keyVaultName'), '/', variables('patSecretName'))]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            ],
+            "properties": {
+                "value": "[parameters('paToken')]"
+            }
+        },
+        {
+            "comments": "Add the SPN secret into the Key Vault",
+            "type": "Microsoft.KeyVault/vaults/secrets",
+            "apiVersion": "2019-09-01",
+            "name": "[concat(parameters('keyVaultName'), '/', variables('spnSecretName'))]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]"
+            ],
+            "properties": {
+                "value": "[parameters('principalSecret')]"
+            }
+        },
+        {
+            "comments": "Role assignment for the Azure Key Vault instance",
+            "type": "Microsoft.KeyVault/vaults/providers/roleAssignments",
+            "apiVersion": "2020-04-01-preview",
+            "name": "[variables('keyVaultRbacName')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults', parameters('keyVaultName'))]",
+                "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userManagedIdentityName'))]"
+            ],
+            "properties": {
+                "principalType": "ServicePrincipal",
+                "principalId": "[reference(variables('userManagedIdentityName'), '2018-11-30').principalId]",
+                "roleDefinitionId": "[variables('rbac').keyVaultAdmin]"
+            }
+        },
+        {
+            "comments": "Deploy the deployment script for the GitHub repo",
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentScriptName')]",
+            "location": "[resourceGroup().location]",
+            "kind": "AzurePowerShell",
+            "identity": {
+                "type": "userAssigned",
+                "userAssignedIdentities": {
+                    "[resourceId('Microsoft.ManagedIdentity/userAssignedIdentities', variables('userManagedIdentityName'))]": {}
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.KeyVault/vaults/providers/roleAssignments', parameters('keyVaultName'), 'Microsoft.Authorization', guid(parameters('keyVaultName')))]",
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), variables('patSecretName'))]",
+                "[resourceId('Microsoft.KeyVault/vaults/secrets', parameters('keyVaultName'), variables('spnSecretName'))]"
+            ],
+            "properties": {
+                "primaryScriptUri": "[base64ToString('aHR0cHM6Ly9yYXcuZ2l0aHVidXNlcmNvbnRlbnQuY29tL2tybmVzZS9ucy9tYXN0ZXIvdW1pQXpPcHNTZXR1cC5wczE=')]",
+                "arguments": "[concat('-KeyVault', ' ', parameters('keyVaultName'), ' ',
                                       '-NewRepositoryName', ' ', parameters('repositoryName'), ' ',
                                       '-GitHubUserNameOrOrg', ' ', parameters('gitHubUserNameOrOrg'), ' ', 
                                       '-SPNSecretName', ' ', variables('spnSecretName'), ' ',
@@ -184,16 +157,10 @@
                                       '-AzureTenantId', ' ', subscription().tenantId, ' ',
                                       '-EnterpriseScalePrefix', ' ', parameters('topLevelManagementGroupPrefix'), ' ',
                                       '-AzureSubscriptionId', ' ', subscription().subscriptionId)]",
-                                "azPowerShellVersion": "5.5",
-                                "timeout": "PT30M",
-                                "cleanupPreference": "Always",
-                                "retentionInterval": "P1D"
-                            }
-                        }
-
-                    ],
-                    "outputs": {}
-                }
+                "azPowerShellVersion": "5.5",
+                "timeout": "PT30M",
+                "cleanupPreference": "Always",
+                "retentionInterval": "P1D"
             }
         }
     ],

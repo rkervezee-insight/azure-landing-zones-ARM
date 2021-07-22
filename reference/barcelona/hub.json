@@ -1831,8 +1831,9 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').rg.azOps]",
-            "location": "[deployment().location]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
+            "resourceGroup": "[variables('platformManagementResourceGroups').azops]",
+            "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.azOpsRoleAssignment)]",
@@ -1871,9 +1872,6 @@
                     },
                     "repositoryName": {
                         "value": "[parameters('repositoryName')]"
-                    },
-                    "rgName": {
-                        "value": "[variables('platformManagementResourceGroups').azops]"
                     },
                     "namingPrefix": {
                         "value": "[variables('namingPrefix').management]"
