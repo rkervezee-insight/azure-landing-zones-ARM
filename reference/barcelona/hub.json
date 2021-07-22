@@ -1833,7 +1833,6 @@
             "name": "[variables('deploymentNames').rg.azOps]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "resourceGroup": "[variables('platformManagementResourceGroups').azops]",
-            "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.azOpsRoleAssignment)]",
