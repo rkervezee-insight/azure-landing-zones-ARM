@@ -808,7 +808,9 @@
                 "ddosRg": "[take(concat('rg-ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "privateDnsZoneRg": "[take(concat('rg-dns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
+                "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "networkwatcherRg": "[take(concat('rg-nw', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "networkRg": "[take(concat('rg-nw', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
                 "privateDnsZones": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1583,6 +1585,72 @@
             }
         },
         {
+            "comments": "Linked template for the creation of the Network Watcher Resource Group",
+            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.networkwatcherRg]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
+               // "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').resourceGroup]"
+                },
+                "parameters": {
+                    "rgName": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the creation of the Network Resource Group",
+            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.networkRg]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
+               // "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').resourceGroup]"
+                },
+                "parameters": {
+                    "rgName": {
+                        "value": "[variables('platformConnectivityResourceGroups').network]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
             // Creating the virtual network hub (hub and spoke)
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
             "type": "Microsoft.Resources/deployments",
@@ -1886,7 +1954,6 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[concat(variables('deploymentNames').rg.privateDnsZones, copyIndex())]",
-            "location": "[deployment().location]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.privateDnsZoneRg)]",
