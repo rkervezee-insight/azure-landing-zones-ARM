@@ -862,7 +862,7 @@
             "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
-            "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]"
+            "networkWatcher": "[toLower(concat(variables('namingPrefix').connectivity, '-anw-', parameters('location')))]"
         },
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
