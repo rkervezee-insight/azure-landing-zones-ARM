@@ -1842,10 +1842,6 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoringSolutions)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
-                "corplandingZones",
-                "onlinelandingZones",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "properties": {
@@ -1857,6 +1853,9 @@
                 "parameters": {
                     "topLevelManagementGroupPrefix": {
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    },
+                    "location": {
+                        "value": "[deployment().location]"
                     },
                     "paToken": {
                         "value": "[parameters('paToken')]"
