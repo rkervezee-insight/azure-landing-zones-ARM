@@ -1062,8 +1062,12 @@
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes",
-                                    "value": "Yes"
+                                    "label": "Traditional Hub and Spoke",
+                                    "value": "vhub"
+                                },
+                                {
+                                    "label": "Virtual WAN (Microsoft managed)",
+                                    "value": "vwan"
                                 },
                                 {
                                     "label": "No",
