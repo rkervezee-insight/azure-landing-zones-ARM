@@ -1096,7 +1096,7 @@
                         "label": "Address space (required for Virtual Hub)",
                         "toolTip": "Provide address prefix in CIDR notation (e.g. 10.49.0.0/18)",
                         "defaultValue": "10.49.0.0/18",
-                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "constraints": {
                             "required": true,
                             "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.49.0.0/18)"
@@ -1114,7 +1114,7 @@
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Region for the first virtual hub",
-                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
@@ -1126,7 +1126,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable DDoS Protection Standard",
                         "defaultValue": "No",
-                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected when also adding a platform subscription, DDoS Protection Standard will be enabled.",
                         "constraints": {
                             "allowedValues": [
@@ -1166,7 +1166,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy VPN Gateway",
                         "defaultValue": "Yes",
-                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway",
                         "constraints": {
                             "allowedValues": [
@@ -1370,7 +1370,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(and(equals(steps('esConnectivityGoalState').esErGw, 'Yes'), not(equals(steps('esConnectivityGoalState').esHub, 'vwan'))),equals(steps('esConnectivityGoalState').esErGw,'Yes'), equals(steps('esConnectivityGoalState').esErRegionalOrAz, 'Zone'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))),equals(steps('esPlatformConnectivity').esErGw,'Yes'), equals(steps('esPlatformConnectivity').esErRegionalOrAz, 'Zone'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "Select the required SKU for the Express Route gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1459,7 +1459,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
                         "defaultValue": "Yes",
-                        "visible": "[or(equals(steps('esConnectivityGoalState').esHub, 'vhub'), equals(steps('esConnectivityGoalState').esHub, 'vwan'))]",
+                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub, 'vhub'), equals(steps('esPlatformConnectivity').esHub, 'vwan'))]",
                         "toolTip": "If 'Yes' is selected, an Azure Firewall will be deployed.",
                         "constraints": {
                             "allowedValues": [
