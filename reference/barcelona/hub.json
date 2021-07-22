@@ -103,6 +103,13 @@
                 "description": "Provide the Azure Key Vault identifier prefix"
             }
         },
+        "rsvPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Recovery Services Vault identifier prefix"
+            }
+        },
         "staPrefix": {
             "type": "string",
             "maxLength": 3,
@@ -183,6 +190,14 @@
             "defaultValue": "No"
         },
         "enableVmBackupForIdentity": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "No"
+        },
+        "enableRsvForIdentity": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -709,6 +724,7 @@
             "corpVwanPeering": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vnetPeeringVwan.json')]",
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
+            "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'subTemplates/recoveryServicesVault.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
             //"nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
             "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-appGwyWafPolicyAssignment.json')]",
@@ -787,11 +803,13 @@
                 "asbPolicyAssignment": "[take(concat('policyAss-asb', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ascPolicyAssignment": "[take(concat('policyAss-asc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "storage": "[take(concat('storage', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "recoveryServicesVault": "[take(concat('rsv', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddosRg": "[take(concat('rg-ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "privateDnsZoneRg": "[take(concat('rg-privateDnsZone', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
+                "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
                 "privateDnsZones": "[take(concat('privateDnsZones', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -821,7 +839,8 @@
             "privatedns": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-privatedns'))]"
         },
         "platformIdentityResourceGroups": {
-            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]"
+            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
+            "backup": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-backup'))]"
         },
         "platformManagementResourceNames": {
             "logAnalyticsWorkspace": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('lawPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
@@ -844,7 +863,8 @@
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
         "platformIdentityResourceNames": {
-            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]"
+            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
+            "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
 
         "platformManagementResourceIds": {
@@ -2481,6 +2501,71 @@
                     },
                     "enforcementMode": {
                         "value": "Default"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the creation of the Azure Recovery Services Vault Resource Group in the Identity Subscription",
+            "condition": "[and(equals(parameters('enableRsvForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.backupRg]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').resourceGroup]"
+                },
+                "parameters": {
+                    "rgName": {
+                        "value": "[variables('platformIdentityResourceGroups').backup]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the creation of the Recovery Services Vault in the Identity Subscription",
+            "condition": "[and(equals(parameters('enableRsvForIdentity'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.recoveryServicesVault]",
+            "location": "[deployment().location]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.backupRg)]",
+                "policyCompletion"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').recoveryServicesVault]"
+                },
+                "parameters": {
+                    "enterpriseScaleCompanyPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    },
+                    "rgName": {
+                        "value": "[variables('platformIdentityResourceGroups').backup]"
+                    },
+                    "recoveryVaultName": {
+                        "value": "[variables('platformIdentityResourceNames').recoveryServicesVault]"
+                    },
+                    "location": {
+                        "value": "[deployment().location]"
                     }
                 }
             }

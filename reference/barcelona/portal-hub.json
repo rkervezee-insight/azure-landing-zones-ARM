@@ -1840,7 +1840,7 @@
                         "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
                     },
                     {
-                        "name": "esRsv",
+                        "name": "esIdRsv",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy a Recovery Services Vault.",
                         "defaultValue": "Yes",
@@ -2483,6 +2483,7 @@
             "denySubnetWithoutNsgForIdentity": "[steps('esPlatformIdentity').esIdDenySubnetNsg]",
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
+            "enableRsvForIdentity": "[steps('esPlatformIdentity').esIdRsv]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
