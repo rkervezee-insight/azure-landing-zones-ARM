@@ -806,12 +806,12 @@
                 "monitoring": "[take(concat('monitoring', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "monitoringSolutions": "[take(concat('monSolutions', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddosRg": "[take(concat('rg-ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "privateDnsZoneRg": "[take(concat('rg-privateDnsZone', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "privateDnsZoneRg": "[take(concat('rg-dns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
-                "privateDnsZones": "[take(concat('privateDnsZones', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "privateDnsZones": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddos": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
