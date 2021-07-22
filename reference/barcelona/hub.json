@@ -836,7 +836,8 @@
             "connectivity": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
             "ddos": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-ddos'))]",
             "privatedns": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-privatedns'))]",
-            "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]"
+            "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
+            "networkWatcher": "NetworkWatcherRG"
         },
         "platformIdentityResourceGroups": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
@@ -860,7 +861,8 @@
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
-            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
+            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "networkWatcher": "[toLower(concat(variables('namingPrefix'), '-anw-', parameters('location')))]"
         },
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
@@ -1662,6 +1664,15 @@
                     },
                     "erRegionalSku": {
                         "value": "[parameters('erRegionalSku')]"
+                    },
+                    "networkWatcherRg": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "networkRg": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "networkWatcherName": {
+                        "value": "[variables('platformConnectivityResourceNames').networkWatcher]"
                     }
                 }
             }

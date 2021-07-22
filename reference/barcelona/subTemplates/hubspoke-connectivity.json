@@ -141,6 +141,15 @@
         },
         "ddosPlanResourceId": {
             "type": "string"
+        },
+        "networkWatcherRg": {
+            "type": "string"
+        },
+        "networkRg": {
+            "type": "string"
+        },
+        "networkWatcherName": {
+            "type": "string"
         }
     },
     "variables": {
@@ -159,8 +168,6 @@
         "azErGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
         "azFwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', variables('hubname'), '/subnets/AzureFirewallSubnet')]",
         "azFwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azFwIpName'))]",
-        "resourceDeploymentName": "[take(concat(deployment().name, '-hubspoke', parameters('location')), 64)]",
-        // Creating variable that later will be used in conjunction with the union() function to cater for conditional subnet creation while ensuring idempotency
         "gwSubnet": [
             {
                 "name": "GatewaySubnet",
@@ -177,24 +184,21 @@
                 }
             }
         ],
-        "ddosProtectionPlanId": {
-            "id": "[parameters('ddosPlanResourceId')]"
-        },
         "azFirewallPolicyId": {
             "id": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/firewallPolicies/', variables('azFwPolicyName'))]"
         },
         "azFirewallDnsSettings": {
-                "enableProxy": true
+            "enableProxy": true
         }
     },
     "resources": [
         {
-            // Conditionally deploy virtual network hub
+            "comments": "Conditional deployment for Azure Network Resources in the Platform Connectivity subscription",
             "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "location": "[parameters('location')]",
-            "name": "[concat('EntScale', '-connectivityHubSub')]",
+            "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
@@ -211,12 +215,53 @@
                             "properties": {}
                         },
                         {
+                            "comments": "Nested deployment for Network Watcher",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2019-10-01",
-                            "name": "[variables('resourceDeploymentName')]",
-                            "resourceGroup": "[variables('rgName')]",
+                            "name": "[take(concat('networkWatcher-', guid(deployment().name)), 64)]",
+                            "resourceGroup": "[parameters('networkWatcherRg')]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('rgName'))]"
+                                "[concat('Microsoft.Resources/resourceGroups/', parameters('networkWatcherRg'))]"
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        {
+                                            "comments": "Deploy Resource Group Lock",
+                                            "type": "Microsoft.Authorization/locks",
+                                            "apiVersion": "2016-09-01",
+                                            "name": "ResourceGroup-DontDelete",
+                                            "properties": {
+                                                "level": "CanNotDelete",
+                                                "notes": "Prevent deletion of the resourceGroup"
+                                            }
+                                        },
+                                        {
+                                            "comments": "Deploy Network Watcher",
+                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "type": "Microsoft.Network/networkWatchers",
+                                            "apiVersion": "2020-05-01",
+                                            "name": "[parameters('networkWatcherName')]",
+                                            "location": "[deployment().location]",
+                                            "tags": {},
+                                            "properties": {},
+                                            "resources": []
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2019-10-01",
+                            "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
+                            "resourceGroup": "[parameters('networkRg')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.Resources/resourceGroups/', parameters('networkRg'))]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
@@ -245,7 +290,7 @@
                                                                               not(
                                                                                   empty(parameters('subnetMaskForAzFw'))), variables('fwSubnet'), json('[]')))]",
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), parameters('ddosPlanResourceId'), json('null'))]"
                                             }
                                         },
                                         {
@@ -256,7 +301,7 @@
                                             "name": "[variables('azVpnGwIpName')]",
                                             "sku": {
                                                 "name": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
-                                            },                          
+                                            },
                                             "properties": {
                                                 "publicIPAllocationMethod": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Static', 'Dynamic')]"
                                             }
@@ -319,7 +364,7 @@
                                             "name": "[variables('azErGwIpName')]",
                                             "sku": {
                                                 "name": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
-                                            },                           
+                                            },
                                             "properties": {
                                                 "publicIPAllocationMethod": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Static', 'Dynamic')]"
                                             }
@@ -381,7 +426,7 @@
                                             "location": "[parameters('location')]",
                                             "sku": {
                                                 "name": "Standard"
-                                            },                                  
+                                            },
                                             "properties": {
                                                 "publicIPAllocationMethod": "Static"
                                             }
