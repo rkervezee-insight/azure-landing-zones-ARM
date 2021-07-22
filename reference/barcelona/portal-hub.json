@@ -1057,7 +1057,7 @@
                         "name": "esHub",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Virtual Hub",
-                        "defaultValue": "No",
+                        "defaultValue": "vhub",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
                         "constraints": {
                             "allowedValues": [
@@ -1502,7 +1502,7 @@
                         "multiselect": true,
                         "selectAll": true,
                         "filter": true,
-                        "visible": "[if(equals(steps('esPlatformConnectivity').esHub, 'vhub'), and(equals(steps('esPlatformConnectivity').esAzFw,'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast'))))]",
+                        "visible": "[if(equals(steps('esPlatformConnectivity').esAzFw,'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast')))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
