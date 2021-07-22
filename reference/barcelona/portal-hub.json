@@ -1066,7 +1066,7 @@
                                     "value": "vhub"
                                 },
                                 {
-                                    "label": "Virtual WAN (Microsoft managed)",
+                                    "label": "Virtual WAN (Microsoft Managed)",
                                     "value": "vwan"
                                 },
                                 {
@@ -1088,7 +1088,7 @@
                                 "label": "Platform Connectivity Subscription"
                             }
                         ],
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]"
+                        "visible": "[and(not(equals(steps('esPlatformConnectivity').esHub, 'No')))]"
                     },
                     {
                         "name": "esAddress",
@@ -1096,7 +1096,7 @@
                         "label": "Address space (required for Virtual Hub)",
                         "toolTip": "Provide address prefix in CIDR notation (e.g. 10.49.0.0/18)",
                         "defaultValue": "10.49.0.0/18",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
                         "constraints": {
                             "required": true,
                             "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.49.0.0/18)"
@@ -1114,7 +1114,7 @@
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Region for the first virtual hub",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
@@ -1126,7 +1126,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable DDoS Protection Standard",
                         "defaultValue": "No",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]",
+                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected when also adding a platform subscription, DDoS Protection Standard will be enabled.",
                         "constraints": {
                             "allowedValues": [
@@ -1159,114 +1159,14 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]"
-                    },
-                    {
-                        "name": "esEnablePrivateDnsZoneBlob",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS (Blob Storage)",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
-                    },
-                    {
-                        "name": "esEnablePrivateDnsZoneAkv",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS (Key Vault)",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
-                    },
-                    {
-                        "name": "esEnablePrivateDnsZoneFiles",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS (File Storage)",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
-                    },
-                    {
-                        "name": "esEnablePrivateDnsZoneQueue",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS (Queue Storage)",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
-                    },
-                    {
-                        "name": "esEnablePrivateDnsZoneTable",
-                        "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Private DNS (Table Storage)",
-                        "defaultValue": "Yes",
-                        "toolTip": "If 'Yes' is selected then the Azure Private DNS Zone will be deployed.",
-                        "constraints": {
-                            "allowedValues": [
-                                {
-                                    "label": "Yes",
-                                    "value": "Yes"
-                                },
-                                {
-                                    "label": "No",
-                                    "value": "No"
-                                }
-                            ]
-                        },
-                        "visible": "[equals(steps('esPlatformConnectivity').esEnablePrivateDnsZones, 'Yes')]"
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'vhub')]"
                     },
                     {
                         "name": "esVpnGw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy VPN Gateway",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway",
                         "constraints": {
                             "allowedValues": [
@@ -1286,12 +1186,12 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy zone redundant or regional VPN Gateway",
                         "defaultValue": "Zone redundant",
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'),or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esVpnGw,'Yes')or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Virtual Gateway to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Zone redundant",
+                                    "label": "Zone Redundant",
                                     "value": "Zone"
                                 },
                                 {
@@ -1310,7 +1210,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), not(or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast'))))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), not(or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast'))))]",
                         "toolTip": "Select the required SKU for the VPN gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1346,7 +1246,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), equals(steps('esPlatformConnectivity').esGwRegionalOrAz, 'Zone') ,or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), equals(steps('esPlatformConnectivity').esGwRegionalOrAz, 'Zone') ,or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "Select the required SKU for the VPN gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1382,7 +1282,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), equals(steps('esPlatformConnectivity').esGwRegionalOrAz, 'Regional') ,or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esVpnGw,'Yes'), equals(steps('esPlatformConnectivity').esGwRegionalOrAz, 'Regional') ,or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "Select the required SKU for the VPN gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1426,7 +1326,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy ExpressRoute Gateway",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy an ExpressRoute gateway",
                         "constraints": {
                             "allowedValues": [
@@ -1446,7 +1346,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy zone redundant or regional ExpressRoute Gateway",
                         "defaultValue": "Zone redundant",
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esErGw,'Yes'),or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))),equals(steps('esPlatformConnectivity').esErGw,'Yes'),or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Express Route Gateway to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
@@ -1470,7 +1370,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esErGw,'Yes'), equals(steps('esPlatformConnectivity').esErRegionalOrAz, 'Zone'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "[and(and(equals(steps('esConnectivityGoalState').esErGw, 'Yes'), not(equals(steps('esConnectivityGoalState').esHub, 'vwan'))),equals(steps('esConnectivityGoalState').esErGw,'Yes'), equals(steps('esConnectivityGoalState').esErRegionalOrAz, 'Zone'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "Select the required SKU for the Express Route gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1501,7 +1401,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esErGw,'Yes'), equals(steps('esPlatformConnectivity').esErRegionalOrAz, 'Regional'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
+                        "visible": "visible": "[and(and(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))), equals(steps('esPlatformConnectivity').esErGw,'Yes'), equals(steps('esPlatformConnectivity').esErRegionalOrAz, 'Regional'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast')))]",
                         "toolTip": "Select the required SKU for the Express Route gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1532,7 +1432,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esErGw,'Yes'), not(or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast'))))]",
+                        "visible": "[and(and(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan'))),equals(steps('esPlatformConnectivity').esErGw,'Yes'), not(or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation,'canadacentral'),equals(steps('esPlatformConnectivity').esNwLocation,'centralus')),equals(steps('esPlatformConnectivity').esNwLocation,'eastus'),equals(steps('esPlatformConnectivity').esNwLocation,'eastus2')),equals(steps('esPlatformConnectivity').esNwLocation,'southcentralus'),equals(steps('esPlatformConnectivity').esNwLocation,'westus2')),equals(steps('esPlatformConnectivity').esNwLocation,'francecentral'),equals(steps('esPlatformConnectivity').esNwLocation,'germanywestcentral')),equals(steps('esPlatformConnectivity').esNwLocation,'northeurope'),equals(steps('esPlatformConnectivity').esNwLocation,'westeurope')),equals(steps('esPlatformConnectivity').esNwLocation,'uksouth'),equals(steps('esPlatformConnectivity').esNwLocation,'southafricanorth')),equals(steps('esPlatformConnectivity').esNwLocation,'japaneast'),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia')),equals(steps('esPlatformConnectivity').esNwLocation,'southeastasia'),equals(steps('esPlatformConnectivity').esNwLocation,'australiaeast'))))]",
                         "toolTip": "Select the required SKU for the Express Route gateway.",
                         "constraints": {
                             "allowedValues": [
@@ -1559,7 +1459,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
                         "defaultValue": "Yes",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'Yes')]",
+                        "visible": "[or(equals(steps('esConnectivityGoalState').esHub, 'vhub'), equals(steps('esConnectivityGoalState').esHub, 'vwan'))]",
                         "toolTip": "If 'Yes' is selected, an Azure Firewall will be deployed.",
                         "constraints": {
                             "allowedValues": [
@@ -1602,7 +1502,7 @@
                         "multiselect": true,
                         "selectAll": true,
                         "filter": true,
-                        "visible": "[and(equals(steps('esPlatformConnectivity').esAzFw, 'Yes'), or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast')))]",
+                        "visible": "[if(equals(steps('esPlatformConnectivity').esHub, 'vhub'), and(equals(steps('esPlatformConnectivity').esAzFw,'Yes'),or(or(or(or(or(or(or(or(equals(steps('esPlatformConnectivity').esNwLocation, 'canadacentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'centralus')), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus'), equals(steps('esPlatformConnectivity').esNwLocation, 'eastus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'southcentralus'), equals(steps('esPlatformConnectivity').esNwLocation, 'westus2')), equals(steps('esPlatformConnectivity').esNwLocation, 'francecentral'), equals(steps('esPlatformConnectivity').esNwLocation, 'germanywestcentral')), equals(steps('esPlatformConnectivity').esNwLocation, 'northeurope'), equals(steps('esPlatformConnectivity').esNwLocation, 'westeurope')), equals(steps('esPlatformConnectivity').esNwLocation, 'uksouth'), equals(steps('esPlatformConnectivity').esNwLocation, 'southafricanorth')), equals(steps('esPlatformConnectivity').esNwLocation, 'japaneast'), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia')), equals(steps('esPlatformConnectivity').esNwLocation, 'southeastasia'), equals(steps('esPlatformConnectivity').esNwLocation, 'australiaeast'))))]",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy Azure Firewall to the selected region and availability zones.",
                         "constraints": {
                             "allowedValues": [
