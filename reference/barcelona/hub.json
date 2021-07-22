@@ -96,6 +96,13 @@
                 "description": "Provide the Azure Automation identifier prefix"
             }
         },
+        "akvPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Key Vault identifier prefix"
+            }
+        },
         "staPrefix": {
             "type": "string",
             "maxLength": 3,
@@ -819,6 +826,7 @@
         "platformManagementResourceNames": {
             "logAnalyticsWorkspace": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('lawPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "automationAccount": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('aaaPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "keyVault": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('akvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "storageAccount": "[take(toLower(concat(variables('namingPrefix').storage, parameters('staPrefix'), guid(parameters('enterpriseScaleCompanyPrefix')))), 20)]"
 
         },
@@ -842,6 +850,7 @@
         "platformManagementResourceIds": {
             "logAnalyticsWorkspace": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.OperationalInsights/workspaces/', variables('platformManagementResourceNames').logAnalyticsWorkspace)]",
             "automationAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.Automation/automationAccounts/', variables('platformManagementResourceNames').automationAccount)]",
+            "keyVault": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').azops, '/providers/Microsoft.KeyVault/vaults/', variables('platformManagementResourceNames').keyVault)]",
             "storageAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.Storage/storageAccounts/', variables('platformManagementResourceNames').storageAccount)]"
         },
         "platformConnectivityResourceIds": {
@@ -1845,6 +1854,9 @@
                     "uri": "[variables('deploymentUris').azOpsSetup]"
                 },
                 "parameters": {
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    },
                     "paToken": {
                         "value": "[parameters('paToken')]"
                     },
@@ -1854,14 +1866,20 @@
                     "gitHubUserNameOrOrg": {
                         "value": "[parameters('gitHubUserNameOrOrg')]"
                     },
-                    "topLevelManagementGroupPrefix": {
-                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
-                    },
                     "appId": {
                         "value": "[parameters('appId')]"
                     },
                     "repositoryName": {
                         "value": "[parameters('repositoryName')]"
+                    },
+                    "rgName": {
+                        "value": "[variables('platformManagementResourceGroups').azops]"
+                    },
+                    "namingPrefix": {
+                        "value": "[variables('namingPrefix').management]"
+                    },
+                    "keyVaultName": {
+                        "value": "[variables('platformManagementResourceNames').keyVault]"
                     }
                 }
             }
