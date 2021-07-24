@@ -711,11 +711,17 @@
             "online": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').online)]"
         },
         "deploymentUris": {
-            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/managementGroups/mgmtGroups.json')]",
+            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/managementGroups/mgmtGroups.json')]"
+            ,
             "policyDefinitions": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/policies.json')]",
+            "publicEndpointPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/deny-publicEndpointsPolicySetDefinition.json')]",
+            "privateDnsZonePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/dine-privateDnsZonesPolicySetDefinition.json')]",
+
             "subscriptionPlacement": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/subscriptionOrganization/subscriptionOrganization.json')]",
+
             "azOpsRBAC": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/azOpsRoleAssignment.json')]",
             "roleAssignments": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/roleAssignment.json')]",
+
             "vnetConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/hubspoke-connectivity.json')]",
             //"vwanConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vwan-connectivity.json')]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsWorkspace.json')]",
@@ -725,6 +731,7 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'subTemplates/recoveryServicesVault.json')]",
+
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
             //"nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
             "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-appGwyWafPolicyAssignment.json')]",
@@ -742,9 +749,7 @@
             "tlsSslPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-dine-append-tlsSslPolicyAssignment.json')]",
             "aksHttpsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-aksWithoutHttpsPolicyAssignment.json')]",
             "ipFwdPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-ipForwardingPolicyAssignment.json')]",
-            "publicEndpointPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/deny-publicEndpointsPolicySetDefinition.json')]",
             "publicEndpointPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-publicEndpointPolicyAssignment.json')]",
-            "privateDnsZonePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/dine-privateDnsZonesPolicySetDefinition.json')]",
             "privateDnsZonePolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-privateDnsZonesPolicyAssignment.json')]",
             "pipPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-publicIpAddressPolicyAssignment.json')]",
             "rdpFromInternetPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-rdpFromInternetPolicyAssignment.json')]",
@@ -753,6 +758,7 @@
             "sqlAuditPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-sqlAuditingPolicyAssignment.json')]",
             "sqlEncryptionPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-sqlEncryptionPolicyAssignment.json')]",
             "ddosPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/modify-ddosProtectionPlanPolicyAssignment.json')]",
+
             "privateDnsZones": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/privateDnsZones.json')]",
             "ddosProtection": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/ddosProtection.json')]",
             "azOpsSetup": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/azOpsArm.json')]"
