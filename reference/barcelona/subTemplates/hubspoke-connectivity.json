@@ -192,6 +192,9 @@
         "vpnGwySubnetId": "[concat(parameters('vhubResourceId'), '/subnets/GatewaySubnet')]",
         "erGwySubnetId": "[concat(parameters('vhubResourceId'), '/subnets/GatewaySubnet')]",
         "azfwSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureFirewallSubnet')]",
+        "azfwPolicyResourceId": {
+            "id": "[parameters('azfwPolicyResourceId')]"
+        },
         "azfwDnsSettings": {
             "enableProxy": true
         },
@@ -439,7 +442,7 @@
                                                         }
                                                     }
                                                 ],
-                                                "firewallPolicy": "[parameters('azfwPolicyResourceId')]"
+                                                "firewallPolicy": "[variables('azfwPolicyResourceId')]"
                                             }
                                         }
                                     ]
