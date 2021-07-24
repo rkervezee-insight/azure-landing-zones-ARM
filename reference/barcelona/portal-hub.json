@@ -1099,7 +1099,8 @@
                         "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "Virtual network's address space, specified as a CIDR notation (e.g. 10.49.0.0/18)"
+                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-4]))$",
+                            "validationMessage": "Invalid CIDR range. The address prefix must be in the range [10,24]."
                         }
                     },
                     {
@@ -1318,7 +1319,8 @@
                         "visible": "[or(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'))]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
+                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-4]))$",
+                            "validationMessage": "Invalid CIDR range. The address prefix must be in the range [10,24]."
                         }
                     },
                     {
@@ -1530,7 +1532,8 @@
                         "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
+                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-4]))$",
+                            "validationMessage": "Invalid CIDR range. The address prefix must be in the range [10,24]."
                         }
                     },
                     {
@@ -1562,7 +1565,8 @@
                         "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
+                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-4]))$",
+                            "validationMessage": "Invalid CIDR range. The address prefix must be in the range [10,24]."
                         }
                     },
                     {

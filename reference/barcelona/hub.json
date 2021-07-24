@@ -815,7 +815,6 @@
                 "privateDnsZoneRg": "[take(concat('rg-dns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                //"networkwatcherRg": "[take(concat('rg-nw', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "networkRg": "[take(concat('rg-nw', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
@@ -845,7 +844,6 @@
             "ddos": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-ddos'))]",
             "privatedns": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-privatedns'))]",
             "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]"
-           // "networkWatcher": "NetworkWatcherRG"
         },
         "platformIdentityResourceGroups": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
@@ -870,7 +868,6 @@
             "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
-          //  "networkWatcher": "[toLower(concat(variables('namingPrefix').connectivity, '-anw-', parameters('location')))]"
         },
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
@@ -1030,7 +1027,7 @@
             ],
             "copy": {
                 "batchSize": 1,
-                "count": 10,
+                "count": 5,
                 "mode": "Serial",
                 "name": "policyCompletion"
             },
@@ -1590,39 +1587,6 @@
                 }
             }
         },
-        /*
-        {
-            "comments": "Linked template for the creation of the Network Watcher Resource Group",
-            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').sub.networkwatcherRg]",
-            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
-            "location": "[deployment().location]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
-            ],
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('deploymentUris').resourceGroup]"
-                },
-                "parameters": {
-                    "rgName": {
-                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
-                    },
-                    "location": {
-                        "value": "[parameters('location')]"
-                    }
-                }
-            }
-        },
-*/
         {
             "comments": "Linked template for the creation of the Network Resource Group",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
@@ -1667,7 +1631,6 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
-              //  "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.networkwatcherRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.networkRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]"
             ],
@@ -1739,8 +1702,11 @@
                     "erRegionalSku": {
                         "value": "[parameters('erRegionalSku')]"
                     },
-                    "networkRg": {
+                    "rgName": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
+                    },
+                    "hubName": {
+                        "value": "[variables('platformConnectivityResourceNames').vhub]"
                     }
                 }
             }
