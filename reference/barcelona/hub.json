@@ -1928,7 +1928,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "properties": {
                 "mode": "Incremental",
