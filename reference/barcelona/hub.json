@@ -844,8 +844,8 @@
             "connectivity": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
             "ddos": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-ddos'))]",
             "privatedns": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-privatedns'))]",
-            "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
-            "networkWatcher": "NetworkWatcherRG"
+            "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]"
+           // "networkWatcher": "NetworkWatcherRG"
         },
         "platformIdentityResourceGroups": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
@@ -869,8 +869,8 @@
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
-            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
-            "networkWatcher": "[toLower(concat(variables('namingPrefix').connectivity, '-anw-', parameters('location')))]"
+            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
+          //  "networkWatcher": "[toLower(concat(variables('namingPrefix').connectivity, '-anw-', parameters('location')))]"
         },
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
@@ -1590,6 +1590,7 @@
                 }
             }
         },
+        /*
         {
             "comments": "Linked template for the creation of the Network Watcher Resource Group",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
@@ -1623,6 +1624,7 @@
                 }
             }
         },
+*/
         {
             "comments": "Linked template for the creation of the Network Resource Group",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
@@ -1741,14 +1743,8 @@
                     "erRegionalSku": {
                         "value": "[parameters('erRegionalSku')]"
                     },
-                    "networkWatcherRg": {
-                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
-                    },
                     "networkRg": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
-                    },
-                    "networkWatcherName": {
-                        "value": "[variables('platformConnectivityResourceNames').networkWatcher]"
                     }
                 }
             }

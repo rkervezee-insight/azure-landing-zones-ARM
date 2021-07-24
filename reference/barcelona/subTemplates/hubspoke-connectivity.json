@@ -142,13 +142,7 @@
         "ddosPlanResourceId": {
             "type": "string"
         },
-        "networkWatcherRg": {
-            "type": "string"
-        },
         "networkRg": {
-            "type": "string"
-        },
-        "networkWatcherName": {
             "type": "string"
         }
     },
@@ -207,36 +201,6 @@
                     "contentVersion": "1.0.0.0",
                     "parameters": {},
                     "resources": [
-                        {
-                            "comments": "Nested deployment for Network Watcher",
-                            "type": "Microsoft.Resources/deployments",
-                            "apiVersion": "2019-10-01",
-                            "name": "[take(concat('networkWatcher-', guid(deployment().name)), 64)]",
-                            "resourceGroup": "[parameters('networkWatcherRg')]",
-                            "dependsOn": [
-                            ],
-                            "properties": {
-                                "mode": "Incremental",
-                                "template": {
-                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
-                                    "contentVersion": "1.0.0.0",
-                                    "parameters": {},
-                                    "resources": [
-                                        {
-                                            "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
-                                            "type": "Microsoft.Network/networkWatchers",
-                                            "apiVersion": "2020-05-01",
-                                            "name": "[parameters('networkWatcherName')]",
-                                            "location": "[deployment().location]",
-                                            "tags": {},
-                                            "properties": {},
-                                            "resources": []
-                                        }
-                                    ]
-                                }
-                            }
-                        },
                         {
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2019-10-01",
