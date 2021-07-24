@@ -711,8 +711,7 @@
             "online": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').online)]"
         },
         "deploymentUris": {
-            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/managementGroups/mgmtGroups.json')]"
-            ,
+            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/managementGroups/mgmtGroups.json')]",
             "policyDefinitions": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/policies.json')]",
             "publicEndpointPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/deny-publicEndpointsPolicySetDefinition.json')]",
             "privateDnsZonePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/dine-privateDnsZonesPolicySetDefinition.json')]",
@@ -865,7 +864,7 @@
             "ddos": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('ddosPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfw": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afwPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
-            "azFwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
+            "azfwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
@@ -882,10 +881,14 @@
         },
         "platformConnectivityResourceIds": {
             "ddos": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('platformConnectivityResourceNames').ddos)]",
-            "vNetHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualNetworks/', variables('platformConnectivityResourceNames').vhub)]",
-            "vWanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vhub)]",
+            "vHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualNetworks/', variables('platformConnectivityResourceNames').vhub)]",
+            "vWan": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vhub)]",
             "privatedns": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').privatedns)]",
-            "azfw": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/azureFirewalls/', variables('platformConnectivityResourceNames').azfw)]"
+            "azfw": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/azureFirewalls/', variables('platformConnectivityResourceNames').azfw)]",
+            "azfwPolicy": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/firewallPolicies/', variables('platformConnectivityResourceNames').azfwPolicy)]",
+            "azfwIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').azfwIp)]",
+            "erGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').erGwyIp)]",
+            "vpnGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').vpnGwyIp)]"
         },
         "privateDnsZones": [
             "privatelink.azure-automation.net",
@@ -1705,8 +1708,47 @@
                     "rgName": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
                     },
-                    "hubName": {
+                    "vhub": {
                         "value": "[variables('platformConnectivityResourceNames').vhub]"
+                    },
+                    "vpnGwy": {
+                        "value": "[variables('platformConnectivityResourceNames').vpnGwy]"
+                    },
+                    "vpnGwyIp": {
+                        "value": "[variables('platformConnectivityResourceNames').vpnGwyIp]"
+                    },
+                    "erGwy": {
+                        "value": "[variables('platformConnectivityResourceNames').erGwy]"
+                    },
+                    "erGwyIp": {
+                        "value": "[variables('platformConnectivityResourceNames').erGwyIp]"
+                    },
+                    "azfw": {
+                        "value": "[variables('platformConnectivityResourceNames').azfw]"
+                    },
+                    "azfwPolicy": {
+                        "value": "[variables('platformConnectivityResourceNames').azfwPolicy]"
+                    },
+                    "azfwIp": {
+                        "value": "[variables('platformConnectivityResourceNames').azfwIp]"
+                    },
+                    "vhubResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').vHub]"
+                    },
+                    "vpnGwyIpResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').vpnGwyIp]"
+                    },
+                    "erGwyIpResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').erGwyIp]"
+                    },
+                    "azfwResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').azfw]"
+                    },
+                    "azfwIpResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').azfwIp]"
+                    },
+                    "azfwPolicyResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').azfwPolicy]"
                     }
                 }
             }
@@ -1925,7 +1967,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]"
-               // "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]"
+                // "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]"
             ],
             "copy": {
                 "name": "dnsZones",
@@ -1942,7 +1984,7 @@
                         "value": "[concat(variables('privateDnsZones')[copyIndex()])]"
                     },
                     "connectivityHubResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').vNetHub]"
+                        "value": "[variables('platformConnectivityResourceIds').vHub]"
                     }
                 }
             }
@@ -2654,7 +2696,7 @@
                         "value": "[parameters('identityAddressPrefix')]"
                     },
                     "hubResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').vNetHub]"
+                        "value": "[variables('platformConnectivityResourceIds').vHub]"
                     },
                     "azureFirewallResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').azfw]"
@@ -2699,7 +2741,7 @@
                         "value": "[parameters('identityAddressPrefix')]"
                     },
                     "vWanHubResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').vWanHub]"
+                        "value": "[variables('platformConnectivityResourceIds').vWan]"
                     },
                     "azureFirewallResourceId": {
                         "value": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('platformConnectivityResourceIds').azfw, '')]"

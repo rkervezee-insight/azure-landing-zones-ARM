@@ -35,7 +35,7 @@
                 "description": "Select whether the virtual network hub should be deployed or not."
             }
         },
-        "enableAzFw": {
+        "enableazfw": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -46,7 +46,7 @@
                 "description": "Select whether the Azure Firewall should be deployed or not."
             }
         },
-        "enableAzFwDnsProxy": {
+        "enableazfwDnsProxy": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -97,7 +97,7 @@
                 "description": "Provide the subscription id for the dedicated connectivity subscription."
             }
         },
-        "subnetMaskForAzFw": {
+        "subnetMaskForazfw": {
             "type": "string",
             "defaultValue": "",
             "metadata": {
@@ -145,25 +145,56 @@
         "rgName": {
             "type": "string"
         },
-        "hubName": {
+        "vhub": {
+            "type": "string"
+        },
+        "vpnGwy": {
+            "type": "string"
+        },
+        "vpnGwyIp": {
+            "type": "string"
+        },
+        "erGwy": {
+            "type": "string"
+        },
+        "erGwyIp": {
+            "type": "string"
+        },
+        "azfw": {
+            "type": "string"
+        },
+        "azfwPolicy": {
+            "type": "string"
+        },
+        "azfwIp": {
+            "type": "string"
+        },
+        "vhubResourceId": {
+            "type": "string"
+        },
+        "vpnGwyIpResourceId": {
+            "type": "string"
+        },
+        "erGwyIpResourceId": {
+            "type": "string"
+        },
+        "azfwResourceId": {
+            "type": "string"
+        },
+        "azfwIpResourceId": {
+            "type": "string"
+        },
+        "azfwPolicyResourceId": {
             "type": "string"
         }
     },
     "variables": {
-        "vpngwname": "[concat(parameters('topLevelManagementGroupPrefix'), '-vpngw-', parameters('location'))]",
-        "rgName": "[concat(parameters('topLevelManagementGroupPrefix'), '-vnethub-', parameters('location'))]",
-        "erGwName": "[concat(parameters('topLevelManagementGroupPrefix'), '-ergw-', parameters('location'))]",
-        "azFwPolicyName": "[concat(parameters('topLevelManagementGroupPrefix'), '-azfwpolicy-', parameters('location'))]",
-        "azVpnGwIpName": "[concat(variables('vpngwname'), '-pip')]",
-        "azVpnGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('hubname'), '/subnets/GatewaySubnet')]",
-        "azFwName": "[concat(parameters('topLevelManagementGroupPrefix'), '-fw-', parameters('location'))]",
-        "azErGwIpName": "[concat(variables('erGwName'), '-pip')]",
-        "azVpnGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azVpnGwIpName'))]",
-        "azFwIpName": "[concat(variables('azFwName'), '-pip')]",
-        "azErGwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('hubname'), '/subnets/GatewaySubnet')]",
-        "azErGwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
-        "azFwSubnetId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualNetworks/', parameters('hubname'), '/subnets/AzureFirewallSubnet')]",
-        "azFwPipId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/publicIPAddresses/', variables('azFwIpName'))]",
+        "vpnGwySubnetId": "[concat(parameters('vhub'), '/subnets/GatewaySubnet')]",
+        "erGwySubnetId": "[concat(parameters('vhub'), '/subnets/GatewaySubnet')]",
+        "azfwSubnetId": "[concat(parameters('vhub'), '/subnets/AzureFirewallSubnet')]",
+        "azfwDnsSettings": {
+            "enableProxy": true
+        },
         "gwSubnet": [
             {
                 "name": "GatewaySubnet",
@@ -176,16 +207,10 @@
             {
                 "name": "AzureFirewallSubnet",
                 "properties": {
-                    "addressPrefix": "[parameters('subnetMaskForAzFw')]"
+                    "addressPrefix": "[parameters('subnetMaskForazfw')]"
                 }
             }
-        ],
-        "azFirewallPolicyId": {
-            "id": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'), '/providers/Microsoft.Network/firewallPolicies/', variables('azFwPolicyName'))]"
-        },
-        "azFirewallDnsSettings": {
-            "enableProxy": true
-        }
+        ]
     },
     "resources": [
         {
@@ -218,7 +243,7 @@
                                     "parameters": {},
                                     "resources": [
                                         {
-                                            "name": "[parameters('hubName')]",
+                                            "name": "[parameters('vhub')]",
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "2020-04-01",
                                             "location": "[parameters('location')]",
@@ -235,7 +260,7 @@
                                                                           empty(parameters('subnetMaskForGw'))), variables('gwSubnet'), json('[]')), 
                                                                           if(
                                                                               not(
-                                                                                  empty(parameters('subnetMaskForAzFw'))), variables('fwSubnet'), json('[]')))]",
+                                                                                  empty(parameters('subnetMaskForazfw'))), variables('fwSubnet'), json('[]')))]",
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
                                                 "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), parameters('ddosPlanResourceId'), json('null'))]"
                                             }
@@ -245,7 +270,7 @@
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('azVpnGwIpName')]",
+                                            "name": "[parameters('vpnGwyIp')]",
                                             "sku": {
                                                 "name": "[if(equals(parameters('gwRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
                                             },
@@ -256,12 +281,12 @@
                                         {
                                             "condition": "[and(equals(parameters('enableVpnGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "apiVersion": "2020-05-01",
-                                            "name": "[variables('vpngwname')]",
+                                            "name": "[parameters('vpnGwy')]",
                                             "type": "Microsoft.Network/virtualNetworkGateways",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('azVpnGwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('hubName'))]"
+                                                "[concat('Microsoft.Network/publicIPAddresses/', parameters('vpnGwyIp'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
                                             ],
                                             "properties": {
                                                 "gatewayType": "Vpn",
@@ -273,10 +298,10 @@
                                                         "properties": {
                                                             "privateIPAllocationMethod": "Dynamic",
                                                             "subnet": {
-                                                                "id": "[variables('azVpnGwSubnetId')]"
+                                                                "id": "[variables('vpnGwySubnetId')]"
                                                             },
                                                             "publicIpAddress": {
-                                                                "id": "[variables('azVpnGwPipId')]"
+                                                                "id": "[parameters('vpnGwyIpResourceId')]"
                                                             }
                                                         }
                                                     }
@@ -308,7 +333,7 @@
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('azErGwIpName')]",
+                                            "name": "[parameters('erGwyIp')]",
                                             "sku": {
                                                 "name": "[if(equals(parameters('erRegionalOrAz'), 'Zone'), 'Standard', 'Basic')]"
                                             },
@@ -319,13 +344,13 @@
                                         {
                                             "condition": "[and(equals(parameters('enableErGw'), 'Yes'), not(empty(parameters('subnetMaskForGw'))))]",
                                             "apiVersion": "2020-05-01",
-                                            "name": "[variables('erGwName')]",
+                                            "name": "[parameters('erGwy')]",
                                             "type": "Microsoft.Network/virtualNetworkGateways",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/publicIPAddresses/', variables('azErGwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworkGateways/', variables('vpngwname'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('hubName'))]"
+                                                "[concat('Microsoft.Network/publicIPAddresses/', parameters('erGwyIp'))]",
+                                                "[concat('Microsoft.Network/virtualNetworkGateways/', parameters('vpnGwy'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
                                             ],
                                             "properties": {
                                                 "gatewayType": "ExpressRoute",
@@ -335,10 +360,10 @@
                                                         "properties": {
                                                             "privateIPAllocationMethod": "Dynamic",
                                                             "subnet": {
-                                                                "id": "[variables('azErGwSubnetId')]"
+                                                                "id": "[variables('erGwySubnetId')]"
                                                             },
                                                             "publicIpAddress": {
-                                                                "id": "[variables('azErGwPipId')]"
+                                                                "id": "[parameters('erGwyIpResourceId')]"
                                                             }
                                                         }
                                                     }
@@ -366,10 +391,10 @@
                                             }
                                         },
                                         {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
+                                            "condition": "[and(equals(parameters('enableazfw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/publicIpAddresses",
-                                            "name": "[variables('azFwIpName')]",
+                                            "name": "[parameters('azfwIp')]",
                                             "location": "[parameters('location')]",
                                             "sku": {
                                                 "name": "Standard"
@@ -379,42 +404,42 @@
                                             }
                                         },
                                         {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
+                                            "condition": "[and(equals(parameters('enableazfw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "type": "Microsoft.Network/firewallPolicies",
                                             "apiVersion": "2020-11-01",
-                                            "name": "[variables('azFwPolicyName')]",
+                                            "name": "[parameters('azfwPolicy')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
-                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('azFirewallDnsSettings'), json('null'))]"
+                                                "dnsSettings": "[if(equals(parameters('enableazfwDnsProxy'), 'Yes'), variables('azfwDnsSettings'), json('null'))]"
                                             }
                                         },
                                         {
-                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForAzFw'))))]",
+                                            "condition": "[and(equals(parameters('enableazfw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/azureFirewalls",
-                                            "name": "[variables('azfwname')]",
+                                            "name": "[parameters('azfw')]",
                                             "location": "[parameters('location')]",
                                             "zones": "[if(not(empty(parameters('firewallZones'))), parameters('firewallZones'), json('null'))]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/firewallPolicies/', variables('azFwPolicyName'))]",
-                                                "[concat('Microsoft.Network/publicIpAddresses/', variables('azFwIpName'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('hubName'))]"
+                                                "[concat('Microsoft.Network/firewallPolicies/', parameters('azfwPolicy'))]",
+                                                "[concat('Microsoft.Network/publicIpAddresses/', parameters('azfwIp'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
                                             ],
                                             "properties": {
                                                 "ipConfigurations": [
                                                     {
-                                                        "name": "[variables('azFwIpName')]",
+                                                        "name": "[parameters('azfwIp')]",
                                                         "properties": {
                                                             "subnet": {
-                                                                "id": "[variables('azFwSubnetId')]"
+                                                                "id": "[variables('azfwSubnetId')]"
                                                             },
                                                             "publicIPAddress": {
-                                                                "id": "[variables('azFwPipId')]"
+                                                                "id": "[parameters('azfwIpResourceId')]"
                                                             }
                                                         }
                                                     }
                                                 ],
-                                                "firewallPolicy": "[variables('azFirewallPolicyId')]"
+                                                "firewallPolicy": "[parameters('azfwPolicyResourceId')]"
                                             }
                                         }
                                     ]

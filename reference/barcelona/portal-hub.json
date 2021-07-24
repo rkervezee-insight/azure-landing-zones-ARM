@@ -1146,7 +1146,7 @@
                         "name": "esEnablePrivateDnsZones",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Private DNS Zones",
-                        "defaultValue": "No",
+                        "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected, Azure Private DNS Zones will be deployed.",
                         "constraints": {
                             "allowedValues": [
@@ -1166,7 +1166,7 @@
                         "name": "esVpnGw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy VPN Gateway",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy VPN gateway",
                         "constraints": {
@@ -1327,7 +1327,7 @@
                         "name": "esErGw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy ExpressRoute Gateway",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected, ARM will deploy an ExpressRoute gateway",
                         "constraints": {
@@ -1460,7 +1460,7 @@
                         "name": "esAzFw",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Firewall",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "visible": "[or(equals(steps('esPlatformConnectivity').esHub, 'vhub'), equals(steps('esPlatformConnectivity').esHub, 'vwan'))]",
                         "toolTip": "If 'Yes' is selected, an Azure Firewall will be deployed.",
                         "constraints": {
@@ -1540,7 +1540,7 @@
                         "name": "esAzBastion",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Bastion",
-                        "defaultValue": "Yes",
+                        "defaultValue": "No",
                         "visible": "[equals(steps('esPlatformConnectivity').esHub, 'vhub')]",
                         "toolTip": "If 'Yes' is selected, an Azure Bastion will be deployed.",
                         "constraints": {
