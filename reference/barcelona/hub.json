@@ -117,6 +117,20 @@
                 "description": "Provide the Azure Storage identifier prefix"
             }
         },
+        "basPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Azure Bastion prefix"
+            }
+        },
+        "nsgPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the NSG prefix"
+            }
+        },
         "vWanPrefix": {
             "type": "string"
         },
@@ -644,6 +658,30 @@
             "type": "array",
             "defaultValue": []
         },
+        "enableAppGw": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "enableAzBastion": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
+        "subnetMaskForAzBastion": {
+            "type": "string",
+            "defaultValue": ""
+        },
+        "subnetMaskForAppGw": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "paToken": {
             "type": "securestring",
             "defaultValue": ""
@@ -814,7 +852,7 @@
                 "privateDnsZoneRg": "[take(concat('rg-dns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "networkRg": "[take(concat('rg-nw', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
+                "networkRg": "[take(concat('rg-network', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
                 "privateDnsZones": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -863,9 +901,13 @@
             "erGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-er'))]",
             "ddos": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('ddosPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfw": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afwPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "bastion": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('basPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "bastionIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-bastion'))]",
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
+            "bastionNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-bastion'))]",
+            "appGwyNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-appGateway'))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
         "platformIdentityResourceNames": {
@@ -884,10 +926,13 @@
             "vHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualNetworks/', variables('platformConnectivityResourceNames').vhub)]",
             "vWan": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vhub)]",
             "privatedns": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').privatedns)]",
+            "bastionIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').bastionIp)]",
             "azfw": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/azureFirewalls/', variables('platformConnectivityResourceNames').azfw)]",
             "azfwPolicy": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/firewallPolicies/', variables('platformConnectivityResourceNames').azfwPolicy)]",
             "azfwIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').azfwIp)]",
             "erGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').erGwyIp)]",
+            "bastionNsg": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/networkSecurityGroups/', variables('platformConnectivityResourceNames').bastionNsg)]",
+            "appGwyNsg": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/networkSecurityGroups/', variables('platformConnectivityResourceNames').appGwyNsg)]",
             "vpnGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').vpnGwyIp)]"
         },
         "privateDnsZones": [
@@ -1645,12 +1690,6 @@
                     "uri": "[variables('deploymentUris').vnetConnectivityHub]"
                 },
                 "parameters": {
-                    "topLevelManagementGroupPrefix": {
-                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
-                    },
-                    "ddosPlanResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').ddos]"
-                    },
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
                     },
@@ -1705,6 +1744,18 @@
                     "erRegionalSku": {
                         "value": "[parameters('erRegionalSku')]"
                     },
+                    "enableAppGw": {
+                        "value": "[parameters('enableAppGw')]"
+                    },
+                    "enableAzBastion": {
+                        "value": "[parameters('enableAzBastion')]"
+                    },
+                    "subnetMaskForAzBastion": {
+                        "value": "[parameters('subnetMaskForAzBastion')]"
+                    },
+                    "subnetMaskForAppGw": {
+                        "value": "[parameters('subnetMaskForAppGw')]"
+                    },
                     "rgName": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
                     },
@@ -1732,6 +1783,18 @@
                     "azfwIp": {
                         "value": "[variables('platformConnectivityResourceNames').azfwIp]"
                     },
+                    "bastion": {
+                        "value": "[variables('platformConnectivityResourceNames').bastion]"
+                    },
+                    "bastionIp": {
+                        "value": "[variables('platformConnectivityResourceNames').bastionIp]"
+                    },
+                    "bastionNsg": {
+                        "value": "[variables('platformConnectivityResourceNames').bastionNsg]"
+                    },
+                    "appGwyNsg": {
+                        "value": "[variables('platformConnectivityResourceNames').appGwyNsg]"
+                    },
                     "vhubResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vHub]"
                     },
@@ -1741,14 +1804,23 @@
                     "erGwyIpResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').erGwyIp]"
                     },
-                    "azfwResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').azfw]"
-                    },
                     "azfwIpResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').azfwIp]"
                     },
                     "azfwPolicyResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').azfwPolicy]"
+                    },
+                    "ddosPlanResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').ddos]"
+                    },
+                    "bastionIpResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').bastionIp]"
+                    },
+                    "bastionNsgResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').bastionNsg]"
+                    },
+                    "appGwyNsgResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').appGwyNsg]"
                     }
                 }
             }
@@ -1990,7 +2062,7 @@
             }
         },
         {
-            // Deploying Private DNS Zones policy assignment for PaaS services using built-in policies
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to deploy Azure Private DNS Zones",
             "condition": "[equals(parameters('enablePrivateDnsZonesForlandingZones'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
@@ -2022,7 +2094,7 @@
             }
         },
         {
-            // Assigning RBAC for Private DNS Zone Policy assignment to the connectivity hub
+            "comments": "Linked template for the Role Assignment at the Landing Zone Management Group to deploy Azure Private DNS Zones",
             "condition": "[equals(parameters('enablePrivateDnsZonesForlandingZones'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
