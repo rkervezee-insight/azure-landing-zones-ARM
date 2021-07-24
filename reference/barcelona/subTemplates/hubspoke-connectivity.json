@@ -214,7 +214,6 @@
                             "name": "[take(concat('networkWatcher-', guid(deployment().name)), 64)]",
                             "resourceGroup": "[parameters('networkWatcherRg')]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', parameters('networkWatcherRg'))]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
@@ -244,7 +243,6 @@
                             "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
                             "resourceGroup": "[parameters('networkRg')]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', parameters('networkRg'))]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
