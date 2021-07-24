@@ -224,16 +224,6 @@
                                     "parameters": {},
                                     "resources": [
                                         {
-                                            "comments": "Deploy Resource Group Lock",
-                                            "type": "Microsoft.Authorization/locks",
-                                            "apiVersion": "2016-09-01",
-                                            "name": "ResourceGroup-DontDelete",
-                                            "properties": {
-                                                "level": "CanNotDelete",
-                                                "notes": "Prevent deletion of the resourceGroup"
-                                            }
-                                        },
-                                        {
                                             "comments": "Deploy Network Watcher",
                                             "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
