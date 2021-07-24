@@ -855,7 +855,7 @@
                                 }
                             ]
                         },
-                        "visible": true
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
                         "name": "esActivityLogSta",

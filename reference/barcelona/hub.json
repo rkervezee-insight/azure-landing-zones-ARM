@@ -1745,7 +1745,7 @@
                         "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
                     },
                     "networkRg": {
-                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                        "value": "[variables('platformConnectivityResourceGroups').network]"
                     },
                     "networkWatcherName": {
                         "value": "[variables('platformConnectivityResourceNames').networkWatcher]"
