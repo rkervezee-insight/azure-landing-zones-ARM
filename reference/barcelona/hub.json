@@ -750,12 +750,9 @@
             "policyDefinitions": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/policies.json')]",
             "publicEndpointPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/deny-publicEndpointsPolicySetDefinition.json')]",
             "privateDnsZonePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/dine-privateDnsZonesPolicySetDefinition.json')]",
-
             "subscriptionPlacement": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/subscriptionOrganization/subscriptionOrganization.json')]",
-
             "azOpsRBAC": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/azOpsRoleAssignment.json')]",
             "roleAssignments": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/roleAssignment.json')]",
-
             "vnetConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/hubspoke-connectivity.json')]",
             "vwanConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vwan-connectivity.json')]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsWorkspace.json')]",
@@ -765,7 +762,6 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'subTemplates/recoveryServicesVault.json')]",
-
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
             //"nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
             "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-appGwyWafPolicyAssignment.json')]",
@@ -792,7 +788,6 @@
             "sqlAuditPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-sqlAuditingPolicyAssignment.json')]",
             "sqlEncryptionPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-sqlEncryptionPolicyAssignment.json')]",
             "ddosPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/modify-ddosProtectionPlanPolicyAssignment.json')]",
-
             "privateDnsZones": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/privateDnsZones.json')]",
             "ddosProtection": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/ddosProtection.json')]",
             "azOpsSetup": "[uri(deployment().properties.templateLink.uri, 'rgTemplates/azOpsArm.json')]"
@@ -858,12 +853,10 @@
                 "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddos": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
-
-            "identityPeeringDeploymentName": "[take(concat('EntScale-IDPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "identityVwanPeeringDeploymentName": "[take(concat('EntScale-IDVwanPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "identityVnetPeering": "[take(concat('identityVnetPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+            "identityVwanPeering": "[take(concat('identityVwanPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "corpConnectedLzVwanSubs": "[take(concat('EntScale-CorpConnlandingZonesVwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
         },
-
         "namingPrefix": {
             "storage": "[concat(parameters('enterpriseScaleCompanyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
             "management": "[toLower(concat(parameters('enterpriseScaleCompanyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix')))]",
@@ -1633,7 +1626,7 @@
         },
         {
             "comments": "Linked template for the creation of the Network Resource Group",
-            "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
+            "condition": "[or(equals(parameters('enableHub'),'vhub'), equals(parameters('enableHub'), 'vwan'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.networkRg]",
@@ -1822,7 +1815,7 @@
             }
         },
         {
-             "comments": "Linked template for the creation of the Virtual Wan Networking",
+            "comments": "Linked template for the creation of the Virtual Wan Networking",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vwan'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -2750,7 +2743,7 @@
             "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "[variables('deploymentNames').identityPeeringDeploymentName]",
+            "name": "[variables('deploymentNames').identityVnetPeering]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -2795,7 +2788,7 @@
             "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "[variables('deploymentNames').identityVwanPeeringDeploymentName]",
+            "name": "[variables('deploymentNames').identityVwanPeering]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[parameters('location')]",
             "dependsOn": [
