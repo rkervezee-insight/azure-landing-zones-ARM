@@ -849,15 +849,16 @@
                 "privateDnsZoneRg": "[take(concat('rg-dns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "networkRg": "[take(concat('rg-network', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
+                "networkRg": "[take(concat('rg-network', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "vnetConnectivityHub": "[take(concat('hubSpoke', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "vwanConnectivityHub": "[take(concat('vwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
                 "privateDnsZones": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddos": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
-            "vnetConnectivityHubDeploymentName": "[take(concat('hubSpoke', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "vwanConnectivityHubDeploymentName": "[take(concat('EntScale-VWanHub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+
             "identityPeeringDeploymentName": "[take(concat('EntScale-IDPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "identityVwanPeeringDeploymentName": "[take(concat('EntScale-IDVwanPeering', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
             "corpConnectedLzVwanSubs": "[take(concat('EntScale-CorpConnlandingZonesVwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
@@ -1667,7 +1668,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "scope": "[variables('MgScopes').connectivity]",
-            "name": "[variables('deploymentNames').vnetConnectivityHubDeploymentName]",
+            "name": "[variables('deploymentNames').sub.vnetConnectivityHub]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
@@ -1821,12 +1822,12 @@
             }
         },
         {
-            // Creating the VWAN network hub (Microsoft managed)
+             "comments": "Linked template for the creation of the Virtual Wan Networking",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vwan'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "scope": "[variables('MgScopes').connectivity]",
-            "name": "[variables('deploymentNames').vwanConnectivityHubDeploymentName]",
+            "name": "[variables('deploymentNames').sub.vwanConnectivityHub]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
@@ -2051,8 +2052,8 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.privateDnsZoneRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]"
-                // "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vnetConnectivityHub)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vwanConnectivityHub)]"
             ],
             "copy": {
                 "name": "dnsZones",
@@ -2753,8 +2754,8 @@
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
-                //"[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vnetConnectivityHub)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vwanConnectivityHub)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
@@ -2798,8 +2799,8 @@
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vnetConnectivityHubDeploymentName)]",
-                //"[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').vwanConnectivityHubDeploymentName)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vnetConnectivityHub)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vwanConnectivityHub)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
