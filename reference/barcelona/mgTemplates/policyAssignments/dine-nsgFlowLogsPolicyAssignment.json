@@ -8,6 +8,14 @@
                 "description": "Provide the company prefix to the root management group containing the policy definitions."
             }
         },
+        "nsgRegion": {
+            "type": "String",
+            "metadata": {
+                "displayName": "NSG Region",
+                "description": "This Policy will review NSGs only in the selected region. You can create other assignments to include other regions.",
+                "strongType": "location"
+            }
+        },
         "enforcementMode": {
             "type": "string",
             "allowedValues": [
@@ -16,29 +24,38 @@
             ],
             "defaultValue": "Default"
         },
-        "logAnalyticsResourceId": {
-            "type": "string",
-            "metadata": {
-                "description": "Provide the resourceId for the central Log Analytics workspace."
-            }
-        },
         "storageAccountResourceId": {
             "type": "string",
             "metadata": {
                 "description": "Provide the resourceId for the storage account."
             }
+        },
+        "networkWatcherRG": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Network Watchers RG",
+                "description": "The name of the resource group where the flowLog resources will be created. This will be used only if a deployment is required. This is the resource group where the Network Watchers are located.",
+                "strongType": "existingResourceGroups"
+            }
+        },
+        "networkWatcherName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Network Watcher name",
+                "description": "The name of the network watcher under which the flowLog resources will be created. Make sure it belongs to the same region as the NSG."
+            }
         }
     },
     "variables": {
         "policyDefinitions": {
-            "deployNsgFlowLogs": "/providers/Microsoft.Authorization/policySetDefinitions/62329546-775b-4a3d-a4cb-eb4bb990d2c0"
+            "deployNsgFlowLogs": "/providers/Microsoft.Authorization/policySetDefinitions/0db34a60-64f4-4bf6-bd44-f95c16cf34b9"
         },
         "policyAssignmentNames": {
             "nsgFlowLogs": "deploy-nsg-flow-logs",
             "description": "Deploys NSG flow logs and traffic analytics to Log Analytics with a specfied retention period.",
             "displayName": "Deploys NSG flow logs and traffic analytics to Log Analytics"
         },
-        "logAnalyticsContributor": "92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+        "contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
         "roleAssignmentNames": {
             "deployNsgFlowLogs": "[guid(concat(parameters('topLevelManagementGroupPrefix'), variables('policyAssignmentNames').nsgFlowLogs))]"
         }
@@ -58,20 +75,17 @@
                 "policyDefinitionId": "[variables('policyDefinitions').deployNsgFlowLogs]",
                 "enforcementMode": "[parameters('enforcementMode')]",
                 "parameters": {
-                    "logAnalytics": {
-                        "value": "[parameters('logAnalyticsResourceId')]"
+                    "nsgRegion": {
+                        "value": "[parameters('nsgRegion')]"
                     },
-                    "storageAccountResourceId": {
+                    "storageId": {
                         "value": "[parameters('storageAccountResourceId')]"
                     },
-                    "retention": {
-                        "value": 7
+                    "networkWatcherRG": {
+                        "value": "[parameters('networkWatcherRG')]"
                     },
-                    "trafficAnalyticsInterval": {
-                        "value": 60
-                    },
-                    "flowAnalyticsEnabled": {
-                        "value": false
+                    "networkWatcherName": {
+                        "value": "[parameters('networkWatcherName')]"
                     }
                 }
             }
@@ -85,7 +99,7 @@
             ],
             "properties": {
                 "principalType": "ServicePrincipal",
-                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('logAnalyticsContributor'))]",
+                "roleDefinitionId": "[concat('/providers/Microsoft.Authorization/roleDefinitions/', variables('contributor'))]",
                 "principalId": "[toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').nsgFlowLogs), '2020-09-01', 'Full' ).identity.principalId)]"
             }
         }

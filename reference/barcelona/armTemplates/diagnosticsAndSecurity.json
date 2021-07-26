@@ -26,114 +26,12 @@
             "defaultValue": "",
             "maxLength": 36
         },
-        "identitySubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
-        "connectivitySubscriptionId": {
-            "type": "string",
-            "defaultValue": "",
-            "maxLength": 36
-        },
         "enableLogAnalytics": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
-            ]
-        },
-        "enableAsc": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ]
-        },
-        "emailContactAsc": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "enableAscForServers": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForAppServices": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForStorage": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForSql": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForSqlOnVm": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForKeyVault": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForArm": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForDns": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForKubernetes": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
-            ]
-        },
-        "enableAscForRegistries": {
-            "type": "string",
-            "defaultValue": "Free",
-            "allowedValues": [
-                "Standard",
-                "Free"
             ]
         },
         "enableLtrStorage": {
@@ -143,18 +41,6 @@
                 "Yes",
                 "No"
             ]
-        },
-        "subscriptionTag": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "ownerTag": {
-            "type": "string",
-            "defaultValue": ""
-        },
-        "costCenterTag": {
-            "type": "string",
-            "defaultValue": ""
         }
     },
     "variables": {
@@ -162,26 +48,13 @@
             "topLevel": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'))]"
         },
         "policyDefinitions": {
-           // "deployActivityLog": "/providers/Microsoft.Authorization/policyDefinitions/2465583e-4e78-4c15-b6be-a36cbc7c8b0f",
+
             "deployActivityLogSta": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-diagnostics-activity-log-sta')]",
-         //   "deployResourceDiagnostics": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/deploy-resource-diags')]",
-           // "deployVmMonitoring": "/providers/Microsoft.Authorization/policyDefinitions/0868462e-646c-4fe3-9ced-a733534b6a2c",
-       //     "deployAzureSecurity": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/deploy-asc-config')]",
-         //   "deployAzureSecurityAutoProvision": "/providers/Microsoft.Authorization/policyDefinitions/8e7da0a5-0a0e-4bbc-bfc0-7773c018b616",
-            "deployNsgFlowLogs": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-nsg-flow-logs')]",
-          //  "enableAscMonitoring": "/providers/Microsoft.Authorization/policySetDefinitions/1f3afdf9-d0c9-4c3d-847f-89da613e70a8",
-          //  "denyAppGwyWaf": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deny-appgwy-without-waf')]"
+            "deployNsgFlowLogs": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('companyPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/deploy-nsg-flow-logs')]"
         },
         "policyAssignmentNames": {
-         //   "deployActivityLog": "deploy-activity-log-la",
             "deployActivityLogSta": "deploy-activity-log-sta",
-         //   "deployResourceDiagnostics": "deploy-resource-diags",
-          //  "deployVmMonitoring": "deploy-vm-monitoring",
-           // "deployAzureSecurity": "deploy-asc-configuration",
-           // "deployAzureSecurityAutoProvision": "deploy-asc-autoprovision",
-            "deployNsgFlowLogs": "deploy-nsg-flow-logs",
-         //   "enableAscMonitoring": "enable-asc-monitoring",
-          //  "denyAppGwyWaf": "deny-appgwy-without-waf"
+            "deployNsgFlowLogs": "deploy-nsg-flow-logs"
         },
         "rbac": {
             "owner": "8e3af657-a8ff-443c-a75c-2fe8c4bcb635",
@@ -190,48 +63,14 @@
             "securityAdmin": "fb1c8493-542b-48eb-b624-b4c8fea62acd"
         },
         "roleAssignmentNames": {
-        //    "deployActivityLog": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployActivityLog))]",
             "deployActivityLogSta": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployActivityLogSta))]",
-        //    "deployResourceDiagnostics": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployResourceDiagnostics))]",
-         //   "deployVmMonitoring": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployVmMonitoring))]",
-        //    "deployAzureSecurity": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzureSecurity))]",
-         //   "deployAzureSecurityAutoProvision": "[guid(concat(parameters('companyPrefix'),variables('policyAssignmentNames').deployAzureSecurityAutoProvision))]",
-          //  "enableAscMonitoring": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').enableAscMonitoring))]",
             "deployNsgFlowLogs": "[guid(concat(parameters('companyPrefix'), variables('policyAssignmentNames').deployNsgFlowLogs))]"
         },
-        "blankTemplateEscaped": "{\"$schema\":\"https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#\",\"contentVersion\":\"1.0.0.0\",\"parameters\":{},\"variables\":{},\"resources\":[],\"outputs\":{}}",
         "namingPrefix": "[concat(parameters('companyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix'))]",
         "resourceGroupName": "[toLower(concat(variables('namingPrefix'), '-', parameters('argPrefix'), '-monitoring'))]",
         "logAnalyticsName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('omsPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "storageNamingPrefix": "[concat(parameters('companyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
         "storageName": "[take(toLower(concat(variables('storageNamingPrefix'), parameters('staPrefix'), guid(parameters('companyPrefix')))), 20)]",
-        "managementDeploymentNames": {
-            "mgmtAscConfig": "[take(concat('mgmtAscConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "mgmtAscAutoProvision": "[take(concat('mgAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "mgmtActivityLogs": "[take(concat('mgmtActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "mgmtActivityLogsSta": "[take(concat('mgmtActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "noMgmtAscAutoProvisionDeployment": "noMgmtAscAuto",
-            "noMgmtActivityDeployment": "noMgmtActivity",
-            "noMgmtAscDeployment": "noMgmtAsc"
-        },
-        "identityDeploymentNames": {
-            "idamAscConfig": "[take(concat('idamAscConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "idamAscAutoProvision": "[take(concat('idamAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "idamActivityLogs": "[take(concat('idamActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "idamActivityLogsSta": "[take(concat('idamActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "noIdamAscAutoProvisionDeployment": "noIdamAscAuto",
-            "noIdamActivityDeployment": "noIdamActivity",
-            "noIdamAscDeployment": "noIdamAsc"
-        },
-        "connectivityDeploymentNames": {
-            "connAscConfig": "[take(concat('connAscConfig', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "connAscAutoProvision": "[take(concat('connAscAutoProvision', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "connActivityLogs": "[take(concat('connActivityLogs', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "connActivityLogsSta": "[take(concat('connActivityLogsSta', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "noConnAscAutoProvisionDeployment": "noConnAscAuto",
-            "noConnActivityDeployment": "noConnActivity",
-            "noConnAscDeployment": "noConnAscDeployment"
-        },
         "apiVersions": {
             "deployments": "2020-06-01",
             "policyAssignments": "2020-03-01",
@@ -324,9 +163,6 @@
                 "principalId": "[if(equals(parameters('enableLogAnalytics'), 'Yes'), toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').deployNsgFlowLogs), '2018-05-01', 'Full' ).identity.principalId), 'na')]"
             }
         }
-
-  
-
     ],
     "outputs": {}
 }

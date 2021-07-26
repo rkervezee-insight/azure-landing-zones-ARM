@@ -1391,7 +1391,6 @@
                 }
             }
         },
-
         /*
         {
             "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deploy NSG Flow Log policy definition",
@@ -1428,7 +1427,6 @@
             }
         },
         */
-
         {
             "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deny application Gateways without WAF",
             "type": "Microsoft.Resources/deployments",
