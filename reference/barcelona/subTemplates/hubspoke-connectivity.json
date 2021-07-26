@@ -28,7 +28,7 @@
                 "description": "Select whether the virtual network hub should be deployed or not."
             }
         },
-        "enableazfw": {
+        "enableAzFw": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -39,7 +39,7 @@
                 "description": "Select whether the Azure Firewall should be deployed or not."
             }
         },
-        "enableazfwDnsProxy": {
+        "enableAzFwDnsProxy": {
             "type": "string",
             "allowedValues": [
                 "Yes",
@@ -266,7 +266,7 @@
     },
     "resources": [
         {
-            "comments": "Conditional deployment for Azure Network Resources in the Platform Connectivity subscription",
+            "comments": "Conditional deployment for Azure Hub Network Resources in the Platform Connectivity subscription",
             "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
@@ -281,7 +281,7 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "comments": "Nested deployment for Azure Network Resources",
+                            "comments": "Nested deployment for Azure Hub Network Resources",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2019-10-01",
                             "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
@@ -705,7 +705,7 @@
                                         },
                                         {
                                             "comments": "Conditional deployment of the Public IP for Azure Firewall",
-                                            "condition": "[and(equals(parameters('enableazfw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
+                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/publicIpAddresses",
                                             "name": "[parameters('azfwIp')]",
@@ -718,18 +718,18 @@
                                             }
                                         },
                                         {
-                                            "condition": "[and(equals(parameters('enableazfw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
+                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "type": "Microsoft.Network/firewallPolicies",
                                             "apiVersion": "2020-11-01",
                                             "name": "[parameters('azfwPolicy')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
-                                                "dnsSettings": "[if(equals(parameters('enableazfwDnsProxy'), 'Yes'), variables('azfwDnsSettings'), json('null'))]"
+                                                "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('azfwDnsSettings'), json('null'))]"
                                             }
                                         },
                                         {
                                             "comments": "Conditional deployment of the Azure Firewall",
-                                            "condition": "[and(equals(parameters('enableazfw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
+                                            "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/azureFirewalls",
                                             "name": "[parameters('azfw')]",

@@ -888,7 +888,6 @@
             "automationAccount": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('aaaPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "keyVault": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('akvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "storageAccount": "[take(toLower(concat(variables('namingPrefix').storage, parameters('staPrefix'), guid(parameters('enterpriseScaleCompanyPrefix')))), 20)]"
-
         },
         // "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "platformConnectivityResourceNames": {
@@ -911,7 +910,6 @@
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
             "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
-
         "platformManagementResourceIds": {
             "logAnalyticsWorkspace": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.OperationalInsights/workspaces/', variables('platformManagementResourceNames').logAnalyticsWorkspace)]",
             "automationAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.Automation/automationAccounts/', variables('platformManagementResourceNames').automationAccount)]",
@@ -1846,9 +1844,6 @@
                     "uri": "[variables('deploymentUris').vwanConnectivityHub]"
                 },
                 "parameters": {
-                    "topLevelManagementGroupPrefix": {
-                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
-                    },
                     "enableHub": {
                         "value": "[parameters('enableHub')]"
                     },
@@ -1875,6 +1870,30 @@
                     },
                     "vpnGateWayScaleUnit": {
                         "value": "[parameters('vpnGateWayScaleUnit')]"
+                    },
+                    "rgName": {
+                        "value": "[variables('platformConnectivityResourceGroups').network]"
+                    },
+                    "vhubResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').vHub]"
+                    },
+                    "vwanResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').vwan]"
+                    },
+                    "vwan": {
+                        "value": "[variables('platformConnectivityResourceNames').vwan]"
+                    },
+                    "vhub": {
+                        "value": "[variables('platformConnectivityResourceNames').vhub]"
+                    },
+                    "vpnGwy": {
+                        "value": "[variables('platformConnectivityResourceNames').vpnGwy]"
+                    },
+                    "erGwy": {
+                        "value": "[variables('platformConnectivityResourceNames').erGwy]"
+                    },
+                    "azfw": {
+                        "value": "[variables('platformConnectivityResourceNames').azfw]"
                     }
                 }
             }
@@ -2178,7 +2197,7 @@
             }
         },
         {
-            // Assigning Azure Backup policy to landing zones management group if condition is true
+            "comments": "Linked template for the Azure Policy Assignment at the Landing Zone Management Group to enable Azure Backup",
             "condition": "[equals(parameters('enableVmBackup'), 'Yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",

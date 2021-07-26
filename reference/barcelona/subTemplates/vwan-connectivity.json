@@ -2,13 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "topLevelManagementGroupPrefix": {
-            "type": "string",
-            "maxLength": 10,
-            "metadata": {
-                "description": "Provide a prefix (max 10 characters, unique at tenant-scope) for the Management Group hierarchy and other resources created as part of Enterprise-scale."
-            }
-        },
         "addressPrefix": {
             "type": "string",
             "metadata": {
@@ -67,28 +60,45 @@
         "expressRouteScaleUnit": {
             "type": "string",
             "defaultValue": "1"
+        },
+        "rgName": {
+            "type": "string"
+        },
+        "vhubResourceId": {
+            "type": "string"
+        },
+        "vwanResourceId": {
+            "type": "string"
+        },
+        "vhub": {
+            "type": "string"
+        },
+        "vpnGwy": {
+            "type": "string"
+        },
+        "vwan": {
+            "type": "string"
+        },
+        "erGwy": {
+            "type": "string"
+        },
+        "azfw": {
+            "type": "string"
         }
     },
     "variables": {
-        "vWanName": "[concat(parameters('topLevelManagementGroupPrefix'), '-vwan-', parameters('location'))]",
-        "vpngwname": "[concat(parameters('topLevelManagementGroupPrefix'), '-vpngw-', parameters('location'))]",
-        "erGwName": "[concat(parameters('topLevelManagementGroupPrefix'), '-ergw-', parameters('location'))]",
-        "rgName": "[concat(parameters('topLevelManagementGroupPrefix'), '-vnethub-', parameters('location'))]",
-        "vHubName": "[concat(parameters('topLevelManagementGroupPrefix'), '-hub-', parameters('location'))]",
-        "azFwName": "[concat(parameters('topLevelManagementGroupPrefix'), '-fw-', parameters('location'))]",
         "vWanSku": "Standard",
-        "vwanresourceid": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/' ,variables('rgName'),'/providers/Microsoft.Network/virtualWans/', variables('vwanname'))]",
-        "vwanhub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('rgName'),'/providers/Microsoft.Network/virtualHubs/', variables('vhubname'))]",
         "vhubsku": "Standard",
-        "vpnbgpasn": 65515,
-        "resourceDeploymentName": "[take(concat(deployment().name, '-vwan'), 64)]"
+        "vpnbgpasn": 65515
     },
     "resources": [
         {
+            "comments": "Conditional deployment for Azure vWan Network Resources in the Platform Connectivity subscription",
+            "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('connectivitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "location": "[parameters('location')]",
-            "name": "[concat('EntScale', '-connectivitySub')]",
+            "name": "[take(concat('vWanConnectivity-', guid(deployment().name)), 64)]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
@@ -98,19 +108,12 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "type": "Microsoft.Resources/resourceGroups",
-                            "apiVersion": "2019-10-01",
-                            "location": "[parameters('location')]",
-                            "name": "[variables('rgName')]",
-                            "properties": {}
-                        },
-                        {
+                            "comments": "Nested deployment for Azure Hub Network Resources",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2019-10-01",
-                            "name": "[variables('resourceDeploymentName')]",
-                            "resourceGroup": "[variables('rgName')]",
+                            "name": "[take(concat('vWanConnectivity-', guid(deployment().name)), 64)]",
+                            "resourceGroup": "[parameters('rgName')]",
                             "dependsOn": [
-                                "[concat('Microsoft.Resources/resourceGroups/', variables('rgName'))]"
                             ],
                             "properties": {
                                 "mode": "Incremental",
@@ -120,9 +123,10 @@
                                     "parameters": {},
                                     "resources": [
                                         {
+                                            "comments": "Deploy Azure Virtual Wan Resources",
                                             "type": "Microsoft.Network/virtualWans",
                                             "apiVersion": "2020-05-01",
-                                            "name": "[variables('vWanName')]",
+                                            "name": "[parameters('vwan')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
                                                 "virtualHubs": [],
@@ -131,34 +135,36 @@
                                             }
                                         },
                                         {
+                                            "comments": "Conditional deployment of Azure Virtual hub Resources",
                                             "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('addressPrefix'))))]",
                                             "type": "Microsoft.Network/virtualHubs",
                                             "apiVersion": "2020-05-01",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('vhubname')]",
+                                            "name": "[parameters('vhub')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualWans/', variables('vWanName'))]"
+                                                "[concat('Microsoft.Network/virtualWans/', parameters('vwan'))]"
                                             ],
                                             "properties": {
                                                 "virtualWan": {
-                                                    "id": "[variables('vwanresourceid')]"
+                                                    "id": "[parameters('vwanresourceid')]"
                                                 },
                                                 "addressPrefix": "[parameters('addressPrefix')]",
                                                 "sku": "[variables('vhubsku')]"
                                             }
                                         },
                                         {
+                                            "comments": "Conditional deployment of the VPN Gateway",
                                             "condition": "[and(equals(parameters('enableHub'), 'vwan'), equals(parameters('enableVpnGw'), 'Yes'))]",
                                             "type": "Microsoft.Network/vpnGateways",
                                             "apiVersion": "2020-05-01",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('vpngwname')]",
+                                            "name": "[parameters('vpnGwy')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vhubname'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/',parameters('vhub'))]"
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[variables('vwanhub')]"
+                                                    "id": "[parameters('vhubResourceId')]"
                                                 },
                                                 "bgpSettings": {
                                                     "asn": "[variables('vpnbgpasn')]"
@@ -167,17 +173,18 @@
                                             }
                                         },
                                         {
+                                            "comments": "Conditional deployment of the ER Gateway",
                                             "condition": "[and(equals(parameters('enableHub'), 'vwan'), equals(parameters('enableErGw'), 'Yes'))]",
                                             "type": "Microsoft.Network/expressRouteGateways",
                                             "apiVersion": "2020-05-01",
                                             "location": "[parameters('location')]",
-                                            "name": "[variables('ergwname')]",
+                                            "name": "[parameters('erGwy')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/', variables('vhubname'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/', parameters('vhub'))]"
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[variables('vwanhub')]"
+                                                    "id": "[parameters('vhubResourceId')]"
                                                 },
                                                 "autoScaleConfiguration": {
                                                     "bounds": {
@@ -187,13 +194,14 @@
                                             }
                                         },
                                         {
+                                            "comments": "Conditional deployment of the Azure Firewall",
                                             "condition": "[equals(parameters('enableAzFw'), 'Yes')]",
                                             "apiVersion": "2020-05-01",
                                             "type": "Microsoft.Network/azureFirewalls",
-                                            "name": "[variables('azfwname')]",
+                                            "name": "[parameters('azfw')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',variables('vhubname'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/',parameters('vhub'))]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -207,7 +215,7 @@
                                                     }
                                                 },
                                                 "virtualHub": {
-                                                    "id": "[variables('vwanhub')]"
+                                                    "id": "[parameters('vhubResourceId')]"
                                                 },
                                                 "firewallPolicy": {
                                                     "id": "[json('null')]"
