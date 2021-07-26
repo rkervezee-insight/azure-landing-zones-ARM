@@ -131,8 +131,19 @@
                 "description": "Provide the NSG prefix"
             }
         },
+        "vHubPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the virtual Hub identifier prefix"
+            }
+        },
         "vWanPrefix": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the virtual WAN identifier prefix"
+            }
         },
         "ddosPrefix": {
             "type": "string",
@@ -896,6 +907,7 @@
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
             "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
+            "vwanHub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-test'))]",
             "bastionNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-bastion'))]",
             "appGwyNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-appGateway'))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
@@ -913,7 +925,8 @@
         "platformConnectivityResourceIds": {
             "ddos": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('platformConnectivityResourceNames').ddos)]",
             "vHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualNetworks/', variables('platformConnectivityResourceNames').vhub)]",
-            "vWan": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vwan)]",
+            "vWan": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualWans/', variables('platformConnectivityResourceNames').vwan)]",
+            "vwanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vwanHub)]",
             "privatedns": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').privatedns)]",
             "bastionIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').bastionIp)]",
             "azfw": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/azureFirewalls/', variables('platformConnectivityResourceNames').azfw)]",
@@ -1874,7 +1887,10 @@
                     "vwan": {
                         "value": "[variables('platformConnectivityResourceNames').vwan]"
                     },
-                    "vhub": {
+                    "vwanHubResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').vwanHub]"
+                    },
+                    "vwanhub": {
                         "value": "[variables('platformConnectivityResourceNames').vhub]"
                     },
                     "vpnGwy": {

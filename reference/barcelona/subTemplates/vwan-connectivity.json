@@ -64,16 +64,19 @@
         "rgName": {
             "type": "string"
         },
+        "vwan": {
+            "type": "string"
+        },
         "vwanResourceId": {
             "type": "string"
         },
-        "vhub": {
+        "vwanhub": {
+            "type": "string"
+        },
+        "vwanhubResourceId": {
             "type": "string"
         },
         "vpnGwy": {
-            "type": "string"
-        },
-        "vwan": {
             "type": "string"
         },
         "erGwy": {
@@ -86,7 +89,6 @@
     "variables": {
         "vWanSku": "Standard",
         "vhubsku": "Standard",
-        "vhubResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', parameters('rgName').networking,'/providers/Microsoft.Network/virtualHubs/', parameters('vhub'))]",
         "vpnbgpasn": 65515
     },
     "resources": [
@@ -138,7 +140,7 @@
                                             "type": "Microsoft.Network/virtualHubs",
                                             "apiVersion": "2020-05-01",
                                             "location": "[parameters('location')]",
-                                            "name": "[parameters('vhub')]",
+                                            "name": "[parameters('vwanHub')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/virtualWans/', parameters('vwan'))]"
                                             ],
@@ -158,11 +160,11 @@
                                             "location": "[parameters('location')]",
                                             "name": "[parameters('vpnGwy')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',parameters('vhub'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/',parameters('vwanHub'))]"
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[variables('vhubResourceId')]"
+                                                    "id": "[parameters('vwanhubResourceId')]"
                                                 },
                                                 "bgpSettings": {
                                                     "asn": "[variables('vpnbgpasn')]"
@@ -178,11 +180,11 @@
                                             "location": "[parameters('location')]",
                                             "name": "[parameters('erGwy')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/', parameters('vhub'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/', parameters('vwanHub'))]"
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[variables('vhubResourceId')]"
+                                                    "id": "[parameters('vwanhubResourceId')]"
                                                 },
                                                 "autoScaleConfiguration": {
                                                     "bounds": {
@@ -199,7 +201,7 @@
                                             "name": "[parameters('azfw')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualHubs/',parameters('vhub'))]"
+                                                "[concat('Microsoft.Network/virtualHubs/',parameters('vwanHub'))]"
                                             ],
                                             "properties": {
                                                 "sku": {
@@ -213,7 +215,7 @@
                                                     }
                                                 },
                                                 "virtualHub": {
-                                                    "id": "[variables('vhubResourceId')]"
+                                                    "id": "[parameters('vwanhubResourceId')]"
                                                 },
                                                 "firewallPolicy": {
                                                     "id": "[json('null')]"
