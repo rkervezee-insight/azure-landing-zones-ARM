@@ -1868,9 +1868,6 @@
                     "rgName": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
                     },
-                    "vhubResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').vHub]"
-                    },
                     "vwanResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vwan]"
                     },

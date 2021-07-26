@@ -64,9 +64,6 @@
         "rgName": {
             "type": "string"
         },
-        "vhubResourceId": {
-            "type": "string"
-        },
         "vwanResourceId": {
             "type": "string"
         },
@@ -89,6 +86,7 @@
     "variables": {
         "vWanSku": "Standard",
         "vhubsku": "Standard",
+        "vhubResourceId": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', parameters('rgName').networking,'/providers/Microsoft.Network/virtualHubs/', parameters('vhub'))]",
         "vpnbgpasn": 65515
     },
     "resources": [
@@ -164,7 +162,7 @@
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[parameters('vhubResourceId')]"
+                                                    "id": "[variables('vhubResourceId')]"
                                                 },
                                                 "bgpSettings": {
                                                     "asn": "[variables('vpnbgpasn')]"
@@ -184,7 +182,7 @@
                                             ],
                                             "properties": {
                                                 "virtualHub": {
-                                                    "id": "[parameters('vhubResourceId')]"
+                                                    "id": "[variables('vhubResourceId')]"
                                                 },
                                                 "autoScaleConfiguration": {
                                                     "bounds": {
@@ -215,7 +213,7 @@
                                                     }
                                                 },
                                                 "virtualHub": {
-                                                    "id": "[parameters('vhubResourceId')]"
+                                                    "id": "[variables('vhubResourceId')]"
                                                 },
                                                 "firewallPolicy": {
                                                     "id": "[json('null')]"
