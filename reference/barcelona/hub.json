@@ -1891,7 +1891,7 @@
                         "value": "[variables('platformConnectivityResourceIds').vwanHub]"
                     },
                     "vwanhub": {
-                        "value": "[variables('platformConnectivityResourceNames').vhub]"
+                        "value": "[variables('platformConnectivityResourceNames').vwanHub]"
                     },
                     "vpnGwy": {
                         "value": "[variables('platformConnectivityResourceNames').vpnGwy]"
