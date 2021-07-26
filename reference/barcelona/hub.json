@@ -2075,6 +2075,9 @@
                     },
                     "connectivityHubResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vHub]"
+                    },
+                    "enableHub": {
+                        "value": "[parameters('enableHub')]"
                     }
                 }
             }
