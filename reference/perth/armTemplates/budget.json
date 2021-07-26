@@ -29,7 +29,7 @@
             }
         },
         "contactEmails": {
-            "type": "array"
+            "type": "string"
         }
     },
     "variables": {
