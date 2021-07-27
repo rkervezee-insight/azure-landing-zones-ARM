@@ -247,6 +247,9 @@
         "erGwySubnetId": "[concat(parameters('vhubResourceId'), '/subnets/GatewaySubnet')]",
         "azfwSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureFirewallSubnet')]",
         "azBastionSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureBastion')]",
+        "ddosProtectionPlanId": {
+            "id": "[parameters('ddosPlanResourceId')]"
+        },
         "azfwPolicyResourceId": {
             "id": "[parameters('azfwPolicyResourceId')]"
         },
@@ -372,7 +375,7 @@
                                                                               not(
                                                                                   empty(parameters('subnetMaskForazfw'))), variables('fwSubnet'), json('[]')))]",
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), parameters('ddosPlanResourceId'), json('null'))]"
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
                                             }
                                         },
                                         {
