@@ -52,8 +52,8 @@
         },
         "policyAssignmentNames": {
             "nsgFlowLogs": "deploy-nsg-flow-logs",
-            "description": "Deploys NSG flow logs and traffic analytics to Log Analytics with a specfied retention period",
-            "displayName": "Deploys NSG flow logs and traffic analytics to Log Analytics"
+            "description": "Deploy a flow log resource with target network security group",
+            "displayName": "Deploy a flow log resource with target network security group"
         },
         "contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
         "roleAssignmentNames": {
