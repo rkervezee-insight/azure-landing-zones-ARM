@@ -30,7 +30,7 @@
                 "description": "Provide the resourceId for the storage account."
             }
         },
-        "networkWatcherRG": {
+        "rgName": {
             "type": "String",
             "metadata": {
                 "displayName": "Network Watchers RG",
@@ -38,7 +38,7 @@
                 "strongType": "existingResourceGroups"
             }
         },
-        "networkWatcherName": {
+        "networkWatcher": {
             "type": "String",
             "metadata": {
                 "displayName": "Network Watcher name",
@@ -52,7 +52,7 @@
         },
         "policyAssignmentNames": {
             "nsgFlowLogs": "deploy-nsg-flow-logs",
-            "description": "Deploys NSG flow logs and traffic analytics to Log Analytics with a specfied retention period.",
+            "description": "Deploys NSG flow logs and traffic analytics to Log Analytics with a specfied retention period",
             "displayName": "Deploys NSG flow logs and traffic analytics to Log Analytics"
         },
         "contributor": "b24988ac-6180-42a0-ab88-20f7382dd24c",
@@ -82,10 +82,10 @@
                         "value": "[parameters('storageAccountResourceId')]"
                     },
                     "networkWatcherRG": {
-                        "value": "[parameters('networkWatcherRG')]"
+                        "value": "[parameters('rgName')]"
                     },
                     "networkWatcherName": {
-                        "value": "[parameters('networkWatcherName')]"
+                        "value": "[parameters('networkWatcher')]"
                     }
                 }
             }

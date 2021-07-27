@@ -171,7 +171,13 @@
         "ddosPlanResourceId": {
             "type": "string"
         },
-        "rgName": {
+        "networkRg": {
+            "type": "string"
+        },
+        "networkWatcherRg": {
+            "type": "string"
+        },
+        "networkWatcher": {
             "type": "string"
         },
         "vhub": {
@@ -281,11 +287,11 @@
                     "parameters": {},
                     "resources": [
                         {
-                            "comments": "Nested deployment for Azure Hub Network Resources",
+                            "comments": "Nested deployment for Network Watcher",
                             "type": "Microsoft.Resources/deployments",
                             "apiVersion": "2019-10-01",
-                            "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
-                            "resourceGroup": "[parameters('rgName')]",
+                            "name": "[take(concat('networkWatcher-', guid(deployment().name)), 64)]",
+                            "resourceGroup": "[parameters('networkWatcherRg')]",
                             "dependsOn": [
                             ],
                             "properties": {
@@ -295,6 +301,56 @@
                                     "contentVersion": "1.0.0.0",
                                     "parameters": {},
                                     "resources": [
+                                        {
+                                            "comments": "Deploy Resource Group Lock",
+                                            "type": "Microsoft.Authorization/locks",
+                                            "apiVersion": "2016-09-01",
+                                            "name": "ResourceGroup-DontDelete",
+                                            "properties": {
+                                                "level": "CanNotDelete",
+                                                "notes": "Prevent deletion of the resourceGroup"
+                                            }
+                                        },
+                                        {
+                                            "comments": "Deploy Network Watcher",
+                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "type": "Microsoft.Network/networkWatchers",
+                                            "apiVersion": "2020-05-01",
+                                            "name": "[parameters('networkWatcher')]",
+                                            "location": "[deployment().location]",
+                                            "tags": {},
+                                            "properties": {},
+                                            "resources": []
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "comments": "Nested deployment for Azure Hub Network Resources",
+                            "type": "Microsoft.Resources/deployments",
+                            "apiVersion": "2019-10-01",
+                            "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
+                            "resourceGroup": "[parameters('networkRg')]",
+                            "dependsOn": [
+                            ],
+                            "properties": {
+                                "mode": "Incremental",
+                                "template": {
+                                    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+                                    "contentVersion": "1.0.0.0",
+                                    "parameters": {},
+                                    "resources": [
+                                        {
+                                            "comments": "Deploy Resource Group Lock",
+                                            "type": "Microsoft.Authorization/locks",
+                                            "apiVersion": "2016-09-01",
+                                            "name": "ResourceGroup-DontDelete",
+                                            "properties": {
+                                                "level": "CanNotDelete",
+                                                "notes": "Prevent deletion of the resourceGroup"
+                                            }
+                                        },
                                         {
                                             "comments": "Deploy Azure Virtual Network Resources",
                                             "type": "Microsoft.Network/virtualNetworks",

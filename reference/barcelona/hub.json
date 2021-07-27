@@ -774,7 +774,7 @@
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'subTemplates/recoveryServicesVault.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
-            //"nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
+            "nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
             "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-appGwyWafPolicyAssignment.json')]",
             "activityDiagnosticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-activityLogPolicyAssignment.json')]",
             "ascConfigPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-ascConfigPolicyAssignment.json')]",
@@ -816,7 +816,7 @@
                 "moveIdentitySubscription": "[take(concat('moveIdamSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azPolicyForAksPolicyAssignment": "[take(concat('policyAss-aksPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivEscalationPolicyAssignment": "[take(concat('policyAss-aksPrivEsc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                //"nsgFlowLogsPolicyAssignment": "[take(concat('policyAss-nsgFlowLogs', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "nsgFlowLogsPolicyAssignment": "[take(concat('policyAss-nsgFlowLogs', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "appGatewayPolicyAssignment": "[take(concat('policyAss-appGwy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksHttpsPolicyAssignment": "[take(concat('policyAss-aksHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivilegedPolicyAssignment": "[take(concat('policyAss-aksPriv', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -856,6 +856,7 @@
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "networkRg": "[take(concat('rg-network', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "networkWatcherRg": "[take(concat('rg-networkWatcher', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "vnetConnectivityHub": "[take(concat('hubSpoke', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "vwanConnectivityHub": "[take(concat('vwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
@@ -882,7 +883,8 @@
             "connectivity": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
             "ddos": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-ddos'))]",
             "privatedns": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-privatedns'))]",
-            "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]"
+            "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
+            "networkWatcher": "NetworkWatcherRG"
         },
         "platformIdentityResourceGroups": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
@@ -910,7 +912,8 @@
             "vwanHub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-test'))]",
             "bastionNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-bastion'))]",
             "appGwyNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-appGateway'))]",
-            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
+            "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformIdentityResourceNames": {
             "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
@@ -1391,7 +1394,6 @@
                 }
             }
         },
-        /*
         {
             "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deploy NSG Flow Log policy definition",
             "condition": "[and(equals(parameters('enableLogAnalytics'), 'Yes'), not(empty(parameters('managementSubscriptionId'))))]",
@@ -1414,19 +1416,24 @@
                     "topLevelManagementGroupPrefix": {
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
                     },
+                    "nsgRegion": {
+                        "value": "[deployment().location]"
+                    },
                     "enforcementMode": {
                         "value": "Default"
                     },
-                    "logAnalyticsResourceId": {
-                        "value": "[variables('platformManagementResourceIds').logAnalyticsWorkspace]"
-                    },
                     "storageAccountResourceId": {
                         "value": "[variables('platformManagementResourceIds').storageAccount]"
+                    },
+                    "rgName": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "networkWatcher": {
+                        "value": "[variables('platformConnectivityResourceNames').networkWatcher]"
                     }
                 }
             }
         },
-        */
         {
             "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deny application Gateways without WAF",
             "type": "Microsoft.Resources/deployments",
@@ -1667,6 +1674,37 @@
             }
         },
         {
+            "comments": "Linked template for the creation of the Network Watcher Resource Group",
+            "condition": "[or(equals(parameters('enableHub'),'vhub'), equals(parameters('enableHub'), 'vwan'), not(empty(parameters('connectivitySubscriptionId'))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.networkWatcherRg]",
+            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').resourceGroup]"
+                },
+                "parameters": {
+                    "rgName": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
             "comments": "Linked template for the creation of the Hub and Spoke Virtual Networking",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vhub'))]",
             "type": "Microsoft.Resources/deployments",
@@ -1680,6 +1718,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.networkRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.networkWatcherRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]"
             ],
             "location": "[deployment().location]",
@@ -1756,8 +1795,14 @@
                     "subnetMaskForAppGw": {
                         "value": "[parameters('subnetMaskForAppGw')]"
                     },
-                    "rgName": {
+                    "networkRg": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
+                    },
+                    "networkWatcherRg": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "networkWatcher": {
+                        "value": "[variables('platformConnectivityResourceNames').networkWatcher]"
                     },
                     "vhub": {
                         "value": "[variables('platformConnectivityResourceNames').vhub]"
