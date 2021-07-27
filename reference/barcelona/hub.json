@@ -1921,8 +1921,14 @@
                     "vpnGateWayScaleUnit": {
                         "value": "[parameters('vpnGateWayScaleUnit')]"
                     },
-                    "rgName": {
+                    "networkRg": {
                         "value": "[variables('platformConnectivityResourceGroups').network]"
+                    },
+                    "networkWatcherRg": {
+                        "value": "[variables('platformConnectivityResourceGroups').networkWatcher]"
+                    },
+                    "networkWatcher": {
+                        "value": "[variables('platformConnectivityResourceNames').networkWatcher]"
                     },
                     "vwanResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vwan]"
