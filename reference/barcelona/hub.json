@@ -1589,7 +1589,7 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').rg.ddos]",
-            "location": "[deployment().location]",
+            "resourceGroup": "[variables('platformConnectivityResourceGroups').ddos]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ddosRg)]",
