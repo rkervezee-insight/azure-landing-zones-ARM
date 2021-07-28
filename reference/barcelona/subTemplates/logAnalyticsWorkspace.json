@@ -48,6 +48,16 @@
           "variables": {},
           "resources": [
             {
+              "comments": "Deploy Resource Group Lock",
+              "type": "Microsoft.Authorization/locks",
+              "apiVersion": "2016-09-01",
+              "name": "ResourceGroup-DontDelete",
+              "properties": {
+                "level": "CanNotDelete",
+                "notes": "Prevent deletion of the resourceGroup"
+              }
+            },
+            {
               "type": "Microsoft.Automation/automationAccounts",
               "apiVersion": "2019-06-01",
               "name": "[parameters('AutomationAccountName')]",

@@ -57,6 +57,16 @@
     },
     "resources": [
         {
+            "comments": "Deploy Resource Group Lock",
+            "type": "Microsoft.Authorization/locks",
+            "apiVersion": "2016-09-01",
+            "name": "ResourceGroup-DontDelete",
+            "properties": {
+                "level": "CanNotDelete",
+                "notes": "Prevent deletion of the resourceGroup"
+            }
+        },
+        {
             "comments": "Deploy the User Managed Identity",
             "type": "Microsoft.ManagedIdentity/userAssignedIdentities",
             "apiVersion": "2018-11-30",

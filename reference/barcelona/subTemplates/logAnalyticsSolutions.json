@@ -181,6 +181,16 @@
                     "variables": {},
                     "resources": [
                         {
+                            "comments": "Deploy Resource Group Lock",
+                            "type": "Microsoft.Authorization/locks",
+                            "apiVersion": "2016-09-01",
+                            "name": "ResourceGroup-DontDelete",
+                            "properties": {
+                                "level": "CanNotDelete",
+                                "notes": "Prevent deletion of the resourceGroup"
+                            }
+                        },
+                        {
                             "comments": "Deploy the Log Analytics Solution for Agent Health",
                             "condition": "[equals(parameters('enableAgentHealth'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
