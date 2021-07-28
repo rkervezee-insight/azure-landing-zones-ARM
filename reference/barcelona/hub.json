@@ -1466,7 +1466,8 @@
             "scope": "[variables('MgScopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
