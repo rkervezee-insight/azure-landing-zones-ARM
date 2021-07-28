@@ -872,6 +872,26 @@
                             ]
                         },
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
+                        "name": "esActivityLogSta",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable Long Term retention of Logs to Azure Storage.",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Long term retention of Azure Activity Logs to Azure Storage will be enabled",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esSta, 'Yes')]"
                     }
                 ]
             },
