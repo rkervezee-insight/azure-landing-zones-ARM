@@ -34,7 +34,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForSql": {
             "type": "string",
@@ -42,7 +42,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForAppServices": {
             "type": "string",
@@ -50,7 +50,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForStorage": {
             "type": "string",
@@ -58,7 +58,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForRegistries": {
             "type": "string",
@@ -66,7 +66,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForKeyVault": {
             "type": "string",
@@ -74,7 +74,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForSqlOnVm": {
             "type": "string",
@@ -82,7 +82,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForKubernetes": {
             "type": "string",
@@ -90,7 +90,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForArm": {
             "type": "string",
@@ -98,7 +98,7 @@
                 "Standard",
                 "Free"
             ],
-            "defaultValue": "Free"            
+            "defaultValue": "Free"
         },
         "enableAscForDns": {
             "type": "string",
@@ -111,7 +111,7 @@
     },
     "variables": {
         "policyDefinitions": {
-            "deployAzureSecurity": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/Deploy-ASC-Config')]"
+            "deployAzureSecurity": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'), '/providers/Microsoft.Authorization/policySetDefinitions/deploy-asc-config')]"
         },
         "policyAssignmentNames": {
             "azureSecurity": "Deploy-ASC-Configuration",
@@ -196,7 +196,7 @@
                 "principalId": "[toLower(reference(concat('/providers/Microsoft.Authorization/policyAssignments/', variables('policyAssignmentNames').azureSecurity), '2019-09-01', 'Full' ).identity.principalId)]"
             }
         }
-        
+
     ],
     "outputs": {}
 }

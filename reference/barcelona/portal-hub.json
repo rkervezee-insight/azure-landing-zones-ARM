@@ -2340,6 +2340,7 @@
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
+            "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
             "enableAscForAppServices": "[steps('esPlatformManagement').esAscApps]",
             "enableAscForStorage": "[steps('esPlatformManagement').esAscStorage]",
