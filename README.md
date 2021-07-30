@@ -23,7 +23,6 @@ The Azure Foundations architecture provides prescriptive guidance coupled with A
 
 The Azure Foundations architecture is modular by design and allow organizations to start with foundational landing zones that support their application portfolios, and the architecture enables organizations to start as small as needed and scale alongside their business requirements regardless of scale point.
 
-![hippo](./ESLZ.gif)
 
 ---
 
