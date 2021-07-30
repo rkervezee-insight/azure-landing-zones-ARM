@@ -2,17 +2,6 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "listOfLocations": {
-            "type": "Array",
-            "defaultvalue": [
-                "Australia East"
-            ],
-            "metadata": {
-                "displayName": "Locations",
-                "description": "Audit if Network Watcher is not enabled for region(s).",
-                "strongType": "location"
-            }
-        },
         "enforcementMode": {
             "type": "string",
             "allowedValues": [
@@ -47,9 +36,6 @@
                 "policyDefinitionId": "[variables('policyDefinitions').auditAzureCis]",
                 "enforcementMode": "[parameters('enforcementMode')]",
                 "parameters": {
-                    "listOfLocations": {
-                        "value": "[parameters('listOfLocations')]"
-                    }
                 }
             }
         }
