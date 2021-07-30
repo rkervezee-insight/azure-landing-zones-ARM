@@ -59,7 +59,6 @@
         }
     },
     "variables": {
-        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
     },
     "resources": [
         {
@@ -218,7 +217,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
                         "policyDefinitionReferenceId": "Allowed-AzureRegions-Rg",
                         "parameters": {
                             "listOfAllowedLocations": {
