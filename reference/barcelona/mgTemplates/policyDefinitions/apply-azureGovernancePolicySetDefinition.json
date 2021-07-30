@@ -76,7 +76,7 @@
                 "parameters": {},
                 "policyDefinitions": [
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                         "policyDefinitionReferenceId": "Add-Tag-ApplicationName",
                         "parameters": {
                             "tagName": {
@@ -88,7 +88,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
                         "policyDefinitionReferenceId": "Inherit-Tag-ApplicationName",
                         "parameters": {
                             "tagName": {
@@ -97,7 +97,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                         "policyDefinitionReferenceId": "Add-Tag-Owner",
                         "parameters": {
                             "tagName": {
@@ -109,7 +109,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
                         "policyDefinitionReferenceId": "Inherit-Tag-Owner",
                         "parameters": {
                             "tagName": {
@@ -118,7 +118,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                         "policyDefinitionReferenceId": "Add-Tag-Criticality",
                         "parameters": {
                             "tagName": {
@@ -130,7 +130,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
                         "policyDefinitionReferenceId": "Inherit-Tag-Criticality",
                         "parameters": {
                             "tagName": {
@@ -139,7 +139,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                         "policyDefinitionReferenceId": "Add-Tag-ContactEmail",
                         "parameters": {
                             "tagName": {
@@ -151,7 +151,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
                         "policyDefinitionReferenceId": "Inherit-Tag-ContactEmail",
                         "parameters": {
                             "tagName": {
@@ -160,7 +160,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                         "policyDefinitionReferenceId": "Add-Tag-CostCenter",
                         "parameters": {
                             "tagName": {
@@ -172,7 +172,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
                         "policyDefinitionReferenceId": "Inherit-Tag-CostCenter",
                         "parameters": {
                             "tagName": {
@@ -181,7 +181,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
                         "policyDefinitionReferenceId": "Add-Tag-DataClassification",
                         "parameters": {
                             "tagName": {
@@ -193,7 +193,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
                         "policyDefinitionReferenceId": "Inherit-Tag-DataClassification",
                         "parameters": {
                             "tagName": {
@@ -206,7 +206,7 @@
                         "parameters": {}
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c')]",
+                        "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
                         "policyDefinitionReferenceId": "Allowed-AzureRegions",
                         "parameters": {
                             "listOfAllowedLocations": {
@@ -218,7 +218,7 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988')]",
+                        "policyDefinitionId": "providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
                         "policyDefinitionReferenceId": "Allowed-AzureRegions-Rg",
                         "parameters": {
                             "listOfAllowedLocations": {
