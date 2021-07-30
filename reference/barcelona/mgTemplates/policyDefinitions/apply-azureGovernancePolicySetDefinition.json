@@ -2,8 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "targetMG": {
-            "type": "string"
+        "topLevelManagementGroupPrefix": {
+            "type": "String",
+            "maxLength": 10,
+            "metadata": {
+                "description": "Provide a prefix (max 10 characters, unique at tenant-scope) for the Management Group hierarchy and other resources created as part of Enterprise-scale."
+            }
         },
         "tag1Name": {
             "type": "string",
@@ -55,49 +59,25 @@
         }
     },
     "variables": {
-        "scope": {
-            "managementGroup": "[tenantResourceId('Microsoft.Management/managementGroups', parameters('targetMG'))]"
-        },
-        "policies": {
-            "policyDefinitions": {
-                "allowedAzRegions": "/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c",
-                "allowedAzRegionsRg": "/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988",
-                "inheritTag": "/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54",
-                "addTag": "/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532",
-                "appendAzHub": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('targetMG'), '/providers/Microsoft.Authorization/policyDefinitions/append-az-hub')]"
-            }
-        },
-        "initiatives": {
-            "policySetDefinitions": {
-                "name": "governance-initiative",
-                "displayName": "Governance Initiative"
-            }
-        },
-        "policyAssignment": {
-            "name": "governance-initiative",
-            "displayName": "governance-initiative"
-        },
-        "apiVersions": {
-            "policySetDefinitions": "2018-05-01",
-            "policyAssignments": "2020-03-01"
-        }
+        "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
     },
     "resources": [
         {
             "type": "Microsoft.Authorization/policySetDefinitions",
-            "name": "[variables('initiatives').policySetDefinitions.name]",
-            "apiVersion": "[variables('apiVersions').policySetDefinitions]",
+            "apiVersion": "2019-09-01",
+            "name": "apply-azure-governance",
             "properties": {
-                "displayName": "[variables('initiatives').policySetDefinitions.displayName]",
-                "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "metadata": {
                     "version": "1.0.0",
                     "category": "Governance"
                 },
+                "displayName": "Configure Azure Governance Settings",
+                "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "parameters": {},
                 "policyDefinitions": [
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionReferenceId": "Add-Tag-ApplicationName",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag1Name')]"
@@ -108,7 +88,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionReferenceId": "Inherit-Tag-ApplicationName",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag1Name')]"
@@ -116,7 +97,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionReferenceId": "Add-Tag-Owner",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag2Name')]"
@@ -127,7 +109,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionReferenceId": "Inherit-Tag-Owner",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag2Name')]"
@@ -135,7 +118,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionReferenceId": "Add-Tag-Criticality",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag3Name')]"
@@ -146,7 +130,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionReferenceId": "Inherit-Tag-Criticality",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag3Name')]"
@@ -154,7 +139,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionReferenceId": "Add-Tag-ContactEmail",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag4Name')]"
@@ -165,7 +151,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionReferenceId": "Inherit-Tag-ContactEmail",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag4Name')]"
@@ -173,7 +160,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionReferenceId": "Add-Tag-CostCenter",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag5Name')]"
@@ -184,7 +172,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionReferenceId": "Inherit-Tag-CostCenter",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag5Name')]"
@@ -192,7 +181,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.addTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/726aca4c-86e9-4b04-b0c5-073027359532')]",
+                        "policyDefinitionReferenceId": "Add-Tag-DataClassification",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag6Name')]"
@@ -203,7 +193,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.inheritTag]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/cd3aa116-8754-49c9-a813-ad46512ece54')]",
+                        "policyDefinitionReferenceId": "Inherit-Tag-DataClassification",
                         "parameters": {
                             "tagName": {
                                 "value": "[parameters('tag6Name')]"
@@ -211,11 +202,12 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.appendAzHub]",
+                        "policyDefinitionId": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'), '/providers/Microsoft.Authorization/policyDefinitions/Append-AzureHub')]",
                         "parameters": {}
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.allowedAzRegions]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/e56962a6-4747-49cd-b67b-bf8b01975c4c')]",
+                        "policyDefinitionReferenceId": "Allowed-AzureRegions",
                         "parameters": {
                             "listOfAllowedLocations": {
                                 "value": [
@@ -226,7 +218,8 @@
                         }
                     },
                     {
-                        "policyDefinitionId": "[variables('policies').policyDefinitions.allowedAzRegionsRg]",
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/e765b5de-1225-4ba3-bd56-1ac6695af988')]",
+                        "policyDefinitionReferenceId": "Allowed-AzureRegions-Rg",
                         "parameters": {
                             "listOfAllowedLocations": {
                                 "value": [
@@ -238,28 +231,6 @@
                     }
                 ]
             }
-        },
-        {
-            "type": "Microsoft.Authorization/policyAssignments",
-            "apiVersion": "[variables('apiVersions').policyAssignments]",
-            "name": "[variables('policyAssignment').name]",
-            "dependsOn": [ "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]" ],
-            "location": "[deployment().location]",
-            "properties": {
-                "description": "This Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
-                "displayName": "[variables('policyAssignment').displayName]",
-                "policyDefinitionId": "[extensionResourceId(variables('scope').managementGroup, 'Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.name)]",
-                "notScopes": []
-            },
-            "identity": {
-                "type": "SystemAssigned"
-            }
         }
-    ],
-    "outputs": {
-        "policyId": {
-            "type": "string",
-            "value": "[resourceId('Microsoft.Authorization/policySetDefinitions', variables('initiatives').policySetDefinitions.Name)]"
-        }
-    }
+    ]
 }

@@ -15641,7 +15641,7 @@
               }
             }
           },
-          "name": "append-az-hub"
+          "name": "Append-AzureHub"
         },
         {
           "properties": {

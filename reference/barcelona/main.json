@@ -774,6 +774,7 @@
             "privateDnsZonePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/dine-privateDnsZonesPolicySetDefinition.json')]",
             "tlsSslPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/deny-dine-append-tlsSslPolicySetDefinition.json')]",
             "ascConfigPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/deploy-ascConfigurationPolicySetDefinition.json')]",
+            "azureGovernancePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyDefinitions/apply-azureGovernancePolicySetDefinition.json')]",
             "subscriptionPlacement": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/subscriptionOrganization/subscriptionOrganization.json')]",
             "azOpsRBAC": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/azOpsRoleAssignment.json')]",
             "roleAssignments": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/roleAssignment.json')]",
@@ -828,6 +829,7 @@
                 "publicEndpointPolicyDefinition": "[take(concat('policySet-publicEndpoints', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "tlsSslPolicyDefinition": "[take(concat('policySet-tls-ssl', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ascConfigPolicyDefinition": "[take(concat('policySet-ascConfig', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azureGovernancePolicyDefinition": "[take(concat('policySet-azGov', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveManagementSubscription": "[take(concat('moveMgmtSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveConnectivitySubscription": "[take(concat('moveConnSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveOnlineSubscription": "[take(concat('moveOnlineSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1068,6 +1070,29 @@
                     "uri": "[variables('deploymentUris').publicEndpointPolicySetDefinition]"
                 },
                 "parameters": {}
+            }
+        },
+        {
+            "comments": "Linked template for the creation of Azure Policy Set Definitions at the root Management Group to apply Azure Governance controls",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2019-10-01",
+            "name": "[variables('deploymentNames').mg.azureGovernancePolicyDefinition]",
+            "location": "[deployment().location]",
+            "scope": "[concat('Microsoft.Management/managementGroups/', parameters('enterpriseScaleCompanyPrefix'))]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.mgmtGroups)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').azureGovernancePolicySetDefinition]"
+                },
+                "parameters": {
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    }
+                }
             }
         },
         {

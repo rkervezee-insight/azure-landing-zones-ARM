@@ -14,6 +14,71 @@
     "scope": "[concat('/providers/Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]",
     "policies": {
       "policyDefinitions": [
+                {
+          "Properties": {
+            "DisplayName": "Append Azure Hybrid Use Benefits to VMs",
+            "Description": "Append Azure Hybrid Use Benefits licensing to all Windows VMs",
+            "Mode": "All",
+            "metadata": {
+              "version": "1.0.0",
+              "category": "Cost Management"
+            },
+            "Parameters": {},
+            "policyRule": {
+              "if": {
+                "allOf": [
+                  {
+                    "field": "type",
+                    "in": [
+                      "Microsoft.Compute/virtualMachines",
+                      "Microsoft.Compute/VirtualMachineScaleSets"
+                    ]
+                  },
+                  {
+                    "field": "Microsoft.Compute/imagePublisher",
+                    "equals": "MicrosoftWindowsServer"
+                  },
+                  {
+                    "field": "Microsoft.Compute/imageOffer",
+                    "equals": "WindowsServer"
+                  },
+                  {
+                    "field": "Microsoft.Compute/imageSKU",
+                    "in": [
+                      "2008-R2-SP1",
+                      "2008-R2-SP1-smalldisk",
+                      "2012-Datacenter",
+                      "2012-Datacenter-smalldisk",
+                      "2012-R2-Datacenter",
+                      "2012-R2-Datacenter-smalldisk",
+                      "2016-Datacenter",
+                      "2016-Datacenter-Server-Core",
+                      "2016-Datacenter-Server-Core-smalldisk",
+                      "2016-Datacenter-smalldisk",
+                      "2016-Datacenter-with-Containers",
+                      "2016-Datacenter-with-RDSH",
+                      "2019-Datacenter"
+                    ]
+                  },
+                  {
+                    "field": "Microsoft.Compute/licenseType",
+                    "notEquals": "Windows_Server"
+                  }
+                ]
+              },
+              "then": {
+                "effect": "append",
+                "details": [
+                  {
+                    "field": "Microsoft.Compute/licenseType",
+                    "value": "Windows_Server"
+                  }
+                ]
+              }
+            }
+          },
+          "name": "Append-AzureHub"
+        },
         {
           "properties": {
             "description": "Deploys the diagnostic settings for Container Instances to stream to a Log Analytics workspace when any ACR which is missing this diagnostic settings is created or updated. The policy wil set the diagnostic with all metrics enabled.",
@@ -166,7 +231,7 @@
           },
           "name": "Deploy-Diagnostics-ACI"
         },
-                {
+        {
           "Properties": {
             "Description": "Ensures that Activity Log Diagnostics settings are set to push logs into a Storage Account for Long term retention",
             "DisplayName": "Deploy Diagnostic Settings for Azure Activity Logs to Storage Account",
