@@ -786,6 +786,8 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'subTemplates/recoveryServicesVault.json')]",
+            "azureCisPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/audit-azureCisPolicyAssignment.json')]",
+            "iso27001PolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/audit-iso27001-2013PolicyAssignment.json')]",
             "azureBudgetPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-azureBudgetPolicyAssignment.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
             "nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
@@ -834,6 +836,8 @@
                 "azPolicyForAksPolicyAssignment": "[take(concat('policyAss-aksPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivEscalationPolicyAssignment": "[take(concat('policyAss-aksPrivEsc', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "nsgFlowLogsPolicyAssignment": "[take(concat('policyAss-nsgFlowLogs', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azureCisPolicyAssignment": "[take(concat('policyAss-azureCIS', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "iso27001PolicyAssignment": "[take(concat('policyAss-iso27001', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "appGatewayPolicyAssignment": "[take(concat('policyAss-appGwy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksHttpsPolicyAssignment": "[take(concat('policyAss-aksHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "aksPrivilegedPolicyAssignment": "[take(concat('policyAss-aksPriv', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1402,6 +1406,50 @@
                     "uri": "[variables('deploymentUris').asbPolicyAssignment]"
                 },
                 "parameters": {}
+            }
+        },
+        {
+            "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deploy Azure Foundations CIS 1.3 Benchmark Policy Initiative",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').mg.azureCisPolicyAssignment]",
+            "scope": "[variables('MgScopes').topLevel]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
+                "policyCompletion"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').azureCisPolicyAssignment]"
+                },
+                "parameters": {}
+            }
+        },
+        {
+            "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deploy ISO 27001:2013 Policy Initiative",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').mg.iso27001PolicyAssignment]",
+            "scope": "[variables('MgScopes').topLevel]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
+                "policyCompletion"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').iso27001PolicyAssignment]"
+                },
+                "parameters": {
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
+                    }
+                }
             }
         },
         {
