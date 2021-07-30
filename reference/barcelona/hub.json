@@ -786,6 +786,7 @@
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subTemplates/storage.json')]",
             "recoveryServicesVault": "[uri(deployment().properties.templateLink.uri, 'subTemplates/recoveryServicesVault.json')]",
+            "azureBudgetPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-azureBudgetPolicyAssignment.json')]",
             "logAnalyticsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-logAnalyticsPolicyAssignment.json')]",
             "nsgFlowLogsPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/dine-nsgFlowLogsPolicyAssignment.json')]",
             "appGatewayPolicyAssignment": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/policyAssignments/deny-appGwyWafPolicyAssignment.json')]",
@@ -839,6 +840,7 @@
                 "sqlAuditPolicyAssignment": "[take(concat('PolicyAss-sqlAudit', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "sqlEncryptionPolicyAssignment": "[take(concat('policyAss-sqlEncrypt', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "pipPolicyAssignment": "[take(concat('policyAss-publicIp', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "azureBudgetPolicyAssignment": "[take(concat('policyAss-budget', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "rdpFromInternetLandingZonePolicyAssignment": "[take(concat('policyAss-rdpLz', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "rdpFromInternetIdentityPolicyAssignment": "[take(concat('policyAss-rdpIdam', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "storageHttpsPolicyAssignment": "[take(concat('policyAss-storageHttps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
@@ -1426,6 +1428,29 @@
                     },
                     "logAnalyticsResourceId": {
                         "value": "[variables('platformManagementResourceIds').logAnalyticsWorkspace]"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the Azure Policy Assignment at the root Management Group to deploy Azure Budgets to a Subscription",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').mg.azureBudgetPolicyAssignment]",
+            "scope": "[variables('MgScopes').topLevel]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "policyCompletion"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').azureBudgetPolicyAssignment]"
+                },
+                "parameters": {
+                    "topLevelManagementGroupPrefix": {
+                        "value": "[parameters('enterpriseScaleCompanyPrefix')]"
                     }
                 }
             }

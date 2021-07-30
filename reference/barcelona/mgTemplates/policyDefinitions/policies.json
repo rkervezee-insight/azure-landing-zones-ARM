@@ -451,7 +451,7 @@
                           {
                             "type": "Microsoft.Consumption/budgets",
                             "apiVersion": "2019-10-01",
-                            "name": "default-sandbox-budget",
+                            "name": "[[concat(subscription().id,'-defaultBudget')]",
                             "properties": {
                               "timePeriod": {
                                 "startDate": "[[parameters('startDate')]"
