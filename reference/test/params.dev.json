@@ -1,0 +1,63 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "lzPrefix": {
+            "value": "sjj"
+        },
+        "location": {
+            "value": "australiaeast"
+        },
+        "envPrefix": {
+            "value": "dev"
+        },
+        "amount": {
+            "value": 1000
+        },
+        "timeGrain": {
+            "value": "Monthly"
+        },
+        "contactEmails": {
+            "value": [
+                "stephen.tulp@outlook.com"
+            ]
+        },
+        "contactRoles": {
+            "value": [
+                "Owner",
+                "Contributor"
+            ]
+        },
+        "firstThreshold": {
+            "value": 80
+        },
+        "secondThreshold": {
+            "value": 100
+        },
+        "tags": {
+            "value": {
+                "applicationName": "notset",
+                "owner": "notset",
+                "businessCriticality": "notset",
+                "ownerEmail": "notset",
+                "costCenter": "notset",
+                "dataClassification": "notset"
+            }
+        },
+        "vnetAddressPrefix": {
+            "value": "10.1.0.0/16"
+        },
+        "webSubnetAddressPrefix": {
+            "value": "10.1.0.0/24"
+        },
+        "appsSubnetAddressPrefix": {
+            "value": "10.1.1.0/24"
+        },
+        "dataSubnetAddressPrefix": {
+            "value": "10.1.2.0/24"
+        },
+        "platformConnectivityVnetId": {
+            "value": "/subscriptions/8d0248a2-d875-4407-99a6-0981fe09bff2/resourceGroups/dwer-syd-npe-arg-network/providers/Microsoft.Network/virtualNetworks/dwer-syd-npe-vnt-10.50.1.0"
+        }
+    }
+}
