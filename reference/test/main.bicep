@@ -82,7 +82,6 @@ var namePrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}')
 var storageNamePrefix = toLower('${lzPrefix}${locPrefix}${envPrefix}${staPrefix}')
 var rgPrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}-${argPrefix}')
 var tagsDefault = {
-  Owner: 'notset'
   applicationName: 'notset'
   owner: 'notset'
   businessCriticality: 'notset'
@@ -170,3 +169,7 @@ module budgets 'modules/budgets.bicep' = {
 }
 
 // Outputs - TODO
+output managementResourceGroup string = managementResourceGroup.name
+output networkWatcherResourceGroup string = networkWatcherResourceGroup.name
+output networkResourceGroup string = networkResourceGroup.name
+output tags object = tags
