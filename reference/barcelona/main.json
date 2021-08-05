@@ -883,16 +883,15 @@
                 "networkRg": "[take(concat('rg-network', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "networkWatcherRg": "[take(concat('rg-networkWatcher', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "vnetConnectivityHub": "[take(concat('hubSpoke', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "vwanConnectivityHub": "[take(concat('vwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
+                "vwanConnectivityHub": "[take(concat('vwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "identityVnetPeering": "[take(concat('idamVnetPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "identityVwanPeering": "[take(concat('idamVwanPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
                 "privateDnsZones": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddos": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
-            },
-            "identityVnetPeering": "[take(concat('identityVnetPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "identityVwanPeering": "[take(concat('identityVwanPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-            "corpConnectedLzVwanSubs": "[take(concat('EntScale-CorpConnlandingZonesVwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
+            }
         },
         "namingPrefix": {
             "storage": "[concat(parameters('enterpriseScaleCompanyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
@@ -912,7 +911,7 @@
             "networkWatcher": "NetworkWatcherRG"
         },
         "platformIdentityResourceGroups": {
-            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
+            "network": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
             "backup": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-backup'))]"
         },
         "platformManagementResourceNames": {
@@ -921,7 +920,7 @@
             "keyVault": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('akvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "storageAccount": "[take(toLower(concat(variables('namingPrefix').storage, parameters('staPrefix'), guid(parameters('enterpriseScaleCompanyPrefix')))), 20)]"
         },
-        // "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "platformConnectivityResourceNames": {
             "vpnGwy": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vngPrefix'), '-vpn'))]",
             "vpnGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-vpn'))]",
@@ -933,7 +932,7 @@
             "bastionIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-bastion'))]",
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
-            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-test'))]",
+            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
             "vwanHub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-test'))]",
             "bastionNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-bastion'))]",
             "appGwyNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-appGateway'))]",
@@ -2997,7 +2996,7 @@
             "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "[variables('deploymentNames').identityVnetPeering]",
+            "name": "[variables('deploymentNames').sub.identityVnetPeering]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -3017,7 +3016,7 @@
                 },
                 "parameters": {
                     "vNetRgName": {
-                        "value": "[variables('platformIdentityResourceGroups').identityVnet]"
+                        "value": "[variables('platformIdentityResourceGroups').network]"
                     },
                     "vNetName": {
                         "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').identityVnet)]"
@@ -3042,7 +3041,7 @@
             "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
-            "name": "[variables('deploymentNames').identityVwanPeering]",
+            "name": "[variables('deploymentNames').sub.identityVwanPeering]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[parameters('location')]",
             "dependsOn": [
@@ -3062,7 +3061,7 @@
                 },
                 "parameters": {
                     "vNetRgName": {
-                        "value": "[variables('platformIdentityResourceGroups').identityVnet]"
+                        "value": "[variables('platformIdentityResourceGroups').network]"
                     },
                     "vNetName": {
                         "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').identityVnet)]"

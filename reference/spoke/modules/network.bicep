@@ -194,7 +194,7 @@ resource hubToSpokeVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetwork
   }
 }
 
-module SpokeToHubVnetPeering 'auxiliary/platformConnectivityVnetPeering.bicep' = if (!empty(platformConnectivityVnetId)) {
+module SpokeToHubVnetPeering 'auxiliary/vnetPeering.bicep' = if (!empty(platformConnectivityVnetId)) {
   name: '${platformConnectivityVnetName}-to-${vnet.name}'
   scope: resourceGroup(platformConnectivityVnetSubscriptionId, platformConnectivityVnetResourceGroupName)
   params: {
