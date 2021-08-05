@@ -168,7 +168,7 @@ module budgets 'modules/budgets.bicep' = {
   }
 }
 
-// Outputs - TODO
+// Outputs
 output managementResourceGroup string = managementResourceGroup.name
 output networkWatcherResourceGroup string = networkWatcherResourceGroup.name
 output networkResourceGroup string = networkResourceGroup.name
