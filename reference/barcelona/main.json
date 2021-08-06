@@ -920,7 +920,6 @@
             "keyVault": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('akvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "storageAccount": "[take(toLower(concat(variables('namingPrefix').storage, parameters('staPrefix'), guid(parameters('enterpriseScaleCompanyPrefix')))), 20)]"
         },
-        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "platformConnectivityResourceNames": {
             "vpnGwy": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vngPrefix'), '-vpn'))]",
             "vpnGwyIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-vpn'))]",
@@ -940,7 +939,7 @@
             "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformIdentityResourceNames": {
-            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', parameters('addressPrefix')))]",
+            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
             "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
         },
         "platformManagementResourceIds": {
@@ -1007,7 +1006,8 @@
         ],
         "roleDefinitions": {
             "networkContributor": "4d97b98b-1d4f-4787-a291-c67834d212e7"
-        }
+        },
+        "vnetAddressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]"
     },
     "resources": [
         {
@@ -2059,7 +2059,7 @@
             }
         },
         {
-            "comments": "Linked template for the creation of the Virtual Wan Networking",
+            "comments": "Linked template for the creation of the Virtual WAN Networking",
             "condition": "[and(not(empty(parameters('connectivitySubscriptionId'))),equals(parameters('enableHub'), 'vwan'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
