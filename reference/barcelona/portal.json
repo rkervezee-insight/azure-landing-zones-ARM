@@ -1791,7 +1791,7 @@
                     {
                         "name": "esIdentityConnectivity",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Create virtual network for Domain Controllers and connect to the PLatform Connectivity hub",
+                        "label": "Create Virtual Network for Domain Controllers and peer to the Platform Connectivity Hub",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
                         "constraints": {
