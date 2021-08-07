@@ -227,6 +227,18 @@
             ],
             "defaultValue": "No"
         },
+        "enableIdentitySpoke": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes"
+        },
+        "identityAddressPrefix": {
+            "type": "string",
+            "defaultValue": ""
+        },
         "enableLogAnalytics": {
             "type": "string",
             "defaultValue": "No",
@@ -740,10 +752,6 @@
         "vpnGateWayScaleUnit": {
             "type": "string",
             "defaultValue": "1"
-        },
-        "identityAddressPrefix": {
-            "type": "string",
-            "defaultValue": ""
         }
     },
     "variables": {
@@ -780,6 +788,7 @@
             "roleAssignments": "[uri(deployment().properties.templateLink.uri, 'mgTemplates/roleAssignments/roleAssignment.json')]",
             "vnetConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/hubspokeConnectivity.json')]",
             "vwanConnectivityHub": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vwanConnectivity.json')]",
+            "identityConnectivity": "[uri(deployment().properties.templateLink.uri, 'subTemplates/identityConnectivity.json')]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'subTemplates/logAnalyticsWorkspace.json')]",
             "resourceGroup": "[uri(deployment().properties.templateLink.uri, 'subTemplates/resourceGroup.json')]",
             "corpVnetPeering": "[uri(deployment().properties.templateLink.uri, 'subTemplates/vnetPeering.json')]",
@@ -881,9 +890,12 @@
                 "azOpsRg": "[take(concat('rg-azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "backupRg": "[take(concat('rg-backup', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "networkRg": "[take(concat('rg-network', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "idamNetworkRg": "[take(concat('rg-idamNetwork', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "networkWatcherRg": "[take(concat('rg-networkWatcher', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "idamNetworkWatcherRg": "[take(concat('rg-idamNetworkWatcher', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "vnetConnectivityHub": "[take(concat('hubSpoke', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "vwanConnectivityHub": "[take(concat('vwan', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "identityConnectivity": "[take(concat('idamVnet', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "identityVnetPeering": "[take(concat('idamVnetPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "identityVwanPeering": "[take(concat('idamVwanPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
@@ -904,7 +916,6 @@
             "azops": "[toLower(concat(variables('namingPrefix').management, '-', parameters('argPrefix'), '-azops'))]"
         },
         "platformConnectivityResourceGroups": {
-            "connectivity": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
             "ddos": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-ddos'))]",
             "privatedns": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-privatedns'))]",
             "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
@@ -912,7 +923,8 @@
         },
         "platformIdentityResourceGroups": {
             "network": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
-            "backup": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-backup'))]"
+            "backup": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-backup'))]",
+            "networkWatcher": "NetworkWatcherRG"
         },
         "platformManagementResourceNames": {
             "logAnalyticsWorkspace": "[toLower(take(concat(variables('namingPrefix').management, '-', parameters('lawPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
@@ -939,8 +951,9 @@
             "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformIdentityResourceNames": {
-            "identityVnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
-            "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]"
+            "vnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('vnetAddressSpace')))]",
+            "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformManagementResourceIds": {
             "logAnalyticsWorkspace": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.OperationalInsights/workspaces/', variables('platformManagementResourceNames').logAnalyticsWorkspace)]",
@@ -950,18 +963,21 @@
         },
         "platformConnectivityResourceIds": {
             "ddos": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('platformConnectivityResourceNames').ddos)]",
-            "vHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualNetworks/', variables('platformConnectivityResourceNames').vhub)]",
-            "vWan": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualWans/', variables('platformConnectivityResourceNames').vwan)]",
-            "vwanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vwanHub)]",
+            "vHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/virtualNetworks/', variables('platformConnectivityResourceNames').vhub)]",
+            "vWan": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/virtualWans/', variables('platformConnectivityResourceNames').vwan)]",
+            "vwanHub": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/virtualHubs/', variables('platformConnectivityResourceNames').vwanHub)]",
             "privatedns": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').privatedns)]",
-            "bastionIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').bastionIp)]",
-            "azfw": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/azureFirewalls/', variables('platformConnectivityResourceNames').azfw)]",
-            "azfwPolicy": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/firewallPolicies/', variables('platformConnectivityResourceNames').azfwPolicy)]",
-            "azfwIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').azfwIp)]",
-            "erGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').erGwyIp)]",
-            "bastionNsg": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/networkSecurityGroups/', variables('platformConnectivityResourceNames').bastionNsg)]",
-            "appGwyNsg": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/networkSecurityGroups/', variables('platformConnectivityResourceNames').appGwyNsg)]",
-            "vpnGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').connectivity, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').vpnGwyIp)]"
+            "bastionIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').bastionIp)]",
+            "azfw": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/azureFirewalls/', variables('platformConnectivityResourceNames').azfw)]",
+            "azfwPolicy": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/firewallPolicies/', variables('platformConnectivityResourceNames').azfwPolicy)]",
+            "azfwIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').azfwIp)]",
+            "erGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').erGwyIp)]",
+            "bastionNsg": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/networkSecurityGroups/', variables('platformConnectivityResourceNames').bastionNsg)]",
+            "appGwyNsg": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/networkSecurityGroups/', variables('platformConnectivityResourceNames').appGwyNsg)]",
+            "vpnGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityResourceGroups').network, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').vpnGwyIp)]"
+        },
+        "platformIdentityResourceIds": {
+            "vnet": "[concat('/subscriptions/', parameters('identitySubscriptionId'), '/resourceGroups/', variables('platformIdentityResourceGroups').network, '/providers/Microsoft.Network/virtualNetworks/', variables('platformIdentityResourceNames').vnet)]"
         },
         "privateDnsZones": [
             "privatelink.azure-automation.net",
@@ -2992,7 +3008,129 @@
             }
         },
         {
-            // Peer vnet in identity subscription to connectivity hub if vhub is true
+            "comments": "Linked template for the creation of the Network Resource Group in the Platform Identity Subscription",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.idamNetworkRg]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').resourceGroup]"
+                },
+                "parameters": {
+                    "rgName": {
+                        "value": "[variables('platformidentityResourceGroups').network]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "comments": "Linked template for the creation of the Network Watcher Resource Group in the Platform Identity Subscription",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "name": "[variables('deploymentNames').sub.idamnetworkWatcherRg]",
+            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "location": "[deployment().location]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveConnectivitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').resourceGroup]"
+                },
+                "parameters": {
+                    "rgName": {
+                        "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+      //  identity vnet
+        {
+            "comments": "Linked template for the creation of the Platform Identity Virtual Networking",
+            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentitySpoke'), 'yes'))]",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2020-10-01",
+            "scope": "[variables('MgScopes').identity]",
+            "name": "[variables('deploymentNames').sub.identityConnectivity]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkWatcherRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]"
+            ],
+            "location": "[deployment().location]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "contentVersion": "1.0.0.0",
+                    "uri": "[variables('deploymentUris').identityConnectivity]"
+                },
+                "parameters": {
+                    "enableIdentitySpoke": {
+                        "value": "[parameters('enableIdentitySpoke')]"
+                    },
+                    "identityAddressPrefix": {
+                        "value": "[parameters('identityAddressPrefix')]"
+                    },
+                    "location": {
+                        "value": "[parameters('location')]"
+                    },
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
+                    },
+                    "networkRg": {
+                        "value": "[variables('platformIdentityResourceGroups').network]"
+                    },
+                    "networkWatcherRg": {
+                        "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
+                    },
+                    "networkWatcher": {
+                        "value": "[variables('platformIdentityResourceNames').networkWatcher]"
+                    },
+                    "vnet": {
+                        "value": "[variables('platformIdentityResourceNames').vnet]"
+                    },
+                    "vnetResourceId": {
+                        "value": "[variables('platformIdentityResourceIds').vnet]"
+                    },
+                    "ddosPlanResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').ddos]"
+                    }
+                }
+            }
+        },
+        // Peer vnet in identity subscription to connectivity hub if vhub is true
+        {
+            
             "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
@@ -3006,7 +3144,9 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkWatcherRg)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -3019,7 +3159,7 @@
                         "value": "[variables('platformIdentityResourceGroups').network]"
                     },
                     "vNetName": {
-                        "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').identityVnet)]"
+                        "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').vnet)]"
                     },
                     "vNetLocation": {
                         "value": "[parameters('location')]"
@@ -3036,8 +3176,9 @@
                 }
             }
         },
+        // Peer vnet in identity subscription to connectivity hub if vwan contidion is true
         {
-            // Peer vnet in identity subscription to connectivity hub if vwan contidion is true
+            
             "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
@@ -3064,7 +3205,7 @@
                         "value": "[variables('platformIdentityResourceGroups').network]"
                     },
                     "vNetName": {
-                        "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').identityVnet)]"
+                        "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').vnet)]"
                     },
                     "vNetLocation": {
                         "value": "[parameters('location')]"

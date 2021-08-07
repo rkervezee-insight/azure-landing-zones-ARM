@@ -1646,9 +1646,9 @@
                     {
                         "name": "esIdentity",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Enable identity subscription",
+                        "label": "Assign recommended policies to govern identity and domain controllers",
                         "defaultValue": "No",
-                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will move selected subscription into identity management group",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, Azure Policy will be assigned at the scope to govern your identity resources.",
                         "constraints": {
                             "allowedValues": [
                                 {
@@ -1677,7 +1677,7 @@
                         "visible": "[equals(steps('esPlatformIdentity').esIdentity,'Yes')]"
                     },
                     {
-                        "name": "identitypolicies",
+                        "name": "identityPolicies",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]",
                         "options": {
@@ -1786,7 +1786,40 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformIdentity').esIdentity, 'Yes')]"
+                        "visible": "[and(equals(steps('esPlatformIdentity').esIdentity, 'Yes'), equals(steps('esPlatformIdentity').esIdAzBackup, 'Yes'))]"
+                    },
+                    {
+                        "name": "esIdentityConnectivity",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Create virtual network for Domain Controllers and connect to the PLatform Connectivity hub",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[and(equals(steps('esPlatformIdentity').esIdentity,'Yes'), not(equals(steps('esPlatformConnectivity').esHub,'No')))]"
+                    },
+                    {
+                        "name": "identityAddressPrefix",
+                        "type": "Microsoft.Common.TextBox",
+                        "label": "Virtual network address space",
+                        "placeholder": "",
+                        "defaultValue": "10.110.0.0/24",
+                        "toolTip": "The virtual network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)",
+                        "constraints": {
+                            "required": true,
+                            "validationMessage": "The virtual network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)."
+                        },
+                        "visible": "[and(equals(steps('esPlatformIdentity').esIdentityConnectivity, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub,'No')))]"
                     }
                 ]
             },
@@ -2409,6 +2442,10 @@
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
             "enableRsvForIdentity": "[steps('esPlatformIdentity').esIdRsv]",
+
+            "enableIdentitySpoke": "[steps('esPlatformIdentity').esIdentityConnectivity]",
+            "identityAddressPrefix": "[steps('esPlatformConnectivity').esIdentityAddress]",
+
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
