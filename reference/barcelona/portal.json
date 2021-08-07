@@ -1847,7 +1847,7 @@
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
-                            "text": "Select the subscriptions you want to move to corp management group.",
+                            "text": "Select the subscriptions you want to move to Corp Landing Zone Management Group.",
                             "link": {
                                 "label": "Learn more",
                                 "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/design-principles#subscription-democratization"
@@ -1858,7 +1858,7 @@
                         "name": "esLzConnectivity",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Connect corp landing zones to the connectivity hub (optional)?",
-                        "defaultValue": "[if(equals(steps('esPlatformConnectivity').esHub,'Yes'),'Yes','No')]",
+                        "defaultValue": "No",
                         "toolTip": "If 'Yes' is selected for corp landing zones, ARM will connect the subscriptions to the hub virtual network via VNet peering.",
                         "constraints": {
                             "allowedValues": [
@@ -1872,7 +1872,7 @@
                                 }
                             ]
                         },
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'Yes')]"
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub,'vhub')]"
                     },
                     {
                         "name": "lzCorpSubsApi",
@@ -1966,7 +1966,7 @@
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
                         "options": {
-                            "text": "Select the subscriptions you want to move to online management group.",
+                            "text": "Select the subscriptions you want to move to Online Landing Zone Management Group.",
                             "link": {
                                 "label": "Learn more",
                                 "uri": "https://docs.microsoft.com/azure/cloud-adoption-framework/ready/enterprise-scale/design-principles#subscription-democratization"
