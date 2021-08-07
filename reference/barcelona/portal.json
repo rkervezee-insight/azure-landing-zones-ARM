@@ -2444,7 +2444,7 @@
             "enableRsvForIdentity": "[steps('esPlatformIdentity').esIdRsv]",
 
             "enableIdentitySpoke": "[steps('esPlatformIdentity').esIdentityConnectivity]",
-            "identityAddressPrefix": "[steps('esPlatformConnectivity').esIdentityAddress]",
+            "identityAddressPrefix": "[steps('esPlatformIdentity').esIdentityAddress]",
 
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
