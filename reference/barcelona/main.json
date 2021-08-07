@@ -3119,9 +3119,6 @@
                     "vnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
                     },
-                    "vnetResourceId": {
-                        "value": "[variables('platformIdentityResourceIds').vnet]"
-                    },
                     "ddosPlanResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').ddos]"
                     }
