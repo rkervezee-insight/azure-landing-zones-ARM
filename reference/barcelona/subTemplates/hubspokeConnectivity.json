@@ -72,17 +72,6 @@
                 "description": "Select whether the ExpressRoute Gateway should be deployed or not."
             }
         },
-        "enableDdoS": {
-            "type": "string",
-            "defaultValue": "No",
-            "allowedValues": [
-                "Yes",
-                "No"
-            ],
-            "metadata": {
-                "description": "Select whether the DDoS Standard protection plan should be enabled or not."
-            }
-        },
         "connectivitySubscriptionId": {
             "type": "string",
             "defaultValue": "",
@@ -168,9 +157,6 @@
                 "description": "Provide subnet for App Gateway"
             }
         },
-        "ddosPlanResourceId": {
-            "type": "string"
-        },
         "networkRg": {
             "type": "string"
         },
@@ -247,9 +233,6 @@
         "erGwySubnetId": "[concat(parameters('vhubResourceId'), '/subnets/GatewaySubnet')]",
         "azfwSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureFirewallSubnet')]",
         "azBastionSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureBastion')]",
-        "ddosProtectionPlanId": {
-            "id": "[parameters('ddosPlanResourceId')]"
-        },
         "azfwPolicyResourceId": {
             "id": "[parameters('azfwPolicyResourceId')]"
         },
@@ -374,8 +357,6 @@
                                                                           if(
                                                                               not(
                                                                                   empty(parameters('subnetMaskForazfw'))), variables('fwSubnet'), json('[]')))]"
-                                                //"enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                                //"ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
                                             }
                                         },
                                         {

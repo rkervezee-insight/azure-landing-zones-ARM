@@ -1948,9 +1948,6 @@
                     "enableErGw": {
                         "value": "[parameters('enableErGw')]"
                     },
-                    "enableDdoS": {
-                        "value": "[parameters('enableDdoS')]"
-                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
@@ -2059,9 +2056,7 @@
                     "azfwPolicyResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').azfwPolicy]"
                     },
-                    "ddosPlanResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').ddos]"
-                    },
+
                     "bastionIpResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').bastionIp]"
                     },
