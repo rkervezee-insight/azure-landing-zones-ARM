@@ -1809,7 +1809,7 @@
                         "visible": "[and(equals(steps('esPlatformIdentity').esIdentity,'Yes'), not(equals(steps('esPlatformConnectivity').esHub,'No')))]"
                     },
                     {
-                        "name": "identityAddressPrefix",
+                        "name": "esIdentityAddressPrefix",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Virtual network address space",
                         "placeholder": "",
@@ -2444,7 +2444,7 @@
             "enableRsvForIdentity": "[steps('esPlatformIdentity').esIdRsv]",
 
             "enableIdentitySpoke": "[steps('esPlatformIdentity').esIdentityConnectivity]",
-            "identityAddressPrefix": "[steps('esPlatformIdentity').esIdentityAddress]",
+            "identityAddressPrefix": "[steps('esPlatformIdentity').esIdentityAddressPrefix]",
 
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",

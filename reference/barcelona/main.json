@@ -3083,8 +3083,8 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkRg)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkWatcherRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkWatcherRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]"
             ],
             "location": "[deployment().location]",
@@ -3142,8 +3142,9 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkRg)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamnetworkWatcherRg)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkWatcherRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.identityConnectivity)]"
             ],
             "properties": {
                 "mode": "Incremental",

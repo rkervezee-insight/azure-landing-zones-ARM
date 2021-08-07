@@ -42,9 +42,6 @@
         "vnet": {
             "type": "string"
         },
-        "vnetResourceId": {
-            "type": "string"
-        },
          "ddosPlanResourceId": {
             "type": "string"
         },
