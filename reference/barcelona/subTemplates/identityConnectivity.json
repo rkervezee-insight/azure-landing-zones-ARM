@@ -42,7 +42,7 @@
         "vnet": {
             "type": "string"
         },
-         "ddosPlanResourceId": {
+        "ddosPlanResourceId": {
             "type": "string"
         },
         "enableDdoS": {
@@ -158,9 +158,9 @@
                                                     "addressPrefixes": [
                                                         "[parameters('IdentityAddressPrefix')]"
                                                     ]
-                                                }
-                                              //  "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                               // "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
+                                                },
+                                                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
                                             },
                                             "resources": []
                                         },

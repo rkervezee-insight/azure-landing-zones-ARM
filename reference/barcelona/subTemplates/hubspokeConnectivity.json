@@ -143,6 +143,17 @@
                 "description": "Select whether the Azure Bastion should be deployed or not."
             }
         },
+        "enableDdoS": {
+            "type": "string",
+            "defaultValue": "No",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "metadata": {
+                "description": "Select whether the DDoS Standard protection plan should be enabled or not."
+            }
+        },
         "subnetMaskForAzBastion": {
             "type": "string",
             "defaultValue": "",
@@ -225,6 +236,9 @@
         },
         "appGwyNsgResourceId": {
             "type": "string"
+        },
+        "ddosPlanResourceId": {
+            "type": "string"
         }
     },
     "variables": {
@@ -235,6 +249,9 @@
         "azBastionSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureBastion')]",
         "azfwPolicyResourceId": {
             "id": "[parameters('azfwPolicyResourceId')]"
+        },
+        "ddosProtectionPlanId": {
+            "id": "[parameters('ddosPlanResourceId')]"
         },
         "azfwDnsSettings": {
             "enableProxy": true
@@ -349,6 +366,8 @@
                                                         "[parameters('addressPrefix')]"
                                                     ]
                                                 },
+                                                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]",
                                                 "subnets": "[
                                                              union(
                                                                   if(
