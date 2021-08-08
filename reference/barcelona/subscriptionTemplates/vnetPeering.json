@@ -95,7 +95,7 @@
       "name": "[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6))]",
       "resourceGroup": "[parameters('rgName')]",
       "dependsOn": [
-        "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
+        "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]"
       ],
       "properties": {
         "mode": "Incremental",
