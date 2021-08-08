@@ -3010,7 +3010,7 @@
         },
         {
             "comments": "Linked template for the creation of the Network Resource Group in the Platform Identity Subscription",
-            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(equals(parameters('enableHub'),'No')), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.idamNetworkRg]",
