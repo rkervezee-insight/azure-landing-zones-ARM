@@ -3073,7 +3073,7 @@
       //  identity vnet
         {
             "comments": "Linked template for the creation of the Platform Identity Virtual Networking",
-            "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentitySpoke'), 'yes'))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.identityConnectivity]",
