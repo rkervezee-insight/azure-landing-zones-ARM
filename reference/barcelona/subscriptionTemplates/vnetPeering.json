@@ -2,28 +2,58 @@
   "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "rgName": {
+    "IdentityAddressPrefix": {
       "type": "string",
       "metadata": {
-        "description": "Provide a name for the resource group that will contain the virtual network."
+        "displayName": "addressPrefix",
+        "description": "Address prefix of the HUB"
       }
     },
-    "vNetName": {
+    "enableIdentitySpoke": {
       "type": "string",
-      "metadata": {
-        "description": "Provide a name for the virtual network."
-      }
+      "defaultValue": "Yes",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ]
     },
     "location": {
       "type": "string",
       "metadata": {
-        "description": "Provide a location for the virtual network."
-      }
+        "displayName": "location",
+        "description": "Location of the HUB"
+      },
+      "defaultValue": "[deployment().location]"
     },
-    "vNetCidrRange": {
+    "identitySubscriptionId": {
       "type": "string",
+      "maxLength": 36,
+      "defaultValue": ""
+    },
+    "networkRg": {
+      "type": "string"
+    },
+    "networkWatcherRg": {
+      "type": "string"
+    },
+    "networkWatcher": {
+      "type": "string"
+    },
+    "vnet": {
+      "type": "string"
+    },
+    "ddosPlanResourceId": {
+      "type": "string"
+    },
+    "enableDdoS": {
+      "type": "string",
+      "defaultValue": "No",
+      "allowedValues": [
+        "Yes",
+        "No"
+      ],
       "metadata": {
-        "description": "Provide a CIDR range for the virtual network."
+        "description": "Select whether the DDoS Standard protection plan should be enabled or not."
       }
     },
     "vNetPeerUseRemoteGateway": {
@@ -54,13 +84,20 @@
       }
     }
   },
-  "variables": {},
+  "variables": {
+    "addsSubnet": "adds",
+    "udrRoute": "subnet-to-azureFirewall",
+    "ddosProtectionPlanId": {
+      "id": "[parameters('ddosPlanResourceId')]"
+    }
+  },
   "resources": [
     {
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
       "name": "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
       "location": "[parameters('location')]",
+      "resourceGroup": "[parameters('networkWatcherRg')]",
       "dependsOn": [],
       "properties": {
         "mode": "Incremental",
@@ -71,31 +108,37 @@
           "variables": {},
           "resources": [
             {
-              "type": "Microsoft.Resources/resourceGroups",
-              "apiVersion": "2020-06-01",
-              "name": "[parameters('rgName')]",
-              "location": "[parameters('location')]",
-              "properties": {}
+              "comments": "Deploy Resource Group Lock",
+              "type": "Microsoft.Authorization/locks",
+              "apiVersion": "2016-09-01",
+              "name": "ResourceGroup-DontDelete",
+              "properties": {
+                "level": "CanNotDelete",
+                "notes": "Prevent deletion of the resourceGroup"
+              }
             },
             {
-              "type": "Microsoft.Resources/resourceGroups",
-              "apiVersion": "2020-06-01",
-              "name": "NetworkWatcherRG",
+              "comments": "Deploy Network Watcher",
+              "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
+              "type": "Microsoft.Network/networkWatchers",
+              "apiVersion": "2020-05-01",
+              "name": "[parameters('networkWatcher')]",
               "location": "[parameters('location')]",
-              "properties": {}
+              "tags": {},
+              "properties": {},
+              "resources": []
             }
-          ],
-          "outputs": {}
+          ]
         }
       }
     },
     {
+      "comments": "Nested deployment for Azure Network Resources",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2020-06-01",
-      "name": "[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6))]",
-      "resourceGroup": "[parameters('rgName')]",
+      "apiVersion": "2019-10-01",
+      "name": "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
+      "resourceGroup": "[parameters('networkRg')]",
       "dependsOn": [
-        "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]"
       ],
       "properties": {
         "mode": "Incremental",
@@ -106,17 +149,29 @@
           "variables": {},
           "resources": [
             {
+              "comments": "Deploy Resource Group Lock",
+              "type": "Microsoft.Authorization/locks",
+              "apiVersion": "2016-09-01",
+              "name": "ResourceGroup-DontDelete",
+              "properties": {
+                "level": "CanNotDelete",
+                "notes": "Prevent deletion of the resourceGroup"
+              }
+            },
+            {
               "type": "Microsoft.Network/virtualNetworks",
-              "apiVersion": "2020-06-01",
-              "name": "[parameters('vNetName')]",
+              "apiVersion": "2020-04-01",
+              "name": "[parameters('vnet')]",
               "location": "[parameters('location')]",
               "dependsOn": [],
               "properties": {
                 "addressSpace": {
                   "addressPrefixes": [
-                    "[parameters('vNetCidrRange')]"
+                    "[parameters('IdentityAddressPrefix')]"
                   ]
-                }
+                },
+                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
+                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
                 /*
                 "dhcpOptions": {
                   "dnsServers": "[if(
@@ -129,11 +184,42 @@
               }
             },
             {
+              "comments": "Conditional deployment of Route Table",
+              "type": "Microsoft.Network/routeTables",
+              "apiVersion": "2020-04-01",
+              "name": "test",
+              "location": "[parameters('location')]",
+              "properties": {
+                "routes": [
+                  {
+                    "name": "[variables('udrRoute')]",
+                    "properties": {
+                      "addressPrefix": "0.0.0.0/0",
+                      "nextHopType": "VirtualAppliance",
+                      "nextHopIpAddress": "1.1.1.1"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "comments": "Conditional deployment of adds Subnet",
+              "type": "Microsoft.Network/virtualNetworks/subnets",
+              "apiVersion": "2020-04-01",
+              "name": "[concat(parameters('vnet'), '/', variables('addsSubnet'))]",
+              "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnet'))]"
+              ],
+              "properties": {
+                "addressPrefix": "[parameters('IdentityAddressPrefix')]"
+              }
+            },
+            {
               "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
               "apiVersion": "2020-05-01",
-              "name": "[concat(parameters('vNetName'), '/peerToHub')]",
+              "name": "[concat(parameters('vnet'), '/peerToHub')]",
               "dependsOn": [
-                "[parameters('vNetName')]"
+                "[parameters('vnet')]"
               ],
               "properties": {
                 "remoteVirtualNetwork": {
@@ -152,7 +238,7 @@
               "subscriptionId": "[split(parameters('hubResourceId'),'/')[2]]",
               "resourceGroup": "[split(parameters('hubResourceId'),'/')[4]]",
               "dependsOn": [
-                "[parameters('vNetName')]"
+                "[parameters('vnet')]"
               ],
               "properties": {
                 "mode": "Incremental",
@@ -161,7 +247,7 @@
                 },
                 "parameters": {
                   "remoteVirtualNetwork": {
-                    "value": "[concat(subscription().id,'/resourceGroups/',parameters('rgName'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vNetName'))]"
+                    "value": "[concat(subscription().id,'/resourceGroups/',parameters('networkRg'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vnet'))]"
                   },
                   "hubName": {
                     "value": "[split(parameters('hubResourceId'),'/')[8]]"

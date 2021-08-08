@@ -3111,14 +3111,14 @@
                     "networkRg": {
                         "value": "[variables('platformIdentityResourceGroups').network]"
                     },
+                    "vnet": {
+                        "value": "[variables('platformIdentityResourceNames').vnet]"
+                    },
                     "networkWatcherRg": {
                         "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
                     },
                     "networkWatcher": {
                         "value": "[variables('platformIdentityResourceNames').networkWatcher]"
-                    },
-                    "vnet": {
-                        "value": "[variables('platformIdentityResourceNames').vnet]"
                     },
                     "ddosPlanResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').ddos]"
@@ -3154,23 +3154,41 @@
                     "uri": "[variables('deploymentUris').corpVnetPeering]"
                 },
                 "parameters": {
-                    "rgName": {
-                        "value": "[variables('platformIdentityResourceGroups').network]"
+                    "enableIdentitySpoke": {
+                        "value": "[parameters('enableIdentitySpoke')]"
                     },
-                    "vNetName": {
-                        "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').vnet)]"
+                    "enableDdos": {
+                        "value": "[parameters('enableDdos')]"
+                    },
+                    "identityAddressPrefix": {
+                        "value": "[parameters('identityAddressPrefix')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
                     },
-                    "vNetCidrRange": {
-                        "value": "[parameters('identityAddressPrefix')]"
+                    "identitySubscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
+                    },
+                    "networkRg": {
+                        "value": "[variables('platformIdentityResourceGroups').network]"
+                    },
+                    "vnet": {
+                        "value": "[variables('platformIdentityResourceNames').vnet]"
+                    },
+                    "networkWatcherRg": {
+                        "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
+                    },
+                    "networkWatcher": {
+                        "value": "[variables('platformIdentityResourceNames').networkWatcher]"
                     },
                     "hubResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vHub]"
                     },
                     "azureFirewallResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').azfw]"
+                    },
+                    "ddosPlanResourceId": {
+                        "value": "[variables('platformConnectivityResourceIds').ddos]"
                     }
                 }
             }
