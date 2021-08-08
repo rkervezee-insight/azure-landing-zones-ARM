@@ -3158,12 +3158,6 @@
                     "enableIdentitySpoke": {
                         "value": "[parameters('enableIdentitySpoke')]"
                     },
-                    "enableDdos": {
-                        "value": "[parameters('enableDdos')]"
-                    },
-                    "identityAddressPrefix": {
-                        "value": "[parameters('identityAddressPrefix')]"
-                    },
                     "location": {
                         "value": "[parameters('location')]"
                     },
@@ -3176,20 +3170,11 @@
                     "vnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
                     },
-                    "networkWatcherRg": {
-                        "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
-                    },
-                    "networkWatcher": {
-                        "value": "[variables('platformIdentityResourceNames').networkWatcher]"
-                    },
                     "hubResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vHub]"
                     },
-                    "azureFirewallResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').azfw]"
-                    },
-                    "ddosPlanResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').ddos]"
+                    "idamVnetResourceId": {
+                        "value": "[variables('platformIdentityResourceIds').vnet]"
                     }
                 }
             }

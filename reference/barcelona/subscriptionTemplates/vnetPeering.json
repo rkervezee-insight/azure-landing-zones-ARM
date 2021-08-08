@@ -1,14 +1,7 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "IdentityAddressPrefix": {
-      "type": "string",
-      "metadata": {
-        "displayName": "addressPrefix",
-        "description": "Address prefix of the HUB"
-      }
-    },
     "enableIdentitySpoke": {
       "type": "string",
       "defaultValue": "Yes",
@@ -33,28 +26,8 @@
     "networkRg": {
       "type": "string"
     },
-    "networkWatcherRg": {
-      "type": "string"
-    },
-    "networkWatcher": {
-      "type": "string"
-    },
     "vnet": {
       "type": "string"
-    },
-    "ddosPlanResourceId": {
-      "type": "string"
-    },
-    "enableDdoS": {
-      "type": "string",
-      "defaultValue": "No",
-      "allowedValues": [
-        "Yes",
-        "No"
-      ],
-      "metadata": {
-        "description": "Select whether the DDoS Standard protection plan should be enabled or not."
-      }
     },
     "vNetPeerUseRemoteGateway": {
       "type": "bool",
@@ -69,35 +42,27 @@
         "description": "Provide the resourceId for the hub."
       }
     },
-    "dnsServers": {
-      "type": "array",
-      "defaultValue": [],
-      "metadata": {
-        "description": "Provide DNS servers."
-      }
-    },
-    "azureFirewallResourceId": {
+    "idamVnetResourceId": {
       "type": "string",
-      "defaultValue": "",
       "metadata": {
-        "description": "Provide full resourceId of Azure Firewall if used as DNS proxy"
+        "description": "Provide the resourceId for the hub."
       }
     }
   },
   "variables": {
-    "addsSubnet": "adds",
-    "udrRoute": "subnet-to-azureFirewall",
-    "ddosProtectionPlanId": {
-      "id": "[parameters('ddosPlanResourceId')]"
-    }
+    "spokeToHubPeerName": "[concat(parameters('vnet'), '-to-', parameters('vnet'))]",
+    "hubToSpokePeerName": "[concat(parameters('vnet'), '-to-', parameters('vnet'))]",
+    "hubVnet": "[split(parameters('hubResourceId'),'/')[8]]"
   },
   "resources": [
     {
+      "comments": "Nested deployment for vNet peering (Spoke >> Hub)",
+      "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
-      "name": "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
-      "location": "[parameters('location')]",
-      "resourceGroup": "[parameters('networkWatcherRg')]",
+      "name": "[take(concat('spokeToHub', '-', guid(deployment().name)), 64)]",
+      "subscriptionId": "[parameters('identitySubscriptionId')]",
+      "resourceGroup": "[parameters('networkRg')]",
       "dependsOn": [],
       "properties": {
         "mode": "Incremental",
@@ -108,187 +73,60 @@
           "variables": {},
           "resources": [
             {
-              "comments": "Deploy Resource Group Lock",
-              "type": "Microsoft.Authorization/locks",
-              "apiVersion": "2016-09-01",
-              "name": "ResourceGroup-DontDelete",
-              "properties": {
-                "level": "CanNotDelete",
-                "notes": "Prevent deletion of the resourceGroup"
-              }
-            },
-            {
-              "comments": "Deploy Network Watcher",
-              "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
-              "type": "Microsoft.Network/networkWatchers",
-              "apiVersion": "2020-05-01",
-              "name": "[parameters('networkWatcher')]",
+              "comments": "Deploy peering (Spoke >> Hub)",
+              "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
+              "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
+              "apiVersion": "2020-07-01",
+              "name": "[concat(parameters('vnet'), '/',variables('spokeToHubPeerName'))]",
               "location": "[parameters('location')]",
-              "tags": {},
-              "properties": {},
-              "resources": []
+              "properties": {
+                "allowVirtualNetworkAccess": true,
+                "allowForwardedTraffic": true,
+                "allowGatewayTransit": false,
+                "useRemoteGateways": "[parameters('vNetPeerUseRemoteGateway')]",
+                "remoteVirtualNetwork": {
+                  "id": "[parameters('hubResourceId')]"
+                }
+              }
             }
           ]
         }
       }
     },
     {
-      "comments": "Nested deployment for Azure Network Resources",
+      "comments": "Nested deployment for vNet peering (Hub >> Spoke)",
+      "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
       "type": "Microsoft.Resources/deployments",
-      "apiVersion": "2019-10-01",
-      "name": "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
-      "resourceGroup": "[parameters('networkRg')]",
-      "dependsOn": [
-      ],
+      "apiVersion": "2020-06-01",
+      "name": "[take(concat('hubToSpoke', '-', guid(deployment().name)), 64)]",
+      "subscriptionId": "[split(parameters('hubResourceId'),'/')[2]]",
+      "resourceGroup": "[split(parameters('hubResourceId'),'/')[4]]",
       "properties": {
         "mode": "Incremental",
         "template": {
-          "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+          "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
           "contentVersion": "1.0.0.0",
           "parameters": {},
           "variables": {},
           "resources": [
             {
-              "comments": "Deploy Resource Group Lock",
-              "type": "Microsoft.Authorization/locks",
-              "apiVersion": "2016-09-01",
-              "name": "ResourceGroup-DontDelete",
-              "properties": {
-                "level": "CanNotDelete",
-                "notes": "Prevent deletion of the resourceGroup"
-              }
-            },
-            {
-              "type": "Microsoft.Network/virtualNetworks",
-              "apiVersion": "2020-04-01",
-              "name": "[parameters('vnet')]",
-              "location": "[parameters('location')]",
-              "dependsOn": [],
-              "properties": {
-                "addressSpace": {
-                  "addressPrefixes": [
-                    "[parameters('IdentityAddressPrefix')]"
-                  ]
-                },
-                "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
-                /*
-                "dhcpOptions": {
-                  "dnsServers": "[if(
-                                       not(
-                                           empty(
-                                                 parameters('azureFirewallResourceId'))), 
-                                                 array(reference(parameters('azureFirewallResourceId'), '2020-05-01').ipConfigurations[0].properties.privateIPAddress), 
-                                                 parameters('dnsServers'))]"
-                }*/
-              }
-            },
-            {
-              "comments": "Conditional deployment of Route Table",
-              "type": "Microsoft.Network/routeTables",
-              "apiVersion": "2020-04-01",
-              "name": "test",
-              "location": "[parameters('location')]",
-              "properties": {
-                "routes": [
-                  {
-                    "name": "[variables('udrRoute')]",
-                    "properties": {
-                      "addressPrefix": "0.0.0.0/0",
-                      "nextHopType": "VirtualAppliance",
-                      "nextHopIpAddress": "1.1.1.1"
-                    }
-                  }
-                ]
-              }
-            },
-            {
-              "comments": "Conditional deployment of adds Subnet",
-              "type": "Microsoft.Network/virtualNetworks/subnets",
-              "apiVersion": "2020-04-01",
-              "name": "[concat(parameters('vnet'), '/', variables('addsSubnet'))]",
-              "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('vnet'))]"
-              ],
-              "properties": {
-                "addressPrefix": "[parameters('IdentityAddressPrefix')]"
-              }
-            },
-            {
+              "comments": "Deploy vNet peering (Hub >> Spoke)",
+              "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
               "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-              "apiVersion": "2020-05-01",
-              "name": "[concat(parameters('vnet'), '/peerToHub')]",
-              "dependsOn": [
-                "[parameters('vnet')]"
-              ],
+              "apiVersion": "2020-07-01",
+              "name": "[concat(variables('hubVnet'), '/',variables('hubToSpokePeerName'))]",
+              "location": "[deployment().location]",
               "properties": {
-                "remoteVirtualNetwork": {
-                  "id": "[parameters('hubResourceId')]"
-                },
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,
-                "allowGatewayTransit": true,
-                "useRemoteGateways": "[parameters('vNetPeerUseRemoteGateway')]"
-              }
-            },
-            {
-              "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2019-10-01",
-              "name": "[concat('es-lz-hub-',substring(uniqueString(subscription().id),0,6),'-peering')]",
-              "subscriptionId": "[split(parameters('hubResourceId'),'/')[2]]",
-              "resourceGroup": "[split(parameters('hubResourceId'),'/')[4]]",
-              "dependsOn": [
-                "[parameters('vnet')]"
-              ],
-              "properties": {
-                "mode": "Incremental",
-                "expressionEvaluationOptions": {
-                  "scope": "inner"
-                },
-                "parameters": {
-                  "remoteVirtualNetwork": {
-                    "value": "[concat(subscription().id,'/resourceGroups/',parameters('networkRg'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vnet'))]"
-                  },
-                  "hubName": {
-                    "value": "[split(parameters('hubResourceId'),'/')[8]]"
-                  }
-                },
-                "template": {
-                  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-                  "contentVersion": "1.0.0.0",
-                  "parameters": {
-                    "remoteVirtualNetwork": {
-                      "type": "String",
-                      "defaultValue": false
-                    },
-                    "hubName": {
-                      "type": "String",
-                      "defaultValue": false
-                    }
-                  },
-                  "variables": {},
-                  "resources": [
-                    {
-                      "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                      "name": "[[concat(parameters('hubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
-                      "apiVersion": "2020-05-01",
-                      "properties": {
-                        "allowVirtualNetworkAccess": true,
-                        "allowForwardedTraffic": true,
-                        "allowGatewayTransit": true,
-                        "useRemoteGateways": false,
-                        "remoteVirtualNetwork": {
-                          "id": "[[parameters('remoteVirtualNetwork')]"
-                        }
-                      }
-                    }
-                  ],
-                  "outputs": {}
+                "allowGatewayTransit": false,
+                "useRemoteGateways": false,
+                "remoteVirtualNetwork": {
+                  "id": "[parameters('idamVnetResourceId')]"
                 }
               }
             }
-          ],
-          "outputs": {}
+          ]
         }
       }
     }
