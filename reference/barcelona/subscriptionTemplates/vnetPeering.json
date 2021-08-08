@@ -233,7 +233,7 @@
             },
             {
               "type": "Microsoft.Resources/deployments",
-              "apiVersion": "2020-06-01",
+              "apiVersion": "2019-10-01",
               "name": "[concat('es-lz-hub-',substring(uniqueString(subscription().id),0,6),'-peering')]",
               "subscriptionId": "[split(parameters('hubResourceId'),'/')[2]]",
               "resourceGroup": "[split(parameters('hubResourceId'),'/')[4]]",
