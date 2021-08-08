@@ -3075,20 +3075,17 @@
             "condition": "[and(not(empty(parameters('identitySubscriptionId'))),equals(parameters('enableIdentitySpoke'), 'yes'))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "scope": "[variables('MgScopes').identity]",
             "name": "[variables('deploymentNames').sub.identityConnectivity]",
+            "scope": "[variables('MgScopes').identity]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vnetConnectivityHub)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vwanConnectivityHub)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.asbPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkWatcherRg)]"
             ],
-            "location": "[deployment().location]",
+            
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {

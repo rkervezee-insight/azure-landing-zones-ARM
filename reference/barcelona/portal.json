@@ -1646,7 +1646,7 @@
                     {
                         "name": "esIdentity",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Assign recommended policies to govern identity and domain controllers",
+                        "label": "Assign a dedicated Platform Identity Subscription of Identity & Access Management services",
                         "defaultValue": "Yes",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, Azure Policy will be assigned at the scope to govern your identity resources.",
                         "constraints": {
