@@ -69,9 +69,9 @@
             "comments": "Conditional deployment for Virtual Network in the Platform Identity Subscription",
 
             "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2020-06-01",
+            "apiVersion": "2019-10-01",
+            "location": "[parameters('location')]",
             "name": "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
-            "location": "[deployment().location]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
