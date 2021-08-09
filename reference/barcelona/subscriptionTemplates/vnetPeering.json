@@ -2,7 +2,7 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "enableIdentitySpoke": {
+    "enableSpoke": {
       "type": "string",
       "defaultValue": "Yes",
       "allowedValues": [
@@ -18,7 +18,7 @@
       },
       "defaultValue": "[deployment().location]"
     },
-    "identitySubscriptionId": {
+    "subscriptionId": {
       "type": "string",
       "maxLength": 36,
       "defaultValue": ""
@@ -26,15 +26,8 @@
     "networkRg": {
       "type": "string"
     },
-    "vnet": {
+    "spokeVnet": {
       "type": "string"
-    },
-    "vNetPeerUseRemoteGateway": {
-      "type": "bool",
-      "defaultValue": false,
-      "metadata": {
-        "description": "Use remote gateway or not."
-      }
     },
     "hubResourceId": {
       "type": "string",
@@ -42,7 +35,7 @@
         "description": "Provide the resourceId for the hub."
       }
     },
-    "idamVnetResourceId": {
+    "vnetResourceId": {
       "type": "string",
       "metadata": {
         "description": "Provide the resourceId for the hub."
@@ -50,18 +43,19 @@
     }
   },
   "variables": {
-    "spokeToHubPeerName": "[concat(parameters('vnet'), '-to-', parameters('vnet'))]",
-    "hubToSpokePeerName": "[concat(parameters('vnet'), '-to-', parameters('vnet'))]",
-    "hubVnet": "[split(parameters('hubResourceId'),'/')[8]]"
+    "vNetPeerUseRemoteGateway": false,
+    "hubVnet": "[split(parameters('hubResourceId'),'/')[8]]",
+    "spokeToHubPeerName": "[concat(parameters('spokeVnet'), '-to-', variables('hubVnet'))]",
+    "hubToSpokePeerName": "[concat(variables('hubVnet'), '-to-', parameters('spokeVnet'))]"
   },
   "resources": [
     {
       "comments": "Nested deployment for vNet peering (Spoke >> Hub)",
-      "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
+      "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
       "name": "[take(concat('spokeToHub', '-', guid(deployment().name)), 64)]",
-      "subscriptionId": "[parameters('identitySubscriptionId')]",
+      "subscriptionId": "[parameters('subscriptionId')]",
       "resourceGroup": "[parameters('networkRg')]",
       "dependsOn": [],
       "properties": {
@@ -74,16 +68,16 @@
           "resources": [
             {
               "comments": "Deploy peering (Spoke >> Hub)",
-              "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
+              "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
               "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
               "apiVersion": "2020-07-01",
-              "name": "[concat(parameters('vnet'), '/',variables('spokeToHubPeerName'))]",
+              "name": "[concat(parameters('spokeVnet'), '/',variables('spokeToHubPeerName'))]",
               "location": "[parameters('location')]",
               "properties": {
                 "allowVirtualNetworkAccess": true,
                 "allowForwardedTraffic": true,
                 "allowGatewayTransit": false,
-                "useRemoteGateways": "[parameters('vNetPeerUseRemoteGateway')]",
+                "useRemoteGateways": "[variables('vNetPeerUseRemoteGateway')]",
                 "remoteVirtualNetwork": {
                   "id": "[parameters('hubResourceId')]"
                 }
@@ -95,7 +89,7 @@
     },
     {
       "comments": "Nested deployment for vNet peering (Hub >> Spoke)",
-      "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
+      "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
       "name": "[take(concat('hubToSpoke', '-', guid(deployment().name)), 64)]",
@@ -111,7 +105,7 @@
           "resources": [
             {
               "comments": "Deploy vNet peering (Hub >> Spoke)",
-              "condition": "[equals(parameters('enableIdentitySpoke'), 'Yes')]",
+              "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
               "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
               "apiVersion": "2020-07-01",
               "name": "[concat(variables('hubVnet'), '/',variables('hubToSpokePeerName'))]",
@@ -122,7 +116,7 @@
                 "allowGatewayTransit": false,
                 "useRemoteGateways": false,
                 "remoteVirtualNetwork": {
-                  "id": "[parameters('idamVnetResourceId')]"
+                  "id": "[parameters('vnetResourceId')]"
                 }
               }
             }

@@ -2,48 +2,13 @@
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/managementGroupDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "IdentityAddressPrefix": {
-            "type": "string",
-            "metadata": {
-                "displayName": "addressPrefix",
-                "description": "Address prefix of the HUB"
-            }
-        },
-        "enableIdentitySpoke": {
+        "enableSpoke": {
             "type": "string",
             "defaultValue": "Yes",
             "allowedValues": [
                 "Yes",
                 "No"
             ]
-        },
-        "location": {
-            "type": "string",
-            "metadata": {
-                "displayName": "location",
-                "description": "Location of the HUB"
-            },
-            "defaultValue": "[deployment().location]"
-        },
-        "identitySubscriptionId": {
-            "type": "string",
-            "maxLength": 36,
-            "defaultValue": ""
-        },
-        "networkRg": {
-            "type": "string"
-        },
-        "networkWatcherRg": {
-            "type": "string"
-        },
-        "networkWatcher": {
-            "type": "string"
-        },
-        "vnet": {
-            "type": "string"
-        },
-        "ddosPlanResourceId": {
-            "type": "string"
         },
         "enableDdoS": {
             "type": "string",
@@ -55,6 +20,41 @@
             "metadata": {
                 "description": "Select whether the DDoS Standard protection plan should be enabled or not."
             }
+        },
+        "addressPrefix": {
+            "type": "string",
+            "metadata": {
+                "displayName": "addressPrefix",
+                "description": "Address prefix of the HUB"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "displayName": "location",
+                "description": "Location of the HUB"
+            },
+            "defaultValue": "[deployment().location]"
+        },
+        "subscriptionId": {
+            "type": "string",
+            "maxLength": 36,
+            "defaultValue": ""
+        },
+        "networkRg": {
+            "type": "string"
+        },
+        "spokeVnet": {
+            "type": "string"
+        },
+        "networkWatcherRg": {
+            "type": "string"
+        },
+        "networkWatcher": {
+            "type": "string"
+        },
+        "ddosPlanResourceId": {
+            "type": "string"
         }
     },
     "variables": {
@@ -62,7 +62,7 @@
             {
                 "name": "adds",
                 "properties": {
-                    "addressPrefix": "[parameters('IdentityAddressPrefix')]"
+                    "addressPrefix": "[parameters('addressPrefix')]"
                 }
             }
         ],
@@ -78,7 +78,7 @@
             "apiVersion": "2019-10-01",
             "location": "[parameters('location')]",
             "name": "[take(concat('IdentityConnectivity-', guid(deployment().name)), 64)]",
-            "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "subscriptionId": "[parameters('subscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -113,7 +113,7 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "2020-05-01",
                                             "name": "[parameters('networkWatcher')]",
@@ -153,21 +153,21 @@
                                         },
                                         {
                                             "comments": "Deploy Azure Virtual Network Resources",
-                                            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "2020-04-01",
-                                            "name": "[parameters('vnet')]",
+                                            "name": "[parameters('spokeVnet')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [],
                                             "properties": {
                                                 "addressSpace": {
                                                     "addressPrefixes": [
-                                                        "[parameters('IdentityAddressPrefix')]"
+                                                        "[parameters('addressPrefix')]"
                                                     ]
                                                 },
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
                                                 "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]",
-                                                "subnets": "[if(not(empty(parameters('IdentityAddressPrefix'))), variables('addsSubnet'), json('[]'))]"
+                                                "subnets": "[if(not(empty(parameters('addressPrefix'))), variables('addsSubnet'), json('[]'))]"
                                             },
                                             "resources": []
                                         }

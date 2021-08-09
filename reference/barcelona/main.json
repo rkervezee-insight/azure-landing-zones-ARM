@@ -3070,7 +3070,6 @@
                 }
             }
         },
-      //  identity vnet
         {
             "comments": "Linked template for the creation of the Platform Identity Virtual Networking",
            // "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
@@ -3094,25 +3093,25 @@
                     "uri": "[variables('deploymentUris').identityConnectivity]"
                 },
                 "parameters": {
-                    "enableIdentitySpoke": {
+                    "enableSpoke": {
                         "value": "[parameters('enableIdentitySpoke')]"
                     },
                     "enableDdos": {
                         "value": "[parameters('enableDdos')]"
                     },
-                    "identityAddressPrefix": {
+                    "addressPrefix": {
                         "value": "[parameters('identityAddressPrefix')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
                     },
-                    "identitySubscriptionId": {
+                    "subscriptionId": {
                         "value": "[parameters('identitySubscriptionId')]"
                     },
                     "networkRg": {
                         "value": "[variables('platformIdentityResourceGroups').network]"
                     },
-                    "vnet": {
+                    "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
                     },
                     "networkWatcherRg": {
@@ -3155,25 +3154,25 @@
                     "uri": "[variables('deploymentUris').corpVnetPeering]"
                 },
                 "parameters": {
-                    "enableIdentitySpoke": {
+                    "enableSpoke": {
                         "value": "[parameters('enableIdentitySpoke')]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
                     },
-                    "identitySubscriptionId": {
+                    "subscriptionId": {
                         "value": "[parameters('identitySubscriptionId')]"
                     },
                     "networkRg": {
                         "value": "[variables('platformIdentityResourceGroups').network]"
                     },
-                    "vnet": {
+                    "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
                     },
-                    "hubResourceId": {
+                    "vhubResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vHub]"
                     },
-                    "idamVnetResourceId": {
+                    "vnetResourceId": {
                         "value": "[variables('platformIdentityResourceIds').vnet]"
                     }
                 }
