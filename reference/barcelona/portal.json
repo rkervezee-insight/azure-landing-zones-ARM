@@ -1789,7 +1789,7 @@
                         "visible": "[and(equals(steps('esPlatformIdentity').esIdentity, 'Yes'), equals(steps('esPlatformIdentity').esIdAzBackup, 'Yes'))]"
                     },
                     {
-                        "name": "esIdentityConnectivity",
+                        "name": "esIdentitySpoke",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Create Virtual Network for Domain Controllers and peer to the Platform Connectivity Hub",
                         "defaultValue": "Yes",
@@ -1819,7 +1819,7 @@
                             "required": true,
                             "validationMessage": "The virtual network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)."
                         },
-                        "visible": "[and(equals(steps('esPlatformIdentity').esIdentityConnectivity, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub,'No')))]"
+                        "visible": "[and(equals(steps('esPlatformIdentity').esIdentitySpoke, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub,'No')))]"
                     }
                 ]
             },
@@ -2367,7 +2367,7 @@
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
             "enableRsvForIdentity": "[steps('esPlatformIdentity').esIdRsv]",
-            "enableIdentitySpoke": "[steps('esPlatformIdentity').esIdentityConnectivity]",
+            "enableIdentitySpoke": "[steps('esPlatformIdentity').esIdentitySpoke]",
             "identityAddressPrefix": "[steps('esPlatformIdentity').esIdentityAddressPrefix]",
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
