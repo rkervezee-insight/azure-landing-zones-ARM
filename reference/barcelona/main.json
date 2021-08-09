@@ -187,6 +187,13 @@
                 "description": "Provide the Azure Firewall Policy identifier prefix"
             }
         },
+        "udrPrefix": {
+            "type": "string",
+            "maxLength": 3,
+            "metadata": {
+                "description": "Provide the Route Table identifier prefix"
+            }
+        },
         "denySubnetWithoutNsgForIdentity": {
             "type": "string",
             "allowedValues": [
@@ -955,6 +962,8 @@
         "platformIdentityResourceNames": {
             "vnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('identityAddressSpace')))]",
             "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
+            "addsNsg": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('nsgPrefix'), '-adds'))]",
+            "routeTable": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('udrPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformManagementResourceIds": {
@@ -3113,6 +3122,12 @@
                     },
                     "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
+                    },
+                    "nsg": {
+                        "value": "[variables('platformIdentityResourceNames').addsNsg]"
+                    },
+                    "routeTable": {
+                        "value": "[variables('platformIdentityResourceNames').routeTable]"
                     },
                     "networkWatcherRg": {
                         "value": "[variables('platformIdentityResourceGroups').networkWatcher]"

@@ -2367,10 +2367,8 @@
             "denyPipForIdentity": "[steps('esPlatformIdentity').esIdDenyPublicIp]",
             "enableVmBackupForIdentity": "[steps('esPlatformIdentity').esIdAzBackup]",
             "enableRsvForIdentity": "[steps('esPlatformIdentity').esIdRsv]",
-
             "enableIdentitySpoke": "[steps('esPlatformIdentity').esIdentityConnectivity]",
             "identityAddressPrefix": "[steps('esPlatformIdentity').esIdentityAddressPrefix]",
-
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",

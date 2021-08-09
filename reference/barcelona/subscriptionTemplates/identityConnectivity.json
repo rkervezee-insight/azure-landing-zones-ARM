@@ -47,6 +47,12 @@
         "spokeVnet": {
             "type": "string"
         },
+        "networkSecurityGroup": {
+            "type": "string"
+        },
+        "routeTable": {
+            "type": "string"
+        },
         "networkWatcherRg": {
             "type": "string"
         },
@@ -68,7 +74,9 @@
         ],
         "ddosProtectionPlanId": {
             "id": "[parameters('ddosPlanResourceId')]"
-        }
+        },
+        "nsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('networkRg'), '/providers/Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroup'))]",
+        "udrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('networkRg'),'/providers/Microsoft.Network/routeTables/', parameters('routeTable'))]"
     },
     "resources": [
         {
@@ -180,7 +188,46 @@
                                                 "[concat('Microsoft.Network/virtualNetworks/', parameters('spokeVnet'))]"
                                             ],
                                             "properties": {
-                                                "addressPrefix": "[parameters('addressPrefix')]"
+                                                "addressPrefix": "[parameters('addressPrefix')]",
+                                                "routeTable": {
+                                                    "id": "[variables('udrId')]"
+                                                },
+                                                "networkSecurityGroup": {
+                                                    "id": "[variables('nsgId')]"
+                                                }
+                                            }
+                                        },
+                                        {
+                                            "comments": "Deployment of ADDS NSG",
+                                            "type": "Microsoft.Network/networkSecurityGroups",
+                                            "apiVersion": "2020-04-01",
+                                            "name": "[parameters('networkSecurityGroup')]",
+                                            "location": "[parameters('location')]",
+                                            "tags": {
+                                                "appliedSubnet": "[concat(parameters('spokeVnet'), '/', parameters('networkSecurityGroup'))]"
+                                            },
+                                            "properties": {
+                                                "securityRules": [
+                                                ]
+                                            }
+                                        },
+                                        {
+                                            "comments": "Route Table",
+                                            "type": "Microsoft.Network/routeTables",
+                                            "apiVersion": "2020-04-01",
+                                            "name": "[parameters('routeTable')]",
+                                            "location": "[parameters('location')]",
+                                            "properties": {
+                                                "routes": [
+                                                    {
+                                                        "name": "udr-subnet-default-0.0.0.0-0",
+                                                        "properties": {
+                                                            "addressPrefix": "0.0.0.0/0",
+                                                            "nextHopType": "VirtualAppliance",
+                                                            "nextHopIpAddress": "1.1.1.1"
+                                                        }
+                                                    }
+                                                ]
                                             }
                                         }
                                     ]
