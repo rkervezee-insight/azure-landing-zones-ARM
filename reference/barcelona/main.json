@@ -3173,9 +3173,6 @@
                     "location": {
                         "value": "[parameters('location')]"
                     },
-                    "subscriptionId": {
-                        "value": "[parameters('identitySubscriptionId')]"
-                    },
                     "networkRg": {
                         "value": "[variables('platformIdentityResourceGroups').network]"
                     },
