@@ -45,8 +45,8 @@
   "variables": {
     "vNetPeerUseRemoteGateway": false,
     "hubVnet": "[split(parameters('vhubResourceId'),'/')[8]]",
-    "spokeToHubPeerName": "[concat(parameters('spokeVnet'), '-to-', variables('hubVnet'))]",
-    "hubToSpokePeerName": "[concat(variables('hubVnet'), '-to-', parameters('spokeVnet'))]"
+    "spokeToHubPeerName": "[concat(parameters('spokeVnet'), '-TO-', variables('hubVnet'))]",
+    "hubToSpokePeerName": "[concat(variables('hubVnet'), '-TO-', parameters('spokeVnet'))]"
   },
   "resources": [
     {
