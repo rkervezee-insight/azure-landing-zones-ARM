@@ -10,18 +10,6 @@
         },
         "connectivityHubResourceId": {
             "type": "string"
-        },
-        "enableHub": {
-            "type": "string",
-            "allowedValues": [
-                "vhub",
-                "vwan",
-                "No"
-            ],
-            "defaultValue": "No",
-            "metadata": {
-                "description": "Select whether the virtual network hub should be deployed or not."
-            }
         }
     },
     "resources": [
@@ -47,7 +35,6 @@
             },
             "resources": [
                 {
-                    "condition": "[not(equals(parameters('enableHub'), 'vwan'))]",
                     "type": "virtualNetworkLinks",
                     "apiVersion": "2020-06-01",
                     "name": "[concat('linkingOf', parameters('privateDnsZoneName'))]",

@@ -181,7 +181,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
 }
 
 resource hubToSpokeVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = if (!empty(platformConnectivityVnetId)) {
-  name: '${vnet.name}/${vnet.name}-to-${platformConnectivityVnetName}'
+  name: 'FROM-${vnet.name}/${vnet.name}-TO-${platformConnectivityVnetName}'
   properties: {
     allowForwardedTraffic: true
     allowGatewayTransit: true
@@ -195,7 +195,7 @@ resource hubToSpokeVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetwork
 }
 
 module SpokeToHubVnetPeering 'auxiliary/vnetPeering.bicep' = if (!empty(platformConnectivityVnetId)) {
-  name: '${platformConnectivityVnetName}-to-${vnet.name}'
+  name: 'FROM-${platformConnectivityVnetName}-TO-${vnet.name}'
   scope: resourceGroup(platformConnectivityVnetSubscriptionId, platformConnectivityVnetResourceGroupName)
   params: {
     landingZoneVnetId: vnet.id

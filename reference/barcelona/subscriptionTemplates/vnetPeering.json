@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "enableSpoke": {
@@ -18,11 +18,6 @@
       },
       "defaultValue": "[deployment().location]"
     },
-    "subscriptionId": {
-      "type": "string",
-      "maxLength": 36,
-      "defaultValue": ""
-    },
     "networkRg": {
       "type": "string"
     },
@@ -35,7 +30,7 @@
         "description": "Provide the resourceId for the hub."
       }
     },
-    "vnetResourceId": {
+    "spokeResourceId": {
       "type": "string",
       "metadata": {
         "description": "Provide the resourceId for the hub."
@@ -44,9 +39,9 @@
   },
   "variables": {
     "vNetPeerUseRemoteGateway": false,
-    "hubVnet": "[split(parameters('vhubResourceId'),'/')[8]]",
-    "spokeToHubPeerName": "[concat(parameters('spokeVnet'), '-TO-', variables('hubVnet'))]",
-    "hubToSpokePeerName": "[concat(variables('hubVnet'), '-TO-', parameters('spokeVnet'))]"
+    "vhub": "[split(parameters('vhubResourceId'),'/')[8]]",
+    "spokeToHubPeerName": "[concat('FROM-', parameters('spokeVnet'), '-TO-', variables('vhub'))]",
+    "hubToSpokePeerName": "[concat('FROM-', variables('vhub'), '-TO-', parameters('spokeVnet'))]"
   },
   "resources": [
     {
@@ -55,7 +50,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
       "name": "[take(concat('spokeToHub', '-', guid(deployment().name)), 64)]",
-      "subscriptionId": "[parameters('subscriptionId')]",
       "resourceGroup": "[parameters('networkRg')]",
       "dependsOn": [],
       "properties": {
@@ -93,7 +87,6 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
       "name": "[take(concat('hubToSpoke', '-', guid(deployment().name)), 64)]",
-      "subscriptionId": "[split(parameters('vhubResourceId'),'/')[2]]",
       "resourceGroup": "[split(parameters('vhubResourceId'),'/')[4]]",
       "properties": {
         "mode": "Incremental",
@@ -108,7 +101,7 @@
               "condition": "[equals(parameters('enableSpoke'), 'Yes')]",
               "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
               "apiVersion": "2020-07-01",
-              "name": "[concat(variables('hubVnet'), '/',variables('hubToSpokePeerName'))]",
+              "name": "[concat(variables('vhub'), '/',variables('hubToSpokePeerName'))]",
               "location": "[deployment().location]",
               "properties": {
                 "allowVirtualNetworkAccess": true,
@@ -116,7 +109,7 @@
                 "allowGatewayTransit": false,
                 "useRemoteGateways": false,
                 "remoteVirtualNetwork": {
-                  "id": "[parameters('vnetResourceId')]"
+                  "id": "[parameters('spokeResourceId')]"
                 }
               }
             }

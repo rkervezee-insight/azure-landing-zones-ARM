@@ -2346,7 +2346,7 @@
             "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
-            "addressPrefix": "[steps('esPlatformConnectivity').esAddressHub]",
+            "connectivityAddressPrefix": "[steps('esPlatformConnectivity').esAddressHub]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
             "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esEnablePrivateDnsZones]",
             "vpnOrErZones": "[steps('esPlatformConnectivity').esGwRegionalOrAz]",

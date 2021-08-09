@@ -10,7 +10,7 @@ var landingZoneVnetName = length(split(landingZoneVnetId, '/')) >= 9 ? last(spli
 
 // Resources
 resource hubToSpokeVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = {
-  name: '${platformConnectivityVnetName}/${platformConnectivityVnetName}-to-${landingZoneVnetName}'
+  name: 'FROM-${platformConnectivityVnetName}/${platformConnectivityVnetName}-TO-${landingZoneVnetName}'
   properties: {
     allowForwardedTraffic: true
     allowGatewayTransit: true
