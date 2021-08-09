@@ -1935,7 +1935,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.networkWatcherRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]"
             ],
-            "location": "[deployment().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -3019,7 +3019,7 @@
         },
         {
             "comments": "Linked template for the creation of the Network Resource Group in the Platform Identity Subscription",
-            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(empty(parameters('identitySubscriptionId'))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
             "name": "[variables('deploymentNames').sub.idamNetworkRg]",
@@ -3050,10 +3050,10 @@
         },
         {
             "comments": "Linked template for the creation of the Network Watcher Resource Group in the Platform Identity Subscription",
-            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(empty(parameters('identitySubscriptionId'))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
-            "name": "[variables('deploymentNames').sub.idamnetworkWatcherRg]",
+            "name": "[variables('deploymentNames').sub.idamNetworkWatcherRg]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
             "location": "[deployment().location]",
             "dependsOn": [
@@ -3081,7 +3081,7 @@
         },
         {
             "comments": "Linked template for the creation of the Platform Identity Virtual Networking",
-            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(empty(parameters('identitySubscriptionId'))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'Yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
             "name": "[variables('deploymentNames').sub.identityConnectivity]",
@@ -3094,7 +3094,6 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkWatcherRg)]"
             ],
-
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
