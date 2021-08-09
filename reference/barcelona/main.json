@@ -3019,7 +3019,7 @@
         },
         {
             "comments": "Linked template for the creation of the Network Resource Group in the Platform Identity Subscription",
-           // "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(equals(parameters('enableHub'),'No')), not(empty(parameters('identitySubscriptionId'))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.idamNetworkRg]",
@@ -3050,7 +3050,7 @@
         },
         {
             "comments": "Linked template for the creation of the Network Watcher Resource Group in the Platform Identity Subscription",
-           // "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.idamnetworkWatcherRg]",
@@ -3081,7 +3081,7 @@
         },
         {
             "comments": "Linked template for the creation of the Platform Identity Virtual Networking",
-           // "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), equals(parameters('enableHub'),'vhub'), or (equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identitySubscriptionId')))))]",
+            "condition": "[and(equals(parameters('enableIdentitySpoke'), 'yes'), not(empty(parameters('identitySubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.identityConnectivity]",
@@ -3094,7 +3094,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkWatcherRg)]"
             ],
-            
+
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -3141,9 +3141,8 @@
                 }
             }
         },
-        // Peer vnet in identity subscription to connectivity hub if vhub is true
         {
-            
+            "comments": "Linked template for the creation of the vNet peering from the Platform Connectivity Virtual Network to the Platform Identity Virtual Network",
             "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
@@ -3195,7 +3194,7 @@
         },
         // Peer vnet in identity subscription to connectivity hub if vwan contidion is true
         {
-            
+
             "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
