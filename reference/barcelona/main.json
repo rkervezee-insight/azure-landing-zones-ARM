@@ -3123,7 +3123,7 @@
                     "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
                     },
-                    "nsg": {
+                    "networkSecurityGroup": {
                         "value": "[variables('platformIdentityResourceNames').addsNsg]"
                     },
                     "routeTable": {
