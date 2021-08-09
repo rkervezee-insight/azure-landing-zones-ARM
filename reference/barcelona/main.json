@@ -3191,9 +3191,8 @@
                 }
             }
         },
-        // Peer vnet in identity subscription to connectivity hub if vwan contidion is true
         {
-
+            "comments": "Linked template for the creation of the vNet peering from the Platform Connectivity VWAN to the Platform Identity Virtual Network",
             "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('identityAddressPrefix'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-06-01",
@@ -3207,7 +3206,10 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.ascConfigPolicyAssignment)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveIdentitySubscription)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.idamNetworkWatcherRg)]",
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.identityConnectivity)]"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -3216,17 +3218,23 @@
                     "uri": "[variables('deploymentUris').corpVwanPeering]"
                 },
                 "parameters": {
-                    "vNetRgName": {
-                        "value": "[variables('platformIdentityResourceGroups').network]"
+                    "enableSpoke": {
+                        "value": "[parameters('enableIdentitySpoke')]"
                     },
-                    "vNetName": {
-                        "value": "[concat(parameters('identitySubscriptionId'), variables('platformIdentityResourceNames').vnet)]"
-                    },
-                    "vNetLocation": {
+                    "location": {
                         "value": "[parameters('location')]"
                     },
-                    "vNetCidrRange": {
-                        "value": "[parameters('identityAddressPrefix')]"
+                    "subscriptionId": {
+                        "value": "[parameters('identitySubscriptionId')]"
+                    },
+                    "networkRg": {
+                        "value": "[variables('platformIdentityResourceGroups').network]"
+                    },
+                    "spokeVnet": {
+                        "value": "[variables('platformIdentityResourceNames').vnet]"
+                    },
+                    "spokeResourceId": {
+                        "value": "[variables('platformIdentityResourceIds').vnet]"
                     },
                     "vWanHubResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').vWan]"
