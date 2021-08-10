@@ -1909,7 +1909,7 @@
                     {
                         "name": "esOnlineLzSub",
                         "type": "Microsoft.Common.DropDown",
-                        "label": "Online landing zone subscriptions (optional)",
+                        "label": "Add Online Landing Zone Subscriptions (optional)",
                         "toolTip": "",
                         "multiselect": true,
                         "selectAll": true,

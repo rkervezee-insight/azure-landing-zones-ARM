@@ -848,7 +848,7 @@
                 "azureGovernancePolicyDefinition": "[take(concat('policySet-azGov', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveManagementSubscription": "[take(concat('moveMgmtSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveConnectivitySubscription": "[take(concat('moveConnSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
-                "moveOnlineSubscription": "[take(concat('moveOnlineSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "moveOnlineSubscription": "[take(concat('moveOnlineSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 65)]",
                 "moveCorpSubscription": "[take(concat('moveCorpSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "moveIdentitySubscription": "[take(concat('moveIdamSub', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azPolicyForAksPolicyAssignment": "[take(concat('policyAss-aksPolicy', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
