@@ -1121,7 +1121,7 @@
                             "required": true,
                             "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-9]))$",
                             "validationMessage": "The virtual hubs network's address space, specified as one address prefixes in CIDR notation (e.g. 192.168.1.0/24)"
-                            }
+                        }
                     },
                     {
                         "name": "esLocationsApi",
@@ -1872,7 +1872,7 @@
                         "filter": true,
                         "filterPlaceholder": "Filter items ...",
                         "multiLine": true,
-                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub,'No'),equals(steps('lzGoalState').esLzConnectivity,'No'))]",
+                        "visible": true,
                         "constraints": {
                             "allowedValues": "[map(steps('lzGoalState').lzCorpSubsApi.value,(sub) => parse(concat('{\"label\":\"',sub.displayName,'\",\"description\":\"',sub.subscriptionId,'\",\"value\":\"',toLower(sub.subscriptionId),'\"}')))]",
                             "required": false
