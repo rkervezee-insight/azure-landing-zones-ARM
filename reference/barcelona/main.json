@@ -907,7 +907,7 @@
                 "identityVwanPeering": "[take(concat('idamVwanPeer', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             },
             "rg": {
-                "privateDnsZones": "[take(concat('privateDns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
+                "privateDnsZones": "[take(concat('dns', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "azOps": "[take(concat('azOps', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]",
                 "ddos": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             }
