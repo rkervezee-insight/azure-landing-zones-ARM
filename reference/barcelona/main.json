@@ -1205,7 +1205,7 @@
                 "[variables('deploymentNames').mg.publicEndpointPolicyDefinition]",
                 "[variables('deploymentNames').mg.ascConfigPolicyDefinition]",
                 "[variables('deploymentNames').mg.tlsSslPolicyDefinition]",
-                "[variables('deploymentNames').mg.azureGovernancePolicyDefinition]",
+                "[variables('deploymentNames').mg.azureGovernancePolicyDefinition]"
             ],
             "copy": {
                 "batchSize": 1,
