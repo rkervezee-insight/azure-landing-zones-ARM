@@ -1209,7 +1209,7 @@
             ],
             "copy": {
                 "batchSize": 1,
-                "count": 20,
+                "count": 5,
                 "mode": "Serial",
                 "name": "policyCompletion"
             },
