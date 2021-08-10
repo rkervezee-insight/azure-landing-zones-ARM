@@ -33,14 +33,14 @@
                 "description": "Provide the subscription id of an existing, empty subscription you want to dedicate for identity."
             }
         },
-        "onlinelandingZonesubscriptionId": {
+        "onlineLzSubscriptionId": {
             "type": "array",
             "defaultValue": [],
             "metadata": {
                 "description": "Provide the subscription ids for existing, empty subscriptions you want to move in as your first online landing zones."
             }
         },
-        "corplandingZonesubscriptionId": {
+        "corpLzSubscriptionId": {
             "type": "array",
             "defaultValue": [],
             "metadata": {
@@ -3268,7 +3268,7 @@
         },
         {
             "comments": "Move the Subscription to the appropriate Management Group or skip if not used",
-            "condition": "[not(empty(parameters('onlinelandingZonesubscriptionId')))]",
+            "condition": "[not(empty(parameters('onlineLzSubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[concat(variables('deploymentNames').mg.moveOnlineSubscription, copyIndex())]",
@@ -3282,7 +3282,7 @@
             ],
             "copy": {
                 "name": "onlinelandingZones",
-                "count": "[length(parameters('onlinelandingZonesubscriptionId'))]"
+                "count": "[length(parameters('onlineLzSubscriptionId'))]"
             },
             "properties": {
                 "mode": "Incremental",
@@ -3295,14 +3295,14 @@
                         "value": "[variables('mgmtGroups').online]"
                     },
                     "subscriptionId": {
-                        "value": "[concat(parameters('onlinelandingZonesubscriptionId')[copyIndex()])]"
+                        "value": "[concat(parameters('onlineLzSubscriptionId')[copyIndex()])]"
                     }
                 }
             }
         },
         {
             "comments": "Move the Subscription to the appropriate Management Group or skip if not used",
-            "condition": "[not(empty(parameters('corplandingZonesubscriptionId')))]",
+            "condition": "[not(empty(parameters('corpLzSubscriptionId')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[concat(variables('deploymentNames').mg.moveCorpSubscription, copyIndex())]",
@@ -3316,7 +3316,7 @@
             ],
             "copy": {
                 "name": "corplandingZones",
-                "count": "[length(parameters('corplandingZonesubscriptionId'))]"
+                "count": "[length(parameters('corpLzSubscriptionId'))]"
             },
             "properties": {
                 "mode": "Incremental",
@@ -3329,7 +3329,7 @@
                         "value": "[variables('mgmtGroups').corp]"
                     },
                     "subscriptionId": {
-                        "value": "[concat(parameters('corplandingZonesubscriptionId')[copyIndex()])]"
+                        "value": "[concat(parameters('corpLzSubscriptionId')[copyIndex()])]"
                     }
                 }
             }

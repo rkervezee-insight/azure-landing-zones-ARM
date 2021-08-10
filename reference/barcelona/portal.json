@@ -2386,7 +2386,9 @@
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]",
-            "subscriptionId": "[steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId]"
+            "subscriptionId": "[steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId]",
+            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),not(contains(steps('lzGoalState').esOnlineLzSub,steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId))),steps('lzGoalState').esOnlineLzSub,'')]",
+            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub,steps('esPlatformManagement').esMgmtSubSection.esMgmtSub.subscriptionId)),not(contains(steps('lzGoalState').esCorpLzSub,steps('esPlatformConnectivity').esNwSubSection.esNwSub.subscriptionId))),steps('lzGoalState').esCorpLzSub,'')]"
         }
     }
 }
