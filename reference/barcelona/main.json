@@ -1522,7 +1522,8 @@
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1572,7 +1573,8 @@
             "scope": "[variables('scopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1628,7 +1630,8 @@
             "location": "[deployment().location]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.storage)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.storage)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -1694,7 +1697,8 @@
             "scope": "[variables('scopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2366,7 +2370,8 @@
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.mgmtGroups)]",
                 "dnsZones",
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.privateDnsPolicyDefinition)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.privateDnsPolicyDefinition)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2426,7 +2431,8 @@
             "scope": "[variables('scopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2456,7 +2462,8 @@
             "scope": "[variables('scopes').topLevel]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.monitoring)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2486,7 +2493,8 @@
             "scope": "[variables('scopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2513,7 +2521,8 @@
             "scope": "[variables('scopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').rg.ddos)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2543,7 +2552,8 @@
             "scope": "[variables('scopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2570,7 +2580,8 @@
             "scope": "[variables('scopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2594,7 +2605,8 @@
             "scope": "[variables('scopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
@@ -2618,7 +2630,8 @@
             "scope": "[variables('scopes').landingZones]",
             "location": "[deployment().location]",
             "dependsOn": [
-                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]"
+                "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.policyDefinitions)]",
+                "policyCompletion"
             ],
             "properties": {
                 "mode": "Incremental",
