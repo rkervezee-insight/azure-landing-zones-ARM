@@ -3064,7 +3064,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformConnectivityRgs').network]"
+                        "value": "[variables('platformIdentityRgs').network]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
