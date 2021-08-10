@@ -79,8 +79,8 @@ param contactRoles array
 // Variables
 var locPrefix = replace(location, 'australiaeast', 'syd')
 var namePrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}')
-var storageNamePrefix = toLower('${lzPrefix}${locPrefix}${envPrefix}${staPrefix}')
-var rgPrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}-${argPrefix}')
+var storagePrefix = toLower('${lzPrefix}${locPrefix}${envPrefix}${staPrefix}')
+var rgPrefix = toLower('${namePrefix}-${argPrefix}')
 var tagsDefault = {
   applicationName: 'notset'
   owner: 'notset'
@@ -149,7 +149,7 @@ module storageServices 'modules/storage.bicep' = {
   scope: managementResourceGroup
   params: {
     location: location
-    storageNamePrefix: storageNamePrefix
+    storagePrefix: storagePrefix
     tags: tagsJoined
   }
 }
