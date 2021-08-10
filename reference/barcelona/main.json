@@ -798,7 +798,7 @@
             "identityConnectivity": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/identityConnectivity.json')]",
             "monitoring": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/logAnalyticsWorkspace.json')]",
             "resourceGroup": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/resourceGroup.json')]",
-            "corpVnetPeering": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/vnetPeering.json')]",
+            "corpVnetPeering": "[uri(deployment().properties.templateLink.uri, 'resourceGroupTemplates/vnetPeering.json')]",
             "corpVwanPeering": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/vnetPeeringVwan.json')]",
             "monitoringSolutions": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/logAnalyticsSolutions.json')]",
             "storage": "[uri(deployment().properties.templateLink.uri, 'subscriptionTemplates/storage.json')]",
@@ -922,7 +922,7 @@
             "connectivity": "[toLower(concat(parameters('enterpriseScaleCompanyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformConnPrefix')))]",
             "identity": "[toLower(concat(parameters('enterpriseScaleCompanyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformIdamPrefix')))]"
         },
-        "platformManagementResourceGroups": {
+        "platformManagementRgs": {
             "management": "[toLower(concat(variables('namingPrefix').management, '-', parameters('argPrefix'), '-management'))]",
             "azops": "[toLower(concat(variables('namingPrefix').management, '-', parameters('argPrefix'), '-azops'))]"
         },
@@ -932,7 +932,7 @@
             "network": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('argPrefix'), '-network'))]",
             "networkWatcher": "NetworkWatcherRG"
         },
-        "platformIdentityResourceGroups": {
+        "platformIdentityRgs": {
             "network": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-network'))]",
             "backup": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('argPrefix'), '-backup'))]",
             "networkWatcher": "NetworkWatcherRG"
@@ -969,10 +969,10 @@
             "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformManagementResourceIds": {
-            "logAnalyticsWorkspace": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.OperationalInsights/workspaces/', variables('platformManagementResourceNames').logAnalyticsWorkspace)]",
-            "automationAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.Automation/automationAccounts/', variables('platformManagementResourceNames').automationAccount)]",
-            "keyVault": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').azops, '/providers/Microsoft.KeyVault/vaults/', variables('platformManagementResourceNames').keyVault)]",
-            "storageAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementResourceGroups').management, '/providers/Microsoft.Storage/storageAccounts/', variables('platformManagementResourceNames').storageAccount)]"
+            "logAnalyticsWorkspace": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementRgs').management, '/providers/Microsoft.OperationalInsights/workspaces/', variables('platformManagementResourceNames').logAnalyticsWorkspace)]",
+            "automationAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementRgs').management, '/providers/Microsoft.Automation/automationAccounts/', variables('platformManagementResourceNames').automationAccount)]",
+            "keyVault": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementRgs').azops, '/providers/Microsoft.KeyVault/vaults/', variables('platformManagementResourceNames').keyVault)]",
+            "storageAccount": "[concat('/subscriptions/', parameters('managementSubscriptionId'), '/resourceGroups/', variables('platformManagementRgs').management, '/providers/Microsoft.Storage/storageAccounts/', variables('platformManagementResourceNames').storageAccount)]"
         },
         "platformConnectivityResourceIds": {
             "ddos": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityRgs').ddos, '/providers/Microsoft.Network/ddosProtectionPlans/', variables('platformConnectivityResourceNames').ddos)]",
@@ -990,7 +990,7 @@
             "vpnGwyIp": "[concat('/subscriptions/', parameters('connectivitySubscriptionId'), '/resourceGroups/', variables('platformConnectivityRgs').network, '/providers/Microsoft.Network/publicIPAddresses/', variables('platformConnectivityResourceNames').vpnGwyIp)]"
         },
         "platformIdentityResourceIds": {
-            "vnet": "[concat('/subscriptions/', parameters('identitySubscriptionId'), '/resourceGroups/', variables('platformIdentityResourceGroups').network, '/providers/Microsoft.Network/virtualNetworks/', variables('platformIdentityResourceNames').vnet)]"
+            "vnet": "[concat('/subscriptions/', parameters('identitySubscriptionId'), '/resourceGroups/', variables('platformIdentityRgs').network, '/providers/Microsoft.Network/virtualNetworks/', variables('platformIdentityResourceNames').vnet)]"
         },
         "privateDnsZones": [
             "privatelink.azure-automation.net",
@@ -1317,7 +1317,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformManagementResourceGroups').management]"
+                        "value": "[variables('platformManagementRgs').management]"
                     },
                     "workspaceName": {
                         "value": "[variables('platformManagementResourceNames').logAnalyticsWorkspace]"
@@ -1357,7 +1357,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformManagementResourceGroups').management]"
+                        "value": "[variables('platformManagementRgs').management]"
                     },
                     "workspaceName": {
                         "value": "[variables('platformManagementResourceNames').logAnalyticsWorkspace]"
@@ -1418,7 +1418,7 @@
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
                     },
                     "rgName": {
-                        "value": "[variables('platformManagementResourceGroups').management]"
+                        "value": "[variables('platformManagementRgs').management]"
                     },
                     "logAnalyticsWorkspaceName": {
                         "value": "[variables('platformManagementResourceNames').logAnalyticsWorkspace]"
@@ -1757,7 +1757,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformManagementResourceGroups').management]"
+                        "value": "[variables('platformManagementRgs').management]"
                     },
                     "storageAccountName": {
                         "value": "[variables('platformManagementResourceNames').storageAccount]"
@@ -2218,7 +2218,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformManagementResourceGroups').azops]"
+                        "value": "[variables('platformManagementRgs').azops]"
                     },
                     "location": {
                         "value": "[deployment().location]"
@@ -2233,7 +2233,7 @@
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').rg.azOps]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
-            "resourceGroup": "[variables('platformManagementResourceGroups').azops]",
+            "resourceGroup": "[variables('platformManagementRgs').azops]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.azOpsRoleAssignment)]",
@@ -2975,7 +2975,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformIdentityResourceGroups').backup]"
+                        "value": "[variables('platformIdentityRgs').backup]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -3006,7 +3006,7 @@
                         "value": "[parameters('enterpriseScaleCompanyPrefix')]"
                     },
                     "rgName": {
-                        "value": "[variables('platformIdentityResourceGroups').backup]"
+                        "value": "[variables('platformIdentityRgs').backup]"
                     },
                     "recoveryVaultName": {
                         "value": "[variables('platformIdentityResourceNames').recoveryServicesVault]"
@@ -3040,7 +3040,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformidentityResourceGroups').network]"
+                        "value": "[variables('platformConnectivityRgs').network]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -3071,7 +3071,7 @@
                 },
                 "parameters": {
                     "rgName": {
-                        "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
+                        "value": "[variables('platformIdentityRgs').networkWatcher]"
                     },
                     "location": {
                         "value": "[parameters('location')]"
@@ -3117,7 +3117,7 @@
                         "value": "[parameters('identitySubscriptionId')]"
                     },
                     "networkRg": {
-                        "value": "[variables('platformIdentityResourceGroups').network]"
+                        "value": "[variables('platformIdentityRgs').network]"
                     },
                     "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
@@ -3129,7 +3129,7 @@
                         "value": "[variables('platformIdentityResourceNames').routeTable]"
                     },
                     "networkWatcherRg": {
-                        "value": "[variables('platformIdentityResourceGroups').networkWatcher]"
+                        "value": "[variables('platformIdentityRgs').networkWatcher]"
                     },
                     "networkWatcher": {
                         "value": "[variables('platformIdentityResourceNames').networkWatcher]"
@@ -3147,6 +3147,7 @@
             "apiVersion": "2020-06-01",
             "name": "[variables('deploymentNames').sub.identityVnetPeering]",
             "subscriptionId": "[parameters('identitySubscriptionId')]",
+            "resourceGroup": "[variables('platformIdentityRgs').network]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.vnetConnectivityHub)]",
@@ -3174,7 +3175,7 @@
                         "value": "[parameters('location')]"
                     },
                     "networkRg": {
-                        "value": "[variables('platformIdentityResourceGroups').network]"
+                        "value": "[variables('platformIdentityRgs').network]"
                     },
                     "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"
@@ -3225,7 +3226,7 @@
                         "value": "[parameters('identitySubscriptionId')]"
                     },
                     "networkRg": {
-                        "value": "[variables('platformIdentityResourceGroups').network]"
+                        "value": "[variables('platformIdentityRgs').network]"
                     },
                     "spokeVnet": {
                         "value": "[variables('platformIdentityResourceNames').vnet]"

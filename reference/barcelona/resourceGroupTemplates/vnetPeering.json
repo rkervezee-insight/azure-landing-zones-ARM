@@ -1,5 +1,5 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json",
   "contentVersion": "1.0.0.0",
   "parameters": {
     "enableSpoke": {
@@ -87,6 +87,7 @@
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2020-06-01",
       "name": "[take(concat('hubToSpoke', '-', guid(deployment().name)), 64)]",
+      "subscriptionId": "[split(parameters('vhubResourceId'),'/')[2]]",
       "resourceGroup": "[split(parameters('vhubResourceId'),'/')[4]]",
       "properties": {
         "mode": "Incremental",
