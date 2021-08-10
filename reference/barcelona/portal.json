@@ -1879,14 +1879,6 @@
                         }
                     },
                     {
-                        "name": "lzSubsApi",
-                        "type": "Microsoft.Solutions.ArmApiControl",
-                        "request": {
-                            "method": "GET",
-                            "path": "subscriptions?api-version=2020-01-01"
-                        }
-                    },
-                    {
                         "name": "onlineText",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": true,
