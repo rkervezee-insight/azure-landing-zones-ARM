@@ -6,5 +6,5 @@
 
 *.json text eol=lf
 
-# Example of a `.gitattributes` file which reclassifies `.rb` files as Java:
 *.json linguist-language=Json
+*.ps1 linguist-language=PowerShell
