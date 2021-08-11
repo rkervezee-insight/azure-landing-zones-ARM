@@ -6,5 +6,5 @@
 
 *.json text eol=lf
 
-*.json linguist-language=Json
+*.json linguist-language=JavaScript
 *.ps1 linguist-language=PowerShell
