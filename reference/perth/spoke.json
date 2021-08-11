@@ -225,8 +225,8 @@
             ]
         },
         "contactEmails": {
-            "type": "array",
-            "defaultValue": []
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
