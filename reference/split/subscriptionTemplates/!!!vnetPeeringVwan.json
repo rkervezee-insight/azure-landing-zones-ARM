@@ -3,41 +3,19 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
       "vNetRgName": {
-        "type": "string",
-        "metadata": {
-            "description": "Provide a name for the resource group that will contain the virtual network."
-        }
+        "type": "String"
       },
       "vNetName": {
-        "type": "string",
-        "metadata": {
-            "description": "Provide a name for the virtual network."
-        }
+        "type": "String"
       },
       "vNetLocation": {
-        "type": "string",
-        "metadata": {
-            "description": "Provide a location for the virtual network."
-        }
+        "type": "String"
       },
       "vNetCidrRange": {
-        "type": "string",
-        "metadata": {
-            "description": "Provide a CIDR range for the virtual network."
-        }        
+        "type": "String"
       },
-      "vNetPeerUseRemoteGateway": {
-        "type": "bool",
-        "defaultValue": false,
-        "metadata": {
-            "description": "Use remote gateway or not."
-        }        
-      },
-      "hubResourceId": {
-        "type": "string",
-        "metadata": {
-            "description": "Provide the resourceId for the hub."
-        }        
+      "vWanhubResourceId": {
+        "type": "String"
       },
       "dnsServers": {
         "type": "array",
@@ -93,7 +71,6 @@
         "type": "Microsoft.Resources/deployments",
         "apiVersion": "2020-06-01",
         "name": "[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6))]",
-        "resourceGroup": "[parameters('vNetRgName')]",
         "dependsOn": [
           "[concat('es-lz-vnet-',substring(uniqueString(subscription().id),0,6),'-rg')]"
         ],
@@ -105,51 +82,34 @@
             "parameters": {},
             "variables": {},
             "resources": [
-              {
+                {
                 "type": "Microsoft.Network/virtualNetworks",
                 "apiVersion": "2020-06-01",
                 "name": "[parameters('vNetName')]",
                 "location": "[parameters('vNetLocation')]",
                 "dependsOn": [],
                 "properties": {
-                  "addressSpace": {
+                    "addressSpace": {
                     "addressPrefixes": [
-                      "[parameters('vNetCidrRange')]"
+                        "[parameters('vNetCidrRange')]"
                     ]
-                  },
-                  "dhcpOptions": {
+                    },
+                    "dhcpOptions": {
                     "dnsServers": "[if(
-                                       not(
-                                           empty(
-                                                 parameters('azureFirewallResourceId'))), 
-                                                 array(reference(parameters('azureFirewallResourceId'), '2020-05-01').ipConfigurations[0].properties.privateIPAddress), 
-                                                 parameters('dnsServers'))]"
-                  }
+                                        not(
+                                            empty(
+                                                    parameters('azureFirewallResourceId'))), 
+                                                    array(reference(parameters('azureFirewallResourceId'), '2020-05-01').hubIPAddresses.privateIPAddress), 
+                                                    parameters('dnsServers'))]"
+                    }
                 }
-              },
-              {
-                "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                "apiVersion": "2020-05-01",
-                "name": "[concat(parameters('vNetName'), '/peerToHub')]",
-                "dependsOn": [
-                  "[parameters('vNetName')]"
-                ],
-                "properties": {
-                  "remoteVirtualNetwork": {
-                    "id": "[parameters('hubResourceId')]"
-                  },
-                  "allowVirtualNetworkAccess": true,
-                  "allowForwardedTraffic": true,
-                  "allowGatewayTransit": true,
-                  "useRemoteGateways": "[parameters('vNetPeerUseRemoteGateway')]"
-                }
-              },
+                },
               {
                 "type": "Microsoft.Resources/deployments",
                 "apiVersion": "2020-06-01",
-                "name": "[concat('es-lz-hub-',substring(uniqueString(subscription().id),0,6),'-peering')]",
-                "subscriptionId": "[split(parameters('hubResourceId'),'/')[2]]",
-                "resourceGroup": "[split(parameters('hubResourceId'),'/')[4]]",
+                "name": "[concat('es-lz-vwanhub-',substring(uniqueString(subscription().id),0,6),'-peering')]",
+                "subscriptionId": "[split(parameters('vWanhubResourceId'),'/')[2]]",
+                "resourceGroup": "[split(parameters('vWanhubResourceId'),'/')[4]]",
                 "dependsOn": [
                   "[parameters('vNetName')]"
                 ],
@@ -158,38 +118,26 @@
                   "expressionEvaluationOptions": {
                     "scope": "inner"
                   },
-                  "parameters": {
-                    "remoteVirtualNetwork": {
-                      "value": "[concat(subscription().id,'/resourceGroups/',parameters('vNetRgName'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vNetName'))]"
-                    },
-                    "hubName": {
-                      "value": "[split(parameters('hubResourceId'),'/')[8]]"
-                    }
-                  },
                   "template": {
                     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                     "contentVersion": "1.0.0.0",
                     "parameters": {
                       "remoteVirtualNetwork": {
-                        "type": "String",
+                        "Type": "string",
                         "defaultValue": false
                       },
-                      "hubName": {
-                        "type": "String",
+                      "vWanvhubName": {
+                        "Type": "string",
                         "defaultValue": false
                       }
                     },
                     "variables": {},
                     "resources": [
                       {
-                        "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
-                        "name": "[[concat(parameters('hubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
-                        "apiVersion": "2020-05-01",
+                        "type": "Microsoft.Network/virtualHubs/hubVirtualNetworkConnections",
+                        "apiVersion": "2019-09-01",
+                        "name": "[[concat(parameters('vWanVhubName'),'/',last(split(parameters('remoteVirtualNetwork'),'/')))]",
                         "properties": {
-                          "allowVirtualNetworkAccess": true,
-                          "allowForwardedTraffic": true,
-                          "allowGatewayTransit": true,
-                          "useRemoteGateways": false,
                           "remoteVirtualNetwork": {
                             "id": "[[parameters('remoteVirtualNetwork')]"
                           }
@@ -197,13 +145,22 @@
                       }
                     ],
                     "outputs": {}
+                  },
+                  "parameters": {
+                    "remoteVirtualNetwork": {
+                      "value": "[concat(subscription().id,'/resourceGroups/',parameters('vNetRgName'), '/providers/','Microsoft.Network/virtualNetworks/', parameters('vNetName'))]"
+                    },
+                    "vWanvhubName": {
+                      "value": "[split(parameters('vWanhubResourceId'),'/')[8]]"
+                    }
                   }
                 }
               }
             ],
             "outputs": {}
           }
-        }
+        },
+        "resourceGroup": "[parameters('vNetRgName')]"
       }
     ],
     "outputs": {}
