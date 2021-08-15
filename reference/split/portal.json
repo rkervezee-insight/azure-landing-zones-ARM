@@ -2121,7 +2121,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-            "platformSubscriptionId": "[steps('esNaming').esPlatformSubSection.esPlatformSub.subscriptionId]",
+            "platformSubscriptionId": "[steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
             "enableAsc": "[steps('esPlatformManagement').esAsc]",
