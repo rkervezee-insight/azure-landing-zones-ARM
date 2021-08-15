@@ -2121,6 +2121,7 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
+
             "platformSubscriptionId": "[steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
@@ -2147,6 +2148,7 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+
             "paToken": "[steps('esPlatformDevOps').esPaToken]",
             "principalId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.objectId]",
             "principalSecret": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.password]",
@@ -2154,6 +2156,7 @@
             "appId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.appId]",
             "enableAzOps": "[steps('esPlatformDevOps').cicdOption]",
             "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
+
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
@@ -2181,6 +2184,7 @@
             "subnetMaskForAppGw": "[steps('esPlatformConnectivity').esAddressAppGw]",
             "subnetMaskForMgmt": "[steps('esPlatformConnectivity').esAddressMgmt]",
             "subnetMaskForIdentity": "[steps('esPlatformConnectivity').esAddressIdentity]",
+
             "enableSqlAudit": "[steps('lzGoalState').esSqlAudit]",
             "enableSqlEncryption": "[steps('lzGoalState').esSqlEncryption]",
             "enableAksPolicy": "[steps('lzGoalState').esAksPolicy]",
@@ -2198,8 +2202,8 @@
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]",
-            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub,steps('esNaming').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esOnlineLzSub))),steps('lzGoalState').esOnlineLzSub,'')]",
-            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub,steps('esNaming').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esCorpLzSub))),steps('lzGoalState').esCorpLzSub,'')]"
+            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub,steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esOnlineLzSub))),steps('lzGoalState').esOnlineLzSub,'')]",
+            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub,steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esCorpLzSub))),steps('lzGoalState').esCorpLzSub,'')]"
         }
     }
 }
