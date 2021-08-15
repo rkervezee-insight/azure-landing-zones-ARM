@@ -72,7 +72,7 @@
                 "description": "Select whether the ExpressRoute Gateway should be deployed or not."
             }
         },
-        "connectivitySubscriptionId": {
+        "platformSubscriptionId": {
             "type": "string",
             "defaultValue": "",
             "metadata": {
@@ -276,12 +276,12 @@
     "resources": [
         {
             "comments": "Conditional deployment for Azure Hub Network Resources in the Platform Connectivity subscription",
-            "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('connectivitySubscriptionId'))))]",
+            "condition": "[and(equals(parameters('enableHub'), 'vhub'), not(empty(parameters('platformSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "location": "[parameters('location')]",
             "name": "[take(concat('hubSpokeConnectivity-', guid(deployment().name)), 64)]",
-            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "subscriptionId": "[parameters('platformSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -316,7 +316,7 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('platformSubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "2020-05-01",
                                             "name": "[parameters('networkWatcher')]",

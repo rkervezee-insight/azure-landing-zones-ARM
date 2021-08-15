@@ -50,7 +50,7 @@
             ],
             "defaultValue": "No"
         },
-        "connectivitySubscriptionId": {
+        "platformSubscriptionId": {
             "type": "string"
         },
         "vpnGateWayScaleUnit": {
@@ -100,12 +100,12 @@
     "resources": [
         {
             "comments": "Conditional deployment for Azure vWan Network Resources in the Platform Connectivity subscription",
-            "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('connectivitySubscriptionId'))))]",
+            "condition": "[and(equals(parameters('enableHub'), 'vwan'), not(empty(parameters('platformSubscriptionId'))))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "location": "[parameters('location')]",
             "name": "[take(concat('vWanConnectivity-', guid(deployment().name)), 64)]",
-            "subscriptionId": "[parameters('connectivitySubscriptionId')]",
+            "subscriptionId": "[parameters('platformSubscriptionId')]",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -140,7 +140,7 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
+                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('platformSubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "2020-05-01",
                                             "name": "[parameters('networkWatcher')]",

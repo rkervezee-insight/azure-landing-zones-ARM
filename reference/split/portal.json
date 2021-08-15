@@ -2168,7 +2168,7 @@
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
             "enableIdentity": "[steps('esPlatformConnectivity').esIdentity]",
-            "connectivityAddressPrefix": "[steps('esPlatformConnectivity').esAddressHub]",
+            "AddressPrefix": "[steps('esPlatformConnectivity').esAddressHub]",
             "location": "[steps('esPlatformConnectivity').esNwLocation]",
             "enablePrivateDnsZones": "[steps('esPlatformConnectivity').esEnablePrivateDnsZones]",
             "vpnOrErZones": "[steps('esPlatformConnectivity').esGwRegionalOrAz]",
