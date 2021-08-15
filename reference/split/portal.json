@@ -2201,9 +2201,9 @@
             "enableEncryptionInTransit": "[steps('lzGoalState').esEncryptionInTransit]",
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
-            "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]",
-            "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub,steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esOnlineLzSub))),steps('lzGoalState').esOnlineLzSub,'')]",
-            "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub,steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esCorpLzSub))),steps('lzGoalState').esCorpLzSub,'')]"
+            "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]"
+           // "onlineLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esOnlineLzSub,steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esOnlineLzSub))),steps('lzGoalState').esOnlineLzSub,'')]",
+           // "corpLzSubscriptionId": "[if(or(not(contains(steps('lzGoalState').esCorpLzSub,steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId)),not(contains(steps('lzGoalState').esCorpLzSub))),steps('lzGoalState').esCorpLzSub,'')]"
         }
     }
 }

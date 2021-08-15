@@ -676,9 +676,6 @@
         "mgmtGroups": {
             "topLevel": "[parameters('enterpriseScaleCompanyPrefix')]",
             "platform": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'platform')]",
-            //"management": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'management')]",
-            //"connectivity": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'connectivity')]",
-            //"identity": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'identity')]",
             "landingZones": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'landingzones')]",
             "corp": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'corp')]",
             "online": "[concat(parameters('enterpriseScaleCompanyPrefix'), '-', 'online')]"
