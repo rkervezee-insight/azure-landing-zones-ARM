@@ -498,7 +498,7 @@
             ],
             "defaultValue": "No"
         },
-        "addressPrefix": {
+        "connectivityAddressPrefix": {
             "type": "string",
             "defaultValue": ""
         },
@@ -816,7 +816,7 @@
             }
         },
         "addressSpace": {
-            "connectivity": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]"
+            "connectivity": "[substring(parameters('connectivityAddressPrefix'),0,sub(length(parameters('connectivityAddressPrefix')), 3))]"
         },
         "namingPrefix": {
             "storage": "[concat(parameters('enterpriseScaleCompanyPrefix'), parameters('locationPrefix'), parameters('platformPrefix'))]",
@@ -1792,7 +1792,7 @@
                         "value": "[parameters('enableAzFw')]"
                     },
                     "addressPrefix": {
-                        "value": "[parameters('addressPrefix')]"
+                        "value": "[parameters('connectivityAddressPrefix')]"
                     },
                     "enableVpnGw": {
                         "value": "[parameters('enableVpnGw')]"
@@ -1957,7 +1957,7 @@
                         "value": "[parameters('enableAzFw')]"
                     },
                     "addressPrefix": {
-                        "value": "[parameters('addressPrefix')]"
+                        "value": "[parameters('connectivityAddressPrefix')]"
                     },
                     "enableVpnGw": {
                         "value": "[parameters('enableVpnGw')]"
