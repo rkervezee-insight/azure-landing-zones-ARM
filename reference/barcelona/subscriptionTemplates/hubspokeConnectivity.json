@@ -467,7 +467,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "INBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080-5701-PROT-tcp-ALLOW",
+                                                        "name": "INBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080/5701-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
                                                             "protocol": "Tcp",
@@ -484,7 +484,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "OUTBOUND-FROM-any-TO-virtualNetwork-PORT-22-3389-PROT-tcp-ALLOW",
+                                                        "name": "OUTBOUND-FROM-any-TO-virtualNetwork-PORT-22/3389-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
@@ -513,7 +513,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "OUTBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080-5701-PROT-any-ALLOW",
+                                                        "name": "OUTBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080/5701-PROT-any-ALLOW",
                                                         "properties": {
                                                             "protocol": "*",
                                                             "sourcePortRange": "*",
