@@ -53,13 +53,14 @@ var vnetAddressSpace = substring(vnetAddressPrefix, 0, (length(vnetAddressPrefix
 var webSubnetName = 'web'
 var appsSubnetName = 'apps'
 var dataSubnetName = 'data'
+var routeTableName = take('${namePrefix}-${udrPrefix}-${guid(namePrefix)}', 24)
 var platformConnectivityVnetSubscriptionId = length(split(platformConnectivityVnetId, '/')) >= 9 ? split(platformConnectivityVnetId, '/')[2] : subscription().subscriptionId
 var platformConnectivityVnetResourceGroupName = length(split(platformConnectivityVnetId, '/')) >= 9 ? split(platformConnectivityVnetId, '/')[4] : resourceGroup().name
 var platformConnectivityVnetName = length(split(platformConnectivityVnetId, '/')) >= 9 ? last(split(platformConnectivityVnetId, '/')) : 'incorrectSegmentLength'
 
 // Creation of the Azure Route Table for the Landing Zone
 resource routeTable 'Microsoft.Network/routeTables@2020-11-01' = {
-  name: take('${namePrefix}-${udrPrefix}-${guid(namePrefix)}', 24)
+  name: routeTableName
   location: location
   tags: tags
   properties: {
@@ -180,8 +181,8 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
   }
 }
 
-resource hubToSpokeVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = if (!empty(platformConnectivityVnetId)) {
-  name: 'FROM-${vnet.name}/${vnet.name}-TO-${platformConnectivityVnetName}'
+resource spokeToHubVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = if (!empty(platformConnectivityVnetId)) {
+  name: '${vnet.name}/FROM-${vnet.name}-TO-${platformConnectivityVnetName}'
   properties: {
     allowForwardedTraffic: true
     allowGatewayTransit: true
@@ -194,7 +195,7 @@ resource hubToSpokeVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetwork
   }
 }
 
-module SpokeToHubVnetPeering 'auxiliary/vnetPeering.bicep' = if (!empty(platformConnectivityVnetId)) {
+module hubToSpokeVnetPeering 'auxiliary/vnetPeering.bicep' = if (!empty(platformConnectivityVnetId)) {
   name: 'FROM-${platformConnectivityVnetName}-TO-${vnet.name}'
   scope: resourceGroup(platformConnectivityVnetSubscriptionId, platformConnectivityVnetResourceGroupName)
   params: {

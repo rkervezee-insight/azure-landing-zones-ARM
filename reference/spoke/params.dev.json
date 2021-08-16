@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "lzPrefix": {
-            "value": "sjj"
+            "value": "spoke"
         },
         "location": {
             "value": "australiaeast"
@@ -57,7 +57,7 @@
             "value": "10.1.2.0/24"
         },
         "platformConnectivityVnetId": {
-            "value": "/subscriptions/8d0248a2-d875-4407-99a6-0981fe09bff2/resourceGroups/dwer-syd-npe-arg-network/providers/Microsoft.Network/virtualNetworks/dwer-syd-npe-vnt-10.50.1.0"
+            "value": "/subscriptions/8f8224ca-1a9c-46d1-9206-1cf2a7c51de8/resourceGroups/sjt-syd-cor-arg-network/providers/Microsoft.Network/virtualNetworks/sjt-syd-cor-vnt-10.49.0.0"
         }
     }
 }

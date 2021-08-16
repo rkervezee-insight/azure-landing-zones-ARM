@@ -20,9 +20,6 @@ param envPrefix string
 @description('Specifies the resource group prefix of the deployment.')
 param argPrefix string = 'arg'
 
-@description('Specifies the storage prefix of the deployment.')
-param staPrefix string = 'sta'
-
 @description('Specifies the NSG prefix of the deployment.')
 param nsgPrefix string = 'nsg'
 
@@ -31,6 +28,12 @@ param vntPrefix string = 'vnt'
 
 @description('Specifies the Route Table prefix of the deployment.')
 param udrPrefix string = 'udr'
+
+@description('Specifies the Key Vault prefix of the deployment.')
+param akvPrefix string = 'akv'
+
+@description('Specifies the Recovery Vault prefix of the deployment.')
+param rsvPrefix string = 'rsv'
 
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object = {}
@@ -79,7 +82,6 @@ param contactRoles array
 // Variables
 var locPrefix = replace(location, 'australiaeast', 'syd')
 var namePrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}')
-var storagePrefix = toLower('${lzPrefix}${locPrefix}${envPrefix}${staPrefix}')
 var rgPrefix = toLower('${namePrefix}-${argPrefix}')
 var tagsDefault = {
   applicationName: 'notset'
@@ -149,7 +151,29 @@ module storageServices 'modules/storage.bicep' = {
   scope: managementResourceGroup
   params: {
     location: location
-    storagePrefix: storagePrefix
+    storagePrefix: lzPrefix
+    tags: tagsJoined
+  }
+}
+
+module keyVaultServices 'modules/keyvault.bicep' = {
+  name: 'keyVaultServices'
+  scope: managementResourceGroup
+  params: {
+    location: location
+    namePrefix: namePrefix
+    akvPrefix: akvPrefix
+    tags: tagsJoined
+  }
+}
+
+module recoveryVaultServices 'modules/recoveryVault.bicep' = {
+  name: 'recoveryVaultServices'
+  scope: managementResourceGroup
+  params: {
+    location: location
+    namePrefix: namePrefix
+    rsvPrefix: rsvPrefix
     tags: tagsJoined
   }
 }
