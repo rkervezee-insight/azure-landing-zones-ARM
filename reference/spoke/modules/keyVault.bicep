@@ -71,7 +71,7 @@ param virtualNetworkRules array = []
 param tenantId string = subscription().tenantId
 
 // Variables
-var keyVaultName = '${namePrefix}-${akvPrefix}-${uniqueString(resourceGroup().id)}'
+var keyVaultName = take('${namePrefix}-${akvPrefix}-${guid(namePrefix)}', 24)
 
 resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: keyVaultName

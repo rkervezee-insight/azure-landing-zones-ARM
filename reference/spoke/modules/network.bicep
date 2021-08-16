@@ -53,7 +53,7 @@ var vnetAddressSpace = substring(vnetAddressPrefix, 0, (length(vnetAddressPrefix
 var webSubnetName = 'web'
 var appsSubnetName = 'apps'
 var dataSubnetName = 'data'
-var routeTableName = take('${namePrefix}-${udrPrefix}-${guid(namePrefix)}', 24)
+var routeTableName = '${namePrefix}-${udrPrefix}-${uniqueString(resourceGroup().id)}'
 var platformConnectivityVnetSubscriptionId = length(split(platformConnectivityVnetId, '/')) >= 9 ? split(platformConnectivityVnetId, '/')[2] : subscription().subscriptionId
 var platformConnectivityVnetResourceGroupName = length(split(platformConnectivityVnetId, '/')) >= 9 ? split(platformConnectivityVnetId, '/')[4] : resourceGroup().name
 var platformConnectivityVnetName = length(split(platformConnectivityVnetId, '/')) >= 9 ? last(split(platformConnectivityVnetId, '/')) : 'incorrectSegmentLength'
@@ -67,7 +67,7 @@ resource routeTable 'Microsoft.Network/routeTables@2020-11-01' = {
     disableBgpRoutePropagation: false
     routes: [
       {
-        name: 'subnet-to-connectivityHub'
+        name: 'FROM-subnet-TO-default-0.0.0.0-0'
         properties: {
           addressPrefix: '0.0.0.0/0'
           nextHopType: 'VirtualAppliance'
@@ -219,3 +219,7 @@ resource lockResource 'Microsoft.Authorization/locks@2016-09-01' = if (!empty(re
 output vNetResourceGroup string = resourceGroup().name
 output vNetName string = vnet.name
 output vNetResourceId string = vnet.id
+output webNsg string = webNsg.name
+output appsNsg string = appsNsg.name
+output dataNsg string = dataNsg.name
+output routeTable string = routeTableName
