@@ -316,7 +316,6 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('platformSubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "2020-05-01",
                                             "name": "[parameters('networkWatcher')]",
@@ -426,7 +425,7 @@
                                             "properties": {
                                                 "securityRules": [
                                                     {
-                                                        "name": "allowHttpsInbound",
+                                                        "name": "INBOUND-FROM-Internet-TO-any-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "description": "This is required for inbound HTTPS access from the internet.",
                                                             "protocol": "Tcp",
@@ -440,7 +439,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowGatewayManagerInbound",
+                                                        "name": "INBOUND-FROM-gatewayManager-TO-any-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "description": "This is required for inbound HTTPS access from the Gateway Manager.",
                                                             "protocol": "Tcp",
@@ -454,7 +453,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowAzureLoadBalancer",
+                                                        "name": "INBOUND-FROM-azureLoadBalancer-TO-any-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
                                                             "protocol": "Tcp",
@@ -468,7 +467,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowBastionHostCommunication",
+                                                        "name": "INBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080-5701-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
                                                             "protocol": "Tcp",
@@ -485,7 +484,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowBastionToVirtualNetwork",
+                                                        "name": "OUTBOUND-FROM-any-TO-virtualNetwork-PORT-22-3389-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
@@ -501,7 +500,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowBastionToAzureCloud",
+                                                        "name": "OUTBOUND-FROM-any-TO-azureCloud-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "protocol": "Tcp",
                                                             "sourcePortRange": "*",
@@ -514,7 +513,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowVirtualNetworkToVirtualNetwork",
+                                                        "name": "OUTBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080-5701-PROT-any-ALLOW",
                                                         "properties": {
                                                             "protocol": "*",
                                                             "sourcePortRange": "*",
@@ -530,7 +529,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "denyAllOutbound",
+                                                        "name": "OUTBOUND-FROM-any-TO-any-PORT-any-PROT-any-DENY",
                                                         "properties": {
                                                             "protocol": "*",
                                                             "sourcePortRange": "*",
@@ -558,7 +557,7 @@
                                             "properties": {
                                                 "securityRules": [
                                                     {
-                                                        "name": "allowAzureBackendCommunication",
+                                                        "name": "INBOUND-FROM-gatewayManager-TO-any-PORT-65200-65535-PROT-tcp-ALLOW",
                                                         "properties": {
                                                             "description": "This is required for Azure infrastructure communication. These ports are protected & locked down by Azure certificates.",
                                                             "protocol": "Tcp",
@@ -572,7 +571,7 @@
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowHttpsInbound",
+                                                        "name": "[concat('INBOUND-FROM-internet-TO-', parameters('subnetMaskForAppGw'), '-PORT-443-PROT-tcp-ALLOW')]",
                                                         "properties": {
                                                             "description": "This is required for inbound HTTPS access from the internet.",
                                                             "protocol": "Tcp",

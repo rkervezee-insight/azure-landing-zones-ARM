@@ -140,7 +140,6 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('platformSubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "2020-05-01",
                                             "name": "[parameters('networkWatcher')]",
