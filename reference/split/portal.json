@@ -1079,7 +1079,7 @@
                         "label": "Address space (required for vWAN hub)",
                         "toolTip": "Provide address prefix in CIDR notation (e.g. 10.49.0.0/18)",
                         "defaultValue": "10.49.0.0/18",
-                        "visible": "[not(equals(steps('platformConnectivity').esHub, 'No')), not(equals(steps('platformConnectivity').esHub, 'vhub'))]",
+                        "visible": "[equals(steps('platformConnectivity').esHub, 'vwan')]",
                         "constraints": {
                             "required": true,
                             "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-9]))$",
@@ -1092,7 +1092,7 @@
                         "label": "Address space (required for hub virtual network)",
                         "toolTip": "Provide address prefix in CIDR notation (e.g 10.49.0.0/18)",
                         "defaultValue": "10.49.0.0/18",
-                        "visible": "[not(equals(steps('esConnectivityGoalState').esHub, 'No')), not(equals(steps('esConnectivityGoalState').esHub, 'vwan'))]",
+                        "visible": "[equals(steps('platformConnectivity').esHub, 'vhub')]",
                         "constraints": {
                             "required": true,
                             "validationMessage": "The hub virtual network address space, specified as one address prefix in CIDR notation (e.g. 10.49.0.0/18)"
