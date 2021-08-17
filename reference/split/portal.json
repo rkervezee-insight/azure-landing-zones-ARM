@@ -2133,7 +2133,6 @@
             "subscriptionTag": "[steps('esNaming').esSubscriptionTag]",
             "ownerTag": "[steps('esNaming').esOwnerTag]",
             "costCenterTag": "[steps('esNaming').esCostCenterTag]",
-
             "platformSubscriptionId": "[steps('esPlatformManagement').esPlatformSubSection.esPlatformSub.subscriptionId]",
             "enableLogAnalytics": "[steps('esPlatformManagement').esLogAnalytics]",
             "retentionInDays": "[string(steps('esPlatformManagement').esLogRetention)]",
@@ -2160,7 +2159,6 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
-
             "paToken": "[steps('esPlatformDevOps').esPaToken]",
             "principalId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.objectId]",
             "principalSecret": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.password]",
@@ -2168,7 +2166,6 @@
             "appId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.appId]",
             "enableAzOps": "[steps('esPlatformDevOps').cicdOption]",
             "repositoryName": "[steps('esPlatformDevOps').esGitRepoName]",
-
             "enableErGw": "[steps('esPlatformConnectivity').esErGw]",
             "enableVpnGw": "[steps('esPlatformConnectivity').esVpnGw]",
             "enableHub": "[steps('esPlatformConnectivity').esHub]",
@@ -2214,7 +2211,6 @@
             "enableVmMonitoring": "[steps('lzGoalState').esVmMonitoring]",
             "enableVmssMonitoring": "[steps('lzGoalState').esVmssMonitoring]",
             "enableArcMonitoring": "[steps('lzGoalState').esArcVmMonitoring]"
-
         }
     }
 }
