@@ -1090,7 +1090,7 @@
             ],
             "copy": {
                 "batchSize": 1,
-                "count": 5,
+                "count": 20,
                 "mode": "Serial",
                 "name": "policyCompletion"
             },
