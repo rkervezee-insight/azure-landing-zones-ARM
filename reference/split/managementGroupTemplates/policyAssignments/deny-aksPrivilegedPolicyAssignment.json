@@ -18,7 +18,7 @@
         "policyAssignmentNames": {
             "denyAksPriv": "Deny-Privileged-AKS",
             "description": "Do not allow privileged containers creation in a Kubernetes cluster. This recommendation is part of CIS 5.2.1 which is intended to improve the security of your Kubernetes environments. This policy is generally available for Kubernetes Service (AKS), and preview for AKS Engine and Azure Arc enabled Kubernetes. For more information, see https://aka.ms/kubepolicydoc.",
-            "displayName": "Kubernetes cluster should not allow privileged containers"
+            "displayName": "Kubernetes clusters should not allow privileged containers"
         }
     },
     "resources": [

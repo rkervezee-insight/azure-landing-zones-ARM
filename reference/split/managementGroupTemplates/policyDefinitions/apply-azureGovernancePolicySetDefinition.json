@@ -70,7 +70,7 @@
                     "version": "1.0.0",
                     "category": "Governance"
                 },
-                "displayName": "Configure Azure Governance Settings",
+                "displayName": "Configure Azure Governance Baseline",
                 "description": "This Azure Governance initiative enforces resource group tagging, tag inheritence, allowed locations and other governance controls across the environment.",
                 "parameters": {},
                 "policyDefinitions": [

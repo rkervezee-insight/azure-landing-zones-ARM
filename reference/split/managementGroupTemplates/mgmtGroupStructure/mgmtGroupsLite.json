@@ -1,6 +1,11 @@
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-08-01/tenantDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
+    "metadata": {
+        "name": "Microsoft.Management/managementGroups",
+        "description": "This template deploys the Mangement Group Structure aligned to the Microsoft Cloud Adoption Framework",
+        "summary": "https://docs.microsoft.com/en-us/azure/templates/microsoft.management/managementgroups?tabs=json"
+    },
     "parameters": {
         "topLevelManagementGroupPrefix": {
             "type": "string",
