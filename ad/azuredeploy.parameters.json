@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "adminUsername": {
+      "value": "azureadmin"
+    },
+    "adminPassword": {
+      "reference": {
+        "keyVault": {
+          "id": "/subscriptions/a50d2a27-93d9-43b1-957c-2a663ffaf37f/resourceGroups/spoke-syd-dev-arg-management/providers/Microsoft.KeyVault/vaults/spoke-syd-dev-akv-b12983"
+        },
+        "secretName": "adminPasswordSecret"
+      }
+    },
+    "vmSize": {
+      "value": "Standard_D2s_v3"
+    },
+    "vNetName": {
+      "value": "spoke-syd-dev-vnt-10.1.0.0"
+    },
+    "vNetRg": {
+      "value": "spoke-syd-dev-arg-network"
+    },
+    "subnetName": {
+      "value": "data"
+    }
+  }
+}
