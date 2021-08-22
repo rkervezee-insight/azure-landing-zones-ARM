@@ -13,4 +13,4 @@ This template will deploy 2 new VMs and create a new  AD forest and domain, each
 
 Click the button below to deploy
 
-[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FInsight-Services-APAC%2Fazure-modules%2Fmain%2FTemp%2Fad%2Fazuredeploy.json)
+[![Deploy To Azure](https://raw.githubusercontent.com/Azure/azure-quickstart-templates/master/1-CONTRIBUTION-GUIDE/images/deploytoazure.svg?sanitize=true)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FInsight-Services-APAC%2Fazure-landing-zones%2FAug2021%2Fad%2Fazuredeploy.json)
