@@ -227,7 +227,6 @@
       "apiVersion": "2020-10-01",
       "name": "UpdateBDCNIC",
       "dependsOn": [
-        "UpdateVNetDNS1"
       ],
       "properties": {
         "mode": "Incremental",
