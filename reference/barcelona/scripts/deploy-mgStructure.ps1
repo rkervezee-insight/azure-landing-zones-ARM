@@ -13,14 +13,10 @@ August 12, 2021 1.0
 
 # Parameters
 
-$ESLZPrefix = "sjt"
 $Location = "australiaeast"
 $DeploymentName = "mgStructure"
-$TenantRootGroupId = (Get-AzTenant).Id
 
-New-AzManagementGroupDeployment -Name  "$($ESLZPrefix)-$($DeploymentName)-$($Location)" ` `
-  -ManagementGroupId $TenantRootGroupId `
+New-AzTenantDeployment -Name  "$($DeploymentName)-$($Location)" ` `
   -Location $Location `
   -TemplateFile ..\managementGroupTemplates\mgmtGroupStructure\mgmtGroups.json `
-  -topLevelManagementGroupPrefix $ESLZPrefix `
   -Verbose
