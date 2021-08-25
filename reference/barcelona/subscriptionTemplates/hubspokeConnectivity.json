@@ -246,7 +246,7 @@
         "vpnGwySubnetId": "[concat(parameters('vhubResourceId'), '/subnets/GatewaySubnet')]",
         "erGwySubnetId": "[concat(parameters('vhubResourceId'), '/subnets/GatewaySubnet')]",
         "azfwSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureFirewallSubnet')]",
-        "azBastionSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureBastion')]",
+        "azBastionSubnetId": "[concat(parameters('vhubResourceId'), '/subnets/AzureBastionSubnet')]",
         "azfwPolicyResourceId": {
             "id": "[parameters('azfwPolicyResourceId')]"
         },
