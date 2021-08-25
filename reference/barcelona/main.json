@@ -783,7 +783,7 @@
             "online": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('mgmtGroups').online)]"
         },
         "deploymentUris": {
-            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'managementGroupTemplates/managementGroups/mgmtGroups.json')]",
+            "managementGroups": "[uri(deployment().properties.templateLink.uri, 'managementGroupTemplates/mgmtGroupStructure/mgmtGroups.json')]",
             "policyDefinitions": "[uri(deployment().properties.templateLink.uri, 'managementGroupTemplates/policyDefinitions/policies.json')]",
             "publicEndpointPolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'managementGroupTemplates/policyDefinitions/deny-publicEndpointsPolicySetDefinition.json')]",
             "privateDnsZonePolicySetDefinition": "[uri(deployment().properties.templateLink.uri, 'managementGroupTemplates/policyDefinitions/dine-privateDnsZonesPolicySetDefinition.json')]",

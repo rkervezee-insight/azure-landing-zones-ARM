@@ -1,6 +1,6 @@
 //param prefix string
 
-@description('Required. Storage Account Name.')
+@description('Required. Storage Account Prefix.')
 param storagePrefix string
 
 @description('Optional. Location for all resources.')
@@ -74,7 +74,8 @@ param resourceLock string = 'Yes'
 @description('Optional. Tags of the resource.')
 param tags object = {}
 
-var storageAccountName = take('${storagePrefix}${guid(storagePrefix)}', 20)
+var storageAccountName = '${storagePrefix}${uniqueString(resourceGroup().id)}'
+
 var restorePolicyEnabled = {
     enabled: enablePointInTimeRestoreForContainers
     days: pointInTimeRestoreForContainersRestoreDays

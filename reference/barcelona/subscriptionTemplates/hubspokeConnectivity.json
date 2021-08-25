@@ -316,7 +316,6 @@
                                         },
                                         {
                                             "comments": "Deploy Network Watcher",
-                                            "condition": "[and(equals(parameters('enableHub'), 'Yes'), not(empty(parameters('connectivitySubscriptionId'))))]",
                                             "type": "Microsoft.Network/networkWatchers",
                                             "apiVersion": "2020-05-01",
                                             "name": "[parameters('networkWatcher')]",
@@ -426,111 +425,66 @@
                                             "properties": {
                                                 "securityRules": [
                                                     {
-                                                        "name": "allowHttpsInbound",
+                                                        "name": "INBOUND-FROM-Internet-TO-any-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the internet.",
-                                                            "protocol": "Tcp",
+                                                            "protocol": "tcp",
                                                             "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "Internet",
                                                             "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "Internet",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
                                                             "priority": 120,
-                                                            "direction": "Inbound"
+                                                            "direction": "Inbound",
+                                                            "description": "This is required for inbound HTTPS access from the internet."
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowGatewayManagerInbound",
+                                                        "name": "INBOUND-FROM-gatewayManager-TO-any-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the Gateway Manager.",
-                                                            "protocol": "Tcp",
+                                                            "protocol": "tcp",
                                                             "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "GatewayManager",
                                                             "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "GatewayManager",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
                                                             "priority": 130,
-                                                            "direction": "Inbound"
+                                                            "direction": "Inbound",
+                                                            "description": "This is required for inbound HTTPS access from the Gateway Manager."
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowAzureLoadBalancer",
+                                                        "name": "INBOUND-FROM-azureLoadBalancer-TO-any-PORT-443-PROT-tcp-ALLOW",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
-                                                            "protocol": "Tcp",
+                                                            "protocol": "tcp",
                                                             "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "AzureLoadBalancer",
                                                             "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "AzureLoadBalancer",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
                                                             "priority": 140,
-                                                            "direction": "Inbound"
+                                                            "direction": "Inbound",
+                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer."
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowBastionHostCommunication",
+                                                        "name": "INBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080/5701-PROT-tcp-ALLOW",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer.",
-                                                            "protocol": "Tcp",
+                                                            "protocol": "tcp",
                                                             "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "VirtualNetwork",
                                                             "destinationPortRanges": [
                                                                 "8080",
                                                                 "5701"
                                                             ],
+                                                            "sourceAddressPrefix": "VirtualNetwork",
                                                             "destinationAddressPrefix": "VirtualNetwork",
                                                             "access": "Allow",
                                                             "priority": 150,
-                                                            "direction": "Inbound"
+                                                            "direction": "Inbound",
+                                                            "description": "This is required for inbound HTTPS access from the Azure Load Balancer."
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowBastionToVirtualNetwork",
-                                                        "properties": {
-                                                            "protocol": "Tcp",
-                                                            "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "*",
-                                                            "destinationPortRanges": [
-                                                                "22",
-                                                                "3389"
-                                                            ],
-                                                            "destinationAddressPrefix": "VirtualNetwork",
-                                                            "access": "Allow",
-                                                            "priority": 100,
-                                                            "direction": "Outbound"
-                                                        }
-                                                    },
-                                                    {
-                                                        "name": "allowBastionToAzureCloud",
-                                                        "properties": {
-                                                            "protocol": "Tcp",
-                                                            "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "*",
-                                                            "destinationPortRange": "443",
-                                                            "destinationAddressPrefix": "AzureCloud",
-                                                            "access": "Allow",
-                                                            "priority": 120,
-                                                            "direction": "Outbound"
-                                                        }
-                                                    },
-                                                    {
-                                                        "name": "allowVirtualNetworkToVirtualNetwork",
-                                                        "properties": {
-                                                            "protocol": "*",
-                                                            "sourcePortRange": "*",
-                                                            "destinationPortRanges": [
-                                                                "8080",
-                                                                "5701"
-                                                            ],
-                                                            "sourceAddressPrefix": "VirtualNetwork",
-                                                            "destinationAddressPrefix": "VirtualNetwork",
-                                                            "access": "Allow",
-                                                            "priority": 130,
-                                                            "direction": "Outbound"
-                                                        }
-                                                    },
-                                                    {
-                                                        "name": "denyAllOutbound",
+                                                        "name": "INBOUND-FROM-any-TO-any-PORT-any-PROT-any-DENY",
                                                         "properties": {
                                                             "protocol": "*",
                                                             "sourcePortRange": "*",
@@ -538,8 +492,71 @@
                                                             "sourceAddressPrefix": "*",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Deny",
-                                                            "priority": 1000,
-                                                            "direction": "Outbound"
+                                                            "priority": 4000,
+                                                            "direction": "Inbound",
+                                                            "description": "Inbound default Deny all rule"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "OUTBOUND-FROM-any-TO-virtualNetwork-PORT-22/3389-PROT-tcp-ALLOW",
+                                                        "properties": {
+                                                            "protocol": "tcp",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRanges": [
+                                                                "22",
+                                                                "3389"
+                                                            ],
+                                                            "sourceAddressPrefix": "*",
+                                                            "destinationAddressPrefix": "VirtualNetwork",
+                                                            "access": "Allow",
+                                                            "priority": 100,
+                                                            "direction": "Outbound",
+                                                            "description": "Outbound from the Bastion Subnet to virtual networks on port 3389 and 22"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "OUTBOUND-FROM-any-TO-azureCloud-PORT-443-PROT-tcp-ALLOW",
+                                                        "properties": {
+                                                            "protocol": "tcp",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "*",
+                                                            "destinationAddressPrefix": "AzureCloud",
+                                                            "access": "Allow",
+                                                            "priority": 120,
+                                                            "direction": "Outbound",
+                                                            "description": "Outbound from the Bastion Subnet to the Azure Cloud on port 443"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "OUTBOUND-FROM-virtualNetwork-TO-virtualNetwork-PORT-8080/5701-PROT-any-ALLOW",
+                                                        "properties": {
+                                                            "protocol": "*",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRanges": [
+                                                                "8080",
+                                                                "5701"
+                                                            ],
+                                                            "sourceAddressPrefix": "VirtualNetwork",
+                                                            "destinationAddressPrefix": "VirtualNetwork",
+                                                            "access": "Allow",
+                                                            "priority": 130,
+                                                            "direction": "Outbound",
+                                                            "description": "Outbound from the Bastion Subnet to the Azure Data plane on port 8080, 5701"
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "OUTBOUND-FROM-any-TO-any-PORT-any-PROT-any-DENY",
+                                                        "properties": {
+                                                            "protocol": "*",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "*",
+                                                            "sourceAddressPrefix": "*",
+                                                            "destinationAddressPrefix": "*",
+                                                            "access": "Deny",
+                                                            "priority": 4000,
+                                                            "direction": "Outbound",
+                                                            "description": "Outbound default Deny all rule"
                                                         }
                                                     }
                                                 ]
@@ -558,31 +575,45 @@
                                             "properties": {
                                                 "securityRules": [
                                                     {
-                                                        "name": "allowAzureBackendCommunication",
+                                                        "name": "INBOUND-FROM-gatewayManager-TO-any-PORT-65200-65535-PROT-tcp-ALLOW",
                                                         "properties": {
-                                                            "description": "This is required for Azure infrastructure communication. These ports are protected & locked down by Azure certificates.",
-                                                            "protocol": "Tcp",
+                                                            "protocol": "tcp",
                                                             "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "GatewayManager",
                                                             "destinationPortRange": "65200-65535",
+                                                            "sourceAddressPrefix": "GatewayManager",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
                                                             "priority": 100,
-                                                            "direction": "Inbound"
+                                                            "direction": "Inbound",
+                                                            "description": "This is required for Azure infrastructure communication. These ports are protected & locked down by Azure certificates."
                                                         }
                                                     },
                                                     {
-                                                        "name": "allowHttpsInbound",
+                                                        "name": "[concat('INBOUND-FROM-internet-TO-', parameters('subnetMaskForAppGw'), '-PORT-443-PROT-tcp-ALLOW')]",
                                                         "properties": {
-                                                            "description": "This is required for inbound HTTPS access from the internet.",
-                                                            "protocol": "Tcp",
+                                                            "protocol": "tcp",
                                                             "sourcePortRange": "*",
-                                                            "sourceAddressPrefix": "Internet",
                                                             "destinationPortRange": "443",
+                                                            "sourceAddressPrefix": "Internet",
                                                             "destinationAddressPrefix": "[parameters('subnetMaskForAppGw')]",
                                                             "access": "Allow",
                                                             "priority": 110,
-                                                            "direction": "Inbound"
+                                                            "direction": "Inbound",
+                                                            "description": "This is required for inbound HTTPS access from the internet."
+                                                        }
+                                                    },
+                                                    {
+                                                        "name": "INBOUND-FROM-any-TO-any-PORT-any-PROT-any-DENY",
+                                                        "properties": {
+                                                            "protocol": "*",
+                                                            "sourcePortRange": "*",
+                                                            "destinationPortRange": "*",
+                                                            "sourceAddressPrefix": "*",
+                                                            "destinationAddressPrefix": "*",
+                                                            "access": "Deny",
+                                                            "priority": 4000,
+                                                            "direction": "Inbound",
+                                                            "description": "Inbound default Deny all rule"
                                                         }
                                                     }
                                                 ]

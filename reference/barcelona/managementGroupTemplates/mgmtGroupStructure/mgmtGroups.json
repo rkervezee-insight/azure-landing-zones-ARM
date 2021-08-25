@@ -4,7 +4,6 @@
     "parameters": {
         "topLevelManagementGroupPrefix": {
             "type": "string",
-            "maxLength": 5,
             "metadata": {
                 "description": "Provide prefix for the management group structure."
             }
@@ -32,34 +31,33 @@
         }
     },
     "variables": {
-        "managementGroups": {
+        "enterpriseScaleManagementGroups": {
             "platform": "[concat(parameters('topLevelManagementGroupPrefix'), '-', 'platform')]",
             "landingZone": "[concat(parameters('topLevelManagementGroupPrefix'), '-', 'landingzones')]",
             "decommissioned": "[concat(parameters('topLevelManagementGroupPrefix'), '-', 'decommissioned')]",
             "sandboxes": "[concat(parameters('topLevelManagementGroupPrefix'), '-', 'sandboxes')]"
-        },
-        "apiVersions": {
-            "managementGroups": "2020-05-01"
         }
     },
     "resources": [
         {
             "comments": "Create top level management group under tenant root",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
+            "scope": "/",
+            "apiVersion": "2020-05-01",
             "name": "[parameters('topLevelManagementGroupPrefix')]",
             "properties": {}
         },
         {
             "comments": "Create the Platform Management Group",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
-            "name": "[variables('managementGroups').platform]",
+            "apiVersion": "2020-05-01",
+            "scope": "/",
+            "name": "[variables('enterpriseScaleManagementGroups').platform]",
             "dependsOn": [
                 "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
             ],
             "properties": {
-                "displayName": "[variables('managementGroups').platform]",
+                "displayName": "[variables('enterpriseScaleManagementGroups').platform]",
                 "details": {
                     "parent": {
                         "id": "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
@@ -70,13 +68,14 @@
         {
             "comments": "Create the Landing Zone Management Group",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
-            "name": "[variables('managementGroups').landingZone]",
+            "apiVersion": "2020-05-01",
+            "scope": "/",
+            "name": "[variables('enterpriseScaleManagementGroups').landingZone]",
             "dependsOn": [
                 "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
             ],
             "properties": {
-                "displayName": "[variables('managementGroups').landingZone]",
+                "displayName": "[variables('enterpriseScaleManagementGroups').landingZone]",
                 "details": {
                     "parent": {
                         "id": "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
@@ -87,13 +86,14 @@
         {
             "comments": "Create the Sandbox Management Group",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
-            "name": "[variables('managementGroups').sandboxes]",
+            "apiVersion": "2020-05-01",
+            "scope": "/",
+            "name": "[variables('enterpriseScaleManagementGroups').sandboxes]",
             "dependsOn": [
                 "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
             ],
             "properties": {
-                "displayName": "[variables('managementGroups').sandboxes]",
+                "displayName": "[variables('enterpriseScaleManagementGroups').sandboxes]",
                 "details": {
                     "parent": {
                         "id": "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
@@ -104,13 +104,14 @@
         {
             "comments": "Create the Decommissioned Management Group",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
-            "name": "[variables('managementGroups').decommissioned]",
+            "apiVersion": "2020-05-01",
+            "scope": "/",
+            "name": "[variables('enterpriseScaleManagementGroups').decommissioned]",
             "dependsOn": [
                 "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
             ],
             "properties": {
-                "displayName": "[variables('managementGroups').decommissioned]",
+                "displayName": "[variables('enterpriseScaleManagementGroups').decommissioned]",
                 "details": {
                     "parent": {
                         "id": "[tenantResourceId('Microsoft.Management/managementGroups/', parameters('topLevelManagementGroupPrefix'))]"
@@ -122,10 +123,11 @@
             "comments": "Create child Management Groups for Platform subscriptions",
             "condition": "[not(empty(parameters('platformMgs')))]",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
+            "apiVersion": "2020-05-01",
+            "scope": "/",
             "name": "[concat(parameters('topLevelManagementGroupPrefix'), '-', parameters('platformMgs')[copyIndex()])]",
             "dependsOn": [
-                "[tenantResourceId('Microsoft.Management/managementGroups', variables('managementGroups').platform)]"
+                "[tenantResourceId('Microsoft.Management/managementGroups', variables('enterpriseScaleManagementGroups').platform)]"
             ],
             "copy": {
                 "name": "platformMgCopy",
@@ -135,7 +137,7 @@
                 "displayName": "[concat(parameters('topLevelManagementGroupPrefix'), '-', parameters('platformMgs')[copyIndex()])]",
                 "details": {
                     "parent": {
-                        "id": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').platform)]"
+                        "id": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('enterpriseScaleManagementGroups').platform)]"
                     }
                 }
             }
@@ -144,10 +146,11 @@
             "comments": "Create child Management Groups for Landing Zones",
             "condition": "[not(empty(parameters('landingZoneMgs')))]",
             "type": "Microsoft.Management/managementGroups",
-            "apiVersion": "[variables('apiVersions').managementGroups]",
+            "apiVersion": "2020-05-01",
+            "scope": "/",
             "name": "[concat(parameters('topLevelManagementGroupPrefix'), '-', parameters('landingZoneMgs')[copyIndex()])]",
             "dependsOn": [
-                "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').landingZone)]"
+                "[tenantResourceId('Microsoft.Management/managementGroups/', variables('enterpriseScaleManagementGroups').landingZone)]"
             ],
             "copy": {
                 "name": "lzMgCopy",
@@ -157,7 +160,7 @@
                 "displayName": "[concat(parameters('topLevelManagementGroupPrefix'), '-', parameters('landingZoneMgs')[copyIndex()])]",
                 "details": {
                     "parent": {
-                        "id": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('managementGroups').landingZone)]"
+                        "id": "[tenantResourceId('Microsoft.Management/managementGroups/', variables('enterpriseScaleManagementGroups').landingZone)]"
                     }
                 }
             }

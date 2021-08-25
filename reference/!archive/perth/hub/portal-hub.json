@@ -1056,14 +1056,18 @@
                     {
                         "name": "esHub",
                         "type": "Microsoft.Common.OptionsGroup",
-                        "label": "Deploy Virtual Hub",
-                        "defaultValue": "Yes",
+                        "label": "Deploy Networking Topology",
+                        "defaultValue": "Traditional Hub and Spoke",
                         "toolTip": "If 'Yes' is selected when also adding a subscription for connectivity, ARM will deploy a Virtual Network Hub",
                         "constraints": {
                             "allowedValues": [
                                 {
-                                    "label": "Yes",
-                                    "value": "Yes"
+                                    "label": "Traditional Hub and Spoke",
+                                    "value": "vhub"
+                                },
+                                {
+                                    "label": "Virtual WAN (Microsoft Managed)",
+                                    "value": "vwan"
                                 },
                                 {
                                     "label": "No",
