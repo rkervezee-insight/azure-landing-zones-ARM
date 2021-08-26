@@ -834,6 +834,26 @@
                         }
                     },
                     {
+                        "name": "esAscOsrdb",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Enable Azure Defender for Open-Source Relational Databases",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected, Azure Defender will be enabled for Open-Source Relational Databases.",
+                        "visible": "[equals(steps('esPlatformManagement').esAsc, 'Yes')]",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Standard"
+                                },
+                                {
+                                    "label": "No, Azure Defender Off",
+                                    "value": "Free"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "esSecuritySolution",
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Deploy Azure Sentinel",
@@ -2333,6 +2353,7 @@
             "enableAscForDns": "[steps('esPlatformManagement').esAscDns]",
             "enableAscForKubernetes": "[steps('esPlatformManagement').esAscKubernetes]",
             "enableAscForRegistries": "[steps('esPlatformManagement').esAscRegistries]",
+            "enableAscForOsrdb": "[steps('esPlatformManagement').esAscOsrdb]",
             "paToken": "[steps('esPlatformDevOps').esPaToken]",
             "principalId": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.objectId]",
             "principalSecret": "[steps('esPlatformDevOps').spnSection.esServicePrincipal.password]",

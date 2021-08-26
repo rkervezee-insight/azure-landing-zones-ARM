@@ -359,6 +359,14 @@
                 "Free"
             ]
         },
+        "enableAscForOsrdb": {
+            "type": "string",
+            "defaultValue": "Free",
+            "allowedValues": [
+                "Standard",
+                "Free"
+            ]
+        },
         "enableAksPolicy": {
             "type": "string",
             "defaultValue": "No",
@@ -1745,6 +1753,9 @@
                     },
                     "enableAscForDns": {
                         "value": "[parameters('enableAscForDns')]"
+                    },
+                    "enableAscForOsrdb": {
+                        "value": "[parameters('enableAscForOsrdb')]"
                     }
                 }
             }
