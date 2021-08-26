@@ -170,6 +170,18 @@
                             "Free"
                         ],
                         "defaultValue": "Standard"
+                    },
+                    "pricingTierOsrdb": {
+                        "type": "string",
+                        "metadata": {
+                            "displayName": "Azure Defender pricing tier for Open-Source Relational Databases",
+                            "description": "Azure Defender pricing tier for Open-Source Relational Databases"
+                        },
+                        "allowedValues": [
+                            "Standard",
+                            "Free"
+                        ],
+                        "defaultValue": "Standard"
                     }
                 },
                 "metadata": {
@@ -264,6 +276,15 @@
                         "parameters": {
                             "pricingTier": {
                                 "value": "[[parameters('pricingTierArm')]"
+                            }
+                        }
+                    },
+                    {
+                        "policyDefinitionId": "[concat(variables('scope'), '/providers/Microsoft.Authorization/policyDefinitions/Deploy-ASC-Defender-OSRDB')]",
+                        "policyDefinitionReferenceId": "defenderForOsrdb",
+                        "parameters": {
+                            "pricingTier": {
+                                "value": "[[parameters('pricingTierOsrdb')]"
                             }
                         }
                     },
