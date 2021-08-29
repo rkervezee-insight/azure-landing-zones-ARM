@@ -433,7 +433,7 @@
                                                             "sourceAddressPrefix": "Internet",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
-                                                            "priority": 120,
+                                                            "priority": 100,
                                                             "direction": "Inbound",
                                                             "description": "This is required for inbound HTTPS access from the internet."
                                                         }
@@ -447,7 +447,7 @@
                                                             "sourceAddressPrefix": "GatewayManager",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
-                                                            "priority": 130,
+                                                            "priority": 110,
                                                             "direction": "Inbound",
                                                             "description": "This is required for inbound HTTPS access from the Gateway Manager."
                                                         }
@@ -461,7 +461,7 @@
                                                             "sourceAddressPrefix": "AzureLoadBalancer",
                                                             "destinationAddressPrefix": "*",
                                                             "access": "Allow",
-                                                            "priority": 140,
+                                                            "priority": 120,
                                                             "direction": "Inbound",
                                                             "description": "This is required for inbound HTTPS access from the Azure Load Balancer."
                                                         }
@@ -523,7 +523,7 @@
                                                             "sourceAddressPrefix": "*",
                                                             "destinationAddressPrefix": "AzureCloud",
                                                             "access": "Allow",
-                                                            "priority": 120,
+                                                            "priority": 110,
                                                             "direction": "Outbound",
                                                             "description": "Outbound from the Bastion Subnet to the Azure Cloud on port 443"
                                                         }
@@ -540,7 +540,7 @@
                                                             "sourceAddressPrefix": "VirtualNetwork",
                                                             "destinationAddressPrefix": "VirtualNetwork",
                                                             "access": "Allow",
-                                                            "priority": 130,
+                                                            "priority": 120,
                                                             "direction": "Outbound",
                                                             "description": "Outbound from the Bastion Subnet to the Azure Data plane on port 8080, 5701"
                                                         }
