@@ -19,7 +19,7 @@ $DeploymentName = "policySetDefinitions"
 
 # Deploying Azure Policy Initiative for associating private DNS zones with private endpoints for Azure PaaS services
 
-New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-privateDnssjt-$($Location)" `
+New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-privateDns-$($Location)" `
   -ManagementGroupId $ESLZPrefix `
   -Location $Location `
   -TemplateFile ..\managementGroupTemplates\policyDefinitions\dine-privateDnsZonesPolicySetDefinition.json `
@@ -29,6 +29,7 @@ New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-private
 
 New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-ascConfig-$($Location)" `
   -ManagementGroupId $ESLZPrefix `
+  -topLevelManagementGroupPrefix $ESLZPrefix `
   -Location $Location `
   -TemplateFile ..\managementGroupTemplates\policyDefinitions\deploy-ascConfigurationPolicySetDefinition.json `
   -Verbose
@@ -45,6 +46,7 @@ New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-publicE
 
 New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-tlsSsl-$($Location)" `
   -ManagementGroupId $ESLZPrefix `
+  -topLevelManagementGroupPrefix $ESLZPrefix `
   -Location $Location `
   -TemplateFile ..\managementGroupTemplates\policyDefinitions\deny-dine-append-tlsSslPolicySetDefinition.json `
   -Verbose
@@ -53,6 +55,7 @@ New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-tlsSsl-
 
 New-AzManagementGroupDeployment -Name "$($ESLZPrefix)-$($DeploymentName)-azureGovernance-$($Location)" `
   -ManagementGroupId $ESLZPrefix `
+  -topLevelManagementGroupPrefix $ESLZPrefix `
   -Location $Location `
   -TemplateFile ..\managementGroupTemplates\policyDefinitions\apply-azureGovernancePolicySetDefinition.json `
   -Verbose
