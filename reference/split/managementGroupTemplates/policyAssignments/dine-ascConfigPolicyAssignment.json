@@ -107,6 +107,14 @@
                 "Free"
             ],
             "defaultValue": "Free"
+        },
+        "enableAscForOsrdb": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Free"
+            ],
+            "defaultValue": "Free"
         }
     },
     "variables": {
@@ -145,7 +153,7 @@
                         "value": "[parameters('logAnalyticsResourceId')]"
                     },
                     "ascExportResourceGroupName": {
-                        "value": "[concat(parameters('topLevelManagementGroupPrefix'), '-asc-export')]"
+                        "value": "[concat(parameters('topLevelManagementGroupPrefix'), '-ascExport')]"
                     },
                     "ascExportResourceGroupLocation": {
                         "value": "[deployment().location]"
@@ -179,6 +187,9 @@
                     },
                     "pricingTierDns": {
                         "value": "[parameters('enableAscForDns')]"
+                    },
+                    "pricingTierOsrdb": {
+                        "value": "[parameters('enableAscForOsrdb')]"
                     }
                 }
             }

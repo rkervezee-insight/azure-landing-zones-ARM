@@ -51,7 +51,7 @@
             "deployNsgFlowLogs": "/providers/Microsoft.Authorization/policyDefinitions/0db34a60-64f4-4bf6-bd44-f95c16cf34b9"
         },
         "policyAssignmentNames": {
-            "nsgFlowLogs": "deploy-nsg-flow-logs",
+            "nsgFlowLogs": "Deploy-Nsg-Flow-Logs",
             "description": "Deploy a flow log resource with target network security group",
             "displayName": "Deploy a flow log resource with target network security group"
         },

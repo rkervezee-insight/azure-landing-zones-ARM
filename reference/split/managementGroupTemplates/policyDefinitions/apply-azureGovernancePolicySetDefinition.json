@@ -64,7 +64,7 @@
         {
             "type": "Microsoft.Authorization/policySetDefinitions",
             "apiVersion": "2019-09-01",
-            "name": "apply-azure-governance",
+            "name": "configure-governance",
             "properties": {
                 "metadata": {
                     "version": "1.0.0",
