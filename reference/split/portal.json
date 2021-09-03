@@ -1607,7 +1607,7 @@
                                     "message": "CIDR range not within virtual network CIDR range (third octet)."
                                 },
                                 {
-                                    "isValid": "[lessOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), last(split(steps('esPlatformConnectivity').esAddressVpnOrEr, '/')))]",
+                                    "isValid": "[lessOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), last(split(steps('esPlatformConnectivity').esAddressFw, '/')))]",
                                     "message": "CIDR range not within virtual network CIDR range (subnet mask)."
                                 }
                             ]
