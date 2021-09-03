@@ -291,7 +291,7 @@
 
                             "type": "Microsoft.Insights/diagnosticSettings",
                             "apiVersion": "2017-05-01-preview",
-                            "name": "subscriptionLogsToStorage",
+                            "name": "activityLogsToAzureStorage",
                             "location": "Global",
                             "properties": {
                               "storageAccountId": "[[parameters('storageAccountId')]",
