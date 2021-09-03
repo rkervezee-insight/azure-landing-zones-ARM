@@ -501,6 +501,14 @@
                 "No"
             ]
         },
+        "enableContainerInsights": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "enableStorage": {
             "type": "string",
             "defaultValue": "Yes",
@@ -1217,7 +1225,7 @@
             ],
             "copy": {
                 "batchSize": 1,
-                "count": 5,
+                "count": 20,
                 "mode": "Serial",
                 "name": "policyCompletion"
             },
@@ -1407,6 +1415,9 @@
                     },
                     "enableKeyVaultAnalytics": {
                         "value": "[parameters('enableKeyVaultAnalytics')]"
+                    },
+                    "enableContainerInsights": {
+                        "value": "[parameters('enableContainerInsights')]"
                     }
                 }
             }

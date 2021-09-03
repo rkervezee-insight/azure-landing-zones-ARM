@@ -565,6 +565,26 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
+                        "name": "esContainerInsights",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Container Insights solution",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
                         "name": "security",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
@@ -2167,6 +2187,7 @@
             "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
+            "enableContainerInsights": "[steps('esPlatformManagement').esContainerInsights]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
