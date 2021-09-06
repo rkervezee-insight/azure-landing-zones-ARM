@@ -174,8 +174,8 @@
                                                     ]
                                                 },
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
-                                                //"subnets": "[if(not(empty(parameters('addressPrefix'))), variables('addsSubnet'), json('[]'))]"
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]",
+                                                "subnets": "[if(not(empty(parameters('addressPrefix'))), variables('addsSubnet'), json('[]'))]"
                                             },
                                             "resources": []
                                         },

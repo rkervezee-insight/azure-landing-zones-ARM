@@ -38,27 +38,11 @@ param rsvPrefix string = 'rsv'
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object = {}
 
-// Landing Zone Network Resource parameters
 @description('Specifies the address space of the vnet of the Landing Zone.')
-param vnetAddressPrefix string
-
-@description('Specifies the address space of the subnet that is used for web services in the Landing Zone.')
-param webSubnetAddressPrefix string
-
-@description('Specifies the address space of the subnet that is used for apps services in the Landing Zone.')
-param appsSubnetAddressPrefix string
-
-@description('Specifies the address space of the subnet that is used for data services in the Landing Zone.')
-param dataSubnetAddressPrefix string
-
-@description('Specifies the resource Id of the vnet in the Platform Connectivity Hub Subscription.')
-param platformConnectivityVnetId string
-
-@description('Specifies the IP address of the central firewall.')
-param firewallPrivateIp string = '10.0.0.4'
+param network array = []
 
 @description('Specifies the IP addresses of the dns servers.')
-param dnsServerAdresses array = []
+param dnsServerAddresses array = []
 
 // Landing Zone Cost Management parameters
 @description('Specifies the budget amount for the Landing Zone.')
@@ -93,7 +77,7 @@ var tagsDefault = {
 }
 var tagsJoined = union(tagsDefault, tags)
 
-// Landing Zone Network resources
+// Landing Zone Network Resource Group
 resource networkResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: '${rgPrefix}-network'
   location: location
@@ -101,8 +85,9 @@ resource networkResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = 
   properties: {}
 }
 
-module networkServices 'modules/network.bicep' = {
-  name: 'networkServices'
+// Landing Zone Network Resources
+module networkServices 'modules/network.bicep' = [for (nw, index) in network: {
+  name: 'networkServices-${index}'
   scope: networkResourceGroup
   params: {
     location: location
@@ -111,16 +96,15 @@ module networkServices 'modules/network.bicep' = {
     nsgPrefix: nsgPrefix
     vntPrefix: vntPrefix
     udrPrefix: udrPrefix
-    vnetAddressPrefix: vnetAddressPrefix
-    firewallPrivateIp: firewallPrivateIp
-    dnsServerAdresses: dnsServerAdresses
-    webSubnetAddressPrefix: webSubnetAddressPrefix
-    appsSubnetAddressPrefix: appsSubnetAddressPrefix
-    dataSubnetAddressPrefix: dataSubnetAddressPrefix
-    platformConnectivityVnetId: platformConnectivityVnetId
+    vnetAddressPrefix: nw.vnetAddressPrefix
+    firewallPrivateIp: nw.firewallPrivateIp
+    dnsServerAddresses: dnsServerAddresses
+    subnetArray: nw.subnetArray
+    hubVnetId: nw.hubVnetId
   }
-}
+}]
 
+// Landing Zone Network Watcher Resource Group
 resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: 'NetworkWatcherRG'
   location: location
@@ -128,6 +112,7 @@ resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01
   properties: {}
 }
 
+// Landing Zone Network Watcher Resources
 module networkWatcher 'modules/networkWatcher.bicep' = {
   name: 'networkWatcher'
   scope: networkWatcherResourceGroup
@@ -138,7 +123,7 @@ module networkWatcher 'modules/networkWatcher.bicep' = {
   }
 }
 
-// Landing Zone Management resources
+// Landing Zone Management Resource Group
 resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: '${rgPrefix}-management'
   location: location
@@ -146,6 +131,7 @@ resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01'
   properties: {}
 }
 
+// Landing Zone Diagnostics Storage Account
 module storageServices 'modules/storage.bicep' = {
   name: 'storageServices'
   scope: managementResourceGroup
@@ -156,6 +142,7 @@ module storageServices 'modules/storage.bicep' = {
   }
 }
 
+// Landing Zone Azure Key Vault
 module keyVaultServices 'modules/keyvault.bicep' = {
   name: 'keyVaultServices'
   scope: managementResourceGroup
@@ -167,6 +154,7 @@ module keyVaultServices 'modules/keyvault.bicep' = {
   }
 }
 
+// Landing Zone Recovery Services Vault
 module recoveryVaultServices 'modules/recoveryVault.bicep' = {
   name: 'recoveryVaultServices'
   scope: managementResourceGroup
@@ -178,7 +166,7 @@ module recoveryVaultServices 'modules/recoveryVault.bicep' = {
   }
 }
 
-// Landing Zone Cost Management resources
+// Landing Zone Azure Budget
 module budgets 'modules/budgets.bicep' = {
   name: 'budgets'
   scope: subscription()

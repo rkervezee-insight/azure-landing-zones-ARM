@@ -3303,7 +3303,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "copy": {
-                "name": "onlinelandingZones",
+                "name": "onlineLandingZones",
                 "count": "[length(parameters('onlineLzSubscriptionId'))]"
             },
             "properties": {
@@ -3337,7 +3337,7 @@
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.resourceDiagnosticsPolicyAssignment)]"
             ],
             "copy": {
-                "name": "corplandingZones",
+                "name": "corpLandingZones",
                 "count": "[length(parameters('corpLzSubscriptionId'))]"
             },
             "properties": {

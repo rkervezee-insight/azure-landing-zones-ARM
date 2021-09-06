@@ -1945,7 +1945,7 @@
                     "preValidation": "",
                     "postValidation": ""
                 },
-                "bladeTitle": "lzGs",
+                "bladeTitle": "lzGoalState",
                 "elements": [
                     {
                         "name": "infoBox1",
