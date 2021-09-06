@@ -119,6 +119,17 @@
             "metadata": {
                 "description": "Select whether key Vault Analytics solution should be enabled or not."
             }
+        },
+        "enableContainerInsights": {
+            "type": "string",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ],
+            "defaultValue": "Yes",
+            "metadata": {
+                "description": "Select whether ContainerInsights solution should be enabled or not."
+            }
         }
     },
     "variables": {
@@ -366,6 +377,7 @@
                         },
                         {
                             "comments": "Deploy the Log Analytics Solution for Conatiner Insights",
+                            "condition": "[equals(parameters('enableContainerInsights'), 'Yes')]",
                             "apiVersion": "2015-11-01-preview",
                             "type": "Microsoft.OperationsManagement/solutions",
                             "name": "[variables('solutions').ContainerInsights.name]",
