@@ -34,6 +34,14 @@
             ],
             "defaultValue": "No"
         },
+        "firewallSku": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
         "enableVpnGw": {
             "type": "string",
             "allowedValues": [
@@ -261,7 +269,7 @@
                                             "properties": {
                                                 "sku": {
                                                     "Name": "AZFW_Hub",
-                                                    "Tier": "Standard"
+                                                    "Tier": "[parameters('firewallSku')]"
                                                 },
                                                 "hubIPAddresses": {
                                                     "publicIPs": {

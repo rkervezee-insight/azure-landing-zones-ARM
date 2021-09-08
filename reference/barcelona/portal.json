@@ -1601,6 +1601,32 @@
                         }
                     },
                     {
+                        "name": "esAzFwSku",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Azure Firewall Sku",
+                        "defaultValue": "Standard",
+                        "multiselect": false,
+                        "selectAll": false,
+                        "filter": false,
+                        "multiLine": true,
+                        "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
+                        "toolTip": "Select Azure Firewall Sku",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Standard",
+                                    "description": "Standard Azure Firewall",
+                                    "value": "Standard"
+                                },
+                                {
+                                    "label": "Premium",
+                                    "description": "Premium Azure Firewall adds support for TLS inspection, IDPS, URL filtering and web categories.",
+                                    "value": "Premium"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "esFwAz",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Select Availability Zones for the Azure Firewall",
@@ -2470,6 +2496,7 @@
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
+            "firewallSku": "[steps('esPlatformConnectivity').esAzFwSku]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "connectivityAddressPrefix": "[coalesce(steps('esPlatformConnectivity').esAddressHubVWAN, steps('esPlatformConnectivity').esAddressHubHS, '')]",

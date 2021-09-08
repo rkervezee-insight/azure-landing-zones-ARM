@@ -97,6 +97,14 @@
             "type": "array",
             "defaultValue": []
         },
+        "firewallSku": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
         "gwRegionalOrAz": {
             "type": "string",
             "defaultValue": ""
@@ -832,6 +840,10 @@
                                                 "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
                                             ],
                                             "properties": {
+                                                "sku": {
+                                                    "name": "AZFW_VNet",
+                                                    "tier": "[parameters('firewallSku')]"
+                                                },
                                                 "ipConfigurations": [
                                                     {
                                                         "name": "[parameters('azfwIp')]",
