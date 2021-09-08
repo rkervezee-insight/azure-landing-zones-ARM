@@ -72,6 +72,7 @@
                 }
             }
         ],
+        "addressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
         "ddosProtectionPlanId": {
             "id": "[parameters('ddosPlanResourceId')]"
         },

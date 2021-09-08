@@ -928,10 +928,12 @@
                 "ddos": "[take(concat('ddos', '-', deployment().location, '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 64)]"
             }
         },
+        /*
         "addressSpace": {
             "connectivity": "[substring(parameters('connectivityAddressPrefix'),0,sub(length(parameters('connectivityAddressPrefix')), 3))]",
             "identity": "[substring(parameters('identityAddressPrefix'),0,sub(length(parameters('identityAddressPrefix')), 3))]"
         },
+        */
         "namingPrefix": {
             "storage": "[concat(parameters('enterpriseScaleCompanyPrefix'), parameters('locationPrefix'), parameters('platformMgmtPrefix'))]",
             "management": "[toLower(concat(parameters('enterpriseScaleCompanyPrefix'), '-', parameters('locationPrefix'), '-', parameters('platformMgmtPrefix')))]",
@@ -970,15 +972,18 @@
             "bastionIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-bastion'))]",
             "azfwPolicy": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('afpPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "azfwIp": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('pipPrefix'), '-afw'))]",
-            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-', variables('addressSpace').connectivity))]",
-            "vwanHub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-', variables('addressSpace').connectivity))]",
+            //"vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix'), '-', variables('addressSpace').connectivity))]",
+            "vhub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vntPrefix')))]",
+            //"vwanHub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix'), '-', variables('addressSpace').connectivity))]",
+            "vwanHub": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('vHubPrefix')))]",
             "bastionNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-bastion'))]",
             "appGwyNsg": "[toLower(concat(variables('namingPrefix').connectivity, '-', parameters('nsgPrefix'), '-appGateway'))]",
             "vwan": "[toLower(take(concat(variables('namingPrefix').connectivity, '-', parameters('vwanPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "networkWatcher": "[concat('NetworkWatcher_', deployment().location)]"
         },
         "platformIdentityResourceNames": {
-            "vnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('addressSpace').identity))]",
+            //"vnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix'), '-', variables('addressSpace').identity))]",
+            "vnet": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('vntPrefix')))]",
             "recoveryServicesVault": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('rsvPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",
             "addsNsg": "[toLower(concat(variables('namingPrefix').identity, '-', parameters('nsgPrefix'), '-adds'))]",
             "routeTable": "[toLower(take(concat(variables('namingPrefix').identity, '-', parameters('udrPrefix'), '-', guid(parameters('enterpriseScaleCompanyPrefix'))), 24))]",

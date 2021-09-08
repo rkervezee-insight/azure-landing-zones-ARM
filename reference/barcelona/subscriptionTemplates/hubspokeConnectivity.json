@@ -256,6 +256,8 @@
         "azfwDnsSettings": {
             "enableProxy": true
         },
+        "addressSpace": "[substring(parameters('addressPrefix'),0,sub(length(parameters('addressPrefix')), 3))]",
+        "vhub": "[toLower(concat(parameters('vhub'), '-', variables('addressSpace')))]",
         "gwSubnet": [
             {
                 "name": "GatewaySubnet",
@@ -357,7 +359,7 @@
                                             "comments": "Deploy Azure Virtual Network Resources",
                                             "type": "Microsoft.Network/virtualNetworks",
                                             "apiVersion": "2020-04-01",
-                                            "name": "[parameters('vhub')]",
+                                            "name": "[variables('vhub')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
                                                 "addressSpace": {
@@ -382,11 +384,11 @@
                                             "condition": "[and(equals(parameters('enableAzBastion'), 'Yes'), not(empty(parameters('subnetMaskForAzBastion'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "2020-04-01",
-                                            "name": "[concat(parameters('vhub'), '/', 'AzureBastionSubnet')]",
+                                            "name": "[concat(variables('vhub'), '/', 'AzureBastionSubnet')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('bastionNsg'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]",
-                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',parameters('vhub'), variables('appGwySubnet'))]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'))]",
+                                                "[resourceId('Microsoft.Network/virtualNetworks/subnets',variables('vhub'), variables('appGwySubnet'))]"
                                             ],
                                             "properties": {
                                                 "addressPrefix": "[parameters('subnetMaskForAzBastion')]",
@@ -400,9 +402,9 @@
                                             "condition": "[and(equals(parameters('enableAppGw'), 'Yes'), not(empty(parameters('subnetMaskForAppGw'))))]",
                                             "type": "Microsoft.Network/virtualNetworks/subnets",
                                             "apiVersion": "2020-04-01",
-                                            "name": "[concat(parameters('vhub'), '/', variables('appGwySubnet'))]",
+                                            "name": "[concat(variables('vhub'), '/', variables('appGwySubnet'))]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]",
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'))]",
                                                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('appGwyNsg'))]"
                                             ],
                                             "properties": {
@@ -420,7 +422,7 @@
                                             "name": "[parameters('bastionNsg')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(parameters('vhub'), '/AzureBastionSubnet')]"
+                                                "appliedSubnet": "[concat(variables('vhub'), '/AzureBastionSubnet')]"
                                             },
                                             "properties": {
                                                 "securityRules": [
@@ -570,7 +572,7 @@
                                             "name": "[parameters('appGwyNsg')]",
                                             "location": "[parameters('location')]",
                                             "tags": {
-                                                "appliedSubnet": "[concat(parameters('vhub'), '/', variables('appGwySubnet'))]"
+                                                "appliedSubnet": "[concat(variables('vhub'), '/', variables('appGwySubnet'))]"
                                             },
                                             "properties": {
                                                 "securityRules": [
@@ -627,7 +629,7 @@
                                             "name": "[parameters('bastionIp')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'), '/subnets/AzureBastionSubnet')]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'), '/subnets/AzureBastionSubnet')]"
                                             ],
                                             "sku": {
                                                 "name": "Standard"
@@ -646,7 +648,7 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/publicIpAddresses/', parameters('bastionIp'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'), '/subnets/AzureBastionSubnet')]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'), '/subnets/AzureBastionSubnet')]"
                                             ],
                                             "properties": {
                                                 "ipConfigurations": [
@@ -687,7 +689,7 @@
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/publicIPAddresses/', parameters('vpnGwyIp'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'))]"
                                             ],
                                             "properties": {
                                                 "gatewayType": "Vpn",
@@ -753,7 +755,7 @@
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/publicIPAddresses/', parameters('erGwyIp'))]",
                                                 "[concat('Microsoft.Network/virtualNetworkGateways/', parameters('vpnGwy'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'))]"
                                             ],
                                             "properties": {
                                                 "gatewayType": "ExpressRoute",
@@ -829,7 +831,7 @@
                                             "dependsOn": [
                                                 "[concat('Microsoft.Network/firewallPolicies/', parameters('azfwPolicy'))]",
                                                 "[concat('Microsoft.Network/publicIpAddresses/', parameters('azfwIp'))]",
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
+                                                "[concat('Microsoft.Network/virtualNetworks/', variables('vhub'))]"
                                             ],
                                             "properties": {
                                                 "ipConfigurations": [
