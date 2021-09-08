@@ -1198,7 +1198,7 @@
                         "name": "esNwLocation",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Region for the first networking hub",
-                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
+                        "visible": "[or(equals(steps('esPlatformConnectivity').esHub, 'vhub'), equals(steps('esPlatformConnectivity').esHub, 'vwan'))]",
                         "toolTip": "Select the target Azure region for the deployment.",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
@@ -1210,7 +1210,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable DDoS Protection Standard",
                         "defaultValue": "No",
-                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'No')]",
+                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
                         "toolTip": "If 'Yes' is selected when also adding a platform subscription, DDoS Protection Standard will be enabled.",
                         "constraints": {
                             "allowedValues": [
