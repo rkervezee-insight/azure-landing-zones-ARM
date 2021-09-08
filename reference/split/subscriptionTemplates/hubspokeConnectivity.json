@@ -93,6 +93,14 @@
                 "description": "Provide subnet for VPN/ER."
             }
         },
+        "firewallSku": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
         "firewallZones": {
             "type": "array",
             "defaultValue": []
@@ -815,6 +823,9 @@
                                             "name": "[parameters('azfwPolicy')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
+                                                "sku": {
+                                                    "tier": "[parameters('firewallSku')]"
+                                                },
                                                 "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('azfwDnsSettings'), json('null'))]"
                                             }
                                         },
@@ -832,6 +843,10 @@
                                                 "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
                                             ],
                                             "properties": {
+                                                "sku": {
+                                                    "name": "AZFW_VNet",
+                                                    "tier": "[parameters('firewallSku')]"
+                                                },
                                                 "ipConfigurations": [
                                                     {
                                                         "name": "[parameters('azfwIp')]",
