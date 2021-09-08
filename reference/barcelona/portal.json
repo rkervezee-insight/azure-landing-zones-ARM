@@ -1210,7 +1210,7 @@
                         "type": "Microsoft.Common.OptionsGroup",
                         "label": "Enable DDoS Protection Standard",
                         "defaultValue": "No",
-                        "visible": "[not(equals(steps('esPlatformConnectivity').esHub, 'No'))]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esHub, 'No')]",
                         "toolTip": "If 'Yes' is selected when also adding a platform subscription, DDoS Protection Standard will be enabled.",
                         "constraints": {
                             "allowedValues": [
