@@ -244,7 +244,7 @@
         },
         "identityAddressPrefix": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "192.168.0.0/24"
         },
         "enableLogAnalytics": {
             "type": "string",
@@ -605,7 +605,7 @@
         },
         "connectivityAddressPrefix": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "192.168.0.0/24"
         },
         "enableVpnGw": {
             "type": "string",
