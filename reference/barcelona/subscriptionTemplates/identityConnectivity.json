@@ -73,7 +73,7 @@
                         "id": "[variables('nsgId')]"
                     },
                     "routeTable": {
-                        "id": "[variables('nsgId')]"
+                        "id": "[variables('udrId')]"
                     }
                 }
             }
