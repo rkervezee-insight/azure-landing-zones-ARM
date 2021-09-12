@@ -210,8 +210,6 @@
                                             "location": "[parameters('location')]",
                                             "properties": {
                                                 "routes": [
-                                                    {
-                                                    }
                                                 ]
                                             }
                                         }
