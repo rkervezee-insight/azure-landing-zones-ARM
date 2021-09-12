@@ -41,27 +41,9 @@ param tags object = {}
 @description('Specifies the address space of the vnet of the Landing Zone.')
 param network array = []
 
-@description('Specifies the IP addresses of the dns servers.')
-param dnsServerAddresses array = []
-
 // Landing Zone Cost Management parameters
-@description('Specifies the budget amount for the Landing Zone.')
-param amount int
-
-@description('Specifies the budget timeperiod for the Landing Zone.')
-param timeGrain string
-
-@description('Specifies the budget first theshold % (0-100) for the Landing Zone.')
-param firstThreshold int
-
-@description('Specifies the budget second theshold % (0-100) for the Landing Zone.')
-param secondThreshold int
-
-@description('Specifies an array of email addresses for the Azure budget.')
-param contactEmails array
-
-@description('Specifies an array of Azure Roles (Owner, Contributor) for the Azure budget.')
-param contactRoles array
+@description('Specifies the address space of the vnet of the Landing Zone.')
+param budgets array = []
 
 // Variables
 var locPrefix = replace(location, 'australiaeast', 'syd')
@@ -98,7 +80,7 @@ module networkServices 'modules/network.bicep' = [for (nw, index) in network: {
     udrPrefix: udrPrefix
     vnetAddressPrefix: nw.vnetAddressPrefix
     firewallPrivateIp: nw.firewallPrivateIp
-    dnsServerAddresses: dnsServerAddresses
+    dnsServerAddresses: nw.dnsServerAddresses
     subnetArray: nw.subnetArray
     hubVnetId: nw.hubVnetId
   }
@@ -167,18 +149,18 @@ module recoveryVaultServices 'modules/recoveryVault.bicep' = {
 }
 
 // Landing Zone Azure Budget
-module budgets 'modules/budgets.bicep' = {
-  name: 'budgets'
+module budgetServices 'modules/budgets.bicep' = [for (bg, index) in budgets: {
+  name: 'budgetServices-${index}'
   scope: subscription()
   params: {
-    amount: amount
-    timeGrain: timeGrain
-    firstThreshold: firstThreshold
-    secondThreshold: secondThreshold
-    contactEmails: contactEmails
-    contactRoles: contactRoles
+    amount: bg.amount
+    timeGrain: bg.timeGrain
+    firstThreshold: bg.firstThreshold
+    secondThreshold: bg.secondThreshold
+    contactEmails: bg.contactEmails
+    contactRoles: bg.contactRoles
   }
-}
+}]
 
 // Outputs
 output managementResourceGroup string = managementResourceGroup.name
