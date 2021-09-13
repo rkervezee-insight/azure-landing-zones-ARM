@@ -11,6 +11,16 @@
         "envPrefix": {
             "value": "dev"
         },
+        "prefixes": {
+            "value": {
+                "resourceGroup": "arg",
+                "networkSecurityGroup": "nsg",
+                "virtualNetwork": "vnt",
+                "routeTable": "udr",
+                "keyVault": "akv",
+                "recoveryVault": "rsv"
+            }
+        },
         "tags": {
             "value": {
                 "applicationName": "notset",

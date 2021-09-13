@@ -5,20 +5,17 @@ targetScope = 'resourceGroup'
 @description('Specifies the location for all resources.')
 param location string
 
-@description('Specifies the naming prefix.')
-param namePrefix string
-
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object
 
 @description('Specifies the NSG prefix of the deployment.')
-param nsgPrefix string
+param nsgName string
 
 @description('Specifies the Virtual Network prefix of the deployment.')
-param vntPrefix string
+param vntName string
 
 @description('Specifies the Route Table prefix of the deployment.')
-param udrPrefix string
+param udrName string
 
 @description('Specifies the IP address of the central firewall.')
 param firewallPrivateIp string
@@ -44,7 +41,7 @@ param resourceLock string = 'Yes'
 
 // Variables
 var vnetAddressSpace = substring(vnetAddressPrefix, 0, (length(vnetAddressPrefix) - 3))
-var routeTableName = '${namePrefix}-${udrPrefix}-${uniqueString(resourceGroup().id)}'
+var routeTableName = '${udrName}-${uniqueString(resourceGroup().id)}'
 var platformConnectivityVnetSubscriptionId = length(split(hubVnetId, '/')) >= 9 ? split(hubVnetId, '/')[2] : subscription().subscriptionId
 var platformConnectivityVnetResourceGroupName = length(split(hubVnetId, '/')) >= 9 ? split(hubVnetId, '/')[4] : resourceGroup().name
 var platformConnectivityVnetName = length(split(hubVnetId, '/')) >= 9 ? last(split(hubVnetId, '/')) : 'incorrectSegmentLength'
@@ -72,7 +69,7 @@ resource routeTable 'Microsoft.Network/routeTables@2020-11-01' = {
 // Creation of the Network Security Group for the Landing Zone
 // Processing subnet as Array from Vnet Array
 resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = [for subnet in subnetArray: {
-  name: ('${namePrefix}-${nsgPrefix}-${subnet.name}')
+  name: ('${nsgName}-${subnet.name}')
   location: location
   tags: tags
   properties: {
@@ -83,7 +80,7 @@ resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = [for subnet 
 // Creation of Azure Virtual Networking for the Landing Zone
 // Processing subnets as Array from Vnet Array
 resource vnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
-  name: ('${namePrefix}-${vntPrefix}-${vnetAddressSpace}')
+  name: ('${vntName}-${vnetAddressSpace}')
   location: location
   tags: tags
   properties: {

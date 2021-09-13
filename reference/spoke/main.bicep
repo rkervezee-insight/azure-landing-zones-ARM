@@ -18,8 +18,8 @@ param location string
 param envPrefix string
 
 @description('Specifies the resource group prefix of the deployment.')
-param argPrefix string = 'arg'
-
+param prefixes object = {}
+/*
 @description('Specifies the NSG prefix of the deployment.')
 param nsgPrefix string = 'nsg'
 
@@ -34,7 +34,7 @@ param akvPrefix string = 'akv'
 
 @description('Specifies the Recovery Vault prefix of the deployment.')
 param rsvPrefix string = 'rsv'
-
+*/
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object = {}
 
@@ -47,7 +47,12 @@ param budgets array = []
 // ---- Variables ----
 var locPrefix = replace(location, 'australiaeast', 'syd')
 var namePrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}')
-var rgPrefix = toLower('${namePrefix}-${argPrefix}')
+var argName = toLower('${namePrefix}-${prefixes.resourceGroup}')
+var nsgName = toLower('${namePrefix}-${prefixes.networkSecurityGroup}')
+var vntName = toLower('${namePrefix}-${prefixes.virtualNetwork}')
+var udrName = toLower('${namePrefix}-${prefixes.routeTable}')
+var akvName = toLower('${namePrefix}-${prefixes.keyVault}')
+var rsvName = toLower('${namePrefix}-${prefixes.recoveryVault}')
 var tagsDefault = {
   applicationName: 'notset'
   owner: 'notset'
@@ -61,7 +66,7 @@ var tagsJoined = union(tagsDefault, tags)
 // ---- Landing Zone Resource Groups ----
 // Network Resources RG
 resource networkResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: '${rgPrefix}-network'
+  name: '${argName}-network'
   location: location
   tags: tagsJoined
   properties: {}
@@ -77,7 +82,7 @@ resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01
 
 // Management Resources RG
 resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: '${rgPrefix}-management'
+  name: '${argName}-management'
   location: location
   tags: tagsJoined
   properties: {}
@@ -91,10 +96,9 @@ module networkServices 'modules/network.bicep' = [for (nw, index) in network: {
   params: {
     location: location
     tags: tagsJoined
-    namePrefix: namePrefix
-    nsgPrefix: nsgPrefix
-    vntPrefix: vntPrefix
-    udrPrefix: udrPrefix
+    nsgName: nsgName
+    vntName: vntName
+    udrName: udrName
     vnetAddressPrefix: nw.vnetAddressPrefix
     firewallPrivateIp: nw.firewallPrivateIp
     dnsServerAddresses: nw.dnsServerAddresses
@@ -132,7 +136,7 @@ module keyVaultServices 'modules/keyvault.bicep' = {
   params: {
     location: location
     namePrefix: namePrefix
-    akvPrefix: akvPrefix
+    akvName: akvName
     tags: tagsJoined
   }
 }
@@ -143,8 +147,7 @@ module recoveryVaultServices 'modules/recoveryVault.bicep' = {
   scope: managementResourceGroup
   params: {
     location: location
-    namePrefix: namePrefix
-    rsvPrefix: rsvPrefix
+    rsvName: rsvName
     tags: tagsJoined
   }
 }

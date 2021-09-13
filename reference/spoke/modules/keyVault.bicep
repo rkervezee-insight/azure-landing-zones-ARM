@@ -12,7 +12,7 @@ param namePrefix string
 param tags object
 
 @description('Specifies the AKV prefix of the deployment.')
-param akvPrefix string
+param akvName string
 
 @allowed([
   'standard'
@@ -71,7 +71,7 @@ param virtualNetworkRules array = []
 param tenantId string = subscription().tenantId
 
 // Variables
-var keyVaultName = take('${namePrefix}-${akvPrefix}-${guid(namePrefix)}', 24)
+var keyVaultName = take('${akvName}-${guid(namePrefix)}', 24)
 
 resource keyVault 'Microsoft.KeyVault/vaults@2019-09-01' = {
   name: keyVaultName
