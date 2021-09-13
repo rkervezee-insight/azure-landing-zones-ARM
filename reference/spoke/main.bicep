@@ -1,6 +1,6 @@
 targetScope = 'subscription'
 
-// Landing Zone parameters
+// ---- Landing Zone Parameters ----
 @minLength(2)
 @maxLength(5)
 @description('Specifies the Landing Zone prefix for all resources created in this deployment.')
@@ -41,11 +41,10 @@ param tags object = {}
 @description('Specifies the address space of the vnet of the Landing Zone.')
 param network array = []
 
-// Landing Zone Cost Management parameters
 @description('Specifies the address space of the vnet of the Landing Zone.')
 param budgets array = []
 
-// Variables
+// ---- Variables ----
 var locPrefix = replace(location, 'australiaeast', 'syd')
 var namePrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}')
 var rgPrefix = toLower('${namePrefix}-${argPrefix}')
@@ -59,7 +58,8 @@ var tagsDefault = {
 }
 var tagsJoined = union(tagsDefault, tags)
 
-// Landing Zone Network Resource Group
+// ---- Landing Zone Resource Groups ----
+// Network Resources RG
 resource networkResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: '${rgPrefix}-network'
   location: location
@@ -67,7 +67,24 @@ resource networkResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = 
   properties: {}
 }
 
-// Landing Zone Network Resources
+// Network Watcher Resources RG
+resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: 'NetworkWatcherRG'
+  location: location
+  tags: tagsJoined
+  properties: {}
+}
+
+// Management Resources RG
+resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: '${rgPrefix}-management'
+  location: location
+  tags: tagsJoined
+  properties: {}
+}
+
+// ---- Landing Zone Modules ----
+// Network Resources
 module networkServices 'modules/network.bicep' = [for (nw, index) in network: {
   name: 'networkServices-${index}'
   scope: networkResourceGroup
@@ -86,15 +103,7 @@ module networkServices 'modules/network.bicep' = [for (nw, index) in network: {
   }
 }]
 
-// Landing Zone Network Watcher Resource Group
-resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: 'NetworkWatcherRG'
-  location: location
-  tags: tagsJoined
-  properties: {}
-}
-
-// Landing Zone Network Watcher Resources
+// Network Watcher Resources
 module networkWatcher 'modules/networkWatcher.bicep' = {
   name: 'networkWatcher'
   scope: networkWatcherResourceGroup
@@ -105,15 +114,7 @@ module networkWatcher 'modules/networkWatcher.bicep' = {
   }
 }
 
-// Landing Zone Management Resource Group
-resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: '${rgPrefix}-management'
-  location: location
-  tags: tagsJoined
-  properties: {}
-}
-
-// Landing Zone Diagnostics Storage Account
+// Storage Resources
 module storageServices 'modules/storage.bicep' = {
   name: 'storageServices'
   scope: managementResourceGroup
@@ -124,7 +125,7 @@ module storageServices 'modules/storage.bicep' = {
   }
 }
 
-// Landing Zone Azure Key Vault
+// Key Vault Resources
 module keyVaultServices 'modules/keyvault.bicep' = {
   name: 'keyVaultServices'
   scope: managementResourceGroup
@@ -136,7 +137,7 @@ module keyVaultServices 'modules/keyvault.bicep' = {
   }
 }
 
-// Landing Zone Recovery Services Vault
+// Recovery Services Vault Resources
 module recoveryVaultServices 'modules/recoveryVault.bicep' = {
   name: 'recoveryVaultServices'
   scope: managementResourceGroup
@@ -148,7 +149,7 @@ module recoveryVaultServices 'modules/recoveryVault.bicep' = {
   }
 }
 
-// Landing Zone Azure Budget
+// Azure Budget Resources
 module budgetServices 'modules/budgets.bicep' = [for (bg, index) in budgets: {
   name: 'budgetServices-${index}'
   scope: subscription()
@@ -162,7 +163,7 @@ module budgetServices 'modules/budgets.bicep' = [for (bg, index) in budgets: {
   }
 }]
 
-// Outputs
+// ---- Outputs ----
 output managementResourceGroup string = managementResourceGroup.name
 output networkWatcherResourceGroup string = networkWatcherResourceGroup.name
 output networkResourceGroup string = networkResourceGroup.name
