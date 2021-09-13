@@ -61,6 +61,17 @@
         },
         "ddosPlanResourceId": {
             "type": "string"
+        },
+        "dnsServers": {
+            "type": "array",
+            "defaultValue": [
+                "1.1.1.1/1",
+                "2.2.2.2/2"
+            ]
+        },
+        "azureFirewallResourceId": {
+            "type": "string",
+            "defaultValue": ""
         }
     },
     "variables": {
@@ -181,6 +192,14 @@
                                                     "addressPrefixes": [
                                                         "[parameters('addressPrefix')]"
                                                     ]
+                                                },
+                                                "dhcpOptions": {
+                                                    "dnsServers": "[if(
+                                                                        not(
+                                                                            empty(
+                                                                                parameters('azureFirewallResourceId'))), 
+                                                                                array(reference(parameters('azureFirewallResourceId'), '2020-05-01').hubIPAddresses.privateIPAddress), 
+                                                                                parameters('dnsServers'))]"
                                                 },
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
                                                 "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]",

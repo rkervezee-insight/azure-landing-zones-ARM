@@ -33,7 +33,7 @@
     "spokeResourceId": {
       "type": "string",
       "metadata": {
-        "description": "Provide the resourceId for the hub."
+        "description": "Provide the resourceId for the spoke."
       }
     }
   },
