@@ -819,7 +819,7 @@
                                             "comments": "Conditional deployment of the Azure Firewall Policy",
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "type": "Microsoft.Network/firewallPolicies",
-                                            "apiVersion": "2020-11-01",
+                                            "apiVersion": "2021-02-01",
                                             "name": "[parameters('azfwPolicy')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
@@ -832,7 +832,7 @@
                                         {
                                             "comments": "Conditional deployment of the Azure Firewall",
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
-                                            "apiVersion": "2020-05-01",
+                                            "apiVersion": "2021-02-01",
                                             "type": "Microsoft.Network/azureFirewalls",
                                             "name": "[parameters('azfw')]",
                                             "location": "[parameters('location')]",

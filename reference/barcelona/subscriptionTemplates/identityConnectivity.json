@@ -180,7 +180,7 @@
                                             "comments": "Deploy Azure Virtual Network Resources",
                                             "condition": "[and(equals(parameters('enableSpoke'), 'Yes'), not(empty(parameters('subscriptionId'))))]",
                                             "type": "Microsoft.Network/virtualNetworks",
-                                            "apiVersion": "2020-04-01",
+                                            "apiVersion": "2021-02-01",
                                             "name": "[parameters('spokeVnet')]",
                                             "location": "[parameters('location')]",
                                             "dependsOn": [
@@ -198,7 +198,7 @@
                                                                         not(
                                                                             empty(
                                                                                 parameters('azureFirewallResourceId'))), 
-                                                                                array(reference(parameters('azureFirewallResourceId'), '2020-05-01').hubIPAddresses.privateIPAddress), 
+                                                                                array(reference(parameters('azureFirewallResourceId'), '2020-05-01').p), 
                                                                                 parameters('dnsServers'))]"
                                                 },
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
