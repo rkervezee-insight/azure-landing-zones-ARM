@@ -5,13 +5,13 @@
         "targetManagementGroupId": {
             "type": "string",
             "metadata": {
-                "description": "Provide the management group id (e.g. 'eslz-corp')"
+                "description": "Provide the ID of the management group that you want to move the subscription to."
             }
         },
         "subscriptionId": {
             "type": "string",
             "metadata": {
-                "description": "Provide the subscriptionId you will place into the management group"
+                "description": "Provide the ID of the existing subscription to move."
             }
         }
     },
