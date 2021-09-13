@@ -17,31 +17,16 @@ param location string
 @description('Specifies the environment of the deployment.')
 param envPrefix string
 
-@description('Specifies the resource group prefix of the deployment.')
+@description('Specifies the resource prefixes for the deployment.')
 param prefixes object = {}
-/*
-@description('Specifies the NSG prefix of the deployment.')
-param nsgPrefix string = 'nsg'
 
-@description('Specifies the Virtual Network prefix of the deployment.')
-param vntPrefix string = 'vnt'
-
-@description('Specifies the Route Table prefix of the deployment.')
-param udrPrefix string = 'udr'
-
-@description('Specifies the Key Vault prefix of the deployment.')
-param akvPrefix string = 'akv'
-
-@description('Specifies the Recovery Vault prefix of the deployment.')
-param rsvPrefix string = 'rsv'
-*/
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object = {}
 
-@description('Specifies the address space of the vnet of the Landing Zone.')
+@description('Specifies the network settings for the Landing Zone.')
 param network array = []
 
-@description('Specifies the address space of the vnet of the Landing Zone.')
+@description('Specifies the budget settings for the Landing Zone')
 param budgets array = []
 
 // ---- Variables ----
@@ -62,6 +47,17 @@ var tagsDefault = {
   dataClassification: 'notset'
 }
 var tagsJoined = union(tagsDefault, tags)
+
+resource subscriptionTags 'Microsoft.Resources/tags@2021-04-01' = {
+  name: 'default'
+  properties: {
+    tags: {
+      environment: 'dev'
+      owner: 'tulpy'
+      costCenter: '1234'
+    }
+  }
+}
 
 // ---- Landing Zone Resource Groups ----
 // Network Resources RG
