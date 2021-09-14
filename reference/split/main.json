@@ -412,6 +412,14 @@
                 "No"
             ]
         },
+        "enableContainerInsights": {
+            "type": "string",
+            "defaultValue": "Yes",
+            "allowedValues": [
+                "Yes",
+                "No"
+            ]
+        },
         "enableStorage": {
             "type": "string",
             "defaultValue": "Yes",
@@ -508,7 +516,7 @@
         },
         "connectivityAddressPrefix": {
             "type": "string",
-            "defaultValue": ""
+            "defaultValue": "192.168.0.0/24"
         },
         "enableVpnGw": {
             "type": "string",
@@ -610,6 +618,14 @@
         "erRegionalSku": {
             "type": "string",
             "defaultValue": ""
+        },
+        "firewallSku": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
         },
         "firewallZones": {
             "type": "array",
@@ -1182,7 +1198,7 @@
         },
         {
             "comments": "Linked template for the creation of Log Analytics Solutions in the Platform Subscription",
-            "condition": "[and(and(not(empty(parameters('platformSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes'), equals(parameters('enableKeyVaultAnalytics'), 'Yes')))]",
+            "condition": "[and(and(not(empty(parameters('platformSubscriptionId'))), equals(parameters('enableLogAnalytics'), 'Yes')), or(or(or(or(or(equals(parameters('enableSecuritySolution'), 'Yes'), equals(parameters('enableAgentHealth'), 'Yes')), equals(parameters('enableChangeTracking'), 'Yes')), equals(parameters('enableUpdateMgmt'), 'Yes'), equals(parameters('enableActivityLog'), 'Yes')), equals(parameters('enableVmInsights'), 'Yes')), equals(parameters('enableServiceMap'), 'Yes'), equals(parameters('enableSqlAssessment'), 'Yes'), equals(parameters('enableKeyVaultAnalytics'), 'Yes'), equals(parameters('enableContainerInsights'), 'Yes')))]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').sub.monitoringSolutions]",
@@ -1234,6 +1250,9 @@
                     },
                     "enableKeyVaultAnalytics": {
                         "value": "[parameters('enableKeyVaultAnalytics')]"
+                    },
+                    "enableContainerInsights": {
+                        "value": "[parameters('enableContainerInsights')]"
                     }
                 }
             }
@@ -1826,6 +1845,9 @@
                     "subnetMaskForGw": {
                         "value": "[parameters('subnetMaskForGw')]"
                     },
+                    "firewallSku": {
+                        "value": "[parameters('firewallSku')]"
+                    },
                     "firewallZones": {
                         "value": "[parameters('firewallZones')]"
                     },
@@ -1966,6 +1988,9 @@
                     },
                     "enableAzFw": {
                         "value": "[parameters('enableAzFw')]"
+                    },
+                    "firewallSku": {
+                        "value": "[parameters('firewallSku')]"
                     },
                     "addressPrefix": {
                         "value": "[parameters('connectivityAddressPrefix')]"

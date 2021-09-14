@@ -1,6 +1,6 @@
 targetScope = 'subscription'
 
-// Landing Zone parameters
+// ---- Landing Zone Parameters ----
 @minLength(2)
 @maxLength(5)
 @description('Specifies the Landing Zone prefix for all resources created in this deployment.')
@@ -17,72 +17,27 @@ param location string
 @description('Specifies the environment of the deployment.')
 param envPrefix string
 
-@description('Specifies the resource group prefix of the deployment.')
-param argPrefix string = 'arg'
-
-@description('Specifies the NSG prefix of the deployment.')
-param nsgPrefix string = 'nsg'
-
-@description('Specifies the Virtual Network prefix of the deployment.')
-param vntPrefix string = 'vnt'
-
-@description('Specifies the Route Table prefix of the deployment.')
-param udrPrefix string = 'udr'
-
-@description('Specifies the Key Vault prefix of the deployment.')
-param akvPrefix string = 'akv'
-
-@description('Specifies the Recovery Vault prefix of the deployment.')
-param rsvPrefix string = 'rsv'
+@description('Specifies the resource prefixes for the deployment.')
+param prefixes object = {}
 
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object = {}
 
-// Landing Zone Network Resource parameters
-@description('Specifies the address space of the vnet of the Landing Zone.')
-param vnetAddressPrefix string
+@description('Specifies the network settings for the Landing Zone.')
+param network array = []
 
-@description('Specifies the address space of the subnet that is used for web services in the Landing Zone.')
-param webSubnetAddressPrefix string
+@description('Specifies the budget settings for the Landing Zone')
+param budgets array = []
 
-@description('Specifies the address space of the subnet that is used for apps services in the Landing Zone.')
-param appsSubnetAddressPrefix string
-
-@description('Specifies the address space of the subnet that is used for data services in the Landing Zone.')
-param dataSubnetAddressPrefix string
-
-@description('Specifies the resource Id of the vnet in the Platform Connectivity Hub Subscription.')
-param platformConnectivityVnetId string
-
-@description('Specifies the IP address of the central firewall.')
-param firewallPrivateIp string = '10.0.0.4'
-
-@description('Specifies the IP addresses of the dns servers.')
-param dnsServerAdresses array = []
-
-// Landing Zone Cost Management parameters
-@description('Specifies the budget amount for the Landing Zone.')
-param amount int
-
-@description('Specifies the budget timeperiod for the Landing Zone.')
-param timeGrain string
-
-@description('Specifies the budget first theshold % (0-100) for the Landing Zone.')
-param firstThreshold int
-
-@description('Specifies the budget second theshold % (0-100) for the Landing Zone.')
-param secondThreshold int
-
-@description('Specifies an array of email addresses for the Azure budget.')
-param contactEmails array
-
-@description('Specifies an array of Azure Roles (Owner, Contributor) for the Azure budget.')
-param contactRoles array
-
-// Variables
+// ---- Variables ----
 var locPrefix = replace(location, 'australiaeast', 'syd')
 var namePrefix = toLower('${lzPrefix}-${locPrefix}-${envPrefix}')
-var rgPrefix = toLower('${namePrefix}-${argPrefix}')
+var argName = toLower('${namePrefix}-${prefixes.resourceGroup}')
+var nsgName = toLower('${namePrefix}-${prefixes.networkSecurityGroup}')
+var vntName = toLower('${namePrefix}-${prefixes.virtualNetwork}')
+var udrName = toLower('${namePrefix}-${prefixes.routeTable}')
+var akvName = toLower('${namePrefix}-${prefixes.keyVault}')
+var rsvName = toLower('${namePrefix}-${prefixes.recoveryVault}')
 var tagsDefault = {
   applicationName: 'notset'
   owner: 'notset'
@@ -93,34 +48,27 @@ var tagsDefault = {
 }
 var tagsJoined = union(tagsDefault, tags)
 
-// Landing Zone Network resources
+resource subscriptionTags 'Microsoft.Resources/tags@2021-04-01' = {
+  name: 'default'
+  properties: {
+    tags: {
+      environment: 'dev'
+      owner: 'tulpy'
+      costCenter: '1234'
+    }
+  }
+}
+
+// ---- Landing Zone Resource Groups ----
+// Network Resources RG
 resource networkResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: '${rgPrefix}-network'
+  name: '${argName}-network'
   location: location
   tags: tagsJoined
   properties: {}
 }
 
-module networkServices 'modules/network.bicep' = {
-  name: 'networkServices'
-  scope: networkResourceGroup
-  params: {
-    location: location
-    tags: tagsJoined
-    namePrefix: namePrefix
-    nsgPrefix: nsgPrefix
-    vntPrefix: vntPrefix
-    udrPrefix: udrPrefix
-    vnetAddressPrefix: vnetAddressPrefix
-    firewallPrivateIp: firewallPrivateIp
-    dnsServerAdresses: dnsServerAdresses
-    webSubnetAddressPrefix: webSubnetAddressPrefix
-    appsSubnetAddressPrefix: appsSubnetAddressPrefix
-    dataSubnetAddressPrefix: dataSubnetAddressPrefix
-    platformConnectivityVnetId: platformConnectivityVnetId
-  }
-}
-
+// Network Watcher Resources RG
 resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
   name: 'NetworkWatcherRG'
   location: location
@@ -128,6 +76,34 @@ resource networkWatcherResourceGroup 'Microsoft.Resources/resourceGroups@2021-01
   properties: {}
 }
 
+// Management Resources RG
+resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: '${argName}-management'
+  location: location
+  tags: tagsJoined
+  properties: {}
+}
+
+// ---- Landing Zone Modules ----
+// Network Resources
+module networkServices 'modules/network.bicep' = [for (nw, index) in network: {
+  name: 'networkServices-${index}'
+  scope: networkResourceGroup
+  params: {
+    location: location
+    tags: tagsJoined
+    nsgName: nsgName
+    vntName: vntName
+    udrName: udrName
+    vnetAddressPrefix: nw.vnetAddressPrefix
+    firewallPrivateIp: nw.firewallPrivateIp
+    dnsServerAddresses: nw.dnsServerAddresses
+    subnetArray: nw.subnetArray
+    hubVnetId: nw.hubVnetId
+  }
+}]
+
+// Network Watcher Resources
 module networkWatcher 'modules/networkWatcher.bicep' = {
   name: 'networkWatcher'
   scope: networkWatcherResourceGroup
@@ -138,14 +114,7 @@ module networkWatcher 'modules/networkWatcher.bicep' = {
   }
 }
 
-// Landing Zone Management resources
-resource managementResourceGroup 'Microsoft.Resources/resourceGroups@2021-01-01' = {
-  name: '${rgPrefix}-management'
-  location: location
-  tags: tagsJoined
-  properties: {}
-}
-
+// Storage Resources
 module storageServices 'modules/storage.bicep' = {
   name: 'storageServices'
   scope: managementResourceGroup
@@ -156,43 +125,44 @@ module storageServices 'modules/storage.bicep' = {
   }
 }
 
+// Key Vault Resources
 module keyVaultServices 'modules/keyvault.bicep' = {
   name: 'keyVaultServices'
   scope: managementResourceGroup
   params: {
     location: location
     namePrefix: namePrefix
-    akvPrefix: akvPrefix
+    akvName: akvName
     tags: tagsJoined
   }
 }
 
+// Recovery Services Vault Resources
 module recoveryVaultServices 'modules/recoveryVault.bicep' = {
   name: 'recoveryVaultServices'
   scope: managementResourceGroup
   params: {
     location: location
-    namePrefix: namePrefix
-    rsvPrefix: rsvPrefix
+    rsvName: rsvName
     tags: tagsJoined
   }
 }
 
-// Landing Zone Cost Management resources
-module budgets 'modules/budgets.bicep' = {
-  name: 'budgets'
+// Azure Budget Resources
+module budgetServices 'modules/budgets.bicep' = [for (bg, index) in budgets: {
+  name: 'budgetServices-${index}'
   scope: subscription()
   params: {
-    amount: amount
-    timeGrain: timeGrain
-    firstThreshold: firstThreshold
-    secondThreshold: secondThreshold
-    contactEmails: contactEmails
-    contactRoles: contactRoles
+    amount: bg.amount
+    timeGrain: bg.timeGrain
+    firstThreshold: bg.firstThreshold
+    secondThreshold: bg.secondThreshold
+    contactEmails: bg.contactEmails
+    contactRoles: bg.contactRoles
   }
-}
+}]
 
-// Outputs
+// ---- Outputs ----
 output managementResourceGroup string = managementResourceGroup.name
 output networkWatcherResourceGroup string = networkWatcherResourceGroup.name
 output networkResourceGroup string = networkResourceGroup.name

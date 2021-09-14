@@ -5,41 +5,32 @@ targetScope = 'resourceGroup'
 @description('Specifies the location for all resources.')
 param location string
 
-@description('Specifies the naming prefix.')
-param namePrefix string
-
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object
 
 @description('Specifies the NSG prefix of the deployment.')
-param nsgPrefix string
+param nsgName string
 
 @description('Specifies the Virtual Network prefix of the deployment.')
-param vntPrefix string
+param vntName string
 
 @description('Specifies the Route Table prefix of the deployment.')
-param udrPrefix string
+param udrName string
 
 @description('Specifies the IP address of the central firewall.')
 param firewallPrivateIp string
 
 @description('Specifies the IP addresses of the dns servers.')
-param dnsServerAdresses array
+param dnsServerAddresses array
 
 @description('Specifies the resource Id of the vnet in the Platform Connectivity Hub Subscription.')
-param platformConnectivityVnetId string
+param hubVnetId string
 
 @description('Specifies the address space of the vnet of the Landing Zone.')
 param vnetAddressPrefix string
 
-@description('Specifies the address space of the subnet that is used for web services in the Landing Zone.')
-param webSubnetAddressPrefix string
-
-@description('Specifies the address space of the subnet that is used for apps services in the Landing Zone.')
-param appsSubnetAddressPrefix string
-
-@description('Specifies the address space of the subnet that is used for data services in the Landing Zone.')
-param dataSubnetAddressPrefix string
+@description('Specifies the List of Subnets and its Address space')
+param subnetArray array
 
 @allowed([
   'Yes'
@@ -50,13 +41,10 @@ param resourceLock string = 'Yes'
 
 // Variables
 var vnetAddressSpace = substring(vnetAddressPrefix, 0, (length(vnetAddressPrefix) - 3))
-var webSubnetName = 'web'
-var appsSubnetName = 'apps'
-var dataSubnetName = 'data'
-var routeTableName = '${namePrefix}-${udrPrefix}-${uniqueString(resourceGroup().id)}'
-var platformConnectivityVnetSubscriptionId = length(split(platformConnectivityVnetId, '/')) >= 9 ? split(platformConnectivityVnetId, '/')[2] : subscription().subscriptionId
-var platformConnectivityVnetResourceGroupName = length(split(platformConnectivityVnetId, '/')) >= 9 ? split(platformConnectivityVnetId, '/')[4] : resourceGroup().name
-var platformConnectivityVnetName = length(split(platformConnectivityVnetId, '/')) >= 9 ? last(split(platformConnectivityVnetId, '/')) : 'incorrectSegmentLength'
+var routeTableName = '${udrName}-${uniqueString(resourceGroup().id)}'
+var platformConnectivityVnetSubscriptionId = length(split(hubVnetId, '/')) >= 9 ? split(hubVnetId, '/')[2] : subscription().subscriptionId
+var platformConnectivityVnetResourceGroupName = length(split(hubVnetId, '/')) >= 9 ? split(hubVnetId, '/')[4] : resourceGroup().name
+var platformConnectivityVnetName = length(split(hubVnetId, '/')) >= 9 ? last(split(hubVnetId, '/')) : 'incorrectSegmentLength'
 
 // Creation of the Azure Route Table for the Landing Zone
 resource routeTable 'Microsoft.Network/routeTables@2020-11-01' = {
@@ -79,36 +67,20 @@ resource routeTable 'Microsoft.Network/routeTables@2020-11-01' = {
 }
 
 // Creation of the Network Security Group for the Landing Zone
-resource webNsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
-  name: ('${namePrefix}-${nsgPrefix}-${webSubnetName}')
+// Processing subnet as Array from Vnet Array
+resource nsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = [for subnet in subnetArray: {
+  name: ('${nsgName}-${subnet.name}')
   location: location
   tags: tags
   properties: {
     securityRules: []
   }
-}
-
-resource appsNsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
-  name: ('${namePrefix}-${nsgPrefix}-${appsSubnetName}')
-  location: location
-  tags: tags
-  properties: {
-    securityRules: []
-  }
-}
-
-resource dataNsg 'Microsoft.Network/networkSecurityGroups@2020-11-01' = {
-  name: ('${namePrefix}-${nsgPrefix}-${dataSubnetName}')
-  location: location
-  tags: tags
-  properties: {
-    securityRules: []
-  }
-}
+}]
 
 // Creation of Azure Virtual Networking for the Landing Zone
+// Processing subnets as Array from Vnet Array
 resource vnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
-  name: ('${namePrefix}-${vntPrefix}-${vnetAddressSpace}')
+  name: ('${vntName}-${vnetAddressSpace}')
   location: location
   tags: tags
   properties: {
@@ -118,70 +90,31 @@ resource vnet 'Microsoft.Network/virtualNetworks@2020-06-01' = {
       ]
     }
     dhcpOptions: {
-      dnsServers: dnsServerAdresses
+      dnsServers: dnsServerAddresses
     }
-
     enableDdosProtection: false
-    subnets: [
-      {
-        name: webSubnetName
-        properties: {
-          addressPrefix: webSubnetAddressPrefix
-          addressPrefixes: []
-          networkSecurityGroup: {
-            id: webNsg.id
-          }
-          routeTable: {
-            id: routeTable.id
-          }
-          delegations: []
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Disabled'
-          serviceEndpointPolicies: []
-          serviceEndpoints: []
+    subnets: [for (subnet, index) in subnetArray: {
+      name: subnet.name
+      properties: {
+        addressPrefix: subnet.addressPrefix
+        addressPrefixes: []
+        networkSecurityGroup: {
+          id: nsg[index].id
         }
-      }
-      {
-        name: appsSubnetName
-        properties: {
-          addressPrefix: appsSubnetAddressPrefix
-          addressPrefixes: []
-          networkSecurityGroup: {
-            id: appsNsg.id
-          }
-          routeTable: {
-            id: routeTable.id
-          }
-          delegations: []
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Disabled'
-          serviceEndpointPolicies: []
-          serviceEndpoints: []
+        routeTable: {
+          id: routeTable.id
         }
+        delegations: []
+        privateEndpointNetworkPolicies: 'Disabled'
+        privateLinkServiceNetworkPolicies: 'Disabled'
+        serviceEndpointPolicies: []
+        serviceEndpoints: []
       }
-      {
-        name: dataSubnetName
-        properties: {
-          addressPrefix: dataSubnetAddressPrefix
-          addressPrefixes: []
-          networkSecurityGroup: {
-            id: dataNsg.id
-          }
-          routeTable: {
-            id: routeTable.id
-          }
-          delegations: []
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Disabled'
-          serviceEndpointPolicies: []
-          serviceEndpoints: []
-        }
-      }
-    ]
+    }]
   }
 }
 
-resource spokeToHubVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = if (!empty(platformConnectivityVnetId)) {
+resource spokeToHubVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetworkPeerings@2020-11-01' = if (!empty(hubVnetId)) {
   name: '${vnet.name}/FROM-${vnet.name}-TO-${platformConnectivityVnetName}'
   properties: {
     allowForwardedTraffic: true
@@ -189,18 +122,18 @@ resource spokeToHubVnetPeering 'Microsoft.Network/virtualNetworks/virtualNetwork
     allowVirtualNetworkAccess: true
     peeringState: 'Connected'
     remoteVirtualNetwork: {
-      id: platformConnectivityVnetId
+      id: hubVnetId
     }
     useRemoteGateways: false
   }
 }
 
-module hubToSpokeVnetPeering 'auxiliary/vnetPeering.bicep' = if (!empty(platformConnectivityVnetId)) {
+module hubToSpokeVnetPeering 'auxiliary/vnetPeering.bicep' = if (!empty(hubVnetId)) {
   name: 'FROM-${platformConnectivityVnetName}-TO-${vnet.name}'
   scope: resourceGroup(platformConnectivityVnetSubscriptionId, platformConnectivityVnetResourceGroupName)
   params: {
     landingZoneVnetId: vnet.id
-    platformConnectivityVnetId: platformConnectivityVnetId
+    hubVnetId: hubVnetId
   }
 }
 
@@ -219,7 +152,8 @@ resource lockResource 'Microsoft.Authorization/locks@2016-09-01' = if (!empty(re
 output vNetResourceGroup string = resourceGroup().name
 output vNetName string = vnet.name
 output vNetResourceId string = vnet.id
-output webNsg string = webNsg.name
-output appsNsg string = appsNsg.name
-output dataNsg string = dataNsg.name
+output nsgIds array = [for (subnetName, index) in subnetArray: {
+  name: nsg[index].name
+  resourceId: nsg[index].id
+}]
 output routeTable string = routeTableName

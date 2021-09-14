@@ -1,11 +1,11 @@
 targetScope = 'resourceGroup'
 
 // Parameters
-param platformConnectivityVnetId string
+param hubVnetId string
 param landingZoneVnetId string
 
 // Variables
-var platformConnectivityVnetName = length(split(platformConnectivityVnetId, '/')) >= 9 ? last(split(platformConnectivityVnetId, '/')) : 'incorrectSegmentLength'
+var platformConnectivityVnetName = length(split(hubVnetId, '/')) >= 9 ? last(split(hubVnetId, '/')) : 'incorrectSegmentLength'
 var landingZoneVnetName = length(split(landingZoneVnetId, '/')) >= 9 ? last(split(landingZoneVnetId, '/')) : 'incorrectSegmentLength'
 
 // Resources

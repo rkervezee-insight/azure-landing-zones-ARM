@@ -97,6 +97,14 @@
             "type": "array",
             "defaultValue": []
         },
+        "firewallSku": {
+            "type": "string",
+            "allowedValues": [
+                "Standard",
+                "Premium"
+            ],
+            "defaultValue": "Standard"
+        },
         "gwRegionalOrAz": {
             "type": "string",
             "defaultValue": ""
@@ -811,10 +819,13 @@
                                             "comments": "Conditional deployment of the Azure Firewall Policy",
                                             "condition": "[and(equals(parameters('enableAzFw'), 'Yes'), not(empty(parameters('subnetMaskForazfw'))))]",
                                             "type": "Microsoft.Network/firewallPolicies",
-                                            "apiVersion": "2020-11-01",
+                                            "apiVersion": "2020-05-01",
                                             "name": "[parameters('azfwPolicy')]",
                                             "location": "[parameters('location')]",
                                             "properties": {
+                                                "sku": {
+                                                    "tier": "[parameters('firewallSku')]"
+                                                },
                                                 "dnsSettings": "[if(equals(parameters('enableAzFwDnsProxy'), 'Yes'), variables('azfwDnsSettings'), json('null'))]"
                                             }
                                         },
@@ -832,6 +843,10 @@
                                                 "[concat('Microsoft.Network/virtualNetworks/', parameters('vhub'))]"
                                             ],
                                             "properties": {
+                                                "sku": {
+                                                    "name": "AZFW_VNet",
+                                                    "tier": "[parameters('firewallSku')]"
+                                                },
                                                 "ipConfigurations": [
                                                     {
                                                         "name": "[parameters('azfwIp')]",

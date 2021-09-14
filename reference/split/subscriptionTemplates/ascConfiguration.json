@@ -141,13 +141,6 @@
             ],
             "defaultValue": "Standard"
         },
-        "topLevelManagementGroupPrefix": {
-            "type": "string",
-            "maxLength": 10,
-            "metadata": {
-                "description": "Provide a prefix (max 10 characters, unique at tenant-scope) for the Management Group hierarchy and other resources created as part of Enterprise-scale."
-            }
-        },
         "workspaceResourceId": {
             "type": "String",
             "metadata": {
@@ -163,7 +156,7 @@
         }
     },
     "variables": {
-        "resourceGroupName": "[concat(parameters('topLevelManagementGroupPrefix'), '-ascExport')]",
+        "resourceGroupName": "ascExportRG",
         "resourceGroupLocation": "[deployment().location]",
         "exportedDataTypes": "[createArray('Security recommendations', 'Security alerts', 'Overall secure score', 'Secure score controls', 'Regulatory compliance', 'Overall secure score - snapshot', 'Secure score controls - snapshot', 'Regulatory compliance - snapshot')]",
         "isSecurityFindingsEnabled": true,

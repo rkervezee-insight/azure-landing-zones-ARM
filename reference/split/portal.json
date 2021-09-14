@@ -565,6 +565,26 @@
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
                     },
                     {
+                        "name": "esContainerInsights",
+                        "type": "Microsoft.Common.OptionsGroup",
+                        "label": "Deploy Container Insights solution",
+                        "defaultValue": "Yes",
+                        "toolTip": "If 'Yes' is selected when also adding a subscription for management, ARM will deploy resources and enable them for continuous compliance",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Yes",
+                                    "value": "Yes"
+                                },
+                                {
+                                    "label": "No",
+                                    "value": "No"
+                                }
+                            ]
+                        },
+                        "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]"
+                    },
+                    {
                         "name": "security",
                         "type": "Microsoft.Common.TextBlock",
                         "visible": "[equals(steps('esPlatformManagement').esLogAnalytics, 'Yes')]",
@@ -1102,8 +1122,13 @@
                         "visible": "[and(not(equals(steps('esPlatformConnectivity').esHub, 'No')), not(equals(steps('esPlatformConnectivity').esHub, 'vhub')))]",
                         "constraints": {
                             "required": true,
-                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-9]))$",
-                            "validationMessage": "The virtual hubs network's address space, specified as one address prefixes in CIDR notation (e.g. 10.49.0.0/18)"
+                            "validationMessage": "The virtual hubs hub network address space, specified as one address prefix in CIDR notation (e.g. 10.100.0.0/23)",
+                            "validations": [
+                                {
+                                    "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:\/(1[0-9]|2[0-4]))$",
+                                    "message": "Invalid CIDR range. The address prefix must be in the range [10,24]."
+                                }
+                            ]
                         }
                     },
                     {
@@ -1115,7 +1140,13 @@
                         "visible": "[and(not(equals(steps('esPlatformConnectivity').esHub, 'No')), not(equals(steps('esPlatformConnectivity').esHub, 'vwan')))]",
                         "constraints": {
                             "required": true,
-                            "validationMessage": "The hub virtual network address space, specified as one address prefix in CIDR notation (e.g. 10.49.0.0/18)"
+                            "validationMessage": "The virtual hubs hub network address space, specified as one address prefix in CIDR notation (e.g. 10.100.0.0/23)",
+                            "validations": [
+                                {
+                                    "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:\/(1[0-9]|2[0-4]))$",
+                                    "message": "Invalid CIDR range. The address prefix must be in the range [10,24]."
+                                }
+                            ]
                         }
                     },
                     {
@@ -1334,8 +1365,29 @@
                         "visible": "[or(equals(steps('esPlatformConnectivity').esErGw, 'Yes'), equals(steps('esPlatformConnectivity').esVpnGw, 'Yes'))]",
                         "constraints": {
                             "required": true,
-                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-9]))$",
-                            "validationMessage": "Invalid CIDR range. The address prefix must be in the range [10,24]."
+                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g 10.100.0.0/24)",
+                            "validations": [
+                                {
+                                    "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:\/(2[0-7]))$",
+                                    "message": "Invalid CIDR range. The address prefix must be /26 or /27."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 8), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 1)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressVpnOrEr, '/')), '.'), 1))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (first octet)."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 16), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 2)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressVpnOrEr, '/')), '.'), 2))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (second octet)."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 24), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 3)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressVpnOrEr, '/')), '.'), 3))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (third octet)."
+                                },
+                                {
+                                    "isValid": "[lessOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), last(split(steps('esPlatformConnectivity').esAddressVpnOrEr, '/')))]",
+                                    "message": "CIDR range not within virtual network CIDR range (subnet mask)."
+                                }
+                            ]
                         }
                     },
                     {
@@ -1512,6 +1564,32 @@
                         }
                     },
                     {
+                        "name": "esAzFwSku",
+                        "type": "Microsoft.Common.DropDown",
+                        "label": "Select Azure Firewall Sku",
+                        "defaultValue": "Standard",
+                        "multiselect": false,
+                        "selectAll": false,
+                        "filter": false,
+                        "multiLine": true,
+                        "visible": "[equals(steps('esConnectivityGoalState').esAzFw, 'Yes')]",
+                        "toolTip": "Select Azure Firewall Sku",
+                        "constraints": {
+                            "allowedValues": [
+                                {
+                                    "label": "Standard",
+                                    "description": "Standard Azure Firewall",
+                                    "value": "Standard"
+                                },
+                                {
+                                    "label": "Premium",
+                                    "description": "Premium Azure Firewall adds support for TLS inspection, IDPS, URL filtering and web categories.",
+                                    "value": "Premium"
+                                }
+                            ]
+                        }
+                    },
+                    {
                         "name": "esFwAz",
                         "type": "Microsoft.Common.DropDown",
                         "label": "Select Availability Zones for the Azure Firewall",
@@ -1547,8 +1625,29 @@
                         "visible": "[and(equals(steps('esPlatformConnectivity').esAzFw, 'Yes'), not(equals(steps('esPlatformConnectivity').esHub, 'vwan')))]",
                         "constraints": {
                             "required": true,
-                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-9]))$",
-                            "validationMessage": "The subnet for Azure Firewall inside the hub virtual network address space, specified as one address prefixes in CIDR notation (e.g. 10.49.61.0/24)"
+                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g 10.100.0.0/24)",
+                            "validations": [
+                                {
+                                    "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:\/(2[0-6]))$",
+                                    "message": "Invalid CIDR range. The address prefix must be in the range [20,26]."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 8), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 1)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressFw, '/')), '.'), 1))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (first octet)."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 16), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 2)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressFw, '/')), '.'), 2))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (second octet)."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 24), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 3)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressFw, '/')), '.'), 3))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (third octet)."
+                                },
+                                {
+                                    "isValid": "[lessOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), last(split(steps('esPlatformConnectivity').esAddressFw, '/')))]",
+                                    "message": "CIDR range not within virtual network CIDR range (subnet mask)."
+                                }
+                            ]
                         }
                     },
                     {
@@ -1580,8 +1679,29 @@
                         "visible": "[equals(steps('esPlatformConnectivity').esAzBastion, 'Yes')]",
                         "constraints": {
                             "required": true,
-                            "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:$|/(1[0-9]|2[0-9]))$",
-                            "validationMessage": "Invalid CIDR range. The address prefix must be in the range [10,24]."
+                            "validationMessage": "The subnet network's address space, specified as one address prefixes in CIDR notation (e.g 10.100.0.0/24)",
+                            "validations": [
+                                {
+                                    "regex": "^(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)\\.(25[0-5]|2[0-4]\\d|1\\d\\d|[1-9]?\\d)(?:\/(2[4-7]))$",
+                                    "message": "Invalid CIDR range. The address prefix must be a /24 to /27."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 8), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 1)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressBastion, '/')), '.'), 1))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (first octet)."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 16), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 2)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressBastion, '/')), '.'), 2))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (second octet)."
+                                },
+                                {
+                                    "isValid": "[if(greaterOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), 24), equals(last(take(split(first(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), '.'), 3)), last(take(split(first(split(steps('esPlatformConnectivity').esAddressBastion, '/')), '.'), 3))), true)]",
+                                    "message": "CIDR range not within virtual network CIDR range (third octet)."
+                                },
+                                {
+                                    "isValid": "[lessOrEquals(last(split(steps('esPlatformConnectivity').esAddressHubHS, '/')), last(split(steps('esPlatformConnectivity').esAddressBastion, '/')))]",
+                                    "message": "CIDR range not within virtual network CIDR range (subnet mask)."
+                                }
+                            ]
                         }
                     },
                     {
@@ -2167,6 +2287,7 @@
             "enableServiceMap": "[steps('esPlatformManagement').esServiceMap]",
             "enableSqlAssessment": "[steps('esPlatformManagement').esSqlAssessment]",
             "enableKeyVaultAnalytics": "[steps('esPlatformManagement').esKeyVaultAnalytics]",
+            "enableContainerInsights": "[steps('esPlatformManagement').esContainerInsights]",
             "enableStorage": "[steps('esPlatformManagement').esSta]",
             "enableLtrStorage": "[steps('esPlatformManagement').esActivityLogSta]",
             "enableAscForServers": "[steps('esPlatformManagement').esAscVms]",
@@ -2194,6 +2315,7 @@
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
+            "firewallSku": "[steps('esConnectivityGoalState').esAzFwSku]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",

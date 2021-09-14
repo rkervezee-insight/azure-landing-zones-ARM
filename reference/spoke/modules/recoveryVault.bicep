@@ -5,14 +5,11 @@ targetScope = 'resourceGroup'
 @description('Optional. Location for all resources.')
 param location string
 
-@description('Specifies the naming prefix.')
-param namePrefix string
-
 @description('Specifies the tags that you want to apply to all resources.')
 param tags object
 
 @description('Specifies the RSV prefix of the deployment.')
-param rsvPrefix string
+param rsvName string
 
 @allowed([
 	'GeoRedundant'
@@ -22,7 +19,7 @@ param rsvPrefix string
 param StorageModelType string = 'LocallyRedundant'
 
 // Variables
-var recoveryVaultName = '${namePrefix}-${rsvPrefix}-${uniqueString(resourceGroup().id)}'
+var recoveryVaultName = '${rsvName}-${uniqueString(resourceGroup().id)}'
 
 resource recoveryVault 'Microsoft.RecoveryServices/vaults@2020-10-01' = {
 	name: recoveryVaultName

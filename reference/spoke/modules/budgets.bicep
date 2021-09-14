@@ -29,7 +29,7 @@ param contactRoles array
 var subscriptionid = subscription().subscriptionId
 
 resource budgets 'Microsoft.Consumption/budgets@2019-10-01' = {
-  name: toLower('${subscriptionid}-budget')
+  name: toLower('subscriptionBudget-${subscriptionid}')
   properties: {
     timePeriod: {
       startDate: startDate

@@ -68,7 +68,13 @@
             {
                 "name": "adds",
                 "properties": {
-                    "addressPrefix": "[parameters('addressPrefix')]"
+                    "addressPrefix": "[parameters('addressPrefix')]",
+                    "networkSecurityGroup": {
+                        "id": "[variables('nsgId')]"
+                    },
+                    "routeTable": {
+                        "id": "[variables('udrId')]"
+                    }
                 }
             }
         ],
@@ -166,7 +172,10 @@
                                             "apiVersion": "2020-04-01",
                                             "name": "[parameters('spokeVnet')]",
                                             "location": "[parameters('location')]",
-                                            "dependsOn": [],
+                                            "dependsOn": [
+                                                "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroup'))]",
+                                                "[concat('Microsoft.Network/routeTables/', parameters('routeTable'))]"
+                                            ],
                                             "properties": {
                                                 "addressSpace": {
                                                     "addressPrefixes": [
@@ -174,28 +183,10 @@
                                                     ]
                                                 },
                                                 "enableDdosProtection": "[if(equals(parameters('enableDdoS'), 'Yes'), 'true', 'false')]",
-                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]"
-                                                //"subnets": "[if(not(empty(parameters('addressPrefix'))), variables('addsSubnet'), json('[]'))]"
+                                                "ddosProtectionPlan": "[if(equals(parameters('enableDdoS'), 'Yes'), variables('ddosProtectionPlanId'), json('null'))]",
+                                                "subnets": "[if(not(empty(parameters('addressPrefix'))), variables('addsSubnet'), json('[]'))]"
                                             },
                                             "resources": []
-                                        },
-                                        {
-                                            "comments": "Subnet for ADDS",
-                                            "type": "Microsoft.Network/virtualNetworks/subnets",
-                                            "apiVersion": "2020-04-01",
-                                            "name": "[concat(parameters('spokeVnet'), '/', 'adds')]",
-                                            "dependsOn": [
-                                                "[concat('Microsoft.Network/virtualNetworks/', parameters('spokeVnet'))]"
-                                            ],
-                                            "properties": {
-                                                "addressPrefix": "[parameters('addressPrefix')]",
-                                                "routeTable": {
-                                                    "id": "[variables('udrId')]"
-                                                },
-                                                "networkSecurityGroup": {
-                                                    "id": "[variables('nsgId')]"
-                                                }
-                                            }
                                         },
                                         {
                                             "comments": "Deployment of ADDS NSG",
@@ -219,8 +210,6 @@
                                             "location": "[parameters('location')]",
                                             "properties": {
                                                 "routes": [
-                                                    {
-                                                    }
                                                 ]
                                             }
                                         }

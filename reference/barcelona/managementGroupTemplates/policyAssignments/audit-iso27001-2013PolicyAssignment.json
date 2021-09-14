@@ -73,9 +73,9 @@
             "auditIso27001": "/providers/Microsoft.Authorization/policySetDefinitions/89c6cddc-1c73-4ac1-b19c-54d1a15a42f2"
         },
         "policyAssignmentNames": {
-            "auditIso27001": "ISO-27001:2013",
+            "auditIso27001": "ISO-27001-2013",
             "description": "This initiative includes audit and virtual machine extension deployment policies that address a subset of ISO 27001:2013 controls. Additional policies will be added in upcoming releases. For more information, visit https://aka.ms/iso27001-init.",
-            "displayName": "Audit ISO 27001:2013 Compliance"
+            "displayName": "Audit ISO 27001-2013 Compliance"
         },
         "rbac": "b24988ac-6180-42a0-ab88-20f7382dd24c",
         "roleAssignmentNames": {
