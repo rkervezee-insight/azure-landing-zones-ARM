@@ -3196,9 +3196,6 @@
                     },
                     "ddosPlanResourceId": {
                         "value": "[variables('platformConnectivityResourceIds').ddos]"
-                    },
-                    "azureFirewallResourceId": {
-                        "value": "[variables('platformConnectivityResourceIds').azfw]"
                     }
                 }
             }
