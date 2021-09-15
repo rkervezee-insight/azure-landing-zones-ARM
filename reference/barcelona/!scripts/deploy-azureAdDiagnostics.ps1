@@ -20,6 +20,5 @@ $lawResourceId = "/subscriptions/afa561b9-1bcc-4e69-bb33-af606363a7df/resourcegr
 New-AzTenantDeployment -Name  "$($DeploymentName)-$($Location)" ` `
   -Location $Location `
   -TemplateFile ..\tenantTemplates\deploy-azureAdActivityLogs.json `
-  -lawReso
-  urceId $lawResourceId  `
+  -lawResourceId $lawResourceId  `
   -Verbose
