@@ -15,8 +15,10 @@ August 12, 2021 1.0
 
 $Location = "australiaeast"
 $DeploymentName = "mgStructure"
+$ESLZPrefix = "sjj"
 
 New-AzTenantDeployment -Name  "$($DeploymentName)-$($Location)" ` `
   -Location $Location `
   -TemplateFile ..\managementGroupTemplates\mgmtGroupStructure\mgmtGroups.json `
+  -topLevelManagementGroupPrefix $ESLZPrefix `
   -Verbose
