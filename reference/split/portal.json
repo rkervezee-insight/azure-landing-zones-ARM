@@ -1572,7 +1572,7 @@
                         "selectAll": false,
                         "filter": false,
                         "multiLine": true,
-                        "visible": "[equals(steps('esConnectivityGoalState').esAzFw, 'Yes')]",
+                        "visible": "[equals(steps('esPlatformConnectivity').esAzFw, 'Yes')]",
                         "toolTip": "Select Azure Firewall Sku",
                         "constraints": {
                             "allowedValues": [
@@ -2315,7 +2315,7 @@
             "enableAzBastion": "[steps('esPlatformConnectivity').esAzBastion]",
             "enableAzFw": "[steps('esPlatformConnectivity').esAzFw]",
             "enableAzFwDnsProxy": "[steps('esPlatformConnectivity').esAzFwDns]",
-            "firewallSku": "[steps('esConnectivityGoalState').esAzFwSku]",
+            "firewallSku": "[steps('esPlatformConnectivity').esAzFwSku]",
             "firewallZones": "[steps('esPlatformConnectivity').esFwAz]",
             "enableAppGw": "[steps('esPlatformConnectivity').esAppGw]",
             "enableMgmt": "[steps('esPlatformConnectivity').esMgmt]",
