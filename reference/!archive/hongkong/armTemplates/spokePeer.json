@@ -55,8 +55,8 @@
         "spokeId": "[concat('/subscriptions/',parameters('spokeSubscriptionId'),'/resourceGroups/',variables('spokeVnetRg'),'/providers/Microsoft.Network/virtualNetworks/',variables('spokeVnetName'))]",
         "spokeToHubPeerName": "[concat(variables('spokeVnetName'), '-to-', parameters('hubVnetName'))]",
         "deploymentNames": {
-            "spokeToHub": "[take(concat('spokeToHub', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]",
-            "hubToSpoke": "[take(concat('hubToSpoke', '-', deployment().location, '-', guid(parameters('companyPrefix'))), 64)]"
+            "spokeToHub": "[take(concat('spokeToHub', '-', guid(parameters('companyPrefix'))), 64)]",
+            "hubToSpoke": "[take(concat('hubToSpoke', '-', guid(parameters('companyPrefix'))), 64)]"
         },
         "apiVersions": {
             "deployments": "2020-06-01",
