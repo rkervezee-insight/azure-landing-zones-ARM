@@ -16,7 +16,7 @@
                 "displayName": "location",
                 "description": "Location of the VHUB"
             },
-            "defaultValue": "[deployment().location]"
+            "defaultValue": "westeurope"
         },
         "enableHub": {
             "type": "string",

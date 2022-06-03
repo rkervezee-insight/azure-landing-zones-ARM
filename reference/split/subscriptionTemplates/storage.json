@@ -16,7 +16,7 @@
         },
         "location": {
             "type": "string",
-            "defaultValue": "[deployment().location]",
+            "defaultValue": "westeurope",
             "metadata": {
                 "description": "Select Azure region for the Azure Storage account. Default, we will use same region as deployment."
             }

@@ -16,7 +16,7 @@
         },
         "workspaceRegion": {
             "type": "string",
-            "defaultValue": "[deployment().location]",
+            "defaultValue": "westeurope",
             "metadata": {
                 "description": "Select Azure region for the Log Analytics workspace. Default, we will use same region as deployment."
             }

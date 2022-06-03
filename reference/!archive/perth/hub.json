@@ -540,7 +540,7 @@
         },
         "location": {
             "type": "string",
-            "defaultValue": "[deployment().location]"
+            "defaultValue": "westeurope"
         },
         "addressPrefix": {
             "type": "string",

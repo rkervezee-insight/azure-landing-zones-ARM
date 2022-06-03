@@ -536,7 +536,7 @@
         },
         "location": {
             "type": "string",
-            "defaultValue": "[deployment().location]"
+            "defaultValue": "westeurope"
         },
         "enableHub": {
             "type": "string",

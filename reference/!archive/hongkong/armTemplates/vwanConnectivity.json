@@ -53,7 +53,7 @@
         },
         "location": {
             "type": "string",
-            "defaultValue": "[deployment().location]"
+            "defaultValue": "westeurope"
         },
         "enableVwan": {
             "type": "string",
