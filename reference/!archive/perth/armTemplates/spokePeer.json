@@ -87,7 +87,7 @@
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
                             "name": "[concat(variables('spokeVnetName'), '/',variables('spokeToHubPeerName'))]",
-                            "location": "[deployment().location]",
+                            "location": "westeurope",
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
                                 "allowForwardedTraffic": true,
@@ -125,7 +125,7 @@
                             "type": "Microsoft.Network/virtualNetworks/virtualNetworkPeerings",
                             "apiVersion": "[variables('apiVersions').virtualNetworkPeerings]",
                             "name": "[concat(parameters('hubVnetName'), '/',variables('hubToSpokePeerName'))]",
-                            "location": "[deployment().location]",
+                            "location": "westeurope",
                             "properties": {
                                 "allowVirtualNetworkAccess": true,
                                 "allowForwardedTraffic": true,
