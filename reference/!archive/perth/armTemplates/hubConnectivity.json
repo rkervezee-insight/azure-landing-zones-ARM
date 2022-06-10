@@ -200,47 +200,47 @@
 
         "vpnGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-vpn'))]",
         "vpnGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-001'))]",
-        "vpnGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('vpnGwIpName'))]",
-        "vpnGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
+        "vpnGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('vpnGwIpName'))]",
+        "vpnGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
 
         "erGwName": "[toLower(concat(variables('namingPrefix'), '-', parameters('vngPrefix'), '-er'))]",
         "erGwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-002'))]",
-        "erGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('erGwIpName'))]",
-        "erGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
+        "erGwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('erGwIpName'))]",
+        "erGwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/GatewaySubnet')]",
 
         "fwName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('azFwPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "fwPolicyName": "[toLower(take(concat(variables('namingPrefix'), '-afp', '-', guid(parameters('companyPrefix'))), 24))]",
-        "fwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
+        "fwSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureFirewallSubnet')]",
         "fwIpName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-003'))]",
-        "fwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('fwIpName'))]",
+        "fwPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('fwIpName'))]",
         "fwDnsSettings": {
             "enableProxy": true
         },
         "fwPolicyId": {
-            "id": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/firewallPolicies/', variables('fwPolicyName'))]"
+            "id": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking, '/providers/Microsoft.Network/firewallPolicies/', variables('fwPolicyName'))]"
         },
         "bastionName": "[toLower(take(concat(variables('namingPrefix'), '-', parameters('basPrefix'), '-', guid(parameters('companyPrefix'))), 24))]",
         "bastionNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-azureBastion'))]",
-        "bastionNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
-        "bastionSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]",
+        "bastionNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('bastionNsg'))]",
+        "bastionSubnetId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/virtualNetworks/', variables('vnetName'), '/subnets/AzureBastionSubnet')]",
         "bastionPipName": "[toLower(concat(variables('namingPrefix'), '-', parameters('pipPrefix'), '-004'))]",
-        "bastionPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('bastionPipName'))]",
+        "bastionPipId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking, '/providers/Microsoft.Network/publicIPAddresses/', variables('bastionPipName'))]",
 
         "managementSubnet": "Management",
         "managementNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('managementSubnet')))]",
-        "managementNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
+        "managementNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('managementNsg'))]",
         "managementUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('managementSubnet')))]",
-        "managementUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('managementUdr'))]",
+        "managementUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('managementUdr'))]",
 
         "appGwySubnet": "AppGateway",
         "appGwyNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('appGwySubnet')))]",
-        "appGwyNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
+        "appGwyNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('appGwyNsg'))]",
 
         "identitySubnet": "Identity",
         "identityNsg": "[toLower(concat(variables('namingPrefix'), '-', parameters('nsgPrefix'), '-', variables('identitySubnet')))]",
-        "identityNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
+        "identityNsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/networkSecurityGroups/', variables('identityNsg'))]",
         "identityUdr": "[toLower(concat(variables('namingPrefix'), '-', parameters('udrPrefix'), '-', variables('identitySubnet')))]",
-        "identityUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('identityUdr'))]",
+        "identityUdrId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups', variables('resourceGroups').networking,'/providers/Microsoft.Network/routeTables/', variables('identityUdr'))]",
         "gatewaySubnet": [
             {
                 "name": "GatewaySubnet",
