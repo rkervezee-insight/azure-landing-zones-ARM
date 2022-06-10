@@ -42,7 +42,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Company Identifier Prefix",
                         "toolTip": "Provide a value for the company identifier, 1-5 characters.",
-                        "defaultValue": "sjj",
+                        "defaultValue": "sqr",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z0-9A-Z-]{1,5}$",
@@ -53,8 +53,8 @@
                         "name": "esLocIdentifier",
                         "type": "Microsoft.Common.TextBox",
                         "label": "Location Identifier Prefix",
-                        "toolTip": "Provide a value for the location identifier, 3 characters (Australia East - SYD) or (Australia SouthEast - MEL)",
-                        "defaultValue": "syd",
+                        "toolTip": "Provide a value for the location identifier, 3 characters (West Europe - WEU) or (North Europe - NEU)",
+                        "defaultValue": "weu",
                         "constraints": {
                             "required": true,
                             "regex": "^[a-z0-9A-Z-]{3}$",
@@ -332,7 +332,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Owner Tag",
                         "toolTip": "Provide a value for the owner tag",
-                        "defaultValue": "tulpy",
+                        "defaultValue": "squirrel",
                         "constraints": {
                             "required": false
                         }
@@ -342,7 +342,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Cost Center Tag",
                         "toolTip": "Provide a value for the Cost Center tag",
-                        "defaultValue": "1234",
+                        "defaultValue": "0000",
                         "constraints": {
                             "required": false
                         }
@@ -645,7 +645,7 @@
                         "type": "Microsoft.Common.TextBox",
                         "label": "Azure Security Center Email Contact",
                         "toolTip": "Provide the email contact for Azure Security Center alerts",
-                        "defaultValue": "stephen.tulp@outlook.com",
+                        "defaultValue": "ralf.kervezee@insight.com",
                         "constraints": {
                             "required": "[equals(steps('esPlatformManagement').esAsc,'Yes')]",
                             "regex": "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$",
