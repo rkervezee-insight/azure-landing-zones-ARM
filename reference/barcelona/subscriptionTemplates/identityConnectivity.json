@@ -81,8 +81,8 @@
         "ddosProtectionPlanId": {
             "id": "[parameters('ddosPlanResourceId')]"
         },
-        "nsgId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('networkRg'), '/providers/Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroup'))]",
-        "udrId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('networkRg'),'/providers/Microsoft.Network/routeTables/', parameters('routeTable'))]"
+        "nsgId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', parameters('networkRg'), '/providers/Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroup'))]",
+        "udrId": "[concat('/subscriptions/', parameters('subscriptionId'), 'resourceGroups/', parameters('networkRg'),'/providers/Microsoft.Network/routeTables/', parameters('routeTable'))]"
     },
     "resources": [
         {
