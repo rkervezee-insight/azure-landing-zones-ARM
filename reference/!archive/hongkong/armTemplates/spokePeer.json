@@ -72,7 +72,7 @@
             "name": "[variables('deploymentNames').spokeToHub]",
             "subscriptionId": "[parameters('spokeSubscriptionid')]",
             "resourceGroup": "[variables('spokeVnetRg')]",
-            "location":"West Europe",
+            "location": "westeurope",
             "properties": {
                 "mode": "Incremental",
                 "template": {
@@ -110,6 +110,7 @@
             "name": "[variables('deploymentNames').hubToSpoke]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "resourceGroup": "[parameters('hubVnetRg')]",
+            "location": "westeurope",
             "properties": {
                 "mode": "Incremental",
                 "template": {

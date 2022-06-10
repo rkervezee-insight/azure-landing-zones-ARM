@@ -2282,6 +2282,7 @@
             "name": "[variables('deploymentNames').rg.azOps]",
             "subscriptionId": "[parameters('managementSubscriptionId')]",
             "resourceGroup": "[variables('platformManagementRgs').azops]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.moveManagementSubscription)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.azOpsRoleAssignment)]",
@@ -2368,6 +2369,7 @@
             "name": "[concat(variables('deploymentNames').rg.privateDnsZones, copyIndex())]",
             "subscriptionId": "[parameters('connectivitySubscriptionId')]",
             "resourceGroup": "[variables('platformConnectivityRgs').privateDns]",
+            "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').sub.privateDnsZoneRg)]",
                 "[resourceId('Microsoft.Resources/deployments', variables('deploymentNames').mg.activityDiagnosticsPolicyAssignment)]",

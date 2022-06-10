@@ -1200,6 +1200,7 @@
                         "label": "Region for the first networking hub",
                         "visible": "[or(equals(steps('esPlatformConnectivity').esHub, 'vhub'), equals(steps('esPlatformConnectivity').esHub, 'vwan'))]",
                         "toolTip": "Select the target Azure region for the deployment.",
+                        "defaultValue": "West Europe",
                         "constraints": {
                             "allowedValues": "[map(steps('esPlatformConnectivity').esLocationsApi.value, (item) => parse(concat('{\"label\":\"', item.displayName, '\",\"value\":\"', item.name, '\"}')))]",
                             "required": true

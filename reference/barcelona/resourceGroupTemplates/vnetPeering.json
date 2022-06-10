@@ -51,7 +51,7 @@
       "apiVersion": "2020-06-01",
       "name": "[take(concat('spokeToHub', '-', guid(deployment().name)), 64)]",
       "resourceGroup": "[parameters('networkRg')]",
-      "location":"West Europe",
+      "location": "[parameters('location')]",
       "dependsOn": [],
       "properties": {
         "mode": "Incremental",
