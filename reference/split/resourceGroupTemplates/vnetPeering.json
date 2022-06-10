@@ -90,6 +90,7 @@
       "name": "[take(concat('hubToSpoke', '-', guid(deployment().name)), 64)]",
       "subscriptionId": "[split(parameters('vhubResourceId'),'/')[2]]",
       "resourceGroup": "[split(parameters('vhubResourceId'),'/')[4]]",
+      "location": "[parameters('location')]",
       "properties": {
         "mode": "Incremental",
         "template": {
